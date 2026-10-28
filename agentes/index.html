@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>13 agentes no Claude Code</title>
+<meta name="description" content="Prompt grátis: monte uma empresa de agentes no seu Claude Code, com 6 equipes e você como CEO.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este prompt é grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">prompt grátis</span>
+  <h1>Uma empresa inteira no seu Claude Code: <span class="nowrap">13 agentes</span></h1>
+  <p class="lead">Seis equipes, um gerente geral e você no cargo de CEO. Você dá a ideia, a empresa se adapta ao seu projeto e só entrega o que está certo.</p>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Monte a empresa</h2></div>
+    <p>No Claude Code, abra a pasta do seu projeto e envie o texto abaixo. Ele cria um arquivo por agente em <code class="inline">.claude/agents/</code>.</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-empresa">Copiar</button></div>
+<pre id="prompt-empresa">Monte uma empresa de agentes neste projeto. Eu sou o CEO: dou a ideia e aprovo cada entrega. Crie um arquivo .md por agente em .claude/agents/, cada um com nome, descrição curta de quando usar e instruções claras do papel. Responda em português.
+
+Diretoria
+1. gerente-geral: recebe o meu pedido, divide o trabalho entre os agentes, confere cada entrega e só me mostra o que está certo.
+
+Equipe de desenvolvimento
+2. pesquisador: estuda o mercado, o público e os concorrentes do projeto.
+3. desenvolvedor: escreve o código em passos pequenos e explica o que mudou.
+4. web-designer: deixa as telas com cara de produto profissional e boas no celular.
+
+Equipe de marketing
+5. copywriter: escreve os textos que vendem, sem prometer o que eu não posso cumprir.
+6. gestor-de-trafego: monta os anúncios e os públicos para Meta e Google, sem publicar nada sem o meu OK.
+
+Equipe de vendas
+7. vendedor: escreve as abordagens e os follow-ups para clientes.
+
+Equipe de finanças
+8. contador: calcula preço, custo e margem.
+9. analista: aponta onde cortar gasto e quais números acompanhar.
+
+Equipe de qualidade
+10. testador: usa o projeto como um cliente usaria e lista tudo o que quebra.
+11. dev-seguranca: procura brechas antes de publicar: senhas no código, dados expostos e entrada sem validação.
+
+Equipe de suporte
+12. atendente: responde as dúvidas dos clientes com base no que o projeto realmente oferece.
+
+Regras para todos: não inventar números nem resultados; perguntar quando faltar informação; nada vai ao ar sem o meu OK.
+
+O meu projeto é: [DESCREVA SUA IDEIA: SITE, OFERTA, APP OU SAAS, PARA QUEM E O OBJETIVO]</pre>
+    </div>
+    <div class="note">Os agentes são arquivos de instrução para o próprio Claude Code. Eles só agem dentro da sua conversa e não publicam nem enviam nada sem a sua aprovação.</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Dê o primeiro pedido</h2></div>
+    <p>Com a empresa criada, fale só com o gerente geral:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-pedido">Copiar</button></div>
+<pre id="prompt-pedido">Gerente geral: com base no meu projeto, monte o plano da primeira semana, diga qual agente faz cada parte e comece pelo que dá resultado mais rápido. Me mostre o plano antes de executar.</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Quem faz o quê</h2></div>
+    <p>O gerente geral responde a você e coordena as seis equipes.</p>
+    <div class="cards">
+      <article class="card"><h3>Desenvolvimento</h3><p class="when">Pesquisa, código e telas.</p><p class="who">pesquisador · desenvolvedor · web-designer</p></article>
+      <article class="card"><h3>Marketing</h3><p class="when">Textos que vendem e anúncios.</p><p class="who">copywriter · gestor-de-trafego</p></article>
+      <article class="card"><h3>Vendas</h3><p class="when">Abordagens e follow-ups.</p><p class="who">vendedor</p></article>
+      <article class="card"><h3>Finanças</h3><p class="when">Preço, margem e cortes.</p><p class="who">contador · analista</p></article>
+      <article class="card"><h3>Qualidade</h3><p class="when">Testes e segurança antes de publicar.</p><p class="who">testador · dev-seguranca</p></article>
+      <article class="card"><h3>Suporte</h3><p class="when">Dúvidas dos seus clientes.</p><p class="who">atendente</p></article>
+    </div>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou da empresa de agentes? O pacote traz o resto pronto."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Harvey: passo a passo</title>
+<meta name="description" content="Passo a passo grátis para instalar o Harvey, agente open source do Claude Code que prospecta clientes e escreve e-mails para você aprovar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este passo a passo é grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">passo a passo grátis</span>
+  <h1>Harvey: o agente do Claude Code que <span class="nowrap">arruma cliente</span></h1>
+  <p class="lead">Ele procura empresas que combinam com o seu negócio, lê o site de cada uma, escreve um e-mail personalizado e leva a conversa até a reunião. Todo e-mail espera a sua aprovação antes de sair.</p>
+
+  <a class="btn" href="https://github.com/ethanplusai/harvey" target="_blank" rel="noopener">Abrir o repositório no GitHub</a>
+  <div class="note">O Harvey é um projeto open source de terceiros (ethanplusai/harvey, licença MIT). Esta página só explica como instalar e não tem ligação com o autor.</div>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">O que você precisa</h2></div>
+    <ul class="plain">
+      <li>Python 3.11 ou mais novo.</li>
+      <li>Assinatura Claude Pro ou Max, com o Claude Code logado. Ele usa a sua assinatura, sem conta de API.</li>
+      <li>Uma caixa de e-mail para enviar, de preferência num domínio secundário, separado do seu domínio principal.</li>
+      <li>Aquecimento dessa caixa de e-mail antes do primeiro envio, para não cair no spam.</li>
+    </ul>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Baixe e abra no Claude Code</h2></div>
+    <p>No terminal, rode:</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-instalar">Copiar</button></div>
+<pre id="cmd-instalar">git clone https://github.com/ethanplusai/harvey.git
+cd harvey
+claude</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Peça a configuração</h2></div>
+    <p>O repositório já vem com instruções que transformam o Claude Code num assistente de instalação. Ele confere o que falta, instala, pergunta o que precisa e aprende sobre o seu produto. Envie:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-config">Copiar</button></div>
+<pre id="prompt-config">set up Harvey for me</pre>
+    </div>
+    <p>Quando terminar, o painel fica em <code class="inline">localhost:5555</code>, com o funil inteiro ao vivo.</p>
+  </section>
+
+  <section class="step" aria-labelledby="passo4">
+    <div class="step-head"><span class="step-num">4</span><h2 id="passo4">Antes do primeiro envio</h2></div>
+    <div class="cards two">
+      <article class="card"><h3>Você aprova tudo</h3><p class="when">Cada e-mail fica na caixa de saída até você aprovar.</p></article>
+      <article class="card"><h3>Você é o remetente</h3><p class="when">Siga as regras de e-mail frio e da LGPD e mantenha a opção de descadastro que ele já coloca.</p></article>
+    </div>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou do Harvey? O pacote traz mais agentes prontos."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>
