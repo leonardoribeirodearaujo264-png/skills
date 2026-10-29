@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FreeLLMAPI: passo a passo</title>
+<meta name="description" content="Passo a passo grátis para ligar o Claude Code à FreeLLMAPI, que junta os planos gratuitos de 34 provedores numa conta só.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este passo a passo é grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">passo a passo grátis</span>
+  <h1>Claude Code com <span class="nowrap">modelos de graça</span></h1>
+  <p class="lead">A FreeLLMAPI junta os planos gratuitos de 34 provedores numa conta só: cerca de 7,4 bilhões de tokens por mês e 635 modelos. Quando um modelo bate o limite, ela passa para o próximo da fila e avisa o modelo novo do que já foi feito.</p>
+
+  <a class="btn" href="https://github.com/tashfeenahmed/freellmapi" target="_blank" rel="noopener">Abrir o repositório no GitHub</a>
+  <div class="note">Projeto open source de terceiros (tashfeenahmed/freellmapi, licença MIT). O próprio autor avisa que é para uso pessoal e testes, não para produção, e que as regras de cada provedor continuam valendo. Os modelos são os gratuitos desses provedores, não os modelos pagos da Anthropic. Esta página não tem ligação com o autor.</div>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Instale</h2></div>
+    <p>No Windows, o caminho mais fácil é o instalador <code class="inline">.exe</code> da página de Releases. No Mac há o <code class="inline">.dmg</code>.</p>
+    <a class="btn" href="https://github.com/tashfeenahmed/freellmapi/releases/latest" target="_blank" rel="noopener">Baixar a versão mais recente</a>
+    <p>Se preferir servidor com Docker, rode no terminal (o script está publicado no site do projeto para você ler antes):</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-docker">Copiar</button></div>
+<pre id="cmd-docker">curl -fsSL https://freellmapi.co/install.sh | bash</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Cadastre as chaves grátis</h2></div>
+    <ul class="plain">
+      <li>Abra o painel. No servidor ele fica em <code class="inline">http://localhost:3001</code>; no app de desktop, pelo ícone da bandeja em Open Dashboard.</li>
+      <li>Na página Keys, adicione as chaves gratuitas dos provedores que você quiser usar. Cada provedor tem o próprio cadastro.</li>
+      <li>Em Fallback Chain, arraste os modelos na ordem de preferência. É essa fila que ele segue quando um limite acaba.</li>
+      <li>Copie a chave unificada que aparece no topo da página Keys.</li>
+    </ul>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Ligue no Claude Code</h2></div>
+    <p>O gerador do projeto ajusta a configuração do Claude Code e faz backup antes. Rode primeiro com <code class="inline">--dry-run</code> para ver o que vai mudar:</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-claude">Copiar</button></div>
+<pre id="cmd-claude">npx freellmapi setup-claude --url http://localhost:3001 --api-key SUA_CHAVE_UNIFICADA --dry-run
+npx freellmapi setup-claude --url http://localhost:3001 --api-key SUA_CHAVE_UNIFICADA</pre>
+    </div>
+    <p>Depois é só abrir o Claude Code normalmente. Para voltar aos modelos da Anthropic, desfaça a configuração pelo backup que o gerador criou.</p>
+  </section>
+
+  <section class="step" aria-labelledby="passo4">
+    <div class="step-head"><span class="step-num">4</span><h2 id="passo4">O pulo do gato</h2></div>
+    <div class="cards two">
+      <article class="card"><h3>Troca sozinha</h3><p class="when">Quando um provedor bate o limite, o pedido vai para o próximo da sua fila.</p></article>
+      <article class="card"><h3>Nota de passagem</h3><p class="when">Com o context handoff ligado, o modelo novo recebe um aviso de que está continuando a tarefa de outro.</p></article>
+    </div>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou? O pacote traz skills e agentes prontos."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>

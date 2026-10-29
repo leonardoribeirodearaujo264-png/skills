@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A banca do seu código: guia grátis</title>
+<meta name="description" content="Guia grátis para revisar o código antes de publicar com três comandos do Claude Code: code review, security review e simplify.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este guia é grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">guia grátis</span>
+  <h1>Monte uma banca para o seu código <span class="nowrap">antes de publicar</span></h1>
+  <p class="lead">Três jurados que já vêm no Claude Code: um caça bugs, um caça falhas de segurança e um limpa o que ficou repetido. Rode os três antes de subir qualquer coisa para produção.</p>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Antes de chamar a banca</h2></div>
+    <ul class="plain">
+      <li>Atualize o Claude Code com <code class="inline">claude update</code>. Os comandos abaixo aparecem quando você digita <code class="inline">/</code> no chat.</li>
+      <li>Abra o Claude Code na pasta do projeto, com as suas mudanças ainda não publicadas.</li>
+      <li>Se usar Git, faça um commit antes. Assim você vê exatamente o que cada jurado mudou.</li>
+    </ul>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Jurado 1: bugs</h2></div>
+    <p>Revisa o que você mudou e aponta erros de lógica, casos esquecidos e o que vai quebrar.</p>
+    <div class="code">
+      <div class="code-bar"><span>Claude Code</span><button class="copy" type="button" data-copy="cmd-code">Copiar</button></div>
+<pre id="cmd-code">/code-review</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Jurado 2: segurança</h2></div>
+    <p>Procura senha e chave escritas no código, dados expostos e entrada sem validação.</p>
+    <div class="code">
+      <div class="code-bar"><span>Claude Code</span><button class="copy" type="button" data-copy="cmd-seg">Copiar</button></div>
+<pre id="cmd-seg">/security-review</pre>
+    </div>
+    <div class="note">Se ele achar uma senha ou chave no código, não basta apagar a linha: troque a senha ou gere uma chave nova, porque a antiga pode já estar no histórico.</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo4">
+    <div class="step-head"><span class="step-num">4</span><h2 id="passo4">Jurado 3: limpeza</h2></div>
+    <p>Revisa o código alterado atrás de repetição, complicação desnecessária e desperdício, e aplica as correções.</p>
+    <div class="code">
+      <div class="code-bar"><span>Claude Code</span><button class="copy" type="button" data-copy="cmd-simp">Copiar</button></div>
+<pre id="cmd-simp">/simplify</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo5">
+    <div class="step-head"><span class="step-num">5</span><h2 id="passo5">O veredito</h2></div>
+    <p>Depois dos três, peça um resumo único:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-veredito">Copiar</button></div>
+<pre id="prompt-veredito">Junte o que a banca encontrou em code review, security review e simplify. Dê um veredito só, APROVADO ou REPROVADO para produção, liste o que falta corrigir em ordem de gravidade e corrija o que for seguro corrigir agora. Responda em português.</pre>
+    </div>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou da banca? O pacote traz mais skills prontas."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>

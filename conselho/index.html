@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conselho de 4 Claudes: prompt grátis</title>
+<meta name="description" content="Prompt grátis do conselho de 4 Claudes: um acredita, um é cético, um é investidor e um juiz dá o veredito sobre a sua ideia.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este prompt é grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">prompt grátis</span>
+  <h1>O conselho de 4 Claudes que <span class="nowrap">testa a sua ideia</span></h1>
+  <p class="lead">Quando você pergunta se a ideia é boa, o Claude tende a concordar. Aqui quatro papéis brigam por ela: um acredita, um ataca, um olha o dinheiro e um juiz decide. Você acha o erro em minutos, não em meses.</p>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Escreva a ideia num parágrafo</h2></div>
+    <p>Diga o que é, para quem é, como ganha dinheiro e o que você já tem. Quanto mais concreto, melhor o veredito.</p>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Cole o conselho no Claude Code</h2></div>
+    <p>Abra o Claude Code numa pasta só para as suas ideias e envie o texto abaixo, trocando a última linha pela sua ideia.</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-conselho">Copiar</button></div>
+<pre id="prompt-conselho">Você vai rodar um conselho de 4 Claudes sobre a minha ideia. Cada conselheiro fala separado, com o próprio título, e nenhum pode concordar só para me agradar. Responda em português.
+
+1. O que acredita: defenda a ideia no melhor cenário. Mostre quem precisa muito dela, qual dor resolve e por que alguém pagaria hoje.
+
+2. O cético: ataque cada ponto fraco. Quem não vai pagar e por quê, o concorrente que eu esqueci, o que é difícil de fazer, o que pode dar errado na lei ou na operação. Numere os pontos fracos.
+
+3. O investidor: só olhe o dinheiro. Quanto custa começar, de onde vem o primeiro real, em quanto tempo o dinheiro aparece e o que precisa ser verdade para valer a pena. Se faltar número, diga qual e não invente.
+
+4. O juiz: leia a briga inteira e dê um veredito só, entre CONSTRUIR, CORRIGIR ANTES ou DESISTIR. Explique em 3 linhas, liste o erro mais grave e diga o primeiro teste barato que eu faço esta semana para provar ou matar a ideia.
+
+No fim, salve tudo em ideias/[nome-curto-da-ideia].md: a ideia, os pontos fracos, o veredito e a data de hoje. Quando eu voltar e disser "o que mudou?", leia esse arquivo, compare com o que eu contar de novo e atualize o veredito.
+
+A minha ideia é: [ESCREVA SUA IDEIA NUM PARÁGRAFO]</pre>
+    </div>
+    <div class="note">É um prompt só, sem instalar nada. O Claude Code faz os quatro papéis na mesma conversa e guarda a ideia num arquivo da pasta.</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Volte amanhã</h2></div>
+    <p>Depois de conversar com clientes ou fazer o teste que o juiz pediu, abra a mesma pasta e envie:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-volta">Copiar</button></div>
+<pre id="prompt-volta">Conselho, o que mudou? Leia ideias/[nome-curto-da-ideia].md. O que eu descobri desde ontem: [CONTE O QUE APRENDEU]. Rode os 4 conselheiros de novo só sobre o que mudou e atualize o veredito no arquivo.</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo4">
+    <div class="step-head"><span class="step-num">4</span><h2 id="passo4">Os quatro papéis</h2></div>
+    <div class="cards">
+      <article class="card"><h3>O que acredita</h3><p class="when">Defende a ideia e mostra quem precisa muito dela.</p></article>
+      <article class="card"><h3>O cético</h3><p class="when">Ataca cada ponto fraco, quem não paga e o concorrente esquecido.</p></article>
+      <article class="card"><h3>O investidor</h3><p class="when">Quer saber se o dinheiro aparece e em quanto tempo.</p></article>
+      <article class="card"><h3>O juiz</h3><p class="when">Dá um veredito só: construir, corrigir antes ou desistir.</p></article>
+    </div>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou do conselho? O pacote traz mais agentes prontos."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>
