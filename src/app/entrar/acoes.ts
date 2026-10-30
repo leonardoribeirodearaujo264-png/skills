@@ -30,7 +30,11 @@ export async function enviarCodigo(_anterior: EstadoEntrar, form: FormData): Pro
       };
     }
     if (resultado === "aguarde") {
-      return { etapa: "email", erro: "Já mandamos um código há pouco. Confira o e-mail ou espere um minuto.", email: r.data };
+      return {
+        etapa: "email",
+        erro: "Muitas tentativas seguidas. Confira o código que já chegou no e-mail ou tente de novo em alguns minutos.",
+        email: r.data,
+      };
     }
     return { etapa: "codigo", erro: null, email: r.data };
   } catch (e) {

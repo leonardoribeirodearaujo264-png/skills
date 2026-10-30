@@ -4,7 +4,7 @@ import { criarClienteMercadoPago } from "../mercadopago/api";
 import { clientePublico, clienteServico } from "../supabase/clientes";
 import { montarPedido, PedidoInvalido, type Catalogo, type ItensDoPedido, type MotivoRecusa } from "./dominio";
 import { meusProdutos } from "./membros";
-import { acessosAtivos, carregarCatalogo, contaPorEmail, criarOuReusarPedido, salvarPreferencia } from "./repositorio";
+import { carregarCatalogo, criarOuReusarPedido, salvarPreferencia } from "./repositorio";
 
 // A compra não exige login: o comprador informa o e-mail no checkout e a conta é criada na aprovação.
 // Quem está logado compra com o e-mail da sessão. O preço de cliente exige sessão (prova do e-mail).
@@ -16,24 +16,21 @@ export type Previa = {
   valorCentavos: number;
 };
 
-async function produtosJaComprados(usuario: Usuario | null, email: string | null): Promise<Set<string>> {
-  if (usuario) return new Set((await meusProdutos(usuario)).map((p) => p.slug));
-  if (!email) return new Set();
-  const db = clienteServico();
-  const conta = await contaPorEmail(db, email);
-  return conta ? acessosAtivos(db, conta) : new Set();
+// O que a pessoa já tem só é conferido com sessão. Para visitante, consultar pelo e-mail digitado
+// revelaria o que outra pessoa comprou; a liberação já não duplica acesso de quem compra de novo.
+async function produtosJaComprados(usuario: Usuario | null): Promise<Set<string>> {
+  return usuario ? new Set((await meusProdutos(usuario)).map((p) => p.slug)) : new Set();
 }
 
 async function calcular(
   usuario: Usuario | null,
-  email: string | null,
   oferta: string,
   produtos: string[],
 ): Promise<{ catalogo: Catalogo; itens: ItensDoPedido }> {
   const catalogo = await carregarCatalogo(clientePublico());
   const ofertaInfo = catalogo.ofertas.find((o) => o.codigo === oferta);
   if (ofertaInfo?.exigeCliente && !usuario) throw new PedidoInvalido("so_clientes");
-  const possui = await produtosJaComprados(usuario, email);
+  const possui = await produtosJaComprados(usuario);
   return { catalogo, itens: montarPedido(catalogo, oferta, produtos, possui) };
 }
 
@@ -44,7 +41,7 @@ export async function previaCompra(
   produtos: string[],
 ): Promise<Previa | { motivo: MotivoRecusa | "falha" }> {
   try {
-    const { catalogo, itens } = await calcular(usuario, usuario?.email ?? null, oferta, produtos);
+    const { catalogo, itens } = await calcular(usuario, oferta, produtos);
     return {
       ofertaTitulo: catalogo.ofertas.find((o) => o.codigo === oferta)?.titulo ?? "Pacote",
       itens: itens.itens.map((s) => ({ slug: s, titulo: catalogo.produtos.find((p) => p.slug === s)?.titulo ?? s })),
@@ -65,7 +62,7 @@ export async function iniciarCompra(
 ): Promise<ResultadoCheckout> {
   try {
     const email = (comprador.usuario?.email ?? comprador.email).trim().toLowerCase();
-    const { catalogo, itens } = await calcular(comprador.usuario, email, oferta, produtos);
+    const { catalogo, itens } = await calcular(comprador.usuario, oferta, produtos);
     const db = clienteServico();
     const pedido = await criarOuReusarPedido(db, { email, userId: comprador.usuario?.id ?? null }, oferta, itens);
 

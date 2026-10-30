@@ -50,6 +50,7 @@ const linhaPedido = z.object({
   id: z.uuid(),
   user_id: z.uuid().nullable(),
   comprador_email: z.string(),
+  pagamentos_estornados: z.array(z.string()),
   status: z.enum(["pendente", "pago", "recusado", "cancelado", "reembolsado"]),
   valor_centavos: z.number().int(),
   mp_payment_id: z.string().nullable(),
@@ -225,7 +226,7 @@ export function repoPagamento(db: SupabaseClient): RepoPagamento {
     async pedidoPorId(id): Promise<PedidoSalvo | null> {
       const { data, error } = await db
         .from("loja_pedidos")
-        .select("id, user_id, comprador_email, status, valor_centavos, mp_payment_id")
+        .select("id, user_id, comprador_email, status, valor_centavos, mp_payment_id, pagamentos_estornados")
         .eq("id", id)
         .maybeSingle();
       if (error) falhar("ler pedido", error);
@@ -238,12 +239,22 @@ export function repoPagamento(db: SupabaseClient): RepoPagamento {
         status: r.status,
         valorCentavos: r.valor_centavos,
         mpPaymentId: r.mp_payment_id,
+        estornados: r.pagamentos_estornados,
       };
     },
     // Encontra a conta do e-mail da compra ou cria uma (confirmada, sem senha) e liga ao pedido.
     // O e-mail é único no Auth: repetição ou corrida cai na conta que já existe, nunca cria outra.
     async garantirConta(pedidoId, email) {
       let userId = await contaPorEmail(db, email);
+      // Conta com e-mail não confirmado pode ter sido criada por outra pessoa antes da compra, com senha
+      // dela. Essa conta não recebe a compra: é apagada e recriada já confirmada para o dono do e-mail.
+      if (userId) {
+        const atual = await db.auth.admin.getUserById(userId);
+        if (atual.data.user && !atual.data.user.email_confirmed_at) {
+          await db.auth.admin.deleteUser(userId);
+          userId = null;
+        }
+      }
       if (!userId) {
         const criada = await db.auth.admin.createUser({ email, email_confirm: true });
         userId = criada.data.user?.id ?? (await contaPorEmail(db, email));
@@ -283,7 +294,7 @@ export type PedidoRetorno = { status: string; valorCentavos: number; email: stri
 // Situação do pedido para a página de retorno do pagamento. O id é um UUID que só o comprador recebe
 // do Mercado Pago; a página mostra o e-mail mascarado.
 export async function pedidoParaRetorno(db: SupabaseClient, id: string): Promise<PedidoRetorno | null> {
-  if (!/^[0-9a-f-]{36}$/i.test(id)) return null;
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) return null;
   const { data, error } = await db
     .from("loja_pedidos")
     .select("status, valor_centavos, comprador_email")

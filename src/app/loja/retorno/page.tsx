@@ -4,7 +4,7 @@ import { Alerta } from "@/components/Alerta";
 import { Cabecalho, Rodape } from "@/components/Cabecalho";
 import { Icone } from "@/components/Icone";
 import { formatarReais } from "@/lib/loja/dominio";
-import { processarPagamento } from "@/lib/loja/pagamento";
+import { aplicarPagamento } from "@/lib/loja/pagamento";
 import { pedidoParaRetorno } from "@/lib/loja/repositorio";
 import { depsPagamento } from "@/lib/loja/servicos";
 import { clienteServico } from "@/lib/supabase/clientes";
@@ -21,12 +21,20 @@ type Busca = Promise<{ payment_id?: string; external_reference?: string; status?
 export default async function Retorno({ searchParams }: { searchParams: Busca }) {
   const b = await searchParams;
   const ref = b.external_reference ?? "";
-  if (ref && b.payment_id && /^\d+$/.test(b.payment_id)) {
-    await processarPagamento(depsPagamento(), b.payment_id).catch((e: unknown) =>
-      console.error("retorno", e instanceof Error ? e.message : "erro desconhecido"),
-    );
+  let pedido = ref ? await pedidoParaRetorno(clienteServico(), ref) : null;
+  // Só processa enquanto o pedido está em aberto, e só o pagamento que pertence a este pedido
+  if (pedido && (pedido.status === "pendente" || pedido.status === "recusado") && /^\d+$/.test(b.payment_id ?? "")) {
+    try {
+      const deps = depsPagamento();
+      const pagamento = await deps.mp.buscarPagamento(b.payment_id as string);
+      if (pagamento?.external_reference === ref) {
+        await aplicarPagamento(deps, pagamento);
+        pedido = await pedidoParaRetorno(clienteServico(), ref);
+      }
+    } catch (e) {
+      console.error("retorno", e instanceof Error ? e.message : "erro desconhecido");
+    }
   }
-  const pedido = ref ? await pedidoParaRetorno(clienteServico(), ref) : null;
 
   return (
     <>

@@ -11,6 +11,8 @@ export type PedidoSalvo = {
   status: "pendente" | "pago" | "recusado" | "cancelado" | "reembolsado";
   valorCentavos: number;
   mpPaymentId: string | null;
+  // pagamentos deste pedido já estornados (nunca liberam)
+  estornados: string[];
 };
 
 export type RepoPagamento = {
@@ -80,9 +82,14 @@ export async function aplicarPagamento(
   if (pagamento.currency_id !== "BRL") return { resultado: "moeda_divergente", pedidoId };
 
   if (pagamento.status === "approved") {
-    // Compra feita sem login: a conta do e-mail da compra é criada ou encontrada só agora, na aprovação
-    if (!pedido.userId) await repo.garantirConta(pedido.id, pedido.email);
     const valor = Math.round(pagamento.transaction_amount * 100);
+    // Compra feita sem login: a conta do e-mail é criada ou encontrada só quando o pagamento vai liberar
+    // de fato (valor certo, pedido em aberto, pagamento não estornado). A função SQL confere tudo de novo.
+    const vaiLiberar =
+      valor === pedido.valorCentavos &&
+      (pedido.status === "pendente" || pedido.status === "recusado") &&
+      !pedido.estornados.includes(pagamento.id);
+    if (!pedido.userId && vaiLiberar) await repo.garantirConta(pedido.id, pedido.email);
     const resultado = (await repo.liberar(pedido.id, pagamento.id, valor)) as ResultadoPagamento;
     // ja_pago também tenta: o envio anterior pode ter falhado. A trava no banco garante um único e-mail.
     if ((resultado === "liberado" || resultado === "ja_pago") && deps.avisarAcesso) await deps.avisarAcesso(pedido.id);

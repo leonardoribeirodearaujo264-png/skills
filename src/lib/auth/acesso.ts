@@ -1,5 +1,6 @@
 import { env } from "../env";
 import { enviarEmail } from "../email/resend";
+import { ipDaRequisicao, permitir } from "../loja/limites";
 import { contaPorEmail } from "../loja/repositorio";
 import { clienteServico } from "../supabase/clientes";
 import { destinoSeguro } from "./cookies";
@@ -44,14 +45,14 @@ export async function enviarAcesso(
   const e = env();
   const email = emailBruto.trim().toLowerCase();
   const db = clienteServico();
-  if (!(await contaPorEmail(db, email))) return "sem_conta";
 
-  // Limite por e-mail para o login não virar envio em massa para a caixa de alguém
+  // Login: o limite vem antes de responder se há compra, para ninguém testar uma lista de e-mails.
+  // Conta por IP e por e-mail+IP: um terceiro em outro IP não consegue travar o login do cliente.
   if (motivo === "login") {
-    const { data, error } = await db.rpc("loja_registrar_envio_acesso", { p_email: email });
-    if (error) throw new Error(`limite de envio: ${error.code ?? "erro"}`);
-    if (data !== true) return "aguarde";
+    const ip = await ipDaRequisicao();
+    if (!(await permitir(`login-ip:${ip}`, 20)) || !(await permitir(`login:${email}:${ip}`, 6, 60))) return "aguarde";
   }
+  if (!(await contaPorEmail(db, email))) return "sem_conta";
 
   const proximo = destinoSeguro(opcoes.proximo);
   const { data, error } = await db.auth.admin.generateLink({ type: "magiclink", email });

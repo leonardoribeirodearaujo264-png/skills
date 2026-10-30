@@ -32,7 +32,8 @@ create index if not exists loja_pedidos_email on loja_pedidos (comprador_email);
 alter table loja_ofertas add column if not exists desconto_percentual int
   check (desconto_percentual is null or desconto_percentual between 1 and 90);
 -- Na oferta de cliente o preço vem do produto com o desconto; preco_centavos não é usado nela
-update loja_ofertas set desconto_percentual = 20, ativo = true where codigo = 'cliente';
+update loja_ofertas set desconto_percentual = 20, ativo = true
+ where codigo = 'cliente' and desconto_percentual is null;
 
 -- Funções do servidor (só service_role executa) -----------------------------------------
 
@@ -154,36 +155,40 @@ begin
 end;
 $$;
 
--- Limite de envio do código de login: 1 por minuto e 6 por hora por e-mail
-create table if not exists loja_envios_acesso (
-  id         bigint generated always as identity primary key,
-  email      text not null,
-  enviado_em timestamptz not null default now()
+-- Limites de uso por chave (e-mail ou IP): login, código e checkout de visitante -------------
+drop function if exists loja_registrar_envio_acesso(text);
+drop table if exists loja_envios_acesso;
+create table if not exists loja_limites (
+  id    bigint generated always as identity primary key,
+  chave text not null check (length(chave) <= 300),
+  em    timestamptz not null default now()
 );
-create index if not exists loja_envios_acesso_email on loja_envios_acesso (email, enviado_em desc);
-alter table loja_envios_acesso enable row level security;
+create index if not exists loja_limites_chave on loja_limites (chave, em desc);
+alter table loja_limites enable row level security;
 
-create or replace function loja_registrar_envio_acesso(p_email text)
+-- Registra o uso e diz se ainda está dentro do limite: no máximo p_por_hora na última hora e
+-- intervalo mínimo de p_intervalo_s segundos entre dois usos da mesma chave
+create or replace function loja_permitir(p_chave text, p_por_hora int, p_intervalo_s int)
 returns boolean
 language plpgsql
 set search_path = ''
 as $$
-declare
-  v_email text := lower(p_email);
 begin
-  perform pg_advisory_xact_lock(hashtextextended('envio:' || v_email, 0));
-  if exists (select 1 from public.loja_envios_acesso where email = v_email and enviado_em > now() - interval '1 minute')
-     or (select count(*) from public.loja_envios_acesso where email = v_email and enviado_em > now() - interval '1 hour') >= 6 then
+  perform pg_advisory_xact_lock(hashtextextended('limite:' || p_chave, 0));
+  if (p_intervalo_s > 0 and exists (
+        select 1 from public.loja_limites
+         where chave = p_chave and em > now() - make_interval(secs => p_intervalo_s)))
+     or (select count(*) from public.loja_limites where chave = p_chave and em > now() - interval '1 hour') >= p_por_hora then
     return false;
   end if;
-  insert into public.loja_envios_acesso (email) values (v_email);
-  delete from public.loja_envios_acesso where enviado_em < now() - interval '2 days';
+  insert into public.loja_limites (chave) values (p_chave);
+  delete from public.loja_limites where em < now() - interval '2 days';
   return true;
 end;
 $$;
 
-revoke all on function loja_registrar_envio_acesso(text) from public, anon, authenticated;
-grant execute on function loja_registrar_envio_acesso(text) to service_role;
+revoke all on function loja_permitir(text, int, int) from public, anon, authenticated;
+grant execute on function loja_permitir(text, int, int) to service_role;
 
 revoke all on function loja_usuario_por_email(text) from public, anon, authenticated;
 revoke all on function loja_vincular_comprador(uuid, uuid) from public, anon, authenticated;

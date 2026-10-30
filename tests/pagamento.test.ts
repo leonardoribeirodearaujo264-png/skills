@@ -106,6 +106,7 @@ const novoPedido = (): PedidoSalvo => ({
   status: "pendente",
   valorCentavos: 6700,
   mpPaymentId: null,
+  estornados: [],
 });
 
 describe("liberação pelo pagamento", () => {
@@ -249,6 +250,13 @@ describe("compra sem login", () => {
     expect(m.contas.size).toBe(1);
     expect(m.liberacoes()).toBe(1);
     expect([...m.acessos.keys()]).toEqual(["a", "b"]);
+  });
+
+  it("aprovação com valor errado não cria conta", async () => {
+    const m = repoEmMemoria(pedidoSemConta(), ["a"]);
+    const r = await processarPagamento({ mp: mpCom({ "9": pagamento({ id: "9", transaction_amount: 1 }) }), repo: m.repo }, "9");
+    expect(r.resultado).toBe("valor_divergente");
+    expect(m.contas.size).toBe(0);
   });
 
   it("pagamento pendente ou recusado não cria conta", async () => {
