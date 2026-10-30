@@ -1,4 +1,5 @@
 import { env } from "../env";
+import { escaparHtml } from "../email/html";
 import { enviarEmail } from "../email/resend";
 import { ipDaRequisicao, permitir } from "../loja/limites";
 import { contaPorEmail } from "../loja/repositorio";
@@ -12,9 +13,6 @@ import { destinoSeguro } from "./cookies";
 export type Motivo = "login" | "compra";
 export type ResultadoAcesso = "enviado" | "sem_conta" | "aguarde";
 
-function escapar(t: string): string {
-  return t.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] ?? c);
-}
 
 function montar(motivo: Motivo, codigo: string, link: string): { assunto: string; html: string; texto: string } {
   const titulo = motivo === "compra" ? "Seu acesso está liberado" : "Seu código de acesso";
@@ -27,11 +25,11 @@ function montar(motivo: Motivo, codigo: string, link: string): { assunto: string
 <div style="max-width:480px;margin:0 auto;padding:32px 20px">
 <p style="font-size:13px;color:#565B66;margin:0 0 16px">Leonardo Araujo</p>
 <div style="background:#FFFFFF;border:1px solid #E3E1DA;border-radius:16px;padding:28px">
-<h1 style="font-size:22px;margin:0 0 10px">${escapar(titulo)}</h1>
-<p style="font-size:15px;line-height:1.5;color:#565B66;margin:0 0 20px">${escapar(intro)}</p>
+<h1 style="font-size:22px;margin:0 0 10px">${escaparHtml(titulo)}</h1>
+<p style="font-size:15px;line-height:1.5;color:#565B66;margin:0 0 20px">${escaparHtml(intro)}</p>
 <p style="font-size:13px;color:#565B66;margin:0 0 6px">Código</p>
-<p style="font-size:30px;letter-spacing:6px;font-weight:bold;margin:0 0 24px">${escapar(codigo)}</p>
-<a href="${escapar(link)}" style="display:inline-block;background:#C03F00;color:#FFFFFF;text-decoration:none;font-weight:bold;padding:14px 22px;border-radius:12px">Entrar na área de membros</a>
+<p style="font-size:30px;letter-spacing:6px;font-weight:bold;margin:0 0 24px">${escaparHtml(codigo)}</p>
+<a href="${escaparHtml(link)}" style="display:inline-block;background:#C03F00;color:#FFFFFF;text-decoration:none;font-weight:bold;padding:14px 22px;border-radius:12px">Entrar na área de membros</a>
 <p style="font-size:12px;color:#565B66;margin:20px 0 0">O código vale por pouco tempo e só uma vez. Se não foi você, ignore este e-mail.</p>
 </div></div></body></html>`;
   return { assunto: motivo === "compra" ? "Seu acesso aos pacotes" : `Seu código de acesso: ${codigo}`, html, texto };

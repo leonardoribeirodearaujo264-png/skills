@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="t">
+<title id="t">Equipe Completa de Agentes</title>
+<defs>
+<style>@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=JetBrains+Mono:wght@500&amp;display=swap');
+.tt{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;letter-spacing:-0.03em}
+.mo{font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:500}
+</style>
+<pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="2" fill="rgba(255,255,255,.06)"/></pattern>
+</defs>
+<rect width="1200" height="800" fill="#C03F00"/>
+<rect x="620" y="0" width="580" height="800" fill="url(#g)"/>
+<g transform="translate(80 72)">
+<rect width="384" height="52" rx="26" fill="rgba(255,255,255,.10)"/>
+<circle cx="28" cy="26" r="7" fill="#FFFFFF"/>
+<text x="48" y="35" class="mo" font-size="26" fill="#FFFFFF" letter-spacing="0.5">25 agentes, 6 times</text>
+</g>
+<text class="tt" font-size="104" fill="#FFFFFF"><tspan x="80" y="496">Equipe</tspan><tspan x="80" y="604">Completa de</tspan><tspan x="80" y="712">Agentes</tspan></text>
+<g transform="translate(680 90)">
+<polygon points="230,114 408,217 408,423 230,526 52,423 52,217" fill="none" stroke="#FFFFFF" stroke-opacity=".35" stroke-width="3" stroke-dasharray="6 10"/>
+<line x1="230" y1="320" x2="230" y2="114" stroke="#FFFFFF" stroke-opacity=".7" stroke-width="4"/><line x1="230" y1="320" x2="408" y2="217" stroke="#FFFFFF" stroke-opacity=".7" stroke-width="4"/><line x1="230" y1="320" x2="408" y2="423" stroke="#FFFFFF" stroke-opacity=".7" stroke-width="4"/><line x1="230" y1="320" x2="230" y2="526" stroke="#FFFFFF" stroke-opacity=".7" stroke-width="4"/><line x1="230" y1="320" x2="52" y2="423" stroke="#FFFFFF" stroke-opacity=".7" stroke-width="4"/><line x1="230" y1="320" x2="52" y2="217" stroke="#FFFFFF" stroke-opacity=".7" stroke-width="4"/>
+<g transform="translate(230 114)"><circle r="56" fill="#F6F5F1"/><path d="M-20 -8 L8 -20 L8 20 L-20 8 Z" fill="#1F1B18"/><rect x="-27" y="-8" width="8" height="16" rx="2" fill="#1F1B18"/><path d="M15 -11 Q24 0 15 11" fill="none" stroke="#C03F00" stroke-width="5" stroke-linecap="round"/></g><g transform="translate(408 217)"><circle r="56" fill="#F6F5F1"/><rect x="-21" y="6" width="10" height="14" rx="3" fill="#1F1B18"/><rect x="-5" y="-6" width="10" height="26" rx="3" fill="#1F1B18"/><rect x="11" y="-20" width="10" height="40" rx="3" fill="#C03F00"/></g><g transform="translate(408 423)"><circle r="56" fill="#F6F5F1"/><circle r="21" fill="none" stroke="#1F1B18" stroke-width="5"/><text y="7" text-anchor="middle" class="tt" font-size="19" fill="#C03F00" letter-spacing="0">R$</text></g><g transform="translate(230 526)"><circle r="56" fill="#F6F5F1"/><rect x="-23" y="-19" width="46" height="32" rx="10" fill="#1F1B18"/><path d="M-11 12 L-17 23 L1 12 Z" fill="#1F1B18"/><circle cx="-10" cy="-3" r="3.5" fill="#F6F5F1"/><circle cx="0" cy="-3" r="3.5" fill="#F6F5F1"/><circle cx="10" cy="-3" r="3.5" fill="#F6F5F1"/></g><g transform="translate(52 423)"><circle r="56" fill="#F6F5F1"/><g fill="#1F1B18"><rect x="-4.5" y="-24" width="9" height="12" rx="2" transform="rotate(0)"/><rect x="-4.5" y="-24" width="9" height="12" rx="2" transform="rotate(45)"/><rect x="-4.5" y="-24" width="9" height="12" rx="2" transform="rotate(90)"/><rect x="-4.5" y="-24" width="9" height="12" rx="2" transform="rotate(135)"/><rect x="-4.5" y="-24" width="9" height="12" rx="2" transform="rotate(180)"/><rect x="-4.5" y="-24" width="9" height="12" rx="2" transform="rotate(225)"/><rect x="-4.5" y="-24" width="9" height="12" rx="2" transform="rotate(270)"/><rect x="-4.5" y="-24" width="9" height="12" rx="2" transform="rotate(315)"/></g><circle r="15" fill="#1F1B18"/><circle r="6" fill="#C03F00"/></g><g transform="translate(52 217)"><circle r="56" fill="#F6F5F1"/><rect x="-17" y="-22" width="34" height="44" rx="6" fill="#1F1B18"/><path d="M-5 -9 L9 0 L-5 9 Z" fill="#F6F5F1"/></g>
+<g transform="translate(230 320)">
+<circle r="92" fill="#FFFFFF" fill-opacity=".14"/>
+<circle r="74" fill="#1F1B18"/>
+<path d="M-30 14 L-30 -16 L-15 -1 L0 -24 L15 -1 L30 -16 L30 14 Z" fill="#FF8A3D"/>
+<rect x="-30" y="20" width="60" height="9" rx="4.5" fill="#FF8A3D"/>
+</g></g>
+</svg>

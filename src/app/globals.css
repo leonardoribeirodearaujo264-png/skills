@@ -401,3 +401,15 @@ main.narrow { max-width: 760px; padding: 48px 16px 96px; }
 .checkout-aguardando { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink-soft); }
 .checkout-cartao { min-height: 120px; }
 .checkout-resultado { justify-items: start; }
+.checkout-lembrete {
+  display: flex; align-items: center; gap: 8px; margin: 0; font-size: 13px; color: var(--ink-soft);
+}
+.checkout-lembrete .num { font-family: var(--font-mono); color: var(--ink); }
+.checkout-lembrete.zerado {
+  justify-content: space-between; flex-wrap: wrap; padding: 10px 12px; border-radius: 12px; background: var(--accent-soft); color: var(--ink);
+}
+.checkout-validade {
+  display: inline-flex; align-items: center; gap: 8px; justify-self: start; margin: 0; padding: 6px 12px;
+  border-radius: 999px; background: var(--accent-soft); color: var(--ink); font-size: 14px;
+}
+.checkout-validade strong { font-family: var(--font-mono); }

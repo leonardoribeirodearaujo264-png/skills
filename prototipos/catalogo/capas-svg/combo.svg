@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="t">
+<title id="t">Pacote completo</title>
+<defs>
+<style>@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=JetBrains+Mono:wght@500&amp;display=swap');
+.tt{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;letter-spacing:-0.03em}
+.mo{font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:500}
+</style>
+<pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="2" fill="rgba(20,22,26,.07)"/></pattern>
+</defs>
+<rect width="1200" height="800" fill="#F6F5F1"/>
+<rect x="620" y="0" width="580" height="800" fill="url(#g)"/>
+<g transform="translate(80 72)">
+<rect width="384" height="52" rx="26" fill="rgba(20,22,26,.06)"/>
+<circle cx="28" cy="26" r="7" fill="#C03F00"/>
+<text x="48" y="35" class="mo" font-size="26" fill="#14161A" letter-spacing="0.5">Os 5 pacotes juntos</text>
+</g>
+<text class="tt" font-size="132" fill="#14161A"><tspan x="80" y="575">Pacote</tspan><tspan x="80" y="712">completo</tspan></text>
+<g transform="translate(680 90)"><g transform="translate(30 0) rotate(-4 190 110)">
+<rect x="6" y="14" width="380" height="210" rx="22" fill="#14161A" opacity=".10"/>
+<rect width="380" height="210" rx="22" fill="#1F1B18"/>
+<rect x="24" y="22" width="68" height="68" rx="18" fill="#FFFFFF" fill-opacity=".10"/>
+<g transform="translate(58 56)"><path d="M-22 8 A22 22 0 0 1 22 8" fill="none" stroke="#FF8A3D" stroke-width="8" stroke-linecap="round"/><line x1="0" y1="8" x2="12" y2="-6" stroke="#F5F0EA" stroke-width="5" stroke-linecap="round"/></g>
+<rect x="112" y="36" width="190" height="16" rx="8" fill="#F5F0EA"/>
+<rect x="112" y="62" width="120" height="12" rx="6" fill="#F5F0EA" opacity=".45"/>
+</g><g transform="translate(70 104) rotate(3 190 110)">
+<rect x="6" y="14" width="380" height="210" rx="22" fill="#14161A" opacity=".10"/>
+<rect width="380" height="210" rx="22" fill="#1F1B18"/>
+<rect x="24" y="22" width="68" height="68" rx="18" fill="#FFFFFF" fill-opacity=".10"/>
+<g transform="translate(58 56)"><rect x="-24" y="-14" width="20" height="28" rx="5" fill="#FF8A3D"/><rect x="0" y="-14" width="24" height="28" rx="5" fill="#F5F0EA"/></g>
+<rect x="112" y="36" width="160" height="16" rx="8" fill="#F5F0EA"/>
+<rect x="112" y="62" width="150" height="12" rx="6" fill="#F5F0EA" opacity=".45"/>
+</g><g transform="translate(20 208) rotate(-3 190 110)">
+<rect x="6" y="14" width="380" height="210" rx="22" fill="#14161A" opacity=".10"/>
+<rect width="380" height="210" rx="22" fill="#1F1B18"/>
+<rect x="24" y="22" width="68" height="68" rx="18" fill="#FFFFFF" fill-opacity=".10"/>
+<g transform="translate(58 56)"><text y="13" text-anchor="middle" class="tt" font-size="40" fill="#F5F0EA" letter-spacing="0">Aa</text></g>
+<rect x="112" y="36" width="140" height="16" rx="8" fill="#F5F0EA"/>
+<rect x="112" y="62" width="110" height="12" rx="6" fill="#F5F0EA" opacity=".45"/>
+</g><g transform="translate(64 312) rotate(2 190 110)">
+<rect x="6" y="14" width="380" height="210" rx="22" fill="#14161A" opacity=".10"/>
+<rect width="380" height="210" rx="22" fill="#1F1B18"/>
+<rect x="24" y="22" width="68" height="68" rx="18" fill="#FFFFFF" fill-opacity=".10"/>
+<g transform="translate(58 56)"><path d="M-20 -12 l14 12 l-14 12" fill="none" stroke="#FF8A3D" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><rect x="2" y="8" width="20" height="7" rx="3.5" fill="#F5F0EA"/></g>
+<rect x="112" y="36" width="200" height="16" rx="8" fill="#F5F0EA"/>
+<rect x="112" y="62" width="90" height="12" rx="6" fill="#F5F0EA" opacity=".45"/>
+</g><g transform="translate(36 400) rotate(0 190 110)">
+<rect x="6" y="14" width="380" height="210" rx="22" fill="#14161A" opacity=".10"/>
+<rect width="380" height="210" rx="22" fill="#C03F00"/>
+<rect x="24" y="22" width="68" height="68" rx="18" fill="#FFFFFF" fill-opacity=".10"/>
+<g transform="translate(58 56)"><circle cx="0" cy="-22" r="6" fill="#F6F5F1"/><circle cx="19" cy="-11" r="6" fill="#F6F5F1"/><circle cx="19" cy="11" r="6" fill="#F6F5F1"/><circle cx="0" cy="22" r="6" fill="#F6F5F1"/><circle cx="-19" cy="11" r="6" fill="#F6F5F1"/><circle cx="-19" cy="-11" r="6" fill="#F6F5F1"/><circle r="9" fill="#1F1B18"/></g>
+<rect x="112" y="36" width="176" height="16" rx="8" fill="#FFFFFF"/>
+<rect x="112" y="62" width="130" height="12" rx="6" fill="#FFFFFF" opacity=".45"/>
+</g></g>
+</svg>

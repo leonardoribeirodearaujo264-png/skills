@@ -6,23 +6,25 @@ import {
   gerarPix,
   MENSAGEM_FALHA_CHECKOUT,
   pagarComCartao,
+  renovarPix,
   situacaoDoPedido,
   type Falha,
+  type PixGerado,
   type Situacao,
 } from "@/lib/loja/checkout";
+import { validarComprador, type ErrosComprador } from "@/lib/loja/comprador";
 import { MENSAGEM_RECUSA } from "@/lib/loja/dominio";
 import { ipDaRequisicao, permitir } from "@/lib/loja/limites";
 
-// Ações do checkout no site. O cliente manda oferta, escolha, e-mail e (no cartão) o token do Mercado Pago;
-// preço e regra saem do servidor.
+// Ações do checkout no site. O cliente manda oferta, escolha, nome, e-mail, telefone e (no cartão) o token do
+// Mercado Pago. Os dados são validados de novo aqui; preço e pacote saem sempre do servidor.
 
-const pedidoEntrada = z.object({
+const escolhaEntrada = z.object({
   oferta: z.string().regex(/^[a-z0-9-]{1,40}$/),
   produtos: z.array(z.string().regex(/^[a-z0-9-]{1,60}$/)).max(20),
-  email: z.email().max(254),
 });
 
-type Entrada = { oferta: string; produtos: string; email: string };
+export type Entrada = { oferta: string; produtos: string; nome: string; email: string; telefone: string };
 
 function mensagem(f: Falha): string {
   return f.motivo === "falha" ? MENSAGEM_FALHA_CHECKOUT : MENSAGEM_RECUSA[f.motivo];
@@ -30,35 +32,51 @@ function mensagem(f: Falha): string {
 
 async function validar(e: Entrada) {
   const usuario = await usuarioAtual();
-  const dados = pedidoEntrada.safeParse({
-    oferta: e.oferta,
-    produtos: e.produtos.split(",").filter(Boolean),
-    email: usuario?.email ?? e.email.trim().toLowerCase(),
-  });
-  if (!dados.success) {
-    const emailRuim = dados.error.issues.some((i) => i.path[0] === "email");
-    return { erro: emailRuim ? "Digite um e-mail válido. É nele que o acesso vai chegar." : "Escolha uma oferta válida." };
-  }
+  const escolha = escolhaEntrada.safeParse({ oferta: e.oferta, produtos: e.produtos.split(",").filter(Boolean) });
+  if (!escolha.success) return { erro: "Escolha uma oferta válida." };
+  // Com sessão, o e-mail é o da conta; nome e telefone sempre vêm do formulário
+  const comprador = validarComprador({ nome: e.nome, email: usuario?.email ?? e.email, telefone: e.telefone });
+  if (!comprador.ok) return { erro: "Confira os campos destacados.", campos: comprador.erros };
   // Visitante cria pedido e cobrança no Mercado Pago a cada tentativa: limite por IP contra abuso
   if (!usuario && !(await permitir(`checkout-ip:${await ipDaRequisicao()}`, 20))) {
     return { erro: "Muitas tentativas seguidas. Espere alguns minutos e tente de novo." };
   }
-  return { usuario, dados: dados.data };
+  return { usuario, escolha: escolha.data, comprador: comprador.dados };
 }
 
+export type PixNaTela = { pedidoId: string; copiaECola: string; qrBase64: string; expiraEm: string | null; agora: string };
+
 export type RespostaPix =
-  | { ok: true; pedidoId: string; copiaECola: string; qrBase64: string; expiraEm: string | null }
+  | ({ ok: true } & PixNaTela)
   | { ok: true; situacao: "aprovado" | "em_analise"; pedidoId: string }
-  | { ok: false; erro: string };
+  | { ok: false; erro: string; campos?: ErrosComprador };
+
+function paraTela(r: PixGerado): PixNaTela {
+  return { pedidoId: r.pedidoId, copiaECola: r.pix.copiaECola, qrBase64: r.pix.qrBase64, expiraEm: r.pix.expiraEm, agora: r.agora };
+}
 
 export async function acaoGerarPix(e: Entrada): Promise<RespostaPix> {
   const v = await validar(e);
-  if ("erro" in v) return { ok: false, erro: v.erro ?? MENSAGEM_FALHA_CHECKOUT };
-  const r = await gerarPix({ usuario: v.usuario, email: v.dados.email }, v.dados.oferta, v.dados.produtos);
+  if ("erro" in v) return { ok: false, erro: v.erro ?? MENSAGEM_FALHA_CHECKOUT, campos: "campos" in v ? v.campos : undefined };
+  const r = await gerarPix({ usuario: v.usuario, ...v.comprador }, v.escolha.oferta, v.escolha.produtos);
   if ("motivo" in r) return { ok: false, erro: mensagem(r) };
   // Pedido já pago ou com cartão em análise: não gera outra cobrança
   if ("situacao" in r) return { ok: true, situacao: r.situacao, pedidoId: r.pedidoId };
-  return { ok: true, pedidoId: r.pedidoId, copiaECola: r.pix.copiaECola, qrBase64: r.pix.qrBase64, expiraEm: r.pix.expiraEm };
+  return { ok: true, ...paraTela(r) };
+}
+
+const uuidEntrada = z.uuid();
+
+// Pix vencido: novo código para o mesmo pedido (mesmo valor gravado)
+export async function acaoRenovarPix(pedidoId: string): Promise<RespostaPix> {
+  if (!uuidEntrada.safeParse(pedidoId).success) return { ok: false, erro: MENSAGEM_FALHA_CHECKOUT };
+  if (!(await permitir(`renovar-pix:${await ipDaRequisicao()}`, 20))) {
+    return { ok: false, erro: "Muitas tentativas seguidas. Espere alguns minutos e tente de novo." };
+  }
+  const r = await renovarPix(pedidoId);
+  if ("motivo" in r) return { ok: false, erro: mensagem(r) };
+  if ("situacao" in r) return { ok: true, situacao: r.situacao, pedidoId: r.pedidoId };
+  return { ok: true, ...paraTela(r) };
 }
 
 const cartaoEntrada = z.object({
@@ -97,7 +115,7 @@ export async function acaoPagarCartao(e: Entrada, dadosCartao: unknown): Promise
   const c = cartaoEntrada.safeParse(dadosCartao);
   if (!c.success) return { ok: false, erro: "Os dados do cartão não chegaram certos. Tente de novo." };
   const doc = c.data.payer?.identification;
-  const r = await pagarComCartao({ usuario: v.usuario, email: v.dados.email }, v.dados.oferta, v.dados.produtos, {
+  const r = await pagarComCartao({ usuario: v.usuario, ...v.comprador }, v.escolha.oferta, v.escolha.produtos, {
     token: c.data.token,
     parcelas: c.data.installments,
     metodo: c.data.payment_method_id,
@@ -115,10 +133,8 @@ export async function acaoPagarCartao(e: Entrada, dadosCartao: unknown): Promise
   return { ok: true, situacao: r.situacao, pedidoId: r.pedidoId };
 }
 
-const uuid = z.uuid();
-
 export async function acaoSituacao(pedidoId: string): Promise<Situacao> {
-  if (!uuid.safeParse(pedidoId).success) return "outro";
+  if (!uuidEntrada.safeParse(pedidoId).success) return "outro";
   // A tela consulta a cada 5 s; o limite por IP só barra abuso
   if (!(await permitir(`situacao-ip:${await ipDaRequisicao()}`, 2000))) return "outro";
   return situacaoDoPedido(pedidoId);

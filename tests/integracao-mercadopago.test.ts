@@ -19,7 +19,8 @@ describe.skipIf(!ativo)("Mercado Pago sandbox: pagamento no site", () => {
       descricao: "Avulso: teste de integração",
       email: "comprador-teste@example.com",
       urlNotificacao: "https://skills-sandy-seven.vercel.app/api/webhooks/mercadopago",
-      expiraEm: new Date(Date.now() + 60 * 60 * 1000),
+      expiraEm: new Date(Date.now() + 14 * 60 * 1000),
+      nome: { primeiro: "Comprador", sobrenome: "Teste" },
     };
     const pix = await mp.criarPix(dados);
     expect(pix.status).toBe("pending");
