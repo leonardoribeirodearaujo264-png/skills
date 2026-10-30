@@ -1,0 +1,67 @@
+1
+00:00:00,350 --> 00:00:04,037
+Seis times de agentes
+para a sua empresa, cada
+
+2
+00:00:04,037 --> 00:00:07,178
+um com líder, especialistas e revisor.
+
+3
+00:00:07,178 --> 00:00:10,934
+E um diretor-geral que
+escolhe o time por você.
+
+4
+00:00:11,284 --> 00:00:17,006
+Para instalar no Claude Code, abra a pasta
+do pacote e rode o instalador do Claude.
+
+5
+00:00:17,006 --> 00:00:19,836
+No Codex, rode o instalador do Codex.
+
+6
+00:00:20,186 --> 00:00:23,458
+No Claude Code, peça
+ao líder: use o agente
+
+7
+00:00:23,458 --> 00:00:26,408
+lider-marketing para a minha campanha.
+
+8
+00:00:26,408 --> 00:00:29,295
+No Codex, cite cada agente pelo nome.
+
+9
+00:00:29,645 --> 00:00:33,210
+O líder pergunta o que
+falta, divide entre os
+
+10
+00:00:33,210 --> 00:00:37,178
+especialistas e só entrega
+o que o revisor aprovou.
+
+11
+00:00:37,178 --> 00:00:40,474
+Nada é publicado ou enviado sem o seu OK.
+
+12
+00:00:40,824 --> 00:00:42,377
+Falta uma área?
+
+13
+00:00:42,377 --> 00:00:48,591
+A skill montar-time-de-agentes entrevista
+você e cria o time novo nos dois formatos.
+
+14
+00:00:48,941 --> 00:00:52,288
+Os prompts prontos estão
+na pasta prompts, um
+
+15
+00:00:52,288 --> 00:00:55,382
+para cada time, e na sua área de membros.

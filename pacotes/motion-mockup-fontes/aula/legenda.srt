@@ -1,0 +1,64 @@
+1
+00:00:00,350 --> 00:00:04,426
+Neste pacote você faz mockup,
+animação e escolha de fontes
+
+2
+00:00:04,426 --> 00:00:08,563
+pedindo ao Claude Code ou ao
+Codex, sem programa de design.
+
+3
+00:00:08,913 --> 00:00:14,102
+No Claude Code, abra a pasta
+do pacote e rode o instalador.
+
+4
+00:00:14,102 --> 00:00:17,278
+No Windows é o arquivo ponto ps1.
+
+5
+00:00:17,278 --> 00:00:19,369
+No Mac, o ponto sh.
+
+6
+00:00:19,719 --> 00:00:23,159
+No Codex é igual, com
+o instalador do Codex.
+
+7
+00:00:23,159 --> 00:00:26,467
+Ele coloca tudo nas pastas que o Codex lê.
+
+8
+00:00:26,817 --> 00:00:31,997
+Peça ao líder visual o que você
+quer entregar e passe seus arquivos.
+
+9
+00:00:31,997 --> 00:00:37,382
+Ele divide entre os especialistas e
+só entrega o que passou na revisão.
+
+10
+00:00:37,382 --> 00:00:40,108
+No Codex, cite o nome do agente.
+
+11
+00:00:40,458 --> 00:00:44,622
+Veja a skill de mockup: mando
+o print do site e recebo o
+
+12
+00:00:44,622 --> 00:00:48,200
+notebook em PNG, no
+tamanho de post e de slide.
+
+13
+00:00:48,550 --> 00:00:53,336
+Os prompts prontos estão na pasta
+prompts e na sua área de membros.
+
+14
+00:00:53,336 --> 00:00:56,463
+Troque o que está entre colchetes e cole.

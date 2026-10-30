@@ -1,0 +1,66 @@
+1
+00:00:00,350 --> 00:00:05,332
+Você não precisa programar para
+construir um site ou um sistema.
+
+2
+00:00:05,332 --> 00:00:08,999
+Precisa pedir do jeito
+certo e com segurança.
+
+3
+00:00:09,349 --> 00:00:14,632
+Rode o instalador do pacote: ponto
+ps1 no Windows, ponto sh no Mac.
+
+4
+00:00:14,632 --> 00:00:18,507
+Tem um para o Claude Code
+e outro para o Codex.
+
+5
+00:00:18,857 --> 00:00:21,622
+Copie o modelo de instrução global.
+
+6
+00:00:21,622 --> 00:00:25,866
+Ele faz o agente responder em
+português, explicar antes de
+
+7
+00:00:25,866 --> 00:00:29,596
+mudar e pedir permissão
+antes de apagar ou gastar.
+
+8
+00:00:29,946 --> 00:00:33,135
+Para começar, chame o líder do projeto.
+
+9
+00:00:33,135 --> 00:00:36,188
+Ele entrevista você, monta o plano em
+
+10
+00:00:36,188 --> 00:00:39,648
+linguagem simples e só
+segue com o seu sim.
+
+11
+00:00:39,998 --> 00:00:44,947
+A skill do pedido ao ar leva a ideia
+até a publicação: versão mínima,
+
+12
+00:00:44,947 --> 00:00:49,447
+teste como cliente e checklist
+de segurança antes de ir ao ar.
+
+13
+00:00:49,797 --> 00:00:54,309
+Os prompts prontos estão na pasta
+prompts e na área de membros.
+
+14
+00:00:54,309 --> 00:00:58,058
+Troque o que está entre
+colchetes e cole no agente.

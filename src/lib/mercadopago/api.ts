@@ -8,8 +8,9 @@ export class ErroMercadoPago extends Error {
   constructor(
     readonly operacao: string,
     readonly status: number,
+    detalhe = "",
   ) {
-    super(`Mercado Pago ${operacao}: HTTP ${status}`);
+    super(`Mercado Pago ${operacao}: HTTP ${status}${detalhe ? ` (${detalhe})` : ""}`);
     this.name = "ErroMercadoPago";
   }
 }
@@ -42,6 +43,17 @@ export type Pagamento = z.infer<typeof respostaPagamento>;
 
 const respostaBusca = z.object({ results: z.array(respostaPagamento) });
 
+// Só o campo "message" da resposta de erro, curto, para o log
+async function motivoDoErro(r: Response): Promise<string> {
+  try {
+    const j: unknown = await r.json();
+    const m = typeof j === "object" && j !== null && "message" in j ? String(j.message) : "";
+    return m.slice(0, 200);
+  } catch {
+    return "";
+  }
+}
+
 export type ClienteMercadoPago = {
   criarPreferencia(p: NovaPreferencia): Promise<Preferencia>;
   buscarPagamento(id: string): Promise<Pagamento | null>;
@@ -67,9 +79,11 @@ export function criarClienteMercadoPago(accessToken: string, fetchImpl: typeof f
         ],
         payer: { email: p.emailComprador },
         external_reference: p.pedidoId,
-        notification_url: p.urlNotificacao,
         back_urls: { success: p.urlRetorno, pending: p.urlRetorno, failure: p.urlRetorno },
-        auto_return: "approved",
+        // Notificação e retorno automático exigem endereço público. Em localhost o comprador volta pelo
+        // botão e a página de retorno consulta o pagamento direto na API.
+        ...(p.urlNotificacao.startsWith("https://") ? { notification_url: p.urlNotificacao } : {}),
+        ...(p.urlRetorno.startsWith("https://") ? { auto_return: "approved" } : {}),
         statement_descriptor: "PACOTES SKILLS",
       };
       // A chave de idempotência evita duas preferências se a requisição for repetida
@@ -78,7 +92,7 @@ export function criarClienteMercadoPago(accessToken: string, fetchImpl: typeof f
         body: JSON.stringify(corpo),
         headers: { "X-Idempotency-Key": p.pedidoId },
       });
-      if (!r.ok) throw new ErroMercadoPago("criar preferência", r.status);
+      if (!r.ok) throw new ErroMercadoPago("criar preferência", r.status, await motivoDoErro(r));
       return respostaPreferencia.parse(await r.json());
     },
 

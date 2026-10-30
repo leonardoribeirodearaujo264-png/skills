@@ -7,6 +7,10 @@ import { COOKIE_ACESSO, COOKIE_RENOVACAO, expiraEmSegundos, opcoesCookie } from 
 export async function proxy(req: NextRequest): Promise<NextResponse> {
   const acesso = req.cookies.get(COOKIE_ACESSO)?.value;
   const renovacao = req.cookies.get(COOKIE_RENOVACAO)?.value;
+  // A lista da área de membros exige login: sem sessão nenhuma, 307 direto, antes do streaming da página
+  if (!acesso && !renovacao && /^\/membros\/?$/.test(req.nextUrl.pathname)) {
+    return NextResponse.redirect(new URL("/entrar/?next=%2Fmembros%2F", req.url), 307);
+  }
   if (!renovacao || (acesso && expiraEmSegundos(acesso) > 60)) return NextResponse.next();
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;

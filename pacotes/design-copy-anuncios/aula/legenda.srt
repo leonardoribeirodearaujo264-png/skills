@@ -1,0 +1,60 @@
+1
+00:00:00,350 --> 00:00:04,135
+Neste pacote, você pede
+em português e o time
+
+2
+00:00:04,135 --> 00:00:07,705
+monta página, texto, anúncio e velocidade.
+
+3
+00:00:08,055 --> 00:00:10,944
+No Claude Code, abra
+o terminal na pasta do
+
+4
+00:00:10,944 --> 00:00:13,777
+pacote e rode o instalador do seu sistema.
+
+5
+00:00:14,127 --> 00:00:17,095
+No Codex, rode o instalador do Codex.
+
+6
+00:00:17,095 --> 00:00:22,438
+Ele usa outras pastas, então rode
+mesmo que já tenha instalado no Claude.
+
+7
+00:00:22,788 --> 00:00:27,247
+Para dar instrução ao time,
+chame o líder pelo nome e conte o
+
+8
+00:00:27,247 --> 00:00:31,125
+negócio, o público, a oferta
+e a ação que você quer.
+
+9
+00:00:31,475 --> 00:00:35,967
+Antes de anunciar, peça a
+checklist da página que vende.
+
+10
+00:00:35,967 --> 00:00:41,020
+Ela devolve o que corrigir primeiro,
+do mais grave ao mais leve.
+
+11
+00:00:41,370 --> 00:00:46,609
+Os prompts prontos estão na pasta
+prompts e na sua área de membros.
+
+12
+00:00:46,609 --> 00:00:50,521
+Copie, troque o que está
+entre colchetes e cole.
+
+13
+00:00:50,521 --> 00:00:53,664
+Nada é publicado sem a sua aprovação.
