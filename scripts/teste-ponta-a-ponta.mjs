@@ -15,6 +15,9 @@ const producao = env.DEV !== "1";
 const COMPRADO = "motion-mockup-fontes";
 const BLOQUEADO = "times-de-agentes";
 
+// Preview da Vercel com proteção de login: token "Protection Bypass for Automation"
+const bypass = env.VERCEL_AUTOMATION_BYPASS_SECRET ? { "x-vercel-protection-bypass": env.VERCEL_AUTOMATION_BYPASS_SECRET } : {};
+
 let falhas = 0;
 function conferir(nome, ok, detalhe = "") {
   console.log(`${ok ? "ok   " : "FALHA"} ${nome}${ok ? "" : ` ${detalhe}`}`);
@@ -22,7 +25,7 @@ function conferir(nome, ok, detalhe = "") {
 }
 
 async function pagina(caminho, cookie) {
-  const r = await fetch(`${SITE}${caminho}`, { redirect: "manual", headers: cookie ? { cookie } : {} });
+  const r = await fetch(`${SITE}${caminho}`, { redirect: "manual", headers: { ...bypass, ...(cookie ? { cookie } : {}) } });
   return { status: r.status, local: r.headers.get("location") ?? "", texto: r.status === 200 ? await r.text() : "" };
 }
 
@@ -94,13 +97,13 @@ try {
   const corpo = JSON.stringify({ type: "payment", action: "payment.updated", data: { id: dataId } });
   const ruim = await fetch(`${SITE}/api/webhooks/mercadopago?data.id=${dataId}&type=payment`, {
     method: "POST",
-    headers: { "content-type": "application/json", "x-signature": `ts=${ts},v1=${"0".repeat(64)}`, "x-request-id": reqId },
+    headers: { ...bypass, "content-type": "application/json", "x-signature": `ts=${ts},v1=${"0".repeat(64)}`, "x-request-id": reqId },
     body: corpo,
   });
   conferir("webhook com assinatura errada responde 401", ruim.status === 401, String(ruim.status));
   const bom = await fetch(`${SITE}/api/webhooks/mercadopago?data.id=${dataId}&type=payment`, {
     method: "POST",
-    headers: { "content-type": "application/json", "x-signature": `ts=${ts},v1=${v1}`, "x-request-id": reqId },
+    headers: { ...bypass, "content-type": "application/json", "x-signature": `ts=${ts},v1=${v1}`, "x-request-id": reqId },
     body: corpo,
   });
   const jb = await bom.json().catch(() => ({}));
