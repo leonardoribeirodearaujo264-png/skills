@@ -4,7 +4,16 @@ import { enviarEmailPix } from "../email/pix";
 import { ErroMercadoPago, type Pagamento, type Pix } from "../mercadopago/api";
 import { clientePublico, clienteServico } from "../supabase/clientes";
 import { partesDoNome } from "./comprador";
-import { formatarReais, montarPedido, PedidoInvalido, type Catalogo, type ItensDoPedido, type MotivoRecusa } from "./dominio";
+import {
+  adicionarBump,
+  bumpParaPedido,
+  formatarReais,
+  montarPedido,
+  PedidoInvalido,
+  type Catalogo,
+  type ItensDoPedido,
+  type MotivoRecusa,
+} from "./dominio";
 import { meusProdutos } from "./membros";
 import { permitir } from "./limites";
 import { aplicarPagamento, type ResultadoPagamento } from "./pagamento";
@@ -15,10 +24,14 @@ import { depsPagamento } from "./servicos";
 // Preço, itens e regra da oferta saem sempre do servidor. A conta nasce na aprovação do pagamento.
 // O preço de cliente exige sessão (prova de que o e-mail é dele).
 
+// Oferta complementar mostrada no checkout, desmarcada por padrão. Preço vem do banco.
+export type BumpNaTela = { slug: string; titulo: string; resumo: string; precoCentavos: number };
+
 export type Previa = {
   ofertaTitulo: string;
   itens: { slug: string; titulo: string }[];
   valorCentavos: number;
+  bump: BumpNaTela | null;
 };
 export type Falha = { motivo: MotivoRecusa | "falha" };
 
@@ -42,16 +55,23 @@ async function produtosJaComprados(usuario: Usuario | null): Promise<Set<string>
   return usuario ? new Set((await meusProdutos(usuario)).map((p) => p.slug)) : new Set();
 }
 
+// bump: slug da oferta complementar marcada no checkout, ou null
 async function calcular(
   usuario: Usuario | null,
   oferta: string,
   produtos: string[],
-): Promise<{ catalogo: Catalogo; itens: ItensDoPedido }> {
+  bump: string | null = null,
+): Promise<{ catalogo: Catalogo; itens: ItensDoPedido; possui: Set<string> }> {
   const catalogo = await carregarCatalogo(clientePublico());
   const ofertaInfo = catalogo.ofertas.find((o) => o.codigo === oferta);
   if (ofertaInfo?.exigeCliente && !usuario) throw new PedidoInvalido("so_clientes");
   const possui = await produtosJaComprados(usuario);
-  return { catalogo, itens: montarPedido(catalogo, oferta, produtos, possui) };
+  const base = montarPedido(catalogo, oferta, produtos, possui);
+  return { catalogo, possui, itens: bump ? adicionarBump(catalogo, base, bump, possui) : base };
+}
+
+function tituloDe(catalogo: Catalogo, slug: string): string {
+  return [...catalogo.produtos, ...catalogo.bumps].find((p) => p.slug === slug)?.titulo ?? slug;
 }
 
 function tratar(e: unknown, onde: string): Falha {
@@ -63,11 +83,16 @@ function tratar(e: unknown, onde: string): Falha {
 // Prévia para a página do checkout: itens e valor calculados no servidor, sem criar nada
 export async function previaCompra(usuario: Usuario | null, oferta: string, produtos: string[]): Promise<Previa | Falha> {
   try {
-    const { catalogo, itens } = await calcular(usuario, oferta, produtos);
+    const { catalogo, itens, possui } = await calcular(usuario, oferta, produtos);
+    const bump = bumpParaPedido(catalogo, itens.itens, possui);
     return {
       ofertaTitulo: catalogo.ofertas.find((o) => o.codigo === oferta)?.titulo ?? "Pacote",
-      itens: itens.itens.map((s) => ({ slug: s, titulo: catalogo.produtos.find((p) => p.slug === s)?.titulo ?? s })),
+      itens: itens.itens.map((s) => ({ slug: s, titulo: tituloDe(catalogo, s) })),
       valorCentavos: itens.valorCentavos,
+      bump:
+        bump && bump.precoBumpCentavos !== null
+          ? { slug: bump.slug, titulo: bump.titulo, resumo: bump.resumo, precoCentavos: bump.precoBumpCentavos }
+          : null,
     };
   } catch (e) {
     return tratar(e, "previa");
@@ -75,14 +100,14 @@ export async function previaCompra(usuario: Usuario | null, oferta: string, prod
 }
 
 // Grava (ou reaproveita) o pedido pendente pelo e-mail, com o valor calculado agora no servidor
-async function prepararPedido(comprador: Comprador, oferta: string, produtos: string[]): Promise<PedidoPronto> {
+async function prepararPedido(comprador: Comprador, oferta: string, produtos: string[], bump: string | null): Promise<PedidoPronto> {
   const email = (comprador.usuario?.email ?? comprador.email).trim().toLowerCase();
-  const { catalogo, itens } = await calcular(comprador.usuario, oferta, produtos);
+  const { catalogo, itens } = await calcular(comprador.usuario, oferta, produtos, bump);
   const db = clienteServico();
   const pedido = await criarOuReusarPedido(db, { email, userId: comprador.usuario?.id ?? null }, oferta, itens);
   await salvarDadosComprador(db, pedido.id, comprador.nome, comprador.telefone);
   const ofertaTitulo = catalogo.ofertas.find((o) => o.codigo === oferta)?.titulo ?? "Pacote";
-  const titulos = itens.itens.map((s) => catalogo.produtos.find((p) => p.slug === s)?.titulo ?? s);
+  const titulos = itens.itens.map((s) => tituloDe(catalogo, s));
   return {
     pedidoId: pedido.id,
     valorCentavos: pedido.valorCentavos,
@@ -159,9 +184,14 @@ async function cobrarPix(pedido: PedidoPronto): Promise<PixGerado | JaCobrado> {
   return { pedidoId: pedido.pedidoId, valorCentavos: pedido.valorCentavos, pix, agora: new Date().toISOString() };
 }
 
-export async function gerarPix(comprador: Comprador, oferta: string, produtos: string[]): Promise<PixGerado | JaCobrado | Falha> {
+export async function gerarPix(
+  comprador: Comprador,
+  oferta: string,
+  produtos: string[],
+  bump: string | null = null,
+): Promise<PixGerado | JaCobrado | Falha> {
   try {
-    return await cobrarPix(await prepararPedido(comprador, oferta, produtos));
+    return await cobrarPix(await prepararPedido(comprador, oferta, produtos, bump));
   } catch (e) {
     return tratar(e, "pix");
   }
@@ -252,9 +282,10 @@ export async function pagarComCartao(
   oferta: string,
   produtos: string[],
   cartao: DadosCartao,
+  bump: string | null = null,
 ): Promise<ResultadoCartao> {
   try {
-    const pedido = await prepararPedido(comprador, oferta, produtos);
+    const pedido = await prepararPedido(comprador, oferta, produtos, bump);
     // O valor mostrado no formulário tem de ser o mesmo do servidor; senão, a tela está desatualizada
     if (cartao.valorCentavos !== pedido.valorCentavos) return { motivo: "falha" };
     const deps = depsPagamento();

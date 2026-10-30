@@ -142,7 +142,20 @@ Write-Host "Pronto. Abra o ${a.rotulo} de novo para carregar as skills e o time.
 `;
 }
 
+function gerarCreditosAutorais() {
+  return `<!-- ${AVISO} -->
+# Créditos
+
+Este pacote não usa skill, plugin nem arquivo de terceiros. O instalador não baixa nada da internet: ele só copia as skills e os agentes que já estão dentro do pacote.
+
+## Conteúdo autoral
+
+O guia, os prompts, as skills da pasta \`skills/\` e o time de agentes da pasta \`agents/\` são de autoria de Leonardo Araujo. Veja \`LICENSES/\`.
+`;
+}
+
 function gerarCreditos(dados) {
+  if (!(dados.terceiros ?? []).length && !(dados.plugins ?? []).length) return gerarCreditosAutorais();
   const linhas = (dados.terceiros ?? []).map(
     (t) => `| [${t.fonte}](${t.url}) | ${t.licenca} | ${t.skills.join(", ")} | ${t.codex === false ? "Só Claude Code" : "Claude Code e Codex"} |`,
   );

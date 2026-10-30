@@ -1,6 +1,6 @@
 import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
-import type { Catalogo, ItensDoPedido } from "./dominio";
+import type { Catalogo, ItensDoPedido, Produto } from "./dominio";
 import type { PedidoSalvo, RepoPagamento } from "./pagamento";
 
 const VIOLA_UNICA = "23505";
@@ -32,8 +32,11 @@ const linhaProduto = z.object({
   qtd_agentes: z.number(),
   qtd_prompts: z.number(),
   aula_duracao_s: z.number().nullable(),
+  preco_bump_centavos: z.number().int().nullable(),
+  so_bump: z.boolean(),
 });
-const COLUNAS_PRODUTO = "slug, titulo, resumo, ordem, github_url, preco_avulso_centavos, destaques, qtd_skills, qtd_agentes, qtd_prompts, aula_duracao_s";
+const COLUNAS_PRODUTO =
+  "slug, titulo, resumo, ordem, github_url, preco_avulso_centavos, destaques, qtd_skills, qtd_agentes, qtd_prompts, aula_duracao_s, preco_bump_centavos, so_bump";
 const linhaOferta = z.object({
   codigo: z.string(),
   titulo: z.string(),
@@ -68,8 +71,10 @@ export async function carregarCatalogo(db: SupabaseClient): Promise<Catalogo> {
   ]);
   if (p.error) falhar("ler produtos", p.error);
   if (o.error) falhar("ler ofertas", o.error);
-  return {
-    produtos: z.array(linhaProduto).parse(p.data).map((r) => ({
+  const todos: Produto[] = z
+    .array(linhaProduto)
+    .parse(p.data)
+    .map((r) => ({
       slug: r.slug,
       titulo: r.titulo,
       resumo: r.resumo,
@@ -81,7 +86,12 @@ export async function carregarCatalogo(db: SupabaseClient): Promise<Catalogo> {
       qtdAgentes: r.qtd_agentes,
       qtdPrompts: r.qtd_prompts,
       aulaDuracaoS: r.aula_duracao_s,
-    })),
+      precoBumpCentavos: r.preco_bump_centavos,
+      soBump: r.so_bump,
+    }));
+  return {
+    produtos: todos.filter((x) => !x.soBump),
+    bumps: todos.filter((x) => x.precoBumpCentavos !== null),
     ofertas: z.array(linhaOferta).parse(o.data).map((r) => ({
       codigo: r.codigo,
       titulo: r.titulo,

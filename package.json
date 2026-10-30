@@ -11,6 +11,7 @@
     "tipos": "tsc --noEmit",
     "test": "vitest run",
     "pacotes:zip": "node scripts/gerar-zips.mjs",
+    "pacotes:vitrine": "node scripts/gerar-vitrine-pacotes.mjs",
     "pacotes:publicar": "node --env-file=.env.local scripts/publicar-pacotes.mjs"
   },
   "engines": {

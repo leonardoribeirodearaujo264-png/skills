@@ -1,0 +1,468 @@
+{
+  "promessa": "Um time de 15 agentes e 50 skills que prepara oferta, página, e-mails, anúncios, peças, atendimento e leitura de métricas do seu lançamento como rascunhos para você revisar e aprovar.",
+  "paraQuem": [
+    "Quem vai lançar um curso, mentoria ou produto digital e faz quase tudo sozinho.",
+    "Quem já vende e quer organizar oferta, página, e-mails e anúncios com método e conta mostrada.",
+    "Quem usa Claude Code ou Codex e quer especialistas de lançamento prontos, em português.",
+    "Profissionais de saúde, direito e finanças que precisam de alerta sobre regra do conselho na comunicação."
+  ],
+  "agentes": [
+    {
+      "nome": "pesquisador-de-mercado",
+      "grupo": "Estratégia",
+      "faz": "Levanta dores, desejos, objeções e a linguagem real do cliente a partir do material que você fornece.",
+      "quando": "Antes de escrever oferta, página ou anúncio.",
+      "ganho": "Um relatório com dores ordenadas por frequência, frases literais com a fonte e hipóteses a validar."
+    },
+    {
+      "nome": "analista-de-concorrentes",
+      "grupo": "Estratégia",
+      "faz": "Compara páginas, ofertas e anúncios de concorrentes para achar o que todos repetem.",
+      "quando": "Quando você quer saber onde o seu produto pode se diferenciar.",
+      "ganho": "Uma tabela de promessa, prova, bônus, garantia e preço de cada concorrente, com lacunas e ângulos possíveis."
+    },
+    {
+      "nome": "estrategista-de-oferta",
+      "grupo": "Estratégia",
+      "faz": "Monta ângulo, entregáveis, bônus, garantia, preço, order bump e jornada até a compra.",
+      "quando": "Quando precisa montar ou revisar a oferta de um lançamento.",
+      "ganho": "O documento da oferta com promessa validada, stack, preço com a conta e jornada com responsável por etapa."
+    },
+    {
+      "nome": "copywriter-pagina-vendas",
+      "grupo": "Copy",
+      "faz": "Escreve ou reescreve o texto completo da página de vendas ou de captura.",
+      "quando": "Quando a oferta está definida e falta o texto da página, da headline ao CTA final.",
+      "ganho": "O texto seção por seção, com três headlines e o motivo de cada uma, FAQ e lista de pendências."
+    },
+    {
+      "nome": "copywriter-emails",
+      "grupo": "Copy",
+      "faz": "Escreve sequências de boas-vindas, lançamento, última chance, pós-venda e reembolso.",
+      "quando": "Quando precisa dos e-mails do lançamento com assuntos e cronograma de envio.",
+      "ganho": "O cronograma por data, hora e segmento e cada e-mail com dois assuntos, pré-cabeçalho, corpo e CTA."
+    },
+    {
+      "nome": "roteirista-video-curto",
+      "grupo": "Copy",
+      "faz": "Escreve roteiros de Reels, Shorts, TikTok ou VSL curta.",
+      "quando": "Quando precisa de vídeo curto com gancho, desenvolvimento, CTA, texto de tela e legenda.",
+      "ganho": "Um roteiro em tabela de tempo, fala, texto na tela e cena, com ganchos alternativos, capa e legenda."
+    },
+    {
+      "nome": "revisor-de-promessas",
+      "grupo": "Copy",
+      "faz": "Barra promessa enganosa, número sem fonte, depoimento inventado e urgência falsa.",
+      "quando": "Antes de publicar página, e-mail, anúncio, roteiro ou post.",
+      "ganho": "Um veredito com cada frase reprovada, o motivo, a reescrita e os avisos de conselho profissional."
+    },
+    {
+      "nome": "gestor-anuncios-meta",
+      "grupo": "Tráfego",
+      "faz": "Planeja campanhas, públicos, orçamento e testes no Meta Ads e lê relatórios exportados.",
+      "quando": "Quando vai anunciar no Facebook e no Instagram ou quer ajustar campanhas a partir de um relatório.",
+      "ganho": "O plano com CPA máximo e conta, tabela de campanhas com UTMs e a lista de mudanças para você aprovar."
+    },
+    {
+      "nome": "gestor-anuncios-google",
+      "grupo": "Tráfego",
+      "faz": "Planeja campanhas de pesquisa no Google Ads, palavras-chave e anúncios de texto.",
+      "quando": "Quando quer anunciar para quem busca o produto ou analisar um relatório do Google Ads.",
+      "ganho": "Grupos com palavras e negativas, títulos e descrições no limite de caracteres e análise de termos com sugestão."
+    },
+    {
+      "nome": "analista-metricas",
+      "grupo": "Tráfego",
+      "faz": "Lê os números de anúncios, página, e-mail e checkout a partir de relatórios exportados.",
+      "quando": "Quando quer saber onde o funil do lançamento está perdendo gente.",
+      "ganho": "O funil com a taxa de cada etapa e a conta, a maior perda, as vendas sem origem e recomendações com responsável."
+    },
+    {
+      "nome": "web-designer-landing",
+      "grupo": "Páginas e design",
+      "faz": "Transforma o texto aprovado em layout responsivo com seções, paleta, tipografia e código.",
+      "quando": "Quando o texto da página está aprovado e falta montar a landing.",
+      "ganho": "Os arquivos HTML e CSS, a paleta com contraste conferido, o wireframe e o checklist de responsividade."
+    },
+    {
+      "nome": "designer-pecas-redes",
+      "grupo": "Páginas e design",
+      "faz": "Planeja posts, carrosséis, capas de Reels e artes de anúncio para redes sociais.",
+      "quando": "Quando precisa do texto de cada tela, do layout e da especificação para produzir a peça.",
+      "ganho": "A peça tela por tela com hierarquia, paleta em hex, fontes, área segura e legenda."
+    },
+    {
+      "nome": "criador-criativos",
+      "grupo": "Páginas e design",
+      "faz": "Cria conceitos de anúncio com texto, roteiro de vídeo curto e direção de imagem.",
+      "quando": "Quando precisa de variações de anúncio prontas para teste A/B.",
+      "ganho": "Conceitos com gancho, texto, título, CTA e visual, mais a matriz de teste por variável."
+    },
+    {
+      "nome": "atendente-dm-comentarios",
+      "grupo": "Vendas e pós-venda",
+      "faz": "Escreve rascunhos de resposta para comentários e mensagens diretas sobre o produto.",
+      "quando": "Quando chegam dúvidas, objeções de preço e pessoas querendo comprar.",
+      "ganho": "Uma tabela de rascunhos por mensagem, classe e canal, com os casos que você precisa decidir antes."
+    },
+    {
+      "nome": "recuperador-carrinho",
+      "grupo": "Vendas e pós-venda",
+      "faz": "Escreve mensagens de e-mail, WhatsApp ou DM para quem não concluiu a compra.",
+      "quando": "Quando há checkout abandonado, cartão recusado ou boleto e Pix gerados sem pagamento.",
+      "ganho": "Trilhas por motivo de abandono, com horário, canal, regra de saída e o texto de cada mensagem."
+    }
+  ],
+  "skills": [
+    {
+      "nome": "mapear-dores",
+      "grupo": "Pesquisa e oferta",
+      "faz": "Organiza as dores do público em sintoma, causa, custo e desejo e prioriza as que pesam na compra.",
+      "quando": "No começo da pesquisa ou quando a oferta parece genérica.",
+      "ganho": "Uma tabela de dores com nota e fonte, a dor principal e as secundárias."
+    },
+    {
+      "nome": "extrair-linguagem-depoimentos",
+      "grupo": "Pesquisa e oferta",
+      "faz": "Extrai de depoimentos, comentários e mensagens as frases exatas que o cliente usa.",
+      "quando": "Quando você tem material de clientes e quer escrever com a voz deles.",
+      "ganho": "Expressões repetidas e frases por momento da história, marcando as sem autorização de uso."
+    },
+    {
+      "nome": "levantar-objecoes",
+      "grupo": "Pesquisa e oferta",
+      "faz": "Levanta e classifica por peso os motivos pelos quais o público não compra.",
+      "quando": "Ao montar oferta e página ou quando há muitas visitas e poucas compras.",
+      "ganho": "Uma tabela com resposta, prova e lugar de cada objeção, e as três que mais travam."
+    },
+    {
+      "nome": "mapear-jornada-cliente",
+      "grupo": "Pesquisa e oferta",
+      "faz": "Desenha as etapas do cliente da descoberta à indicação, com o que pensa, faz e precisa.",
+      "quando": "Ao planejar o caminho entre anúncio, página, checkout e entrega, ou quando uma etapa cai forte.",
+      "ganho": "A jornada em tabela com risco de abandono por etapa e a etapa mais frágil com a ação."
+    },
+    {
+      "nome": "analisar-pagina-concorrente",
+      "grupo": "Pesquisa e oferta",
+      "faz": "Estuda a estrutura e os argumentos de uma página concorrente sem copiar texto.",
+      "quando": "Quando você tem a URL ou o arquivo de uma página concorrente.",
+      "ganho": "A planta dos blocos, os argumentos descritos com palavras próprias e o que fazer diferente."
+    },
+    {
+      "nome": "definir-angulo-venda",
+      "grupo": "Pesquisa e oferta",
+      "faz": "Gera de três a cinco ângulos de venda, compara e escolhe um com justificativa.",
+      "quando": "Quando já há pesquisa de dores e falta decidir por qual lado contar a história.",
+      "ganho": "Uma tabela de ângulos com nota, o escolhido com o motivo e um reserva para teste."
+    },
+    {
+      "nome": "criar-10-angulos-dor",
+      "grupo": "Copy e roteiros",
+      "faz": "Cria 10 ângulos de dor para o mesmo público, cada um com cena, frase do cliente e gancho.",
+      "quando": "Quando os anúncios repetem sempre a mesma mensagem ou faltam ganchos.",
+      "ganho": "Dez ângulos com gancho pronto e a indicação de quais testar primeiro."
+    },
+    {
+      "nome": "montar-stack-bonus",
+      "grupo": "Pesquisa e oferta",
+      "faz": "Monta produto e bônus escolhendo cada bônus pela objeção que resolve e corta o que só faz volume.",
+      "quando": "Quando a oferta precisa de bônus ou a lista atual parece aleatória.",
+      "ganho": "A pilha em ordem com custo por cliente, valor apresentado e base do valor, mais os itens cortados."
+    },
+    {
+      "nome": "definir-garantia",
+      "grupo": "Pesquisa e oferta",
+      "faz": "Escolhe tipo, prazo e condições da garantia e confere os 7 dias do CDC, sem parecer jurídico.",
+      "quando": "Quando a oferta precisa de garantia ou o risco é a objeção principal.",
+      "ganho": "O texto da garantia para a página, como pedir o reembolso e quem opera."
+    },
+    {
+      "nome": "calcular-preco-bump",
+      "grupo": "Pesquisa e oferta",
+      "faz": "Calcula a faixa de preço do order bump a partir de preço, custo e margem que você informa.",
+      "quando": "Ao definir ou revisar o produto extra do checkout.",
+      "ganho": "Piso, teto, faixa viável e a conta reversa da margem por venda."
+    },
+    {
+      "nome": "validar-promessa",
+      "grupo": "Pesquisa e oferta",
+      "faz": "Exige prova ou mecanismo para cada promessa e reprova ou reescreve o que não tiver.",
+      "quando": "Antes de publicar ou rodar anúncio, ou quando você quer saber se pode dizer uma frase.",
+      "ganho": "Uma tabela com o veredito de cada promessa, o ajuste e os alertas de nicho e plataforma."
+    },
+    {
+      "nome": "escrever-headline",
+      "grupo": "Copy e roteiros",
+      "faz": "Escreve opções de headline para página, anúncio ou e-mail com o motivo de cada uma.",
+      "quando": "Quando falta o título principal ou você quer testar títulos para a mesma oferta.",
+      "ganho": "Headlines com ângulo, motivo e contagem de caracteres, e a recomendada."
+    },
+    {
+      "nome": "escrever-subtitulo",
+      "grupo": "Copy e roteiros",
+      "faz": "Escreve o subtítulo que explica o que é, para quem é e como funciona.",
+      "quando": "Quando a headline já existe e falta a linha de apoio.",
+      "ganho": "Opções com o que cada uma responde e quantas linhas ocupa no celular."
+    },
+    {
+      "nome": "escrever-beneficios",
+      "grupo": "Copy e roteiros",
+      "faz": "Transforma características em benefícios ligados ao recurso que os comprova.",
+      "quando": "Quando a seção de benefícios só lista características técnicas.",
+      "ganho": "A lista de benefícios pronta e o rastreio de recurso para ganho."
+    },
+    {
+      "nome": "escrever-cta",
+      "grupo": "Copy e roteiros",
+      "faz": "Escreve o texto do botão e o microtexto ao lado dele para cada ponto da página.",
+      "quando": "Quando o botão diz apenas Enviar, Comprar ou Saiba mais.",
+      "ganho": "Botão e microtexto por ponto da página, com caracteres e a dúvida que cada um responde."
+    },
+    {
+      "nome": "escrever-faq-objecoes",
+      "grupo": "Copy e roteiros",
+      "faz": "Transforma uma lista de objeções em perguntas frequentes respondidas com fatos do produto.",
+      "quando": "Quando a página precisa de FAQ ou já existe uma lista de objeções.",
+      "ganho": "O FAQ na voz do cliente com o fato usado em cada resposta e as lacunas a decidir."
+    },
+    {
+      "nome": "reescrever-clareza",
+      "grupo": "Copy e roteiros",
+      "faz": "Reescreve texto confuso, longo ou com jargão sem mudar sentido nem tom.",
+      "quando": "Quando o leitor não entende o que está sendo vendido.",
+      "ganho": "O texto reescrito, cada problema corrigido e a contagem de palavras antes e depois."
+    },
+    {
+      "nome": "adaptar-tom-voz",
+      "grupo": "Copy e roteiros",
+      "faz": "Reescreve um texto pronto na voz da marca ou de outro público, mantendo fatos e estrutura.",
+      "quando": "Quando precisa ajustar o tom ou padronizar textos de pessoas diferentes.",
+      "ganho": "As regras da voz, o texto adaptado e a lista do que mudou."
+    },
+    {
+      "nome": "escrever-script-vsl",
+      "grupo": "Copy e roteiros",
+      "faz": "Escreve o roteiro de uma VSL em blocos com tempo, fala exata e o que aparece na tela.",
+      "quando": "Quando precisa de vídeo de vendas para a página ou para o lançamento.",
+      "ganho": "O roteiro bloco a bloco com tempo de início e fim e contagem de palavras."
+    },
+    {
+      "nome": "escrever-legenda-reels",
+      "grupo": "Copy e roteiros",
+      "faz": "Escreve a legenda de vídeo curto com gancho, corpo no limite da plataforma e CTA.",
+      "quando": "Quando o vídeo está gravado ou roteirizado e falta o texto do post.",
+      "ganho": "Versões de legenda com tipos de gancho diferentes, prontas para colar."
+    },
+    {
+      "nome": "sequencia-boas-vindas",
+      "grupo": "E-mail e funil",
+      "faz": "Escreve de 3 a 5 e-mails para quem acabou de entrar na lista.",
+      "quando": "Quando alguém se inscreve por isca, cadastro ou aula gratuita.",
+      "ganho": "Os e-mails com envio, função, assunto, pré-cabeçalho, corpo e link."
+    },
+    {
+      "nome": "sequencia-lancamento",
+      "grupo": "E-mail e funil",
+      "faz": "Escreve os e-mails do aquecimento à abertura e ao fechamento do carrinho.",
+      "quando": "Quando a data de abertura das vendas está definida.",
+      "ganho": "A sequência por fase com data, função e texto de cada envio."
+    },
+    {
+      "nome": "sequencia-pos-venda",
+      "grupo": "E-mail e funil",
+      "faz": "Escreve os e-mails depois da compra, do acesso ao depoimento e à próxima oferta.",
+      "quando": "Quando o pagamento foi confirmado e o cliente precisa começar a usar.",
+      "ganho": "A sequência com acesso, garantia, suporte e o texto de cada e-mail."
+    },
+    {
+      "nome": "email-ultima-chance",
+      "grupo": "E-mail e funil",
+      "faz": "Escreve o aviso final antes de um prazo real e recusa quando o prazo não existe.",
+      "quando": "Quando uma oferta ou inscrição termina numa data e hora definidas.",
+      "ganho": "O e-mail com prazo confirmado, o que acontece depois, botão e descadastro."
+    },
+    {
+      "nome": "email-carrinho-abandonado",
+      "grupo": "E-mail e funil",
+      "faz": "Escreve de 1 a 3 e-mails para quem começou a compra e não concluiu.",
+      "quando": "Quando a plataforma registra checkout iniciado sem pagamento.",
+      "ganho": "Os e-mails com horário, função, assunto, corpo, link e regra de saída."
+    },
+    {
+      "nome": "email-reembolso",
+      "grupo": "E-mail e funil",
+      "faz": "Escreve a resposta a pedido de reembolso ou cancelamento sem criar obstáculo.",
+      "quando": "Quando um cliente pede o dinheiro de volta ou reclama da compra.",
+      "ganho": "O e-mail de resposta com a situação do prazo e as ações internas."
+    },
+    {
+      "nome": "assunto-alta-abertura",
+      "grupo": "E-mail e funil",
+      "faz": "Gera assuntos e pré-cabeçalhos em ângulos diferentes e elimina os que prometem demais.",
+      "quando": "Quando o corpo do e-mail está pronto e faltam boas opções de assunto.",
+      "ganho": "Opções com ângulo e caracteres, as eliminadas com o motivo e as finalistas."
+    },
+    {
+      "nome": "testar-assuntos",
+      "grupo": "E-mail e funil",
+      "faz": "Desenha um teste A/B de assuntos com hipótese, divisão da lista e critério de vitória.",
+      "quando": "Quando você tem duas ou mais opções de assunto e quer escolher com dado.",
+      "ganho": "O plano do teste e a planilha de registro para preencher com os números reais."
+    },
+    {
+      "nome": "segmentar-lista",
+      "grupo": "E-mail e funil",
+      "faz": "Define segmentos da lista por consentimento, estágio, comportamento e interesse.",
+      "quando": "Quando vai mandar campanhas diferentes ou precisa excluir compradores e inativos.",
+      "ganho": "Uma tabela de segmentos com regra de entrada, de saída e o que cada um recebe."
+    },
+    {
+      "nome": "cronograma-envios",
+      "grupo": "E-mail e funil",
+      "faz": "Junta sequências, campanhas e testes num calendário sem sobreposição.",
+      "quando": "Quando há vários e-mails ou fluxos no mesmo período.",
+      "ganho": "A tabela de data, hora, segmento e e-mail, com as tarefas para agendar na ferramenta."
+    },
+    {
+      "nome": "estrutura-campanha-meta",
+      "grupo": "Tráfego e métricas",
+      "faz": "Desenha campanha, conjuntos e anúncios no Meta Ads com orçamento, públicos e nomes.",
+      "quando": "Antes de subir campanhas de Facebook e Instagram.",
+      "ganho": "A árvore da conta, quantos conjuntos o orçamento comporta e o checklist de configuração."
+    },
+    {
+      "nome": "publicos-semelhantes",
+      "grupo": "Tráfego e métricas",
+      "faz": "Planeja públicos semelhantes e de remarketing a partir das listas que você já tem.",
+      "quando": "Quando quer públicos parecidos com compradores ou leads.",
+      "ganho": "As fontes avaliadas e os públicos planejados com faixa, exclusões e uso."
+    },
+    {
+      "nome": "campanha-busca-google",
+      "grupo": "Tráfego e métricas",
+      "faz": "Planeja a campanha de pesquisa no Google com grupos por intenção, negativas e anúncios.",
+      "quando": "Quando quer anunciar para quem busca o produto ou revisar uma campanha de pesquisa.",
+      "ganho": "Grupos, palavras com correspondência, negativas, anúncios com caracteres e orçamento ligado ao CPA."
+    },
+    {
+      "nome": "calcular-cpa-maximo",
+      "grupo": "Tráfego e métricas",
+      "faz": "Calcula o CPA de equilíbrio e o CPA máximo a partir dos seus custos e do lucro que você quer.",
+      "quando": "Quando quer saber até quanto pagar por venda ou por lead.",
+      "ganho": "Os dois limites com a conta passo a passo e a sensibilidade."
+    },
+    {
+      "nome": "calcular-roas-minimo",
+      "grupo": "Tráfego e métricas",
+      "faz": "Calcula o ROAS de equilíbrio e o mínimo para o lucro desejado.",
+      "quando": "Quando precisa de uma meta de retorno ou quer saber se o ROAS do relatório dá lucro.",
+      "ganho": "As metas de ROAS com a conta e a comparação com o ROAS real informado."
+    },
+    {
+      "nome": "montar-utms",
+      "grupo": "Tráfego e métricas",
+      "faz": "Define um padrão de UTMs e gera as URLs rastreadas de cada anúncio.",
+      "quando": "Quando precisa saber de qual anúncio veio cada venda.",
+      "ganho": "A convenção, a tabela de URLs prontas para colar e o passo a passo para testar."
+    },
+    {
+      "nome": "ler-relatorio-anuncios",
+      "grupo": "Tráfego e métricas",
+      "faz": "Recalcula as métricas de um relatório e aponta em que etapa o resultado se perde.",
+      "quando": "Quando você cola ou exporta um relatório de Meta Ads, Google Ads ou outra plataforma.",
+      "ganho": "Um resumo curto, a tabela de métricas recalculadas e o funil com a perda."
+    },
+    {
+      "nome": "sugerir-pausa-conjunto",
+      "grupo": "Tráfego e métricas",
+      "faz": "Classifica cada conjunto em manter, observar ou candidato a pausa com critério objetivo.",
+      "quando": "Quando quer saber o que pausar, cortar ou escalar a partir de um relatório.",
+      "ganho": "A classificação de cada conjunto com a regra aplicada e o motivo numérico."
+    },
+    {
+      "nome": "matriz-teste-ab",
+      "grupo": "Tráfego e métricas",
+      "faz": "Monta um teste A/B com hipótese, uma variável por vez e critério de vitória definido antes.",
+      "quando": "Quando vai testar criativos, ganchos, públicos, ofertas ou páginas.",
+      "ganho": "As células com gasto mínimo e nome, o critério de vitória e a próxima rodada."
+    },
+    {
+      "nome": "briefing-criativo",
+      "grupo": "Tráfego e métricas",
+      "faz": "Escreve o briefing de um criativo de anúncio para quem vai produzir.",
+      "quando": "Quando precisa pedir, encomendar ou planejar uma peça antes de produzir.",
+      "ganho": "O briefing com objetivo, público, ângulo, ganchos e roteiro de cenas."
+    },
+    {
+      "nome": "estruturar-landing",
+      "grupo": "Página, peças e atendimento",
+      "faz": "Monta a ordem das seções da landing, o que cada uma prova e o rascunho de cada bloco.",
+      "quando": "Quando vai escrever a página do zero ou a ordem atual não convence.",
+      "ganho": "O mapa de seções, o arquivo em Markdown ou HTML simples e as pendências."
+    },
+    {
+      "nome": "paleta-tipografia",
+      "grupo": "Página, peças e atendimento",
+      "faz": "Define as cores em hex com contraste calculado e a escala de fontes.",
+      "quando": "Quando o lançamento precisa de identidade visual ou as cores falham em contraste.",
+      "ganho": "A especificação de paleta e tipografia e um HTML de amostra para abrir no navegador."
+    },
+    {
+      "nome": "checklist-responsividade",
+      "grupo": "Página, peças e atendimento",
+      "faz": "Confere a página em cinco larguras, de 360 a 1280 px.",
+      "quando": "Quando a página está montada e você quer saber se funciona no celular antes de divulgar.",
+      "ganho": "Uma tabela por largura e os problemas priorizados com a evidência no código."
+    },
+    {
+      "nome": "template-post",
+      "grupo": "Página, peças e atendimento",
+      "faz": "Especifica um post estático para o feed com grade, hierarquia e cores conferidas.",
+      "quando": "Quando precisa de um post de imagem única ou de um modelo reutilizável.",
+      "ganho": "A especificação com posição de cada elemento e um HTML ou SVG editável."
+    },
+    {
+      "nome": "criar-carrossel",
+      "grupo": "Página, peças e atendimento",
+      "faz": "Planeja um carrossel de 5 a 10 slides com roteiro e grade comum.",
+      "quando": "Quando precisa ensinar um passo a passo ou quebrar uma objeção no feed.",
+      "ganho": "O roteiro slide a slide e um HTML com todos os slides lado a lado."
+    },
+    {
+      "nome": "capa-reels",
+      "grupo": "Página, peças e atendimento",
+      "faz": "Especifica a capa do Reels respeitando os recortes do feed e da grade do perfil.",
+      "quando": "Quando os vídeos curtos precisam de capa legível ou de uma série com padrão único.",
+      "ganho": "Título, fonte, cores com contraste e um HTML ou SVG para exportar."
+    },
+    {
+      "nome": "responder-comentario-padrao",
+      "grupo": "Página, peças e atendimento",
+      "faz": "Classifica comentários públicos e escreve rascunhos a partir de um banco de respostas aprovado.",
+      "quando": "Quando você cola ou exporta comentários dos posts do lançamento.",
+      "ganho": "O banco de respostas para aprovar e a tabela de rascunhos por comentário."
+    },
+    {
+      "nome": "responder-dm-interesse",
+      "grupo": "Página, peças e atendimento",
+      "faz": "Escreve rascunhos para quem mostrou interesse, dizendo se o produto serve ou não.",
+      "quando": "Quando alguém pergunta no direct, WhatsApp ou e-mail como funciona ou se é para ela.",
+      "ganho": "O rascunho imediato e as respostas para os próximos caminhos da conversa."
+    },
+    {
+      "nome": "tratar-objecao-preco",
+      "grupo": "Página, peças e atendimento",
+      "faz": "Identifica o que está por trás do está caro e responde com valor e condições reais.",
+      "quando": "Quando um lead levanta dúvida sobre preço, parcelamento ou desconto.",
+      "ganho": "O rascunho de resposta, a mensagem para nova recusa e o que ficou de fora por falta de confirmação."
+    },
+    {
+      "nome": "encaminhar-lead-checkout",
+      "grupo": "Página, peças e atendimento",
+      "faz": "Escreve a mensagem que leva o lead decidido ao checkout com o link e as formas de pagamento reais.",
+      "quando": "Quando a pessoa já disse que quer comprar ou travou no pagamento.",
+      "ganho": "A mensagem de envio do link e o rascunho de ajuda para quem travou."
+    }
+  ]
+}

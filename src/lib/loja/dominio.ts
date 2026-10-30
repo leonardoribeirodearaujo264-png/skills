@@ -15,6 +15,10 @@ export type Produto = {
   qtdAgentes: number;
   qtdPrompts: number;
   aulaDuracaoS: number | null;
+  // preço como oferta complementar no checkout (order bump); null = não é oferecido assim
+  precoBumpCentavos: number | null;
+  // vendido só como complemento: fica fora da vitrine, da loja e do combo
+  soBump: boolean;
 };
 
 export type Oferta = {
@@ -33,7 +37,8 @@ export type Oferta = {
   itens: string[];
 };
 
-export type Catalogo = { produtos: Produto[]; ofertas: Oferta[] };
+// produtos: os da vitrine. bumps: os oferecidos como complemento no checkout (podem não estar na vitrine)
+export type Catalogo = { produtos: Produto[]; ofertas: Oferta[]; bumps: Produto[] };
 
 export type ItensDoPedido = { itens: string[]; valorCentavos: number; chaveItens: string };
 
@@ -94,6 +99,29 @@ export function montarPedido(
   const unico = itens.length === 1 ? catalogo.produtos.find((p) => p.slug === itens[0]) : undefined;
   const valorCentavos = unico ? precoNaOferta(catalogo, oferta, unico) : oferta.precoCentavos;
   return { itens, valorCentavos, chaveItens: `${oferta.codigo}:${itens.join(",")}` };
+}
+
+// Oferta complementar marcada no checkout: entra como mais um item do pedido, pelo preço de bump do banco.
+// Não oferece o que a pessoa já tem nem o que já está no pedido.
+export function adicionarBump(
+  catalogo: Catalogo,
+  pedido: ItensDoPedido,
+  slug: string,
+  possui: ReadonlySet<string>,
+): ItensDoPedido {
+  const bump = catalogo.bumps.find((p) => p.slug === slug);
+  if (!bump || bump.precoBumpCentavos === null) throw new PedidoInvalido("produto_inexistente");
+  if (pedido.itens.includes(slug) || possui.has(slug)) throw new PedidoInvalido("ja_possui");
+  return {
+    itens: [...pedido.itens, slug],
+    valorCentavos: pedido.valorCentavos + bump.precoBumpCentavos,
+    chaveItens: `${pedido.chaveItens}+bump:${slug}`,
+  };
+}
+
+// Bump que aparece no checkout para estes itens: o primeiro que a pessoa ainda não tem
+export function bumpParaPedido(catalogo: Catalogo, itens: readonly string[], possui: ReadonlySet<string>): Produto | null {
+  return catalogo.bumps.find((p) => p.precoBumpCentavos !== null && !itens.includes(p.slug) && !possui.has(p.slug)) ?? null;
 }
 
 // Avulso comum é por produto: cada produto pode ter preço próprio no banco (ex.: edição de vídeo).

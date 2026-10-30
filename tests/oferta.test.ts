@@ -1,7 +1,16 @@
 import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { destinoSeguro } from "@/lib/auth/cookies";
-import { formatarReais, montarPedido, ofertaParaMaisUm, PedidoInvalido, precoNaOferta, type Catalogo } from "@/lib/loja/dominio";
+import {
+  adicionarBump,
+  bumpParaPedido,
+  formatarReais,
+  montarPedido,
+  ofertaParaMaisUm,
+  PedidoInvalido,
+  precoNaOferta,
+  type Catalogo,
+} from "@/lib/loja/dominio";
 import { OFERTA_DOS_VIDEOS } from "@/lib/loja/paginas-videos";
 import { montarCatalogo, montarVitrine } from "@/lib/loja/vitrine";
 
@@ -23,6 +32,8 @@ function catalogoDoSeed(): Catalogo {
       qtdAgentes: 0,
       qtdPrompts: 0,
       aulaDuracaoS: null,
+      precoBumpCentavos: null,
+      soBump: false,
     })),
     ofertas: ofertas.map((m) => ({
       codigo: m[1]!,
@@ -36,6 +47,7 @@ function catalogoDoSeed(): Catalogo {
       ordem: Number(m[7]),
       itens: [],
     })),
+    bumps: [],
   };
 }
 
@@ -285,5 +297,53 @@ describe("catálogo da página inicial", () => {
     const c = montarCatalogo({ ...ordenado, ofertas: ordenado.ofertas.filter((o) => o.codigo !== "avulso") });
     expect(c.destaque).toBeNull();
     expect(c.pacotes).toEqual([]);
+  });
+});
+
+describe("oferta complementar (order bump)", () => {
+  const bump = {
+    slug: "lancamento-pro",
+    titulo: "Lançamento Pro",
+    resumo: "15 agentes e 50 skills.",
+    ordem: 90,
+    githubUrl: null,
+    precoAvulsoCentavos: null,
+    destaques: [],
+    qtdSkills: 50,
+    qtdAgentes: 15,
+    qtdPrompts: 0,
+    aulaDuracaoS: null,
+    precoBumpCentavos: 1990,
+    soBump: true,
+  };
+  const comBump: Catalogo = { ...cat, bumps: [bump] };
+
+  it("marcado, soma o preço de bump do banco ao pedido e entra como item", () => {
+    const base = montarPedido(comBump, "avulso", ["times-de-agentes"], nada);
+    const p = adicionarBump(comBump, base, "lancamento-pro", nada);
+    expect(p.valorCentavos).toBe(3700 + 1990);
+    expect(p.itens).toEqual(["times-de-agentes", "lancamento-pro"]);
+    expect(p.chaveItens).toBe("avulso:times-de-agentes+bump:lancamento-pro");
+  });
+
+  it("vale também com o leve 3 (R$ 47 + R$ 19,90)", () => {
+    const base = montarPedido(comBump, "leve-3", ["times-de-agentes", "edicao-de-video", "design-copy-anuncios"], nada);
+    expect(adicionarBump(comBump, base, "lancamento-pro", nada).valorCentavos).toBe(4700 + 1990);
+  });
+
+  it("recusa bump inexistente e bump que a pessoa já tem", () => {
+    const base = montarPedido(comBump, "avulso", ["times-de-agentes"], nada);
+    expect(motivo(() => adicionarBump(comBump, base, "nao-existe", nada))).toBe("produto_inexistente");
+    expect(motivo(() => adicionarBump(comBump, base, "lancamento-pro", new Set(["lancamento-pro"])))).toBe("ja_possui");
+  });
+
+  it("o bump não entra na vitrine nem no combo", () => {
+    expect(comBump.produtos.some((p) => p.slug === "lancamento-pro")).toBe(false);
+    expect(montarPedido(comBump, "combo", [], nada).itens).not.toContain("lancamento-pro");
+  });
+
+  it("só é oferecido a quem ainda não tem", () => {
+    expect(bumpParaPedido(comBump, ["times-de-agentes"], nada)?.slug).toBe("lancamento-pro");
+    expect(bumpParaPedido(comBump, ["times-de-agentes"], new Set(["lancamento-pro"]))).toBeNull();
   });
 });

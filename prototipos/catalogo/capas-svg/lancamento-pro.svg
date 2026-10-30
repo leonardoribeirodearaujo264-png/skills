@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="t">
+<title id="t">Lançamento Pro</title>
+<defs>
+<style>@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=JetBrains+Mono:wght@500&amp;display=swap');
+.tt{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;letter-spacing:-0.03em}
+.mo{font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:500}
+</style>
+<pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="2" fill="rgba(255,255,255,.06)"/></pattern>
+</defs>
+<rect width="1200" height="800" fill="#1F1B18"/>
+<rect x="620" y="0" width="580" height="800" fill="url(#g)"/>
+<g transform="translate(80 72)">
+<rect width="416" height="52" rx="26" fill="rgba(255,255,255,.10)"/>
+<circle cx="28" cy="26" r="7" fill="#FF8A3D"/>
+<text x="48" y="35" class="mo" font-size="26" fill="#FFFFFF" letter-spacing="0.5">15 agentes, 50 skills</text>
+</g>
+<text class="tt" font-size="106" fill="#FFFFFF"><tspan x="80" y="604">Lançamento</tspan><tspan x="80" y="712">Pro</tspan></text>
+<g transform="translate(680 90)">
+
+<path d="M96 474 C 40 440, 30 380, 70 334" fill="none" stroke="#FF8A3D" stroke-opacity=".55" stroke-width="4" stroke-dasharray="4 12" stroke-linecap="round"/>
+<path d="M300 352 C 380 330, 420 250, 400 170" fill="none" stroke="#FF8A3D" stroke-opacity=".55" stroke-width="4" stroke-dasharray="4 12" stroke-linecap="round"/>
+
+<rect x="0" y="20" width="360" height="300" rx="22" fill="#2A2420" stroke="#3D342D" stroke-width="3"/>
+<circle cx="30" cy="48" r="7" fill="#BDB2A7" opacity=".5"/>
+<circle cx="52" cy="48" r="7" fill="#BDB2A7" opacity=".5"/>
+<circle cx="74" cy="48" r="7" fill="#BDB2A7" opacity=".5"/>
+<line x1="0" y1="76" x2="360" y2="76" stroke="#3D342D" stroke-width="3"/>
+<rect x="30" y="100" width="72" height="22" rx="11" fill="#FF8A3D" opacity=".9"/>
+<rect x="30" y="136" width="240" height="28" rx="8" fill="#F5F0EA"/>
+<rect x="30" y="174" width="170" height="28" rx="8" fill="#F5F0EA"/>
+<rect x="30" y="220" width="290" height="12" rx="6" fill="#BDB2A7" opacity=".45"/>
+<rect x="30" y="242" width="240" height="12" rx="6" fill="#BDB2A7" opacity=".45"/>
+<rect x="30" y="270" width="140" height="34" rx="17" fill="#FF8A3D"/>
+
+<g transform="translate(250 262)">
+<rect width="210" height="196" rx="20" fill="#F5F0EA"/>
+<rect x="16" y="16" width="178" height="96" rx="12" fill="#C03F00"/>
+<path d="M58 44 L58 84 L70 84 L96 98 L96 30 L70 44 Z" fill="#F5F0EA"/>
+<path d="M108 48 Q120 64 108 80" fill="none" stroke="#F5F0EA" stroke-width="5" stroke-linecap="round"/>
+<path d="M120 38 Q140 64 120 90" fill="none" stroke="#F5F0EA" stroke-opacity=".6" stroke-width="5" stroke-linecap="round"/>
+<rect x="16" y="128" width="136" height="14" rx="7" fill="#1F1B18"/>
+<rect x="16" y="152" width="88" height="14" rx="7" fill="#1F1B18" opacity=".45"/>
+<rect x="132" y="150" width="62" height="28" rx="14" fill="#FF8A3D"/>
+</g>
+
+<g transform="translate(70 482)">
+<rect width="200" height="136" rx="18" fill="#2A2420" stroke="#3D342D" stroke-width="3"/>
+<path d="M18 22 L100 82 L182 22" fill="none" stroke="#F5F0EA" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="18" y="104" width="96" height="12" rx="6" fill="#BDB2A7" opacity=".45"/>
+<g transform="translate(184 4)"><circle r="24" fill="#FF8A3D"/><text y="9" text-anchor="middle" class="tt" font-size="26" fill="#1F1B18" letter-spacing="0">3</text></g>
+</g>
+
+<g transform="translate(330 30)">
+<rect x="0" y="0" width="140" height="92" rx="24" fill="#F5F0EA"/>
+<path d="M98 88 L122 116 L72 90 Z" fill="#F5F0EA"/>
+<circle cx="42" cy="46" r="9" fill="#1F1B18"/>
+<circle cx="70" cy="46" r="9" fill="#1F1B18"/>
+<circle cx="98" cy="46" r="9" fill="#FF8A3D"/>
+</g>
+</g>
+</svg>

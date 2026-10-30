@@ -94,21 +94,20 @@ function cardLeve(l) {
   const titulo = el("h3", null, "Leve " + l.qtd + " pacotes por " + l.precoTexto);
   titulo.id = "leve-titulo";
   const precos = el("div", "oferta-combo-precos");
-  if (l.referenciaTexto) {
-    const de = el("s", "oferta-de");
-    de.append(el("span", "sr-only", "de "), l.referenciaTexto);
-    precos.append(de);
-  }
-  const por = el("span", "price");
-  por.append(el("span", "sr-only", "por "), l.precoTexto);
-  precos.append(por);
+  precos.append(el("span", "price", l.precoTexto));
   const cta = el("a", "cta", "Escolher meus " + l.qtd + " pacotes");
   cta.href = l.escolherUrl;
   const outros = l.qtd - 1;
   const desc = l.comPacote
     ? "O pacote deste vídeo já vem marcado. Escolha os outros " + (outros === 2 ? "dois" : outros) + " na loja."
     : l.descricao;
-  card.append(el("span", "oferta-selo", l.titulo.toUpperCase()), titulo, el("p", "oferta-leve-desc", desc), precos, cta);
+  const filhos = [el("span", "oferta-selo", l.titulo.toUpperCase()), titulo, el("p", "oferta-leve-desc", desc), precos];
+  // Comparação com os preços reais de cada pacote, sem preço riscado
+  if (l.referenciaTexto && l.economiaTexto) {
+    filhos.push(el("p", "oferta-comparacao", "Separados, os " + l.qtd + " sairiam " + l.referenciaTexto + ". Você economiza " + l.economiaTexto + "."));
+  }
+  filhos.push(cta);
+  card.append(...filhos);
   return card;
 }
 
@@ -134,16 +133,11 @@ function cardCombo(c, comoTitulo) {
     return li;
   }));
   const precos = el("div", "oferta-combo-precos");
-  if (c.somaTexto) {
-    const de = el("s", "oferta-de");
-    de.append(el("span", "sr-only", "de "), c.somaTexto);
-    precos.append(de);
-  }
-  const por = el("span", "price");
-  por.append(el("span", "sr-only", "por "), c.precoTexto);
-  precos.append(por);
+  precos.append(el("span", "price", c.precoTexto));
   const filhos = [el("span", "oferta-selo", "PACOTE COMPLETO"), titulo, el("p", "oferta-combo-desc", c.descricao), lista, precos];
-  if (c.economiaTexto) filhos.push(el("p", "oferta-economia", "VOCÊ ECONOMIZA " + c.economiaTexto));
+  if (c.somaTexto && c.economiaTexto) {
+    filhos.push(el("p", "oferta-comparacao", "Separados, sairiam " + c.somaTexto + ". Você economiza " + c.economiaTexto + "."));
+  }
   const cta = el("a", "cta", "Quero o pacote completo");
   cta.href = c.comprarUrl;
   filhos.push(cta, el("p", "price-note", "Pagamento único. Acesso na hora, logo depois do pagamento."));

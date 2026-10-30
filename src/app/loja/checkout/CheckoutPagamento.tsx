@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Alerta } from "@/components/Alerta";
 import { Icone } from "@/components/Icone";
+import type { BumpNaTela } from "@/lib/loja/checkout";
+import { formatarReais } from "@/lib/loja/dominio";
 import {
   erroEmail,
   erroNome,
@@ -13,6 +15,7 @@ import {
   type ErrosComprador,
 } from "@/lib/loja/comprador";
 import { acaoGerarPix, acaoPagarCartao, acaoSituacao, type PixNaTela } from "../acoes";
+import { BlocoBump } from "./BlocoBump";
 import { PixTela } from "./PixTela";
 
 // Checkout no próprio site: nome, e-mail e telefone, e pagamento por Pix ou cartão sem sair da página.
@@ -23,7 +26,9 @@ type Props = {
   produtos: string;
   emailSessao: string | null;
   valorCentavos: number;
-  totalTexto: string;
+  bump: BumpNaTela | null;
+  // miniatura do bump (src/lib/loja/apresentacao.ts)
+  bumpMini: string | null;
   chavePublica: string | null;
 };
 
@@ -34,10 +39,13 @@ type Etapa =
   | { tipo: "analise"; pedidoId: string };
 
 const VALIDADORES: Record<Campo, (v: string) => string | null> = { nome: erroNome, email: erroEmail, telefone: erroTelefone };
-const LEMBRETE_S = 120;
 const INTERVALO_CONSULTA_MS = 5000;
 
-export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos, totalTexto, chavePublica }: Props) {
+export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos: base, bump, bumpMini, chavePublica }: Props) {
+  // Oferta complementar: desmarcada por padrão; o total muda na hora e o servidor confere de novo
+  const [comBump, setComBump] = useState(false);
+  const valorCentavos = base + (comBump && bump ? bump.precoCentavos : 0);
+  const totalTexto = formatarReais(valorCentavos);
   const [campos, setCampos] = useState<Record<Campo, string>>({ nome: "", email: emailSessao ?? "", telefone: "" });
   const [tocados, setTocados] = useState<Partial<Record<Campo, boolean>>>({});
   const [errosServidor, setErrosServidor] = useState<ErrosComprador>({});
@@ -52,7 +60,7 @@ export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos
     telefone: VALIDADORES.telefone(campos.telefone) ?? undefined,
   };
   const tudoValido = !erros.nome && !erros.email && !erros.telefone;
-  const entrada = { oferta, produtos, ...campos };
+  const entrada = { oferta, produtos, bump: comBump && bump ? bump.slug : "", ...campos };
   const erroVisivel = (c: Campo) => (tocados[c] ? erros[c] : undefined) ?? errosServidor[c];
 
   function mudar(c: Campo, valor: string) {
@@ -130,7 +138,6 @@ export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos
 
   return (
     <div className="checkout-pagamento">
-      <Lembrete />
       <CampoTexto
         id="nome"
         rotulo="Nome completo"
@@ -170,6 +177,14 @@ export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos
         aoMudar={(v) => mudar("telefone", v)}
         aoSair={() => setTocados((t) => ({ ...t, telefone: true }))}
       />
+
+      {bump ? (
+        <BlocoBump bump={bump} mini={bumpMini} marcado={comBump} aoMudar={setComBump} bloqueado={gerando} />
+      ) : null}
+      <p className="checkout-total" aria-live="polite">
+        <span>Total</span>
+        <strong className="num">{totalTexto}</strong>
+      </p>
 
       <div className="abas checkout-abas" role="tablist" aria-label="Forma de pagamento">
         <button type="button" role="tab" aria-selected={aba === "pix"} onClick={() => setAba("pix")}>
@@ -295,32 +310,6 @@ function CampoTexto({
   );
 }
 
-// Lembrete discreto de 2 minutos. Ao zerar, só avisa que o pedido continua pronto e pode recomeçar a contagem:
-// nada é cancelado, o preço não muda e os campos preenchidos ficam como estão.
-function Lembrete() {
-  const [resta, setResta] = useState(LEMBRETE_S);
-  useEffect(() => {
-    if (resta <= 0) return;
-    const id = setTimeout(() => setResta((r) => r - 1), 1000);
-    return () => clearTimeout(id);
-  }, [resta]);
-  if (resta <= 0) {
-    return (
-      <div className="checkout-lembrete zerado" role="status">
-        <span>Ainda está por aqui? O seu pedido continua pronto, com o mesmo preço.</span>
-        <button type="button" className="btn ghost sm" onClick={() => setResta(LEMBRETE_S)}>
-          Continuar
-        </button>
-      </div>
-    );
-  }
-  return (
-    <p className="checkout-lembrete" aria-live="off">
-      <Icone nome="relogio" tamanho={14} />
-      Seu pedido está pronto <span className="num">{`${Math.floor(resta / 60)}:${String(resta % 60).padStart(2, "0")}`}</span>
-    </p>
-  );
-}
 
 // --- Formulário de cartão do Mercado Pago (Card Payment Brick) ---------------------------------------
 

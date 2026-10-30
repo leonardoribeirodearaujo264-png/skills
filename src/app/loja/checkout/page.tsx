@@ -7,7 +7,7 @@ import { Icone } from "@/components/Icone";
 import { usuarioAtual } from "@/lib/auth/sessao";
 import { capaDoPacote } from "@/lib/loja/apresentacao";
 import { MENSAGEM_FALHA_CHECKOUT, previaCompra } from "@/lib/loja/checkout";
-import { formatarReais, MENSAGEM_RECUSA } from "@/lib/loja/dominio";
+import { MENSAGEM_RECUSA } from "@/lib/loja/dominio";
 import { CheckoutPagamento } from "./CheckoutPagamento";
 
 export const metadata: Metadata = { title: "Finalizar compra", robots: { index: false } };
@@ -66,17 +66,14 @@ export default async function Checkout({ searchParams }: { searchParams: Busca }
                       </dd>
                     </div>
                   ))}
-                  <div>
-                    <dt>Total</dt>
-                    <dd className="num">{formatarReais(previa.valorCentavos)}</dd>
-                  </div>
                 </dl>
                 <CheckoutPagamento
                   oferta={oferta}
                   produtos={produtos.join(",")}
                   emailSessao={usuario?.email ?? null}
                   valorCentavos={previa.valorCentavos}
-                  totalTexto={formatarReais(previa.valorCentavos)}
+                  bump={previa.bump}
+                  bumpMini={previa.bump ? (capaDoPacote(previa.bump.slug, previa.bump.titulo)?.mini ?? null) : null}
                   chavePublica={process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY ?? null}
                 />
                 <p className="small muted">

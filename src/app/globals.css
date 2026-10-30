@@ -520,3 +520,52 @@ main.narrow { max-width: 760px; padding: 48px 16px 96px; }
   .inclui-grade, .times { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) { .pp-barra { transition: none; } }
+
+/* ---------- Oferta complementar (order bump) no checkout ---------- */
+.bump {
+  position: relative; display: grid; gap: 10px; padding: 14px 16px 12px; border-radius: 16px;
+  background: var(--surface); box-shadow: 0 0 0 1.5px var(--line); transition: box-shadow .3s var(--ease), background .3s var(--ease);
+}
+.bump.marcado { background: var(--accent-soft); box-shadow: 0 0 0 2px var(--accent); }
+.bump input { position: absolute; top: 18px; left: 16px; width: 22px; height: 22px; margin: 0; accent-color: var(--accent); cursor: pointer; }
+.bump-corpo { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: start; padding-left: 34px; cursor: pointer; }
+.bump-mini { width: 72px; height: 48px; border-radius: 8px; object-fit: cover; }
+.bump-texto { display: grid; gap: 4px; min-width: 0; }
+.bump-topo { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; align-items: baseline; }
+.bump-topo strong { font: 700 15px/1.3 var(--font-display); }
+.bump-preco { font: 700 15px/1.3 var(--font-body); color: var(--accent); white-space: nowrap; }
+.bump-desc { font-size: 13px; line-height: 1.45; color: var(--ink-soft); }
+.bump-ver { padding-left: 34px; font-size: 13px; color: var(--accent); }
+.checkout-total { display: flex; justify-content: space-between; align-items: baseline; margin: 4px 0 0; padding-top: 12px; border-top: 1px solid var(--line); }
+.checkout-total span { color: var(--ink-soft); font-size: 14px; }
+.checkout-total strong { font: 800 24px/1 var(--font-display); }
+@media (max-width: 400px) { .bump-mini { display: none; } .bump-corpo { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- Página do pacote: demonstrações, o que leva e ganha, lista de agentes e skills ---------- */
+.pp-promessa { margin: 0 0 40px; font: 700 clamp(20px, 2.6vw, 24px)/1.35 var(--font-display); letter-spacing: -.01em; }
+.demos { margin: 0; padding: 0; list-style: none; display: grid; gap: 32px; counter-reset: demo; }
+.demo { display: grid; gap: 12px; counter-increment: demo; }
+.demo > h3 { margin: 0; font: 700 18px/1.3 var(--font-display); display: flex; gap: 10px; align-items: baseline; }
+.demo > h3::before { content: counter(demo, decimal-leading-zero); font: 500 12px/1 var(--font-mono); color: var(--accent); }
+.funcao { margin: 0; display: grid; gap: 1px; border-radius: 16px; overflow: hidden; background: var(--line); box-shadow: 0 0 0 1px var(--line); }
+.funcao > div { background: var(--surface); padding: 14px 16px; display: grid; gap: 4px; }
+.funcao dt { display: flex; align-items: center; gap: 8px; font: 600 13px/1.3 var(--font-body); color: var(--ink-soft); }
+.funcao dt svg { color: var(--accent); flex: none; }
+.funcao dt code { font: 500 12px/1.3 var(--font-mono); color: var(--ink); background: var(--bg); padding: 2px 6px; border-radius: 6px; }
+.funcao dd { margin: 0; font-size: 15px; line-height: 1.5; }
+.leva { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.leva li { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 14px; padding: 16px; border-radius: 16px; background: var(--surface); box-shadow: 0 0 0 1px var(--line); }
+.leva .ic { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); }
+.leva h3 { margin: 0 0 4px; font: 700 16px/1.3 var(--font-display); }
+.leva p { margin: 0; font-size: 14px; color: var(--ink-soft); line-height: 1.5; }
+.leva p.ganha { margin-top: 6px; color: var(--ink); }
+.grupos { display: grid; gap: 10px; }
+.grupo { border-radius: 16px; background: var(--surface); box-shadow: 0 0 0 1px var(--line); }
+.grupo summary { cursor: pointer; padding: 16px; font: 700 16px/1.3 var(--font-display); display: flex; justify-content: space-between; align-items: center; gap: 12px; list-style: none; min-height: 44px; }
+.grupo summary::-webkit-details-marker { display: none; }
+.grupo summary::after { content: "+"; font: 400 20px/1 var(--font-mono); color: var(--accent); margin-left: auto; }
+.grupo[open] summary::after { content: "−"; }
+.grupo ul { margin: 0; padding: 0 16px 16px; list-style: none; display: grid; gap: 14px; }
+.grupo li { display: grid; gap: 4px; padding-top: 14px; border-top: 1px solid var(--line); }
+.grupo li code { font: 600 13px/1.3 var(--font-mono); color: var(--accent); }
+.grupo li p { margin: 0; font-size: 14px; line-height: 1.5; }
