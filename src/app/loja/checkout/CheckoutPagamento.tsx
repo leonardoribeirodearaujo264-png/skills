@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Alerta } from "@/components/Alerta";
 import { BlocoCodigo } from "@/components/BlocoCodigo";
 import { Icone } from "@/components/Icone";
@@ -68,6 +68,13 @@ export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos
     const r = await acaoGerarPix(entrada).catch(() => ({ ok: false as const, erro: "Sem conexão. Tente de novo." }));
     setGerando(false);
     if (!r.ok) return setErro(r.erro);
+    if ("situacao" in r) {
+      return setEtapa(
+        r.situacao === "aprovado"
+          ? { tipo: "aprovado", email: email.trim() }
+          : { tipo: "analise", pedidoId: r.pedidoId, email: email.trim() },
+      );
+    }
     setEtapa({ tipo: "pix", pix: { pedidoId: r.pedidoId, copiaECola: r.copiaECola, qrBase64: r.qrBase64 } });
   }
 
@@ -262,6 +269,9 @@ function FormularioCartao({
   pagar: (dados: unknown) => Promise<void>;
 }) {
   const [estado, setEstado] = useState<"carregando" | "pronto" | "erro">("carregando");
+  // Um contêiner por montagem (muda com o e-mail e o valor): desmontar o formulário antigo não apaga o novo
+  const base = useId().replace(/[^a-zA-Z0-9]/g, "");
+  const container = `cartao-mp-${base}-${email.replace(/[^a-zA-Z0-9]/g, "")}-${valorCentavos}`;
   const pagarRef = useRef(pagar);
   useEffect(() => {
     pagarRef.current = pagar;
@@ -270,7 +280,7 @@ function FormularioCartao({
   const montar = useCallback(async () => {
     await carregarSdk();
     const mp = new window.MercadoPago!(chavePublica, { locale: "pt-BR" });
-    return mp.bricks().create("cardPayment", "cartao-mercadopago", {
+    return mp.bricks().create("cardPayment", container, {
       initialization: { amount: valorCentavos / 100, payer: { email } },
       // Botão na cor de destaque do site; o resto do formulário é o padrão do Mercado Pago
       customization: {
@@ -283,7 +293,7 @@ function FormularioCartao({
         onError: () => setEstado("erro"),
       },
     });
-  }, [chavePublica, valorCentavos, email]);
+  }, [chavePublica, valorCentavos, email, container]);
 
   useEffect(() => {
     let controle: ControleBrick | null = null;
@@ -313,7 +323,7 @@ function FormularioCartao({
           Tente de novo em instantes ou use o Pix, que aprova na hora.
         </Alerta>
       )}
-      <div id="cartao-mercadopago" />
+      <div id={container} key={container} />
     </div>
   );
 }

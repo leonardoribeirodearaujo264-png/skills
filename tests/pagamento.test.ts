@@ -87,6 +87,7 @@ function mpCom(pagamentos: Record<string, Pagamento>): ClienteMercadoPago {
     pagarComCartao: async () => {
       throw new Error("não usado");
     },
+    cancelarPagamento: async () => false,
     buscarPagamento: async (id) => pagamentos[id] ?? null,
     pagamentosDoPedido: async () => Object.values(pagamentos),
   };

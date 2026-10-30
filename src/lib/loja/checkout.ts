@@ -1,9 +1,10 @@
 import type { Usuario } from "../auth/sessao";
 import { env } from "../env";
-import { ErroMercadoPago, type Pix } from "../mercadopago/api";
+import { ErroMercadoPago, type Pagamento, type Pix } from "../mercadopago/api";
 import { clientePublico, clienteServico } from "../supabase/clientes";
 import { montarPedido, PedidoInvalido, type Catalogo, type ItensDoPedido, type MotivoRecusa } from "./dominio";
 import { meusProdutos } from "./membros";
+import { permitir } from "./limites";
 import { aplicarPagamento, type ResultadoPagamento } from "./pagamento";
 import { carregarCatalogo, criarOuReusarPedido, pedidoParaRetorno } from "./repositorio";
 import { depsPagamento } from "./servicos";
@@ -81,12 +82,41 @@ function urlNotificacao(): string {
   return `${env().SITE_URL}/api/webhooks/mercadopago?source_news=webhooks`;
 }
 
+// Pagamentos que já existem no pedido. Antes de cobrar de novo, o que está aprovado ou em análise decide.
+type JaCobrado = { situacao: "aprovado" | "em_analise"; pedidoId: string };
+const EM_ANALISE = new Set(["in_process", "pending", "authorized"]);
+
+// Libera e confirma: "aprovado" só quando o acesso saiu de fato; o resto vira análise (e fica no log)
+async function liberarAprovado(deps: ReturnType<typeof depsPagamento>, pagamento: Pagamento, pedidoId: string): Promise<JaCobrado> {
+  const r: ResultadoPagamento = (await aplicarPagamento(deps, pagamento)).resultado;
+  if (r === "liberado" || r === "ja_pago") return { situacao: "aprovado", pedidoId };
+  console.error("pagamento aprovado sem liberação", { pedidoId, resultado: r });
+  return { situacao: "em_analise", pedidoId };
+}
+
+async function cobrancaExistente(
+  deps: ReturnType<typeof depsPagamento>,
+  pedidoId: string,
+  ignorarPix: boolean,
+): Promise<JaCobrado | null> {
+  const pagamentos = await deps.mp.pagamentosDoPedido(pedidoId);
+  const aprovado = pagamentos.find((p) => p.status === "approved");
+  if (aprovado) return liberarAprovado(deps, aprovado, pedidoId);
+  const analise = pagamentos.find((p) => EM_ANALISE.has(p.status) && !(ignorarPix && p.payment_method_id === "pix"));
+  if (analise) return { situacao: "em_analise", pedidoId };
+  return null;
+}
+
 export type PixGerado = { pedidoId: string; valorCentavos: number; pix: Pix };
 
-export async function gerarPix(comprador: Comprador, oferta: string, produtos: string[]): Promise<PixGerado | Falha> {
+export async function gerarPix(comprador: Comprador, oferta: string, produtos: string[]): Promise<PixGerado | JaCobrado | Falha> {
   try {
     const pedido = await prepararPedido(comprador, oferta, produtos);
-    const pix = await depsPagamento().mp.criarPix({
+    const deps = depsPagamento();
+    // Se o pedido já foi pago ou tem cartão em análise, não gera cobrança nova. Pix pendente é reaproveitado.
+    const ja = await cobrancaExistente(deps, pedido.pedidoId, true);
+    if (ja) return ja;
+    const pix = await deps.mp.criarPix({
       ...pedido,
       urlNotificacao: urlNotificacao(),
       expiraEm: new Date(Date.now() + PIX_VALIDO_MS),
@@ -107,10 +137,7 @@ export type DadosCartao = {
   documento: { tipo: string; numero: string } | null;
 };
 
-export type ResultadoCartao =
-  | { situacao: "aprovado" | "em_analise"; pedidoId: string }
-  | { situacao: "recusado"; detalhe: string | null }
-  | Falha;
+export type ResultadoCartao = JaCobrado | { situacao: "recusado"; detalhe: string | null } | Falha;
 
 export async function pagarComCartao(
   comprador: Comprador,
@@ -123,6 +150,21 @@ export async function pagarComCartao(
     // O valor mostrado no formulário tem de ser o mesmo do servidor; senão, a tela está desatualizada
     if (cartao.valorCentavos !== pedido.valorCentavos) return { motivo: "falha" };
     const deps = depsPagamento();
+
+    // Nada de cobrança dupla: pedido já pago ou com cartão em análise não é cobrado de novo,
+    // e o Pix pendente do mesmo pedido é cancelado antes do cartão (se não der, ele já foi pago)
+    const ja = await cobrancaExistente(deps, pedido.pedidoId, true);
+    if (ja) return ja;
+    const pixPendentes = (await deps.mp.pagamentosDoPedido(pedido.pedidoId)).filter(
+      (p) => p.payment_method_id === "pix" && p.status === "pending",
+    );
+    for (const pix of pixPendentes) {
+      if (!(await deps.mp.cancelarPagamento(pix.id))) {
+        const depois = await cobrancaExistente(deps, pedido.pedidoId, false);
+        if (depois) return depois;
+      }
+    }
+
     const pagamento = await deps.mp.pagarComCartao({
       ...pedido,
       ...cartao,
@@ -130,13 +172,8 @@ export async function pagarComCartao(
       // O token do cartão vale uma vez: a mesma tentativa repetida não cobra duas vezes
       idempotencia: `cartao-${pedido.pedidoId}-${cartao.token}`.slice(0, 256),
     });
-    if (pagamento.status === "approved") {
-      await aplicarPagamento(deps, pagamento);
-      return { situacao: "aprovado", pedidoId: pedido.pedidoId };
-    }
-    if (pagamento.status === "in_process" || pagamento.status === "pending" || pagamento.status === "authorized") {
-      return { situacao: "em_analise", pedidoId: pedido.pedidoId };
-    }
+    if (pagamento.status === "approved") return liberarAprovado(deps, pagamento, pedido.pedidoId);
+    if (EM_ANALISE.has(pagamento.status)) return { situacao: "em_analise", pedidoId: pedido.pedidoId };
     await aplicarPagamento(deps, pagamento);
     return { situacao: "recusado", detalhe: pagamento.status_detail ?? null };
   } catch (e) {
@@ -147,20 +184,18 @@ export async function pagarComCartao(
 
 export type Situacao = "pago" | "pendente" | "recusado" | "outro";
 
-// Situação do pedido para a tela do checkout. Se ainda está pendente, confere no Mercado Pago:
-// a tela fica certa mesmo se o webhook atrasar. A liberação é a mesma do webhook (idempotente).
+// Situação do pedido para a tela do checkout. Enquanto não está pago, confere no Mercado Pago (no máximo
+// a cada 8 s por pedido): a tela fica certa mesmo se o webhook atrasar. A liberação é a do webhook.
 export async function situacaoDoPedido(pedidoId: string): Promise<Situacao> {
   const db = clienteServico();
   let pedido = await pedidoParaRetorno(db, pedidoId);
   if (!pedido) return "outro";
-  if (pedido.status === "pendente") {
+  if ((pedido.status === "pendente" || pedido.status === "recusado") && (await permitir(`situacao:${pedidoId}`, 600, 8))) {
     try {
       const deps = depsPagamento();
-      const pagamentos = await deps.mp.pagamentosDoPedido(pedidoId);
-      const aprovado = pagamentos.find((p) => p.status === "approved");
+      const aprovado = (await deps.mp.pagamentosDoPedido(pedidoId)).find((p) => p.status === "approved");
       if (aprovado) {
-        const r: ResultadoPagamento = (await aplicarPagamento(deps, aprovado)).resultado;
-        if (r !== "liberado" && r !== "ja_pago") console.error("situacao", { pedidoId, resultado: r });
+        await liberarAprovado(deps, aprovado, pedidoId);
         pedido = await pedidoParaRetorno(db, pedidoId);
       }
     } catch (e) {

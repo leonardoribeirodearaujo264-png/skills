@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 // Chamadas REST do Mercado Pago (pagamento direto no site: Pix e cartão). Endpoints da documentação oficial:
-// POST /v1/payments (com X-Idempotency-Key), GET /v1/payments/{id} e GET /v1/payments/search,
-// com Authorization: Bearer <access token>.
+// POST /v1/payments (com X-Idempotency-Key), PUT /v1/payments/{id} (cancelar pendente),
+// GET /v1/payments/{id} e GET /v1/payments/search, com Authorization: Bearer <access token>.
 const BASE = "https://api.mercadopago.com";
 
 export class ErroMercadoPago extends Error {
@@ -49,6 +49,7 @@ const respostaPagamento = z.object({
   id: z.union([z.number(), z.string()]).transform(String),
   status: z.string(),
   status_detail: z.string().nullish(),
+  payment_method_id: z.string().nullish(),
   external_reference: z.string().nullish(),
   transaction_amount: z.number(),
   currency_id: z.string(),
@@ -71,48 +72,57 @@ async function motivoDoErro(r: Response): Promise<string> {
 export type ClienteMercadoPago = {
   criarPix(p: NovoPix): Promise<Pix>;
   pagarComCartao(p: NovoCartao): Promise<Pagamento>;
+  // Cancela um pagamento ainda pendente (Pix não pago). Devolve false se ele não pode mais ser cancelado.
+  cancelarPagamento(id: string): Promise<boolean>;
   buscarPagamento(id: string): Promise<Pagamento | null>;
   pagamentosDoPedido(pedidoId: string): Promise<Pagamento[]>;
 };
 
 export function criarClienteMercadoPago(accessToken: string, fetchImpl: typeof fetch = fetch): ClienteMercadoPago {
   async function chamar(operacao: string, caminho: string, init: RequestInit = {}): Promise<Response> {
-    const r = await fetchImpl(`${BASE}${caminho}`, {
+    return fetchImpl(`${BASE}${caminho}`, {
       ...init,
       headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json", ...init.headers },
       signal: AbortSignal.timeout(10_000),
       cache: "no-store",
     });
-    return r;
+  }
+
+  async function criarPixComChave(p: NovoPix, chave: string): Promise<Pix> {
+    const corpo = {
+      transaction_amount: p.valorCentavos / 100,
+      description: p.descricao,
+      payment_method_id: "pix",
+      payer: { email: p.email },
+      external_reference: p.pedidoId,
+      date_of_expiration: p.expiraEm.toISOString(),
+      // Notificação só com endereço público; em localhost a tela consulta o pagamento direto
+      ...(p.urlNotificacao.startsWith("https://") ? { notification_url: p.urlNotificacao } : {}),
+    };
+    const r = await chamar("criar Pix", "/v1/payments", {
+      method: "POST",
+      body: JSON.stringify(corpo),
+      headers: { "X-Idempotency-Key": chave },
+    });
+    if (!r.ok) throw new ErroMercadoPago("criar Pix", r.status, await motivoDoErro(r));
+    const j = respostaPix.parse(await r.json());
+    return {
+      id: j.id,
+      status: j.status,
+      copiaECola: j.point_of_interaction.transaction_data.qr_code,
+      qrBase64: j.point_of_interaction.transaction_data.qr_code_base64,
+      expiraEm: j.date_of_expiration ?? null,
+    };
   }
 
   return {
     async criarPix(p) {
-      const corpo = {
-        transaction_amount: p.valorCentavos / 100,
-        description: p.descricao,
-        payment_method_id: "pix",
-        payer: { email: p.email },
-        external_reference: p.pedidoId,
-        date_of_expiration: p.expiraEm.toISOString(),
-        // Notificação só com endereço público; em localhost a tela consulta o pagamento direto
-        ...(p.urlNotificacao.startsWith("https://") ? { notification_url: p.urlNotificacao } : {}),
-      };
-      // Mesmo pedido, mesma chave: clicar duas vezes devolve o mesmo Pix em vez de criar outro
-      const r = await chamar("criar Pix", "/v1/payments", {
-        method: "POST",
-        body: JSON.stringify(corpo),
-        headers: { "X-Idempotency-Key": `pix-${p.pedidoId}` },
-      });
-      if (!r.ok) throw new ErroMercadoPago("criar Pix", r.status, await motivoDoErro(r));
-      const j = respostaPix.parse(await r.json());
-      return {
-        id: j.id,
-        status: j.status,
-        copiaECola: j.point_of_interaction.transaction_data.qr_code,
-        qrBase64: j.point_of_interaction.transaction_data.qr_code_base64,
-        expiraEm: j.date_of_expiration ?? null,
-      };
+      // Mesmo pedido, mesma chave: clicar duas vezes devolve o mesmo Pix em vez de criar outro.
+      // Se o Pix devolvido já venceu, foi cancelado ou vence em menos de 5 min, gera outro com chave nova.
+      const primeiro = await criarPixComChave(p, `pix-${p.pedidoId}`);
+      const vence = primeiro.expiraEm ? Date.parse(primeiro.expiraEm) : Infinity;
+      if (primeiro.status === "pending" && vence > Date.now() + 5 * 60_000) return primeiro;
+      return criarPixComChave(p, `pix-${p.pedidoId}-${Date.now()}`);
     },
 
     async pagarComCartao(p) {
@@ -138,6 +148,15 @@ export function criarClienteMercadoPago(accessToken: string, fetchImpl: typeof f
       });
       if (!r.ok) throw new ErroMercadoPago("pagar com cartão", r.status, await motivoDoErro(r));
       return respostaPagamento.parse(await r.json());
+    },
+
+    async cancelarPagamento(id) {
+      if (!/^\d+$/.test(id)) return false;
+      const r = await chamar("cancelar pagamento", `/v1/payments/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({ status: "cancelled" }),
+      });
+      return r.ok;
     },
 
     async buscarPagamento(id) {

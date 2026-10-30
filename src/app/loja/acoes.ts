@@ -48,6 +48,7 @@ async function validar(e: Entrada) {
 
 export type RespostaPix =
   | { ok: true; pedidoId: string; copiaECola: string; qrBase64: string; expiraEm: string | null }
+  | { ok: true; situacao: "aprovado" | "em_analise"; pedidoId: string }
   | { ok: false; erro: string };
 
 export async function acaoGerarPix(e: Entrada): Promise<RespostaPix> {
@@ -55,6 +56,8 @@ export async function acaoGerarPix(e: Entrada): Promise<RespostaPix> {
   if ("erro" in v) return { ok: false, erro: v.erro ?? MENSAGEM_FALHA_CHECKOUT };
   const r = await gerarPix({ usuario: v.usuario, email: v.dados.email }, v.dados.oferta, v.dados.produtos);
   if ("motivo" in r) return { ok: false, erro: mensagem(r) };
+  // Pedido já pago ou com cartão em análise: não gera outra cobrança
+  if ("situacao" in r) return { ok: true, situacao: r.situacao, pedidoId: r.pedidoId };
   return { ok: true, pedidoId: r.pedidoId, copiaECola: r.pix.copiaECola, qrBase64: r.pix.qrBase64, expiraEm: r.pix.expiraEm };
 }
 
@@ -116,5 +119,7 @@ const uuid = z.uuid();
 
 export async function acaoSituacao(pedidoId: string): Promise<Situacao> {
   if (!uuid.safeParse(pedidoId).success) return "outro";
+  // A tela consulta a cada 5 s; o limite por IP só barra abuso
+  if (!(await permitir(`situacao-ip:${await ipDaRequisicao()}`, 2000))) return "outro";
   return situacaoDoPedido(pedidoId);
 }
