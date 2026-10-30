@@ -26,14 +26,17 @@ Se o usuário já tem depoimentos, comentários ou respostas de pesquisa e quer 
 
 1. **Defina o público em uma frase.** Escreva quem é, em que momento da vida ou do negócio está e o que já tentou. Pronto quando a frase cabe em uma linha e não usa "todo mundo".
 2. **Liste as dores brutas.** Leia o material fornecido com Read ou Grep e anote cada problema citado, sem filtrar. Sem material, liste hipóteses a partir do produto e marque [HIPÓTESE]. Pronto quando há pelo menos 10 itens ou todo o material foi lido.
-3. **Agrupe por tema.** Junte dores que falam da mesma coisa com palavras diferentes. Dê a cada grupo um nome curto na linguagem do cliente. Pronto quando nenhum grupo repete outro.
+3. **Agrupe por tema.** Junte dores que falam da mesma coisa com palavras diferentes. Dê a cada grupo um nome curto na linguagem do cliente. Cada fonte (um comentário, uma mensagem, uma resposta) entra em um grupo só: se falar de duas dores, ponha na que ela descreve com mais detalhe e anote a outra na coluna Fonte. Desejo que vale para todas as dores vai na linha "Desejo geral" da Saída, não repetido em cada grupo. Pronto quando nenhum grupo repete outro e nenhuma fonte está em dois grupos.
 4. **Abra cada grupo em quatro camadas.** Para cada grupo, escreva:
    - Sintoma: o que a pessoa sente ou vê no dia a dia.
    - Causa percebida: o que ela acha que provoca o problema.
    - Custo: o que perde por continuar assim (dinheiro, tempo, saúde, reputação, relação).
    - Desejo: como seria a vida resolvida, nas palavras dela.
-   Pronto quando nenhuma camada está em branco; se faltar dado, marque [FALTA DADO].
-5. **Pontue e priorize.** Dê nota de 1 a 3 em frequência (quantas vezes aparece) e em intensidade (quanto incomoda). Multiplique. Ordene do maior para o menor. Pronto quando a tabela está ordenada e cada nota tem justificativa de uma linha.
+   Se faltar dado, marque [FALTA DADO] e inclua na Saída as três perguntas para o público completar o mapa: "O que custa para você continuar assim?", "O que você já tentou para resolver?" e "Como seria o seu dia com isso resolvido?". Pronto quando nenhuma camada está em branco.
+5. **Pontue e priorize.** Duas notas de 1 a 3, multiplicadas:
+   - Frequência, pela régua fixa (a mesma da levantar-objecoes): 1 = 1 fonte; 2 = 2 a 3 fontes; 3 = 4 ou mais fontes. Linha [HIPÓTESE] sem fonte recebe 1.
+   - Intensidade: 1 = incômodo citado de passagem; 2 = queixa com custo concreto (dinheiro, tempo, relação); 3 = queixa com urgência ou emoção forte ("não aguento mais", "vou desistir").
+   Ordene do maior para o menor. Desempate, nesta ordem: maior intensidade; depois maior número de fontes; depois a dor que o produto resolve mais diretamente. Pronto quando a tabela está ordenada, cada linha mostra o número de fontes e cada nota de intensidade tem justificativa de uma linha.
 6. **Escolha a dor principal e duas secundárias.** A principal é a de maior pontuação que o produto realmente resolve. Se a dor mais forte não é resolvida pelo produto, registre isso como alerta. Pronto quando as três estão marcadas e o alerta, se existir, está escrito.
 
 ## Saída
@@ -42,9 +45,14 @@ Se o usuário já tem depoimentos, comentários ou respostas de pesquisa e quer 
 Público: [FRASE DE UMA LINHA]
 Base: [material lido] ou [HIPÓTESE, sem material do cliente]
 
-| # | Dor (nome do cliente) | Sintoma | Causa percebida | Custo | Desejo | Freq | Int | Nota | Fonte |
-|---|---|---|---|---|---|---|---|---|---|
-| 1 | ... | ... | ... | ... | ... | 3 | 3 | 9 | comentário 12 |
+| # | Dor (nome do cliente) | Sintoma | Causa percebida | Custo | Desejo | Fontes | Freq | Int | Por que Int | Nota | Fonte |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | ... | ... | ... | ... | ... | 4 | 3 | 3 | "..." | 9 | comentários 3, 7, 12, 15 |
+
+Régua de frequência: 1 = 1 fonte | 2 = 2 a 3 | 3 = 4 ou mais | [HIPÓTESE] = 1
+Desempates aplicados: [quais linhas e por qual critério]
+Desejo geral: [desejo que vale para todas as dores, se houver]
+Perguntas para completar [FALTA DADO]: [as três do passo 4, se houver lacuna]
 
 Dor principal: [nome]
 Secundárias: [nome], [nome]

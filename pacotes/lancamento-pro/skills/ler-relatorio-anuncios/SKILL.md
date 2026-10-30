@@ -26,11 +26,12 @@ Para decidir quais conjuntos pausar, use sugerir-pausa-conjunto. Para saber se o
 ## Passo a passo
 
 1. **Leia o arquivo.** CSV com Read; print, transcreva os números e peça confirmação dos que ficaram ilegíveis. Os nomes das colunas variam conforme plataforma, idioma e versão: mapeie cada coluna para o conceito (gasto, impressões, cliques no link, conversões, valor) e mostre o mapeamento. Pronto quando o usuário pode conferir de qual coluna saiu cada conceito.
-2. **Recalcule as métricas derivadas.** CPM = gasto / impressões x 1000. CTR = cliques / impressões. CPC = gasto / cliques. Taxa de conversão = conversões / cliques. CPA = gasto / conversões. ROAS = valor / gasto. Se a plataforma também traz esses campos, compare e explique diferença (por exemplo, clique total contra clique no link). Pronto quando há uma tabela com as métricas por linha e no total.
-3. **Monte o funil.** Impressões -> cliques -> visitas na página (se houver dado) -> início de checkout -> conversão. Calcule a passagem de cada etapa. Pronto quando cada etapa tem número absoluto e percentual de passagem, ou "sem dado".
-4. **Ache o gargalo.** Compare as linhas entre si, nunca com média de mercado. CPM alto relativo aponta para público ou leilão; CTR baixo relativo, para criativo ou oferta no anúncio; muito clique e pouca visita, para página lenta ou rastreamento; visita sem checkout, para página ou preço. Pronto quando o gargalo principal está nomeado com o número que o sustenta.
+2. **Recalcule as métricas derivadas.** CPM = gasto / impressões x 1000. CTR = cliques / impressões. CPC = gasto / cliques. Taxa de conversão do clique = conversões / cliques (não confundir com a passagem checkout -> compra do passo 3). CPA = gasto / conversões. ROAS = valor / gasto. Se a plataforma também traz esses campos, compare e explique diferença (por exemplo, clique total contra clique no link). Pronto quando há uma tabela com as métricas por linha e no total.
+3. **Monte o funil.** Impressões -> cliques -> visitas na página (se houver dado) -> início de checkout -> conversão. Calcule a passagem de cada etapa: número da etapa / número da etapa anterior. Pronto quando cada etapa tem número absoluto e percentual de passagem, ou "sem dado".
+4. **Ache o gargalo.** Compare as linhas entre si, nunca com média de mercado. CPM alto relativo aponta para público ou leilão; CTR baixo relativo, para criativo ou oferta no anúncio; muito clique e pouca visita, para página lenta ou rastreamento; visita sem checkout, para página ou preço. Essas causas de página só valem quando as linhas comparadas usam páginas diferentes ou quando se compara o mesmo item em períodos diferentes. Se todas as linhas levam à mesma página e à mesma oferta, a diferença entre elas vem do público, do posicionamento ou do criativo; diga isso em vez de culpar a página. Dado fraco: peça ao usuário o mínimo de conversões por linha que ele aceita para tirar conclusão; sem resposta, marque [DADO FRACO] em toda linha com menos de 10 conversões e diga que esse corte é uma convenção, não um limite estatístico. Linha [DADO FRACO] não sustenta o gargalo sozinha. Pronto quando o gargalo principal está nomeado com o número que o sustenta e as linhas fracas estão marcadas.
 5. **Confronte com os números de fora.** Se o usuário trouxe vendas reais, mostre a diferença entre atribuído e real e diga que a diferença é esperada em algum grau, sem cravar o motivo. Pronto quando a diferença está em reais e em percentual, ou marcada como "sem dado externo".
-6. **Liste o que medir primeiro.** Tudo que impediu uma conclusão vira item: evento faltando, UTM ausente, período curto. Pronto quando a lista existe, mesmo que vazia.
+6. **Compare com o CPA máximo.** Se o usuário informou CPA máximo ou ROAS mínimo, ponha lado a lado com o real, por linha e no total, e marque cada linha como dentro ou fora. Pronto quando a comparação está feita ou registrada como "sem CPA máximo informado".
+7. **Liste o que medir primeiro.** Tudo que impediu uma conclusão vira item: evento faltando, UTM ausente, período curto. Pronto quando a lista existe, mesmo que vazia.
 
 ## Saída
 
@@ -43,12 +44,14 @@ Mapeamento de colunas
 | Conceito | Coluna no arquivo |
 
 Métricas
-| Linha | Gasto | CPM | CTR | CPC | Conv. | Tx conv. | CPA | ROAS |
+| Linha | Gasto | CPM | CTR | CPC | Conv. | Tx conv. do clique | CPA | ROAS | Dado |
+(Dado: ok ou [DADO FRACO], corte de [n] conversões definido por [usuário/convenção])
 
 Funil
 Impressões [n] -> Cliques [n] ([%]) -> Visitas [n] ([%]) -> Checkout [n] ([%]) -> Conversões [n] ([%])
 
-Gargalo principal: [etapa] porque [número]
+Gargalo principal: [etapa] porque [número] | mesma página em todas as linhas? [sim/não]
+CPA real x CPA máximo: [real] x [máximo] por linha e no total, dentro/fora | ou "sem CPA máximo informado"
 Atribuído x real: [diferença] ou "sem dado externo"
 Medir primeiro: [itens]
 ```

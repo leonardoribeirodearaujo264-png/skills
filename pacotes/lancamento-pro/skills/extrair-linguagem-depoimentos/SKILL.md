@@ -19,12 +19,12 @@ Se não há material de cliente e o objetivo é descobrir quais problemas existe
 
 - O material bruto, em arquivo ou colado na conversa. Sem material, pare: esta skill não inventa fala de cliente.
 - Origem de cada peça (depoimento autorizado, comentário público, mensagem privada, pesquisa anônima).
-- Se há autorização para publicar nome, foto ou trecho. Sem resposta, trate tudo como [SEM AUTORIZAÇÃO].
+- Se há autorização para publicar e de qual escopo, peça por peça: nome, foto, trecho. Sem resposta, trate tudo como [SEM AUTORIZAÇÃO].
 - Produto e público, em uma linha cada.
 
 ## Passo a passo
 
-1. **Inventarie o material.** Liste cada peça com um código (D1, D2, C1...) e a origem. Use Read e Grep para arquivos. Pronto quando cada peça tem código, origem e status de autorização.
+1. **Inventarie o material.** Liste cada peça com um código (D1, D2, C1...) e a origem. Use Read e Grep para arquivos. Pronto quando cada peça tem código, origem e status de autorização com escopo (nome, foto, trecho ou nenhum).
 2. **Marque trechos por função.** Em cada peça, recorte frases curtas e classifique:
    - Antes: como descreve o problema.
    - Tentativas: o que já fez e não funcionou.
@@ -32,10 +32,10 @@ Se não há material de cliente e o objetivo é descobrir quais problemas existe
    - Depois: resultado com as palavras dela.
    - Freio: dúvida, medo ou objeção citada.
    - Decisão: motivo declarado para comprar.
-   Pronto quando todas as peças foram lidas e cada recorte tem função.
+   Uma frase pode entrar em duas funções quando cumpre as duas (por exemplo, Virada e Decisão): repita a frase e anote "também em [função]". Pronto quando todas as peças foram lidas e cada recorte tem função.
 3. **Preserve a fala.** Copie o trecho do cliente exatamente como está, inclusive gírias e erros leves. Corrija apenas o que impede a leitura e marque [AJUSTE]. Pronto quando nenhum trecho foi reescrito sem marca.
-4. **Encontre padrões.** Conte palavras e expressões que se repetem em peças diferentes. Pronto quando há uma lista das 5 a 10 expressões mais repetidas, com contagem.
-5. **Separe o que pode ir para a página.** Para cada trecho com resultado, confira se tem contexto verificável (quem, situação, prazo). Resultado de saúde, dinheiro ou processo judicial ganha alerta de regra do conselho ou de publicidade. Pronto quando cada trecho de "Depois" está marcado como usável, usável com autorização ou só referência interna.
+4. **Encontre padrões.** Conte por peça, não por ocorrência: a expressão que aparece três vezes na mesma peça conta 1. Junte variações da mesma palavra (ressecar, ressecou, ressecado). Ignore o nome do produto, a categoria ("shampoo", "curso") e verbos genéricos (comprei, usei, achei, gostei). Pronto quando há uma lista das 5 a 10 expressões que aparecem em mais peças, com o número de peças e os códigos.
+5. **Separe o que pode ir para a página.** Para cada trecho com resultado, confira se tem contexto verificável (quem, situação, prazo). Resultado de saúde, dinheiro ou processo judicial ganha alerta de regra do conselho ou de publicidade. Cosmético, suplemento e alimento com alegação de efeito ("acabou a queda", "emagreci", "curou") ganham alerta das regras da Anvisa: o depoimento não pode atribuir ao produto efeito que o registro dele não permite. Pronto quando cada trecho de "Depois" está marcado como usável, usável com autorização ou só referência interna.
 6. **Entregue o banco no formato da Saída.** Pronto quando cada frase tem código de fonte e status.
 
 ## Saída
@@ -43,8 +43,12 @@ Se não há material de cliente e o objetivo é descobrir quais problemas existe
 ```text
 Material: [quantidade] peças | Autorizadas para publicação: [quantidade]
 
+Autorização por peça
+| Peça | Origem | Nome | Foto | Trecho |
+| D1 | depoimento | não | não | sim |
+
 Expressões que se repetem
-- "[expressão]" (x vezes: D1, D4, C2)
+- "[expressão]" (em x peças: D1, D4, C2)
 
 Antes
 - "[frase exata]" (D3) [SEM AUTORIZAÇÃO]

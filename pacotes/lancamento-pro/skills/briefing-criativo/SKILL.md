@@ -28,19 +28,22 @@ Para decidir quais variações testar e com quanto orçamento, use matriz-teste-
 ## Passo a passo
 
 1. **Feche objetivo e público.** Uma frase para cada. Pronto quando o objetivo cabe em "esta peça faz [público] [ação]".
-2. **Escolha o ângulo.** Dor, desejo, objeção, prova, comparação ou bastidor. Um ângulo por peça. Pronto quando o ângulo está nomeado e justificado com algo que o usuário disse.
-3. **Escreva três ganchos.** Primeira fala ou primeiro texto na tela, até os primeiros segundos. Cada gancho diferente no tipo (pergunta, afirmação, cena). Pronto quando há três opções e uma marcada como principal.
-4. **Monte o roteiro de cenas.** Tabela com tempo aproximado, o que se vê, o que se ouve e o texto na tela. Para imagem ou carrossel, um quadro por linha. Pronto quando a peça tem começo (gancho), meio (prova ou explicação) e fim (CTA).
-5. **Defina CTA e destino.** Ação única e página de destino. Se houver UTM, cite o nome da peça para montar-utms. Pronto quando CTA e URL estão escritos.
-6. **Marque as provas.** Use só o que o usuário forneceu. O resto vira [DEPOIMENTO REAL] ou [NÚMERO REAL]. Pronto quando nenhuma prova inventada aparece.
-7. **Liste restrições.** Regras da plataforma sobre promessas e atributos pessoais, regras do conselho profissional, marca (cores, fontes, tom). Avise quando um trecho puder ferir uma regra. Pronto quando a lista está escrita.
-8. **Defina entregáveis.** Formatos, legendas, versão sem texto, nome do arquivo. Pronto quando o produtor sabe exatamente o que entregar.
+2. **Levante as restrições antes de escrever.** Regras da plataforma sobre promessas e atributos pessoais (saúde, condição física ou mental, finanças pessoais, entre outros), regras do conselho profissional, marca (cores, fontes, tom). Pronto quando a lista está escrita e será aplicada aos passos seguintes.
+3. **Escolha o ângulo.** Dor, desejo, objeção, prova, comparação, bastidor, ou outro, com justificativa. Um ângulo por peça. Pronto quando o ângulo está nomeado e justificado com algo que o usuário disse.
+4. **Escreva três ganchos.** Primeira fala ou primeiro texto na tela, até os primeiros segundos. Cada gancho diferente no tipo (pergunta, afirmação, cena). Em área regulada, aplique as restrições do passo 2 já aqui: a pergunta é sobre hábito ou situação ("passa o dia sentado?"), nunca sobre a condição da pessoa ("você tem dor lombar?"). Pronto quando há três opções, uma marcada como principal, e nenhuma fere as restrições.
+5. **Monte o roteiro de cenas.** Tabela com tempo aproximado, o que se vê, o que se ouve e o texto na tela. Para imagem ou carrossel, um quadro por linha. Pronto quando a peça tem começo (gancho), meio (prova ou explicação) e fim (CTA), e o gancho se entende sem som.
+6. **Defina CTA e destino.** Ação única e página de destino. Se houver UTM, cite o nome da peça para montar-utms. Pronto quando CTA e URL estão escritos.
+7. **Marque as provas.** Use só o que o usuário forneceu. O resto vira [DEPOIMENTO REAL] ou [NÚMERO REAL]. Confira também o conteúdo da prova real: depoimento que afirma cura, resultado garantido ou prazo de resultado não entra como está; sinalize e sugira o trecho que pode ir ao ar. Pronto quando nenhuma prova inventada aparece e cada depoimento foi conferido contra as restrições.
+8. **Revise o roteiro inteiro contra as restrições.** Fala, texto na tela e legenda. Avise com "Atenção:" quando um trecho puder ferir uma regra. Pronto quando cada risco está marcado ou a revisão diz "nenhum".
+9. **Defina entregáveis.** Formatos, legendas, versão sem texto, nome do arquivo. Pronto quando o produtor sabe exatamente o que entregar.
 
 ## Saída
 
 ```text
 Peça: [nome no padrão do usuário] | Formato: [vídeo/imagem/carrossel] | Prazo: [data]
-Objetivo: [frase] | Público: [frase] | Ângulo: [ângulo]
+Objetivo: [frase] | Público: [frase] | Ângulo: [ângulo e justificativa]
+
+Restrições: [plataforma, conselho, marca]
 
 Ganchos
 1. (principal) [...]
@@ -51,17 +54,17 @@ Roteiro
 | Tempo | Imagem | Fala/Áudio | Texto na tela |
 
 CTA: [texto] -> [URL]
-Provas: [itens reais ou marcadores]
-Restrições: [plataforma, conselho, marca]
+Provas: [itens reais ou marcadores; depoimento conferido: ok ou trecho a cortar]
+Atenção: [riscos encontrados ou "nenhum"]
 Entregáveis: [lista com proporções a confirmar na especificação atual]
 ```
 
 ## Erros comuns
 
 - Dois ângulos na mesma peça, e o espectador não guarda nenhum.
-- Gancho que só se entende com som, sem texto na tela para quem assiste mudo.
+- Gancho em pergunta sobre a condição de saúde da pessoa, que fere a regra de atributos pessoais.
+- Depoimento real usado como está, com promessa de cura ou resultado garantido.
 - Depoimento ou número "de exemplo" que acaba indo ao ar.
-- Promessa de resultado em área regulada sem checar a regra do conselho.
 - Briefing sem destino nem nome de arquivo, que quebra o rastreio.
 
 ## Exemplo de pedido

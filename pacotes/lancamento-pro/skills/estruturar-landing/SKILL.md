@@ -39,11 +39,11 @@ Para conferir a página pronta em várias larguras de tela, use checklist-respon
    8. Garantia e riscos: o que acontece se não servir.
    9. Perguntas frequentes: objeções restantes.
    10. Fechamento: resumo da decisão e CTA final.
-   Pronto quando cada seção tem um objetivo escrito em uma linha.
+   Ajustes permitidos: se a objeção mais pesada é de risco ou de preço, a Garantia sobe para logo depois da Oferta, ao lado do CTA; se a venda fecha em chamada ou WhatsApp, a Oferta vira "como funciona a conversa" e o preço pode ficar para a conversa, desde que a página diga isso. Pronto quando cada seção tem um objetivo escrito em uma linha e cada ajuste na ordem tem o motivo.
 4. **Defina o que cada seção precisa provar.** Para cada uma, escreva a afirmação e a evidência que a sustenta. Afirmação sem evidência vira marcador [PROVA NECESSÁRIA] ou sai da página. Pronto quando nenhuma afirmação forte fica sem evidência ou marcador.
 5. **Escreva o rascunho de cada bloco.** Título que diga o argumento, até três parágrafos curtos ou uma lista, e CTA quando couber (abertura, depois da prova, oferta e fechamento). Sem contagem regressiva ou "últimas vagas" se não houver prazo ou limite real. Pronto quando os títulos, lidos em sequência, contam o argumento inteiro.
-6. **Gere o arquivo no formato pedido.** Markdown: um `##` por seção. HTML: um único arquivo com `<section>` por bloco, CSS mínimo no `<head>`, sem biblioteca externa, com `lang="pt-BR"` e `meta viewport`. Pronto quando o arquivo abre no navegador sem erro e sem rolagem horizontal.
-7. **Revise contra as regras.** Confira marcadores, promessas e regras do conselho profissional, se houver. Pronto quando a lista de pendências está escrita.
+6. **Gere o arquivo no formato pedido.** Markdown: um `##` por seção. HTML: um único arquivo com `<section>` por bloco, CSS mínimo no `<head>`, sem biblioteca externa, com `lang="pt-BR"` e `meta viewport`. Pronto quando o arquivo abre no navegador sem erro e, na largura de 375 px, `document.documentElement.scrollWidth <= window.innerWidth` (confira no console do navegador ou com checklist-responsividade). Sem navegador disponível, registre "rolagem horizontal não testada" nas Pendências.
+7. **Revise contra as regras.** Confira marcadores, promessas e regras do conselho profissional, se houver. Se a garantia for de 7 dias em venda on-line, avise que esse prazo é o direito de arrependimento do Código de Defesa do Consumidor (art. 49) e não deve ser apresentado como diferencial. Pronto quando a lista de pendências está escrita.
 
 ## Saída
 
@@ -63,6 +63,8 @@ Pendências
 
 Esqueleto HTML mínimo:
 
+Branco sobre #C2410C dá 5,18:1 (passa AA). Se trocar as cores, recalcule com paleta-tipografia.
+
 ```html
 <!doctype html>
 <html lang="pt-BR">
@@ -70,10 +72,17 @@ Esqueleto HTML mínimo:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>[NOME DO PRODUTO]</title>
-<style>body{margin:0;font-family:system-ui,sans-serif;line-height:1.6}section{padding:48px 16px;max-width:720px;margin:auto}</style>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,sans-serif;line-height:1.6;color:#1A1A2E;background:#FFFFFF}
+section{padding:48px 16px;max-width:720px;margin:auto}
+img{max-width:100%;height:auto}
+.cta{display:inline-block;background:#C2410C;color:#FFFFFF;padding:14px 24px;border-radius:8px;font-weight:700;text-decoration:none}
+.cta:focus-visible{outline:3px solid #1A1A2E;outline-offset:2px}
+</style>
 </head>
 <body>
-<section id="abertura">...</section>
+<section id="abertura">... <a class="cta" href="#oferta">[TEXTO DO CTA]</a></section>
 </body>
 </html>
 ```
@@ -84,4 +93,4 @@ Esqueleto HTML mínimo:
 - Inventar depoimento ou número para preencher a seção de prova.
 - Criar dois CTAs principais com o mesmo peso, um para comprar e outro para "saber mais".
 - Título de seção decorativo ("Nossa história") em vez de argumento ("Quem já aplicou o método em [NÚMERO REAL] clínicas").
-- Prometer resultado garantido em saúde, direito ou finanças.
+- Prometer resultado garantido em saúde, direito ou finanças, ou vender a garantia de 7 dias como diferencial: em compra on-line ela é o direito de arrependimento do CDC.
