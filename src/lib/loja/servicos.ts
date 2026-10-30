@@ -15,12 +15,13 @@ export function depsPagamento(): DepsPagamento {
     mp: criarClienteMercadoPago(e.MERCADOPAGO_ACCESS_TOKEN),
     repo: repoPagamento(db),
     // Código e link de acesso pelo Resend; a conta já foi criada na aprovação (garantirConta)
-    avisarAcesso: criarAvisoAcesso(db, async (email, pacotes, slugs) => {
+    avisarAcesso: criarAvisoAcesso(db, async (email, pacotes, slugs, senha) => {
       // Capa do primeiro pacote do pedido, em PNG (leitores de e-mail nem sempre abrem WebP)
       const capa = slugs[0] ? capaDoPacote(slugs[0], pacotes[0] ?? "") : null;
       const r = await enviarAcesso(email, "compra", {
         proximo: "/membros/",
         pacotes,
+        senha,
         capa: capa ? { url: `${e.SITE_URL}${capa.png}`, alt: capa.alt } : null,
       });
       return { erro: r === "enviado" ? null : r };

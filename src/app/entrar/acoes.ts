@@ -5,6 +5,8 @@ import { z } from "zod";
 import { destinoSeguro } from "@/lib/auth/cookies";
 import { gravarSessao, limparSessao, usuarioAtual } from "@/lib/auth/sessao";
 import { enviarAcesso } from "@/lib/auth/acesso";
+import { SENHA_MINIMA, trocarSenha } from "@/lib/auth/senha";
+import { ipDaRequisicao, permitir } from "@/lib/loja/limites";
 import { clientePublico, clienteServico } from "@/lib/supabase/clientes";
 
 export type EstadoEntrar =
@@ -66,6 +68,47 @@ export async function confirmarLink(form: FormData): Promise<void> {
   if (error || !data.session) redirect("/entrar/?erro=link");
   await gravarSessao(data.session);
   redirect(proximo);
+}
+
+export type EstadoSenha = { erro: string | null; email: string };
+
+// Entrar com o e-mail da compra e a senha que chegou no e-mail de acesso (ou a que a pessoa trocou).
+// Limite por IP e por e-mail+IP contra quem tenta adivinhar senha; a mensagem não diz se o e-mail existe.
+export async function entrarComSenha(_anterior: EstadoSenha, form: FormData): Promise<EstadoSenha> {
+  const e = email.safeParse(form.get("email"));
+  const senha = String(form.get("senha") ?? "");
+  if (!e.success) return { erro: "Digite um e-mail válido.", email: String(form.get("email") ?? "") };
+  if (!senha) return { erro: "Digite a sua senha.", email: e.data };
+  const ip = await ipDaRequisicao();
+  if (!(await permitir(`senha-ip:${ip}`, 30)) || !(await permitir(`senha:${e.data}:${ip}`, 10))) {
+    return { erro: "Muitas tentativas seguidas. Espere alguns minutos ou entre com um código pelo e-mail.", email: e.data };
+  }
+  const { data, error } = await clientePublico().auth.signInWithPassword({ email: e.data, password: senha });
+  if (error || !data.session) return { erro: "E-mail ou senha incorretos. Confira ou entre com um código pelo e-mail.", email: e.data };
+  await gravarSessao(data.session);
+  redirect(destinoSeguro(form.get("next")));
+}
+
+export type EstadoTrocarSenha = { erro: string | null; ok: boolean };
+
+// Troca de senha na área de membros, só com sessão
+export async function trocarMinhaSenha(_anterior: EstadoTrocarSenha, form: FormData): Promise<EstadoTrocarSenha> {
+  const usuario = await usuarioAtual();
+  if (!usuario) return { erro: "Sua sessão expirou. Entre de novo.", ok: false };
+  const nova = String(form.get("nova") ?? "");
+  const repetir = String(form.get("repetir") ?? "");
+  if (nova.length < SENHA_MINIMA || nova.length > 72) return { erro: `A senha precisa ter de ${SENHA_MINIMA} a 72 caracteres.`, ok: false };
+  if (nova !== repetir) return { erro: "As duas senhas não são iguais.", ok: false };
+  const db = clienteServico();
+  const { data, error } = await db.auth.admin.getUserById(usuario.id);
+  if (error || !data.user) return { erro: "Não conseguimos trocar agora. Tente de novo.", ok: false };
+  try {
+    await trocarSenha(db, data.user, nova);
+  } catch (err) {
+    console.error("trocar senha", err instanceof Error ? err.message : "erro desconhecido");
+    return { erro: "Não conseguimos trocar agora. Tente de novo.", ok: false };
+  }
+  return { erro: null, ok: true };
 }
 
 export async function sair(): Promise<void> {
