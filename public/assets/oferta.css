@@ -18,10 +18,10 @@
 }
 .oferta-selo {
   display: inline-block; padding: 6px 12px; border-radius: 999px;
-  background: var(--accent); color: #fff; font: 500 12px/1 var(--font-mono); letter-spacing: .06em;
+  background: var(--accent); color: var(--accent-ink); font: 500 12px/1 var(--font-mono); letter-spacing: .06em;
 }
 .oferta-combo h2, .oferta-combo h3 {
-  font: 800 clamp(24px, 4vw, 32px)/1.15 var(--font-display); letter-spacing: -.02em; margin: 14px 0 8px; color: #fff;
+  font: 800 clamp(24px, 4vw, 32px)/1.15 var(--font-display); letter-spacing: -.02em; margin: 14px 0 8px; color: var(--code-ink);
 }
 .oferta-combo-desc { margin: 0 auto 24px; max-width: 46ch; color: var(--code-muted); }
 .oferta-combo-itens {
@@ -29,18 +29,19 @@
 }
 .oferta-combo-itens li {
   display: flex; justify-content: space-between; gap: 12px; align-items: baseline;
-  padding: 12px 14px; border-radius: 12px; background: rgba(255, 255, 255, .07); font-size: 15px; color: #fff;
+  padding: 12px 14px; border-radius: 12px; background: color-mix(in srgb, var(--code-ink) 7%, transparent);
+  font-size: 15px; color: var(--code-ink);
 }
 .oferta-combo-qtd { flex: none; font: 500 12px/1.3 var(--font-mono); color: var(--code-muted); text-align: right; }
 .oferta-combo-precos { display: flex; justify-content: center; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; }
 .oferta-de { font: 500 20px/1 var(--font-display); color: var(--code-muted); }
-.oferta-combo .price { color: #fff; margin: 0; }
+.oferta-combo .price { color: var(--code-ink); margin: 0; }
 .oferta-economia {
   display: table; margin: 4px auto 22px; padding: 6px 12px; border-radius: 999px;
-  background: #E3F4EC; color: #16714A; font: 600 12px/1 var(--font-mono); letter-spacing: .04em;
+  background: var(--ok-soft); color: var(--ok-ink); font: 600 12px/1 var(--font-mono); letter-spacing: .04em;
 }
-.oferta-combo .cta { background: #fff; color: var(--code-bg); box-shadow: 0 10px 24px -12px rgba(0, 0, 0, .6); }
-.oferta-combo .cta:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.oferta-combo .cta { background: var(--accent); color: var(--accent-ink); box-shadow: 0 12px 28px -12px var(--accent); }
+.oferta-combo .cta:focus-visible { outline: 3px solid var(--code-ink); outline-offset: 3px; }
 .oferta-combo .price-note { margin: 14px 0 0; color: var(--code-muted); }
 
 @media (max-width: 640px) {

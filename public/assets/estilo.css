@@ -4,15 +4,24 @@
   --ink: #14161A;
   --ink-soft: #565B66;
   --line: #E3E1DA;
-  --accent: #2F5BFF;
+  /* Destaque laranja: o único lugar com o valor. Contraste AA conferido em prototipos/laranja/TOKENS.md */
+  --accent: #C03F00;
   --accent-ink: #FFFFFF;
-  --accent-soft: #E7ECFF;
-  --code-bg: #0F2A80;
-  --code-ink: #E6ECFF;
-  --code-muted: #A9B8EC;
-  --blue-block: #1E40C8;
-  --blue-block-ink: #FFFFFF;
+  --accent-soft: #FFEDE1;
+  --code-bg: #1F1B18;
+  --code-ink: #F5F0EA;
+  --code-muted: #BDB2A7;
+  --code-line: color-mix(in srgb, var(--code-ink) 12%, transparent);
+  /* Bloco sólido (faixa do topo, número do passo): mantém o laranja escuro nos dois temas */
+  --block: #C03F00;
+  --block-ink: #FFFFFF;
+  --blue-block: var(--block);
+  --blue-block-ink: var(--block-ink);
   --ok: #1F8A5B;
+  --ok-ink: #16714A;
+  --ok-soft: #E3F4EC;
+  --danger: #B42318;
+  --danger-soft: #FCE9E7;
   --radius: 16px;
   --shadow: 0 1px 2px rgba(20,22,26,.04), 0 12px 32px -12px rgba(20,22,26,.12);
   --font-display: "Bricolage Grotesque", system-ui, sans-serif;
@@ -23,14 +32,16 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #0D0F13; --surface: #151921; --ink: #EEF0F4; --ink-soft: #9BA3B2;
-    --line: #252B36; --accent: #6B8BFF; --accent-ink: #0D0F13; --accent-soft: #1A2240;
-    --code-bg: #0F2366; --blue-block: #2447D6; --ok: #3DBE86; color-scheme: dark;
+    --line: #252B36; --accent: #FF8A3D; --accent-ink: #0D0F13; --accent-soft: #2B1A0F;
+    --code-bg: #231D19; --ok: #3DBE86; --ok-ink: #5FD3A0; --ok-soft: #10261D;
+    --danger: #FF8A7E; --danger-soft: #2C1513; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0D0F13; --surface: #151921; --ink: #EEF0F4; --ink-soft: #9BA3B2;
-  --line: #252B36; --accent: #6B8BFF; --accent-ink: #0D0F13; --accent-soft: #1A2240;
-  --code-bg: #0F2366; --blue-block: #2447D6; --ok: #3DBE86; color-scheme: dark;
+  --line: #252B36; --accent: #FF8A3D; --accent-ink: #0D0F13; --accent-soft: #2B1A0F;
+  --code-bg: #231D19; --ok: #3DBE86; --ok-ink: #5FD3A0; --ok-soft: #10261D;
+  --danger: #FF8A7E; --danger-soft: #2C1513; color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -93,7 +104,7 @@ code.inline {
 }
 .code-bar {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 10px 10px 10px 18px; border-bottom: 1px solid rgba(255,255,255,.12);
+  padding: 10px 10px 10px 18px; border-bottom: 1px solid var(--code-line);
   font: 500 12px/1 var(--font-mono); color: var(--code-muted);
 }
 .code pre {
@@ -108,9 +119,9 @@ code.inline {
 }
 .copy:hover { transform: translateY(-1px); }
 .copy:active { transform: translateY(0); }
-.code .copy { background: #FFFFFF; color: var(--code-bg); }
+.code .copy { background: var(--accent); color: var(--accent-ink); }
 .copy[data-state="ok"] { background: var(--ok); color: #fff; }
-.copy[data-state="erro"] { background: #C2410C; color: #fff; }
+.copy[data-state="erro"] { background: var(--danger); color: #fff; }
 
 .note {
   margin-top: 16px; padding: 14px 16px; border-radius: 12px;
@@ -149,10 +160,17 @@ a.card:hover { transform: translateY(-2px); border-color: var(--accent); }
   list-style: none; padding: 0; margin: 0 auto 28px; max-width: 460px;
   display: grid; gap: 10px; text-align: left;
 }
-.offer li { display: flex; gap: 10px; font-size: 15px; }
+.offer li { position: relative; display: flex; gap: 10px; font-size: 15px; }
 .offer li::before {
   content: ""; flex: none; width: 18px; height: 18px; margin-top: 3px; border-radius: 6px;
-  background: var(--accent-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232F5BFF' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E") center/12px no-repeat;
+  background: var(--accent-soft);
+}
+/* O check usa a cor do token: o SVG vira máscara e a cor vem do background */
+.offer li::after {
+  content: ""; position: absolute; left: 3px; top: 6px; width: 12px; height: 12px;
+  background-color: var(--accent);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E") center/12px no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E") center/12px no-repeat;
 }
 .price { font: 800 40px/1 var(--font-display); letter-spacing: -.02em; margin: 0 0 6px; }
 .price-note { font-size: 13px; color: var(--ink-soft); margin: 0 0 22px; }

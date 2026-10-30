@@ -1,14 +1,10 @@
 /*
-  Loja e área de membros. Camada por cima de public/assets/estilo.css (mesmos tokens e fontes),
+  Loja e área de membros. Camada por cima de public/assets/estilo.css (mesmos tokens, inclusive ok e danger, e fontes),
   carregado no layout. Desenho aprovado em prototipos/loja/.
 */
 :root {
-  --ok-ink: #16714A;          /* texto verde com contraste AA sobre surface e bg */
-  --ok-soft: #E3F4EC;
   --warn: #9A5B00;            /* texto âmbar AA */
   --warn-soft: #FDF1DC;
-  --danger: #B42318;          /* texto vermelho AA */
-  --danger-soft: #FCE9E7;
   --shell: rgba(20, 22, 26, .035);
   --shell-line: rgba(20, 22, 26, .06);
   --inner-hi: inset 0 1px 0 rgba(255, 255, 255, .9);
@@ -19,15 +15,13 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --ok-ink: #5FD3A0; --ok-soft: #10261D; --warn: #F2B65A; --warn-soft: #2A1F0C;
-    --danger: #FF8A7E; --danger-soft: #2C1513;
+    --warn: #F2B65A; --warn-soft: #2A1F0C;
     --shell: rgba(255, 255, 255, .03); --shell-line: rgba(255, 255, 255, .07);
     --inner-hi: inset 0 1px 0 rgba(255, 255, 255, .05);
   }
 }
 :root[data-theme="dark"] {
-  --ok-ink: #5FD3A0; --ok-soft: #10261D; --warn: #F2B65A; --warn-soft: #2A1F0C;
-  --danger: #FF8A7E; --danger-soft: #2C1513;
+  --warn: #F2B65A; --warn-soft: #2A1F0C;
   --shell: rgba(255, 255, 255, .03); --shell-line: rgba(255, 255, 255, .07);
   --inner-hi: inset 0 1px 0 rgba(255, 255, 255, .05);
 }
@@ -278,9 +272,9 @@ main.narrow { max-width: 760px; padding: 48px 16px 96px; }
 .bloco > h2 { margin-bottom: 6px; }
 .bloco > p.muted { margin: 0 0 18px; }
 
-.player { position: relative; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; background: #070A14; color: #fff; }
+.player { position: relative; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; background: var(--code-bg); color: #fff; }
 .player video { position: absolute; inset: 0; width: 100%; height: 100%; }
-.player .capa-video { position: absolute; inset: 0; display: grid; place-items: center; background: radial-gradient(90% 90% at 80% 0%, rgba(107,139,255,.55), transparent 55%), radial-gradient(70% 70% at 10% 100%, rgba(47,91,255,.35), transparent 60%), var(--code-bg); }
+.player .capa-video { position: absolute; inset: 0; display: grid; place-items: center; background: radial-gradient(90% 90% at 80% 0%, color-mix(in srgb, var(--accent) 55%, transparent), transparent 55%), radial-gradient(70% 70% at 10% 100%, color-mix(in srgb, var(--accent) 35%, transparent), transparent 60%), var(--code-bg); }
 .player .play {
   width: 76px; height: 76px; border-radius: 50%; border: 0; cursor: pointer; display: grid; place-items: center;
   background: #fff; color: var(--code-bg); box-shadow: 0 0 0 10px rgba(255,255,255,.12);
@@ -289,7 +283,7 @@ main.narrow { max-width: 760px; padding: 48px 16px 96px; }
 .player .play:hover { transform: scale(1.06); box-shadow: 0 0 0 14px rgba(255,255,255,.14); }
 .player .play:focus-visible { outline: 3px solid #fff; outline-offset: 6px; }
 .player .legenda { position: absolute; left: 16px; right: 16px; bottom: 14px; display: flex; justify-content: space-between; gap: 12px; font: 500 12px/1.3 var(--font-mono); color: rgba(255,255,255,.85); }
-.player .estado-video { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 12px; text-align: center; padding: 24px; background: rgba(7,10,20,.88); }
+.player .estado-video { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 12px; text-align: center; padding: 24px; background: color-mix(in srgb, var(--code-bg) 88%, transparent); }
 .player .estado-video p { margin: 0; color: rgba(255,255,255,.8); font-size: 14px; max-width: 40ch; }
 
 .skills { display: grid; gap: 10px; grid-template-columns: repeat(2, minmax(0, 1fr)); }

@@ -29,10 +29,18 @@ describe.skipIf(!BASE)("páginas antigas dos vídeos", () => {
     }
   }
 
-  it("estilo.css segue igual", async () => {
+  // O estilo.css só pode ter mudado de cor: toda regra do original continua lá e o destaque vem do token laranja
+  it("estilo.css mantém todas as regras do original e usa o destaque laranja", async () => {
     const r = await fetch(`${BASE}/assets/estilo.css`, { headers: cabecalhos });
     expect(r.status).toBe(200);
-    expect(await r.text()).toBe(execFileSync("git", ["show", `${REF}:assets/estilo.css`], { encoding: "utf8" }));
+    const atual = await r.text();
+    const original = execFileSync("git", ["show", `${REF}:assets/estilo.css`], { encoding: "utf8" });
+    const seletores = (css: string) =>
+      [...css.replace(/\/\*[\s\S]*?\*\//g, "").matchAll(/(^|})\s*([^{}@]+?)\s*{/g)].map((m) => m[2]!.replace(/\s+/g, " ").trim());
+    const atuais = new Set(seletores(atual));
+    expect(seletores(original).filter((s) => !atuais.has(s))).toEqual([]);
+    expect(atual).toContain("--accent: #C03F00;");
+    expect(atual).not.toMatch(/2F5BFF|6B8BFF/i);
   });
 
   it("a vitrine do fim das páginas traz o pacote do vídeo e o combo com os preços do banco", async () => {
@@ -48,7 +56,7 @@ describe.skipIf(!BASE)("páginas antigas dos vídeos", () => {
     expect([v.combo.somaTexto, v.combo.precoTexto, v.combo.economiaTexto]).toEqual(["R$\u00a0195,00", "R$\u00a0127,00", "R$\u00a068,00"]);
     const css = await fetch(`${BASE}/assets/oferta.css`, { headers: cabecalhos });
     expect(css.status).toBe(200);
-  });
+  }, 15_000); // primeira chamada fria ao Supabase pode passar de 5 s fora da CDN
 
   it("endereço inexistente responde 404", async () => {
     const r = await fetch(`${BASE}/naoexiste/`, { redirect: "manual", headers: cabecalhos });
