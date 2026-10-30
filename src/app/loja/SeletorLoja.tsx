@@ -1,14 +1,12 @@
 "use client";
 
-import { useActionState, useMemo, useState } from "react";
-import { useFormStatus } from "react-dom";
+import { useMemo, useState } from "react";
 import { formatarReais } from "@/lib/loja/dominio";
 import { Alerta } from "@/components/Alerta";
 import { Icone } from "@/components/Icone";
-import { comprar, type EstadoCompra } from "./acoes";
 
 // Tudo o que é preço chega pronto do servidor. Esta tela só mostra e monta a escolha;
-// a regra da oferta é conferida de novo no servidor ao comprar.
+// a regra da oferta e o preço são calculados de novo no servidor, no checkout.
 
 export type OfertaVista = {
   codigo: string;
@@ -22,8 +20,9 @@ export type OfertaVista = {
   referenciaTexto: string | null;
   // preço próprio de algum produto no avulso, já formatado pelo servidor
   nota: string | null;
-  // avulso: o total é o preço do produto escolhido
+  // avulso e preço de cliente: o total é o preço do produto escolhido, já calculado no servidor
   porProduto: boolean;
+  precos: Record<string, number> | null;
   incluidos: string[] | null;
   destaque: boolean;
 };
@@ -41,14 +40,11 @@ type Props = {
   ofertas: OfertaVista[];
   produtos: ProdutoVista[];
   possui: string[];
-  logado: boolean;
   ofertaInicial: string | null;
   produtosIniciais: string[];
 };
 
-const INICIAL: EstadoCompra = { erro: null };
-
-export function SeletorLoja({ ofertas, produtos, possui, logado, ofertaInicial, produtosIniciais }: Props) {
+export function SeletorLoja({ ofertas, produtos, possui, ofertaInicial, produtosIniciais }: Props) {
   const jaTem = useMemo(() => new Set(possui), [possui]);
   const padrao = ofertas.find((o) => o.codigo === ofertaInicial) ?? ofertas.find((o) => o.destaque) ?? ofertas[0];
   const [codigo, setCodigo] = useState(padrao?.codigo ?? "");
@@ -57,7 +53,6 @@ export function SeletorLoja({ ofertas, produtos, possui, logado, ofertaInicial, 
       ? produtosIniciais.filter((s) => !jaTem.has(s) && produtos.some((p) => p.slug === s)).slice(0, padrao.qtdEscolha ?? 0)
       : [],
   );
-  const [estado, acao] = useActionState(comprar, INICIAL);
 
   const oferta = ofertas.find((o) => o.codigo === codigo);
   if (!oferta) return <Alerta tipo="warn" titulo="Nenhuma oferta disponível agora" />;
@@ -92,7 +87,7 @@ export function SeletorLoja({ ofertas, produtos, possui, logado, ofertaInicial, 
   const titulo = (slug: string) => produtos.find((p) => p.slug === slug)?.titulo ?? slug;
   // Só exibição: o servidor recalcula tudo ao comprar
   const avulsoDe = (slug: string) => produtos.find((p) => p.slug === slug)?.precoAvulsoCentavos ?? null;
-  const escolhidoAvulso = oferta.porProduto && escolhidos[0] ? avulsoDe(escolhidos[0]) : null;
+  const escolhidoAvulso = oferta.porProduto && escolhidos[0] ? (oferta.precos?.[escolhidos[0]] ?? null) : null;
   const totalTexto = escolhidoAvulso !== null ? formatarReais(escolhidoAvulso) : oferta.precoTexto;
   const somaItens = itens.reduce((t, s) => t + (avulsoDe(s) ?? 0), 0);
   const economiaTexto =
@@ -101,9 +96,10 @@ export function SeletorLoja({ ofertas, produtos, possui, logado, ofertaInicial, 
       : oferta.referenciaTexto;
 
   return (
-    <form action={acao}>
+    // GET para o checkout: abrir não cria pedido nem pede login; o e-mail é pedido lá
+    <form method="get" action="/loja/checkout/">
       <input type="hidden" name="oferta" value={oferta.codigo} />
-      {escolha && escolhidos.map((s) => <input key={s} type="hidden" name="produto" value={s} />)}
+      <input type="hidden" name="produtos" value={escolha ? escolhidos.join(",") : ""} />
 
       <section className="section" aria-labelledby="passo-oferta">
         <div className="section-head">
@@ -278,15 +274,7 @@ export function SeletorLoja({ ofertas, produtos, possui, logado, ofertaInicial, 
                 </div>
                 <span className="valor num">{totalTexto}</span>
               </div>
-              <div aria-live="assertive">
-                {estado.erro && <Alerta tipo="danger" titulo="Não deu para continuar">{estado.erro}</Alerta>}
-              </div>
-              {!logado && (
-                <Alerta titulo="Entre com o seu e-mail para pagar">
-                  É nele que o acesso fica guardado. A sua escolha não se perde.
-                </Alerta>
-              )}
-              <BotaoPagar bloqueado={Boolean(motivo)} logado={logado} />
+              <BotaoContinuar bloqueado={Boolean(motivo)} />
               <p className="motivo" id="r-motivo">
                 {motivo}
               </p>
@@ -312,30 +300,13 @@ export function SeletorLoja({ ofertas, produtos, possui, logado, ofertaInicial, 
   );
 }
 
-function BotaoPagar({ bloqueado, logado }: { bloqueado: boolean; logado: boolean }) {
-  const { pending } = useFormStatus();
+function BotaoContinuar({ bloqueado }: { bloqueado: boolean }) {
   return (
-    <button
-      className="btn lg"
-      type="submit"
-      disabled={bloqueado || pending}
-      aria-disabled={bloqueado || undefined}
-      aria-busy={pending || undefined}
-      aria-describedby="r-motivo"
-    >
-      {pending ? (
-        <>
-          <span className="spinner" aria-hidden="true" />
-          Abrindo o pagamento
-        </>
-      ) : (
-        <>
-          {logado ? "Ir para o pagamento" : "Entrar e pagar"}
-          <span className="ico">
-            <Icone nome="direita" tamanho={16} />
-          </span>
-        </>
-      )}
+    <button className="btn lg" type="submit" disabled={bloqueado} aria-describedby="r-motivo">
+      Continuar para o pagamento
+      <span className="ico">
+        <Icone nome="direita" tamanho={16} />
+      </span>
     </button>
   );
 }

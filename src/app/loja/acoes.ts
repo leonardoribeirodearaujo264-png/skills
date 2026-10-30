@@ -6,26 +6,31 @@ import { usuarioAtual } from "@/lib/auth/sessao";
 import { iniciarCompra, MENSAGEM_FALHA_CHECKOUT } from "@/lib/loja/checkout";
 import { MENSAGEM_RECUSA } from "@/lib/loja/dominio";
 
-export type EstadoCompra = { erro: string | null };
+export type EstadoCompra = { erro: string | null; email: string };
 
 const entrada = z.object({
   oferta: z.string().regex(/^[a-z0-9-]{1,40}$/),
   produtos: z.array(z.string().regex(/^[a-z0-9-]{1,60}$/)).max(20),
+  email: z.email().max(254),
 });
 
-// O cliente manda só a oferta e a escolha. Preço, itens e regra saem do banco e de montarPedido.
-export async function comprar(_anterior: EstadoCompra, form: FormData): Promise<EstadoCompra> {
-  const dados = entrada.safeParse({ oferta: form.get("oferta"), produtos: form.getAll("produto") });
-  if (!dados.success) return { erro: "Escolha uma oferta válida." };
-  const { oferta, produtos } = dados.data;
-
+// Checkout sem login. O cliente manda a oferta, a escolha e o e-mail; preço, itens e regra saem do servidor.
+export async function pagar(_anterior: EstadoCompra, form: FormData): Promise<EstadoCompra> {
   const usuario = await usuarioAtual();
-  if (!usuario) {
-    const volta = `/loja/?oferta=${encodeURIComponent(oferta)}&produtos=${encodeURIComponent(produtos.join(","))}`;
-    redirect(`/entrar/?next=${encodeURIComponent(volta)}`);
+  const emailDigitado = String(form.get("email") ?? "").trim().toLowerCase();
+  const dados = entrada.safeParse({
+    oferta: form.get("oferta"),
+    produtos: String(form.get("produtos") ?? "").split(",").filter(Boolean),
+    email: usuario?.email ?? emailDigitado,
+  });
+  if (!dados.success) {
+    const emailRuim = dados.error.issues.some((i) => i.path[0] === "email");
+    return { erro: emailRuim ? "Digite um e-mail válido. É nele que o acesso vai chegar." : "Escolha uma oferta válida.", email: emailDigitado };
   }
 
-  const r = await iniciarCompra(usuario, oferta, produtos);
-  if ("motivo" in r) return { erro: r.motivo === "falha" ? MENSAGEM_FALHA_CHECKOUT : MENSAGEM_RECUSA[r.motivo] };
+  const r = await iniciarCompra({ usuario, email: dados.data.email }, dados.data.oferta, dados.data.produtos);
+  if ("motivo" in r) {
+    return { erro: r.motivo === "falha" ? MENSAGEM_FALHA_CHECKOUT : MENSAGEM_RECUSA[r.motivo], email: emailDigitado };
+  }
   redirect(r.url);
 }

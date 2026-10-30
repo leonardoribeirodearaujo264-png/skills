@@ -10,6 +10,9 @@ const esquema = z.object({
   // Endereço público do site, sem barra final. Usado nas back_urls e na notification_url.
   SITE_URL: z.url().transform((u) => u.replace(/\/+$/, "")),
   CRON_SECRET: z.string().min(16).optional(),
+  // E-mails de acesso (código e link) saem pelo Resend, do domínio verificado
+  RESEND_API_KEY: z.string().startsWith("re_"),
+  EMAIL_REMETENTE: z.string().min(3).default("Leonardo Araujo <acesso@leonardoskills.com>"),
 });
 
 export type Env = z.infer<typeof esquema>;

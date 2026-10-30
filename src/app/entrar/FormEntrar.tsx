@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { Alerta } from "@/components/Alerta";
@@ -73,7 +74,7 @@ export function FormEntrar({ proximo, erroLink }: { proximo: string; erroLink: b
       <h1 ref={titulo} tabIndex={-1}>
         Entrar na sua área
       </h1>
-      <p className="lead muted">Sem senha. Mandamos um código para o seu e-mail.</p>
+      <p className="lead muted">Para quem já comprou. Mandamos um código para o e-mail da compra.</p>
       {erroLink && (
         <Alerta tipo="warn" titulo="Esse link já foi usado ou expirou">
           Peça um novo abaixo. Por segurança, cada link vale uma vez e por pouco tempo.
@@ -93,13 +94,27 @@ export function FormEntrar({ proximo, erroLink }: { proximo: string; erroLink: b
           aria-invalid={envio.erro ? true : undefined}
           aria-describedby={envio.erro ? "email-erro" : "email-ajuda"}
         />
-        {envio.erro ? (
+        {envio.etapa === "email" && envio.semCompra ? (
+          <div id="email-erro">
+            <Alerta
+              tipo="warn"
+              titulo="Este e-mail ainda não tem compra"
+              acoes={
+                <Link className="btn sm" href="/loja/">
+                  Conhecer os pacotes
+                </Link>
+              }
+            >
+              {envio.erro}
+            </Alerta>
+          </div>
+        ) : envio.erro ? (
           <p className="erro-campo" id="email-erro" role="alert">
             {envio.erro}
           </p>
         ) : (
           <p className="ajuda" id="email-ajuda">
-            Use o mesmo e-mail da compra. Se ainda não comprou, é este que vai guardar o seu acesso.
+            Use o mesmo e-mail que você informou no pagamento.
           </p>
         )}
         <Enviar rotulo="Enviar código" carregando="Enviando" />

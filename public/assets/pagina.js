@@ -27,6 +27,47 @@ function carregarEstiloOferta() {
   document.head.append(link);
 }
 
+// Chamada curta logo depois do prompt: a pessoa acabou de ver o valor do prompt grátis
+function chamadaAposPrompt(p) {
+  const passoDoPrompt = [...document.querySelectorAll("main .step")].find(s => s.querySelector(".code"));
+  if (!passoDoPrompt) return;
+  const box = el("aside", "oferta-rapida");
+  box.setAttribute("aria-label", "Pacote deste vídeo");
+  const texto = el("div", "oferta-rapida-texto");
+  texto.append(el("strong", null, "Quer o resto pronto?"), el("span", null, "O pacote " + p.titulo + " por " + p.precoTexto + ", pagamento único."));
+  const acoes = el("div", "oferta-rapida-acoes");
+  const cta = el("a", "cta", "Quero este pacote");
+  cta.href = p.comprarUrl;
+  const ver = el("a", "oferta-rapida-ver", "Ver o que vem no pacote");
+  ver.href = "#oferta";
+  acoes.append(cta, ver);
+  box.append(texto, acoes);
+  passoDoPrompt.after(box);
+}
+
+// Barra fixa no celular com preço e botão. Some quando o card do pacote ou a chamada estão na tela,
+// e o corpo ganha espaço embaixo para a barra não cobrir conteúdo nem o botão de copiar.
+function barraFixa(p) {
+  const barra = el("div", "barra-compra");
+  barra.setAttribute("role", "region");
+  barra.setAttribute("aria-label", "Comprar o pacote");
+  const info = el("div", "barra-compra-info");
+  info.append(el("span", "barra-compra-nome", p.titulo), el("span", "barra-compra-preco", p.precoTexto));
+  const cta = el("a", "cta", "Quero este pacote");
+  cta.href = p.comprarUrl;
+  barra.append(info, cta);
+  document.body.append(barra);
+  document.body.classList.add("com-barra-compra");
+  const alvos = document.querySelectorAll(".oferta-pacote, .oferta-rapida");
+  if (!("IntersectionObserver" in window) || !alvos.length) return;
+  const visiveis = new Set();
+  const obs = new IntersectionObserver(entradas => {
+    entradas.forEach(e => (e.isIntersecting ? visiveis.add(e.target) : visiveis.delete(e.target)));
+    barra.classList.toggle("escondida", visiveis.size > 0);
+  });
+  alvos.forEach(a => obs.observe(a));
+}
+
 function cardPacote(p) {
   const card = el("div", "offer oferta-pacote");
   card.setAttribute("role", "group");
@@ -105,6 +146,10 @@ async function montarOferta() {
     if (v.pacote) filhos.push(cardPacote(v.pacote));
     if (v.combo) filhos.push(cardCombo(v.combo, !v.pacote));
     secao.replaceChildren(...filhos);
+    if (v.pacote) {
+      chamadaAposPrompt(v.pacote);
+      barraFixa(v.pacote);
+    }
   } catch {
     secao.replaceChildren(cardReserva());
   }

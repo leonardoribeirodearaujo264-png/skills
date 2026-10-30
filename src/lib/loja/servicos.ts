@@ -1,6 +1,7 @@
 import { env } from "../env";
 import { criarClienteMercadoPago } from "../mercadopago/api";
-import { clientePublico, clienteServico } from "../supabase/clientes";
+import { enviarAcesso } from "../auth/acesso";
+import { clienteServico } from "../supabase/clientes";
 import { criarAvisoAcesso } from "./emailAcesso";
 import { repoPagamento } from "./repositorio";
 import type { DepsPagamento } from "./pagamento";
@@ -12,13 +13,10 @@ export function depsPagamento(): DepsPagamento {
   return {
     mp: criarClienteMercadoPago(e.MERCADOPAGO_ACCESS_TOKEN),
     repo: repoPagamento(db),
-    // Link mágico do Supabase Auth (template Magic Link: código e link). Cria a conta se ela não existir.
+    // Código e link de acesso pelo Resend; a conta já foi criada na aprovação (garantirConta)
     avisarAcesso: criarAvisoAcesso(db, async (email) => {
-      const { error } = await clientePublico().auth.signInWithOtp({
-        email,
-        options: { shouldCreateUser: true, emailRedirectTo: `${e.SITE_URL}/entrar/confirmar/?next=%2Fmembros%2F` },
-      });
-      return { erro: error ? `${error.status ?? ""} ${error.message}`.trim() : null };
+      const r = await enviarAcesso(email, "compra", { proximo: "/membros/" });
+      return { erro: r === "enviado" ? null : r };
     }),
   };
 }

@@ -2,7 +2,7 @@ import { ehAvulsoPorProduto, formatarReais, precoNaOferta, somaAvulsos, type Cat
 import { OFERTA_DOS_VIDEOS } from "./paginas-videos";
 
 // Dados do bloco de oferta no fim das páginas dos vídeos. Tudo calculado aqui, a partir do banco;
-// o pagina.js só desenha. Os links levam à compra direta (login, se faltar, e depois o checkout).
+// o pagina.js só desenha. Os links levam ao checkout, que não exige login.
 
 export type VitrinePacote = {
   slug: string;
@@ -40,7 +40,7 @@ function contagem(p: Produto): string {
 function urlComprar(oferta: string, produto?: string): string {
   const q = new URLSearchParams({ oferta });
   if (produto) q.set("produtos", produto);
-  return `/loja/comprar/?${q}`;
+  return `/loja/checkout/?${q}`;
 }
 
 export function montarVitrine(catalogo: Catalogo, pagina: string): Vitrine {
@@ -55,7 +55,7 @@ export function montarVitrine(catalogo: Catalogo, pagina: string): Vitrine {
           titulo: produto.titulo,
           gancho: config.gancho,
           descricao: produto.resumo,
-          precoTexto: formatarReais(precoNaOferta(avulso, produto)),
+          precoTexto: formatarReais(precoNaOferta(catalogo, avulso, produto)),
           comprarUrl: urlComprar(avulso.codigo, produto.slug),
         }
       : null;

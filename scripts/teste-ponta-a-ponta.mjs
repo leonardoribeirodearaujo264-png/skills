@@ -49,6 +49,13 @@ try {
   conferir("loja mostra R$ 37, R$ 67 e R$ 127 vindos do banco", ["37", "67", "127"].every((v) => loja.texto.includes(`<small>R$</small>${v}`)));
   conferir("loja mostra o avulso de edição de vídeo a R$ 47", loja.texto.includes("R$\u00a047,00") || loja.texto.includes("R$&nbsp;47,00"));
   conferir("loja não mostra a oferta de cliente desativada", !loja.texto.includes("Preço de cliente"));
+  // Compra sem login: do botão do vídeo ao checkout, sem passar pela tela de entrar
+  const direta = await pagina(`/loja/comprar/?oferta=avulso&produtos=${COMPRADO}`);
+  conferir("compra direta leva ao checkout, não ao login", direta.status === 303 && direta.local.includes("/loja/checkout/") && !direta.local.includes("/entrar/"), direta.local);
+  const checkout = await pagina(`/loja/checkout/?oferta=avulso&produtos=${COMPRADO}`);
+  conferir("checkout abre sem login, com o valor do servidor e o campo de e-mail", checkout.status === 200 && checkout.texto.includes("Finalizar compra") && checkout.texto.includes('name="email"') && checkout.texto.includes("37,00"), String(checkout.status));
+  const checkoutCliente = await pagina(`/loja/checkout/?oferta=cliente&produtos=${COMPRADO}`);
+  conferir("preço de cliente sem sessão pede para entrar com o e-mail da compra", checkoutCliente.texto.includes("Entrar com o e-mail da compra"));
   const anonMembros = await pagina("/membros/");
   conferir("área de membros sem login vai para /entrar/", anonMembros.status === 307 && anonMembros.local.includes("/entrar/"), `${anonMembros.status} ${anonMembros.local}`);
   const anonConteudo = await pagina(`/membros/${COMPRADO}/`);
@@ -64,7 +71,7 @@ try {
 
   // Compra liberada pela mesma função que o webhook usa
   const itens = [COMPRADO];
-  const ped = await admin.rpc("loja_criar_pedido", { p_user: userId, p_oferta: "avulso", p_valor_centavos: 3700, p_chave: `avulso:${COMPRADO}`, p_itens: itens });
+  const ped = await admin.rpc("loja_criar_pedido", { p_email: email, p_user: userId, p_oferta: "avulso", p_valor_centavos: 3700, p_chave: `avulso:${COMPRADO}`, p_itens: itens });
   if (ped.error) throw ped.error;
   const pedidoId = ped.data[0].pedido_id;
   const lib = await admin.rpc("loja_liberar_pedido", { p_pedido: pedidoId, p_payment_id: `teste-${randomUUID()}`, p_valor_centavos: 3700 });
@@ -73,6 +80,10 @@ try {
   const membros = await pagina("/membros/", cookie);
   conferir("área de membros lista o produto comprado", membros.texto.includes(`/membros/${COMPRADO}/`));
   conferir("área de membros mostra os outros como bloqueados com preço", membros.texto.includes("Outros pacotes") && membros.texto.includes(`produtos=${BLOQUEADO}`));
+  conferir("cliente vê 20% de desconto nos outros pacotes (R$ 37,00 vira R$ 29,60)", membros.texto.includes("20% de desconto") && membros.texto.includes("29,60"));
+  conferir("a vitrine não oferece o pacote que ele já tem", !membros.texto.includes(`produtos=${COMPRADO}`));
+  const checkoutDesconto = await pagina(`/loja/checkout/?oferta=cliente&produtos=${BLOQUEADO}`, cookie);
+  conferir("checkout do cliente calcula o desconto no servidor", checkoutDesconto.texto.includes("29,60"));
   const conteudo = await pagina(`/membros/${COMPRADO}/`, cookie);
   conferir("conteúdo comprado tem aula, instalação, prompts e arquivos", ['id="aula"', 'id="instalar"', 'id="prompts"', 'id="arquivos"'].every((x) => conteudo.texto.includes(x)));
   conferir("conteúdo comprado tem o player com URL assinada", conteudo.texto.includes("<video") && conteudo.texto.includes("/storage/v1/object/sign/loja-aulas/"));

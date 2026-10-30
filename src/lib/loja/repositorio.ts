@@ -42,12 +42,14 @@ const linhaOferta = z.object({
   qtd_escolha: z.number().nullable(),
   preco_centavos: z.number().int(),
   exige_cliente: z.boolean(),
+  desconto_percentual: z.number().int().nullable(),
   ordem: z.number(),
   loja_oferta_itens: z.array(z.object({ produto_slug: z.string() })),
 });
 const linhaPedido = z.object({
   id: z.uuid(),
-  user_id: z.uuid(),
+  user_id: z.uuid().nullable(),
+  comprador_email: z.string(),
   status: z.enum(["pendente", "pago", "recusado", "cancelado", "reembolsado"]),
   valor_centavos: z.number().int(),
   mp_payment_id: z.string().nullable(),
@@ -59,7 +61,7 @@ export async function carregarCatalogo(db: SupabaseClient): Promise<Catalogo> {
     db.from("loja_produtos").select(COLUNAS_PRODUTO).eq("ativo", true).order("ordem"),
     db
       .from("loja_ofertas")
-      .select("codigo, titulo, descricao, tipo, qtd_escolha, preco_centavos, exige_cliente, ordem, loja_oferta_itens(produto_slug)")
+      .select("codigo, titulo, descricao, tipo, qtd_escolha, preco_centavos, exige_cliente, desconto_percentual, ordem, loja_oferta_itens(produto_slug)")
       .eq("ativo", true)
       .order("ordem"),
   ]);
@@ -87,6 +89,7 @@ export async function carregarCatalogo(db: SupabaseClient): Promise<Catalogo> {
       qtdEscolha: r.qtd_escolha,
       precoCentavos: r.preco_centavos,
       exigeCliente: r.exige_cliente,
+      descontoPercentual: r.desconto_percentual,
       ordem: r.ordem,
       itens: r.loja_oferta_itens.map((i) => i.produto_slug),
     })),
@@ -106,17 +109,26 @@ export async function acessosAtivos(db: SupabaseClient, userId: string): Promise
 }
 
 export type PedidoAberto = { id: string; valorCentavos: number };
+export type Comprador = { email: string; userId: string | null };
 
-// Cria o pedido pendente e os itens numa transação (loja_criar_pedido). O duplo clique devolve o mesmo
-// pedido; se o preço mudou desde o pendente anterior, a função cancela o antigo e cria outro.
+// Conta pelo e-mail (null se ainda não existe)
+export async function contaPorEmail(db: SupabaseClient, email: string): Promise<string | null> {
+  const { data, error } = await db.rpc("loja_usuario_por_email", { p_email: email });
+  if (error) falhar("buscar conta pelo e-mail", error);
+  return z.uuid().nullable().parse(data);
+}
+
+// Cria o pedido pendente e os itens numa transação (loja_criar_pedido), pelo e-mail do comprador.
+// O duplo clique devolve o mesmo pedido; se o preço mudou, a função cancela o antigo e cria outro.
 export async function criarOuReusarPedido(
   db: SupabaseClient,
-  userId: string,
+  comprador: Comprador,
   codigoOferta: string,
   pedido: ItensDoPedido,
 ): Promise<PedidoAberto> {
   const { data, error } = await db.rpc("loja_criar_pedido", {
-    p_user: userId,
+    p_email: comprador.email,
+    p_user: comprador.userId,
     p_oferta: codigoOferta,
     p_valor_centavos: pedido.valorCentavos,
     p_chave: pedido.chaveItens,
@@ -213,7 +225,7 @@ export function repoPagamento(db: SupabaseClient): RepoPagamento {
     async pedidoPorId(id): Promise<PedidoSalvo | null> {
       const { data, error } = await db
         .from("loja_pedidos")
-        .select("id, user_id, status, valor_centavos, mp_payment_id")
+        .select("id, user_id, comprador_email, status, valor_centavos, mp_payment_id")
         .eq("id", id)
         .maybeSingle();
       if (error) falhar("ler pedido", error);
@@ -222,10 +234,24 @@ export function repoPagamento(db: SupabaseClient): RepoPagamento {
       return {
         id: r.id,
         userId: r.user_id,
+        email: r.comprador_email,
         status: r.status,
         valorCentavos: r.valor_centavos,
         mpPaymentId: r.mp_payment_id,
       };
+    },
+    // Encontra a conta do e-mail da compra ou cria uma (confirmada, sem senha) e liga ao pedido.
+    // O e-mail é único no Auth: repetição ou corrida cai na conta que já existe, nunca cria outra.
+    async garantirConta(pedidoId, email) {
+      let userId = await contaPorEmail(db, email);
+      if (!userId) {
+        const criada = await db.auth.admin.createUser({ email, email_confirm: true });
+        userId = criada.data.user?.id ?? (await contaPorEmail(db, email));
+        if (!userId) throw new ErroBanco("criar conta do comprador", criada.error?.code ?? null);
+      }
+      const { data, error } = await db.rpc("loja_vincular_comprador", { p_pedido: pedidoId, p_user: userId });
+      if (error) falhar("ligar conta ao pedido", error);
+      return z.string().parse(data);
     },
     async liberar(pedidoId, paymentId, valorCentavos) {
       const { data, error } = await db.rpc("loja_liberar_pedido", {
@@ -250,4 +276,21 @@ export function repoPagamento(db: SupabaseClient): RepoPagamento {
       if (error) falhar("marcar recusado", error);
     },
   };
+}
+
+export type PedidoRetorno = { status: string; valorCentavos: number; email: string };
+
+// Situação do pedido para a página de retorno do pagamento. O id é um UUID que só o comprador recebe
+// do Mercado Pago; a página mostra o e-mail mascarado.
+export async function pedidoParaRetorno(db: SupabaseClient, id: string): Promise<PedidoRetorno | null> {
+  if (!/^[0-9a-f-]{36}$/i.test(id)) return null;
+  const { data, error } = await db
+    .from("loja_pedidos")
+    .select("status, valor_centavos, comprador_email")
+    .eq("id", id)
+    .maybeSingle();
+  if (error) falhar("ler pedido do retorno", error);
+  if (!data) return null;
+  const r = z.object({ status: z.string(), valor_centavos: z.number(), comprador_email: z.string() }).parse(data);
+  return { status: r.status, valorCentavos: r.valor_centavos, email: r.comprador_email };
 }

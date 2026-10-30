@@ -5,7 +5,7 @@ import { Alerta } from "@/components/Alerta";
 import { Cabecalho, Rodape } from "@/components/Cabecalho";
 import { Icone } from "@/components/Icone";
 import { usuarioAtual } from "@/lib/auth/sessao";
-import { formatarReais, ofertaParaMaisUm, precoNaOferta } from "@/lib/loja/dominio";
+import { formatarReais, ofertaParaMaisUm, precoAvulso, precoNaOferta } from "@/lib/loja/dominio";
 import { meusProdutos, pedidosRecentes } from "@/lib/loja/membros";
 import { carregarCatalogo } from "@/lib/loja/repositorio";
 import { clientePublico } from "@/lib/supabase/clientes";
@@ -26,8 +26,13 @@ export default async function Membros() {
   const pendente = pedidos.some((p) => p.status === "pendente");
   const meus = new Set(produtos.map((p) => p.slug));
   const outros = catalogo.produtos.filter((p) => !meus.has(p.slug));
-  // Preço e regra vêm do banco; o servidor confere de novo ao comprar
+  // Preço e regra vêm do banco; o checkout confere de novo no servidor (sessão e compra aprovada)
   const oferta = ofertaParaMaisUm(catalogo, meus.size > 0);
+  const precoDe = (p: (typeof outros)[number]) => {
+    const preco = oferta ? precoNaOferta(catalogo, oferta, p) : null;
+    const cheio = precoAvulso(catalogo, p);
+    return { preco, cheio: preco !== null && cheio !== null && cheio > preco ? cheio : null };
+  };
 
   return (
     <>
@@ -58,9 +63,10 @@ export default async function Membros() {
               <span className="icone-grande" aria-hidden="true">
                 <Icone nome="pacote" tamanho={26} />
               </span>
-              <h2>Nenhum produto ainda</h2>
+              <h2>Este e-mail ainda não tem compra aprovada</h2>
               <p>
-                Quando você comprar, os produtos aparecem aqui. Comprou com outro e-mail? Saia e entre com ele.
+                A área de membros mostra os pacotes comprados com {usuario.email}. Se você pagou com outro e-mail, saia e
+                entre com ele. Se o pagamento foi agora, ele aparece aqui assim que for aprovado.
               </p>
               <Link className="btn" href="/loja/">
                 Conhecer os pacotes
@@ -102,9 +108,9 @@ export default async function Membros() {
               <div>
                 <h2 id="outros-titulo">Outros pacotes</h2>
                 <p>
-                  {oferta.oferta.exigeCliente
-                    ? `Por ser cliente, cada pacote sai por ${formatarReais(oferta.oferta.precoCentavos)}.`
-                    : "Compre um de cada vez ou veja os combos com desconto na loja."}
+                  {oferta.exigeCliente && oferta.descontoPercentual !== null
+                    ? `Por ser cliente, você tem ${oferta.descontoPercentual}% de desconto em cada pacote.`
+                    : "Compre um de cada vez ou veja os combos na loja."}
                 </p>
               </div>
               <Link className="btn secondary sm" href="/loja/">
@@ -122,15 +128,16 @@ export default async function Membros() {
                         <Icone nome="cadeado" tamanho={12} />
                         Bloqueado
                       </span>
-                      <Link className="btn sm" href={`/loja/?oferta=${oferta.oferta.codigo}&produtos=${p.slug}`}>
-                        {oferta.referenciaCentavos ? (
+                      <Link className="btn sm" href={`/loja/checkout/?oferta=${oferta.codigo}&produtos=${p.slug}`}>
+                        {precoDe(p).cheio !== null && (
                           <>
-                            <s className="small" aria-label={`de ${formatarReais(oferta.referenciaCentavos)}`}>
-                              {formatarReais(oferta.referenciaCentavos)}
+                            <s className="small">
+                              <span className="sr-only">de </span>
+                              {formatarReais(precoDe(p).cheio ?? 0)}
                             </s>{" "}
                           </>
-                        ) : null}
-                        Comprar por {formatarReais(precoNaOferta(oferta.oferta, p))}
+                        )}
+                        Comprar por {formatarReais(precoDe(p).preco ?? 0)}
                         <span className="sr-only"> {p.titulo}</span>
                       </Link>
                     </div>

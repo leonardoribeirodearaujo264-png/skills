@@ -37,16 +37,25 @@ describe("assinatura x-signature", () => {
 function repoEmMemoria(pedido: PedidoSalvo, itens: string[]) {
   const acessos = new Map<string, string>();
   const estornados = new Set<string>();
+  const contas = new Map<string, string>();
   let liberacoes = 0;
   const repo: RepoPagamento = {
     async pedidoPorId(id) {
       return id === pedido.id ? { ...pedido } : null;
+    },
+    // Igual ao Auth: um e-mail, uma conta; nunca troca a conta já ligada ao pedido
+    async garantirConta(_id, email) {
+      if (!contas.has(email)) contas.set(email, `conta-${contas.size + 1}`);
+      if (pedido.userId) return "ja_vinculado";
+      pedido.userId = contas.get(email)!;
+      return "vinculado";
     },
     async liberar(id, paymentId, valor) {
       if (estornados.has(paymentId)) return "estornado";
       if (pedido.status === "pago") return pedido.mpPaymentId === paymentId ? "ja_pago" : "pagamento_duplicado";
       if (pedido.status === "reembolsado") return "reembolsado";
       if (valor !== pedido.valorCentavos) return "valor_divergente";
+      if (!pedido.userId) return "sem_conta";
       pedido.status = "pago";
       pedido.mpPaymentId = paymentId;
       liberacoes++;
@@ -67,7 +76,7 @@ function repoEmMemoria(pedido: PedidoSalvo, itens: string[]) {
       if (pedido.status === "pendente") pedido.status = "recusado";
     },
   };
-  return { repo, acessos, liberacoes: () => liberacoes, pedido };
+  return { repo, acessos, contas, liberacoes: () => liberacoes, pedido };
 }
 
 function mpCom(pagamentos: Record<string, Pagamento>): ClienteMercadoPago {
@@ -90,7 +99,14 @@ const pagamento = (p: Partial<Pagamento>): Pagamento => ({
   currency_id: "BRL",
   ...p,
 });
-const novoPedido = (): PedidoSalvo => ({ id: PEDIDO, userId: "u1", status: "pendente", valorCentavos: 6700, mpPaymentId: null });
+const novoPedido = (): PedidoSalvo => ({
+  id: PEDIDO,
+  userId: "u1",
+  email: "cliente@example.com",
+  status: "pendente",
+  valorCentavos: 6700,
+  mpPaymentId: null,
+});
 
 describe("liberação pelo pagamento", () => {
   it("pagamento aprovado libera os 3 produtos uma única vez, mesmo com notificação repetida", async () => {
@@ -211,5 +227,35 @@ describe("e-mail de acesso", () => {
     const aviso = avisoComTrava();
     await processarPagamento({ mp: mpCom({ "1": pagamento({ id: "1", status: "pending" }) }), repo: m.repo, avisarAcesso: aviso.avisar }, "1");
     expect(aviso.enviados()).toBe(0);
+  });
+});
+
+describe("compra sem login", () => {
+  const pedidoSemConta = (): PedidoSalvo => ({ ...novoPedido(), userId: null });
+
+  it("a aprovação cria a conta pelo e-mail da compra e libera o acesso", async () => {
+    const m = repoEmMemoria(pedidoSemConta(), ["a"]);
+    const r = await processarPagamento({ mp: mpCom({ "111": pagamento({}) }), repo: m.repo }, "111");
+    expect(r.resultado).toBe("liberado");
+    expect(m.pedido.userId).toBe("conta-1");
+    expect(m.acessos.size).toBe(1);
+  });
+
+  it("webhook reenviado não cria segunda conta nem segundo acesso", async () => {
+    const m = repoEmMemoria(pedidoSemConta(), ["a", "b"]);
+    const deps = { mp: mpCom({ "111": pagamento({}) }), repo: m.repo };
+    await Promise.all([processarPagamento(deps, "111"), processarPagamento(deps, "111")]);
+    await processarPagamento(deps, "111");
+    expect(m.contas.size).toBe(1);
+    expect(m.liberacoes()).toBe(1);
+    expect([...m.acessos.keys()]).toEqual(["a", "b"]);
+  });
+
+  it("pagamento pendente ou recusado não cria conta", async () => {
+    const m = repoEmMemoria(pedidoSemConta(), ["a"]);
+    await processarPagamento({ mp: mpCom({ "1": pagamento({ id: "1", status: "pending" }) }), repo: m.repo }, "1");
+    await processarPagamento({ mp: mpCom({ "2": pagamento({ id: "2", status: "rejected" }) }), repo: m.repo }, "2");
+    expect(m.contas.size).toBe(0);
+    expect(m.pedido.userId).toBeNull();
   });
 });

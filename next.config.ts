@@ -22,7 +22,13 @@ const config: NextConfig = {
   // Há outro package-lock.json acima desta pasta; a raiz do projeto é esta
   turbopack: { root: fileURLToPath(new URL(".", import.meta.url)) },
   async rewrites() {
-    return { beforeFiles: reescritasAntigas, afterFiles: [], fallback: [] };
+    // Páginas novas que o gerador da automação cria em public/<pasta>/ também respondem com e sem barra.
+    // Fica no fallback: só vale quando nenhuma rota do app atende; pasta inexistente continua 404.
+    const paginasNovas = [
+      { source: "/:pasta([a-z0-9-]+)", destination: "/:pasta/index.html" },
+      { source: "/:pasta([a-z0-9-]+)/", destination: "/:pasta/index.html" },
+    ];
+    return { beforeFiles: reescritasAntigas, afterFiles: [], fallback: paginasNovas };
   },
   async headers() {
     return [
