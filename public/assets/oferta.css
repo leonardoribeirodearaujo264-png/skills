@@ -1,0 +1,50 @@
+/* Bloco de oferta no fim das páginas dos vídeos. Carregado pelo pagina.js; usa os tokens do estilo.css. */
+.oferta-bloco { margin-top: 72px; display: grid; gap: 20px; }
+.oferta-bloco > .offer { margin-top: 0; }
+.oferta-carregando {
+  margin: 0; padding: 36px 28px; border-radius: 22px; text-align: center;
+  border: 1px dashed var(--line); color: var(--ink-soft); font-size: 14px;
+}
+
+.oferta-pacote h2 { max-width: 24ch; margin-left: auto; margin-right: auto; }
+.oferta-confianca { margin-bottom: 24px; }
+.oferta-preco { margin: 0 0 22px; display: grid; justify-items: center; gap: 6px; }
+.oferta-preco .price { margin: 0; color: var(--ink); }
+.oferta-preco-rotulo { font: 500 13px/1 var(--font-mono); color: var(--ink-soft); letter-spacing: .04em; text-transform: uppercase; }
+
+.oferta-combo {
+  position: relative; text-align: center; border-radius: 22px; padding: 40px 28px 32px;
+  background: var(--code-bg); color: var(--code-ink); box-shadow: var(--shadow);
+}
+.oferta-selo {
+  display: inline-block; padding: 6px 12px; border-radius: 999px;
+  background: var(--accent); color: #fff; font: 500 12px/1 var(--font-mono); letter-spacing: .06em;
+}
+.oferta-combo h2, .oferta-combo h3 {
+  font: 800 clamp(24px, 4vw, 32px)/1.15 var(--font-display); letter-spacing: -.02em; margin: 14px 0 8px; color: #fff;
+}
+.oferta-combo-desc { margin: 0 auto 24px; max-width: 46ch; color: var(--code-muted); }
+.oferta-combo-itens {
+  list-style: none; padding: 0; margin: 0 auto 28px; max-width: 520px; display: grid; gap: 8px; text-align: left;
+}
+.oferta-combo-itens li {
+  display: flex; justify-content: space-between; gap: 12px; align-items: baseline;
+  padding: 12px 14px; border-radius: 12px; background: rgba(255, 255, 255, .07); font-size: 15px; color: #fff;
+}
+.oferta-combo-qtd { flex: none; font: 500 12px/1.3 var(--font-mono); color: var(--code-muted); text-align: right; }
+.oferta-combo-precos { display: flex; justify-content: center; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; }
+.oferta-de { font: 500 20px/1 var(--font-display); color: var(--code-muted); }
+.oferta-combo .price { color: #fff; margin: 0; }
+.oferta-economia {
+  display: table; margin: 4px auto 22px; padding: 6px 12px; border-radius: 999px;
+  background: #E3F4EC; color: #16714A; font: 600 12px/1 var(--font-mono); letter-spacing: .04em;
+}
+.oferta-combo .cta { background: #fff; color: var(--code-bg); box-shadow: 0 10px 24px -12px rgba(0, 0, 0, .6); }
+.oferta-combo .cta:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.oferta-combo .price-note { margin: 14px 0 0; color: var(--code-muted); }
+
+@media (max-width: 640px) {
+  .oferta-combo { padding: 32px 18px 26px; }
+  .oferta-combo-itens li { flex-direction: column; gap: 4px; }
+  .oferta-combo-qtd { text-align: left; }
+}

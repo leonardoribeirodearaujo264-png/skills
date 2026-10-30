@@ -47,7 +47,7 @@ try {
   const loja = await pagina("/loja/");
   conferir("loja responde 200 para visitante", loja.status === 200, String(loja.status));
   conferir("loja mostra R$ 37, R$ 67 e R$ 127 vindos do banco", ["37", "67", "127"].every((v) => loja.texto.includes(`<small>R$</small>${v}`)));
-  conferir("loja mostra o avulso de edição de vídeo a R$ 47", loja.texto.includes("R$ 47,00") || loja.texto.includes("R$&nbsp;47,00"));
+  conferir("loja mostra o avulso de edição de vídeo a R$ 47", loja.texto.includes("R$\u00a047,00") || loja.texto.includes("R$&nbsp;47,00"));
   conferir("loja não mostra a oferta de cliente desativada", !loja.texto.includes("Preço de cliente"));
   const anonMembros = await pagina("/membros/");
   conferir("área de membros sem login vai para /entrar/", anonMembros.status === 307 && anonMembros.local.includes("/entrar/"), `${anonMembros.status} ${anonMembros.local}`);

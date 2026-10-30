@@ -35,6 +35,21 @@ describe.skipIf(!BASE)("páginas antigas dos vídeos", () => {
     expect(await r.text()).toBe(execFileSync("git", ["show", `${REF}:assets/estilo.css`], { encoding: "utf8" }));
   });
 
+  it("a vitrine do fim das páginas traz o pacote do vídeo e o combo com os preços do banco", async () => {
+    const r = await fetch(`${BASE}/api/loja/vitrine?pagina=agentes`, { headers: cabecalhos });
+    expect(r.status).toBe(200);
+    const v = (await r.json()) as {
+      pacote: { slug: string; precoTexto: string; comprarUrl: string };
+      combo: { somaTexto: string; precoTexto: string; economiaTexto: string };
+    };
+    expect(v.pacote.slug).toBe("times-de-agentes");
+    expect(v.pacote.precoTexto).toBe("R$\u00a037,00");
+    expect(v.pacote.comprarUrl).toContain("/loja/comprar/");
+    expect([v.combo.somaTexto, v.combo.precoTexto, v.combo.economiaTexto]).toEqual(["R$\u00a0195,00", "R$\u00a0127,00", "R$\u00a068,00"]);
+    const css = await fetch(`${BASE}/assets/oferta.css`, { headers: cabecalhos });
+    expect(css.status).toBe(200);
+  });
+
   it("endereço inexistente responde 404", async () => {
     const r = await fetch(`${BASE}/naoexiste/`, { redirect: "manual", headers: cabecalhos });
     expect(r.status).toBe(404);

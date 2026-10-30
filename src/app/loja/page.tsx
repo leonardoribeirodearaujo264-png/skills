@@ -1,8 +1,18 @@
 import type { Metadata } from "next";
+import { Alerta } from "@/components/Alerta";
 import { Cabecalho, Rodape } from "@/components/Cabecalho";
 import { Icone } from "@/components/Icone";
 import { usuarioAtual } from "@/lib/auth/sessao";
-import { ehAvulsoPorProduto, formatarReais, precoNaOferta, somaAvulsos, type Catalogo } from "@/lib/loja/dominio";
+import { MENSAGEM_FALHA_CHECKOUT } from "@/lib/loja/checkout";
+import {
+  ehAvulsoPorProduto,
+  formatarReais,
+  MENSAGEM_RECUSA,
+  precoNaOferta,
+  somaAvulsos,
+  type Catalogo,
+  type MotivoRecusa,
+} from "@/lib/loja/dominio";
 import { meusProdutos } from "@/lib/loja/membros";
 import { carregarCatalogo } from "@/lib/loja/repositorio";
 import { clientePublico } from "@/lib/supabase/clientes";
@@ -62,7 +72,14 @@ function produtosVista(cat: Catalogo): ProdutoVista[] {
   }));
 }
 
-type Busca = Promise<{ oferta?: string; produtos?: string; produto?: string }>;
+type Busca = Promise<{ oferta?: string; produtos?: string; produto?: string; erro?: string }>;
+
+// Motivo vindo da compra direta (/loja/comprar/); valor desconhecido não aparece
+function mensagemErro(codigo: string | undefined): string | null {
+  if (!codigo) return null;
+  if (codigo === "falha") return MENSAGEM_FALHA_CHECKOUT;
+  return codigo in MENSAGEM_RECUSA ? MENSAGEM_RECUSA[codigo as MotivoRecusa] : null;
+}
 
 export default async function Loja({ searchParams }: { searchParams: Busca }) {
   const busca = await searchParams;
@@ -99,6 +116,14 @@ export default async function Loja({ searchParams }: { searchParams: Busca }) {
             </li>
           </ul>
         </section>
+
+        {mensagemErro(busca.erro) && (
+          <div className="section">
+            <Alerta tipo="danger" titulo="Não deu para abrir o pagamento">
+              {mensagemErro(busca.erro)}
+            </Alerta>
+          </div>
+        )}
 
         <SeletorLoja
           ofertas={ofertasVista(catalogo, possui.length > 0)}

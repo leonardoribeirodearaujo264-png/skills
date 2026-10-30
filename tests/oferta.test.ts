@@ -1,7 +1,9 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { destinoSeguro } from "@/lib/auth/cookies";
-import { formatarReais, montarPedido, ofertaParaMaisUm, PedidoInvalido, type Catalogo } from "@/lib/loja/dominio";
+import { formatarReais, montarPedido, ofertaParaMaisUm, PedidoInvalido, precoNaOferta, type Catalogo } from "@/lib/loja/dominio";
+import { OFERTA_DOS_VIDEOS } from "@/lib/loja/paginas-videos";
+import { montarVitrine } from "@/lib/loja/vitrine";
 
 // O catálogo do teste é lido do próprio SQL de dados iniciais: o teste quebra se o preço do banco mudar sem querer.
 function catalogoDoSeed(): Catalogo {
@@ -63,20 +65,20 @@ describe("valores das ofertas", () => {
       expect(p.valorCentavos).toBe(3700);
       expect(p.itens).toEqual([slug]);
     }
-    expect(formatarReais(3700)).toBe("R$ 37,00");
+    expect(formatarReais(3700)).toBe("R$\u00a037,00");
   });
 
   it("edição de vídeo avulso sai R$ 47,00, preço próprio do produto no banco", () => {
     const p = montarPedido(cat, "avulso", ["edicao-de-video"], nada);
     expect(p.valorCentavos).toBe(4700);
-    expect(formatarReais(p.valorCentavos)).toBe("R$ 47,00");
+    expect(formatarReais(p.valorCentavos)).toBe("R$\u00a047,00");
   });
 
   it("pague 2, leve 3 sai R$ 67,00 com três produtos", () => {
     const p = montarPedido(cat, "leve-3", ["times-de-agentes", "edicao-de-video", "programacao-sem-codigo"], nada);
     expect(p.valorCentavos).toBe(6700);
     expect(p.itens).toHaveLength(3);
-    expect(formatarReais(p.valorCentavos)).toBe("R$ 67,00");
+    expect(formatarReais(p.valorCentavos)).toBe("R$\u00a067,00");
   });
 
   it("o leve 3 com o de vídeo dentro continua R$ 67,00", () => {
@@ -97,7 +99,7 @@ describe("valores das ofertas", () => {
     const p = montarPedido(cat, "combo", [], nada);
     expect(p.valorCentavos).toBe(12700);
     expect(p.itens).toEqual(cat.produtos.map((x) => x.slug).sort());
-    expect(formatarReais(p.valorCentavos)).toBe("R$ 127,00");
+    expect(formatarReais(p.valorCentavos)).toBe("R$\u00a0127,00");
   });
 });
 
@@ -168,5 +170,43 @@ describe("destino depois do login", () => {
     for (const ruim of ["//evil.example", "/\\evil.example", "/\t/evil.example", "/\n/evil.example", "https://evil.example", "evil", ""]) {
       expect(destinoSeguro(ruim)).toBe("/membros/");
     }
+  });
+});
+
+describe("vitrine das páginas dos vídeos (preços do banco)", () => {
+  it("cada vídeo do mapa aponta para um pacote que existe no banco", () => {
+    for (const [pagina, cfg] of Object.entries(OFERTA_DOS_VIDEOS)) {
+      expect(cat.produtos.some((p) => p.slug === cfg.pacote), pagina).toBe(true);
+    }
+  });
+
+  it("o pacote do vídeo sai por R$ 37 e leva à compra direta daquele pacote", () => {
+    const v = montarVitrine(cat, "agentes");
+    expect(v.pacote?.slug).toBe("times-de-agentes");
+    expect(v.pacote?.precoTexto).toBe("R$\u00a037,00");
+    expect(v.pacote?.comprarUrl).toBe("/loja/comprar/?oferta=avulso&produtos=times-de-agentes");
+    expect(montarVitrine(cat, "clonadora").pacote?.slug).toBe("design-copy-anuncios");
+    expect(montarVitrine(cat, "harvey").pacote?.slug).toBe("times-de-agentes");
+  });
+
+  it("o pacote de edição de vídeo, se for o do vídeo, sai por R$ 47", () => {
+    const avulso = cat.ofertas.find((o) => o.codigo === "avulso")!;
+    const video = cat.produtos.find((p) => p.slug === "edicao-de-video")!;
+    expect(formatarReais(precoNaOferta(avulso, video))).toBe("R$\u00a047,00");
+  });
+
+  it("o combo mostra a soma dos avulsos (R$ 195), o preço (R$ 127) e a economia (R$ 68)", () => {
+    const c = montarVitrine(cat, "agentes").combo!;
+    expect(c.somaTexto).toBe("R$\u00a0195,00");
+    expect(c.precoTexto).toBe("R$\u00a0127,00");
+    expect(c.economiaTexto).toBe("R$\u00a068,00");
+    expect(c.itens).toHaveLength(5);
+    expect(c.comprarUrl).toBe("/loja/comprar/?oferta=combo");
+  });
+
+  it("página sem pacote no mapa mostra só o combo", () => {
+    const v = montarVitrine(cat, "");
+    expect(v.pacote).toBeNull();
+    expect(v.combo).not.toBeNull();
   });
 });

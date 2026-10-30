@@ -36,7 +36,8 @@ const config: NextConfig = {
       },
       { source: "/membros/:path*", headers: semCache },
       { source: "/entrar/:path*", headers: semCache },
-      { source: "/api/:path*", headers: semCache },
+      // A vitrine pública das páginas dos vídeos define o próprio cache
+      { source: "/api/((?!loja/vitrine).*)", headers: semCache },
     ];
   },
 };
