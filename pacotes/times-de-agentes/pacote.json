@@ -44,5 +44,27 @@
       "comandoClaude": "",
       "comandoCodex": ""
     }
+  ],
+  "demonstracoes": [
+    {
+      "prompt": "07-diretor-geral",
+      "agente": "diretor-geral",
+      "resultado": "Um resumo com os times acionados, a entrega de cada um, o que ainda falta você confirmar e cada ação que espera o seu OK."
+    },
+    {
+      "prompt": "01-marketing",
+      "agente": "lider-marketing",
+      "resultado": "O plano da campanha com quem faz cada tarefa e os textos das peças, já conferidos pelo revisor-marketing, para você aprovar."
+    },
+    {
+      "prompt": "03-financeiro",
+      "agente": "lider-financeiro",
+      "resultado": "Os números organizados em rascunhos/financeiro/, conferidos pelo revisor-financeiro, com cada dado que falta marcado como [A CONFIRMAR]."
+    },
+    {
+      "prompt": "08-criar-time-novo",
+      "skill": "montar-time-de-agentes",
+      "resultado": "Um time novo para a área que faltava, com líder, especialistas e revisor, nos formatos do Claude Code e do Codex."
+    }
   ]
 }

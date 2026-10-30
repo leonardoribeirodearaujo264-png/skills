@@ -47,13 +47,13 @@ try {
   const loja = await pagina("/loja/");
   conferir("loja responde 200 para visitante", loja.status === 200, String(loja.status));
   conferir("loja mostra a capa de cada pacote", ["times-de-agentes", "edicao-de-video", "design-copy-anuncios"].every((p) => loja.texto.includes(`/capas/${p}.webp`)));
-  conferir("loja mostra R$ 37, R$ 47 do leve 3 e R$ 127 vindos do banco", ["37", "47", "127"].every((v) => loja.texto.includes(`<small>R$</small>${v}`)));
+  conferir("loja mostra R$ 37, R$ 47 do leve 3 e R$ 97 do combo vindos do banco", ["37", "47", "97"].every((v) => loja.texto.includes(`<small>R$</small>${v}`)));
   conferir("loja mostra o avulso de edição de vídeo a R$ 47", loja.texto.includes("R$\u00a047,00") || loja.texto.includes("R$&nbsp;47,00"));
   conferir("loja não mostra a oferta de cliente para visitante", !loja.texto.includes("Preço de cliente"));
   // Catálogo da página inicial e página pública do pacote
   const vitrine = await fetch(`${SITE}/api/loja/vitrine?pagina=`, { headers: bypass }).then((r) => r.json());
   const cartoes = vitrine.catalogo ? [vitrine.catalogo.destaque, ...vitrine.catalogo.pacotes].filter(Boolean) : [];
-  conferir("página inicial recebe os 5 pacotes à venda e o combo", cartoes.length === 5 && vitrine.catalogo?.combo?.precoTexto.includes("127,00"), String(cartoes.length));
+  conferir("página inicial recebe os 5 pacotes à venda e o combo", cartoes.length === 5 && vitrine.catalogo?.combo?.precoTexto.includes("97,00"), String(cartoes.length));
   conferir("catálogo traz edição de vídeo a R$ 47 e capa com texto alternativo em todos", cartoes.find((c) => c.slug === "edicao-de-video")?.precoTexto.includes("47,00") && cartoes.every((c) => c.capa?.alt));
   const capa = await fetch(`${SITE}${cartoes[0]?.capa?.webp ?? "/capas/x.webp"}`, { headers: bypass });
   conferir("capa do catálogo responde 200 como WebP", capa.status === 200 && (capa.headers.get("content-type") ?? "").includes("webp"), String(capa.status));
@@ -61,11 +61,15 @@ try {
   conferir("página do pacote abre sem login, com preço do banco e compra direta", pp.status === 200 && /<h1>Equipe Completa de Agentes<\/h1>/.test(pp.texto) && pp.texto.includes("37,00") && pp.texto.includes(`/loja/checkout/?oferta=avulso&amp;produtos=${BLOQUEADO}`), String(pp.status));
   conferir("página do pacote não cita o Mercado Pago", !pp.texto.includes("Mercado Pago"));
   conferir("pacote inexistente responde 404", (await pagina("/pacotes/nao-existe/")).status === 404);
+  const bumpPagina = await pagina("/pacotes/lancamento-pro/");
+  conferir("página do Lançamento Pro abre e diz que é complemento no checkout", bumpPagina.status === 200 && bumpPagina.texto.includes("Complemento no checkout") && bumpPagina.texto.includes("19,90"), String(bumpPagina.status));
+  conferir("página do pacote de agentes mostra os prompts de demonstração com a função do agente", pp.texto.includes("Veja como você pede") && pp.texto.includes("O que você recebe") && pp.texto.includes("O que você leva e o que ganha"));
   // Compra sem login: do botão do vídeo ao checkout, sem passar pela tela de entrar
   const direta = await pagina(`/loja/comprar/?oferta=avulso&produtos=${COMPRADO}`);
   conferir("compra direta leva ao checkout, não ao login", direta.status === 303 && direta.local.includes("/loja/checkout/") && !direta.local.includes("/entrar/"), direta.local);
   const checkout = await pagina(`/loja/checkout/?oferta=avulso&produtos=${COMPRADO}`);
   conferir("checkout abre sem login, com o valor do servidor e o campo de e-mail", checkout.status === 200 && checkout.texto.includes("Finalizar compra") && checkout.texto.includes('name="email"') && checkout.texto.includes("37,00"), String(checkout.status));
+  conferir("checkout oferece o bump desmarcado com o preço do banco e sem cronômetro", /Adicionar (<!-- -->)?Lançamento Pro/.test(checkout.texto) && checkout.texto.includes("19,90") && !/type="checkbox"[^>]*checked/.test(checkout.texto) && !checkout.texto.includes("checkout-lembrete"));
   const checkoutCliente = await pagina(`/loja/checkout/?oferta=cliente&produtos=${COMPRADO}`);
   conferir("preço de cliente sem sessão pede para entrar com o e-mail da compra", checkoutCliente.texto.includes("Entrar com o e-mail da compra"));
   const anonMembros = await pagina("/membros/");

@@ -1,0 +1,23 @@
+{
+  "slug": "lancamento-pro",
+  "titulo": "Lançamento Pro",
+  "terceiros": [],
+  "plugins": [],
+  "demonstracoes": [
+    {
+      "prompt": "01-oferta-e-pagina",
+      "agente": "estrategista-de-oferta",
+      "resultado": "A oferta com promessa validada, ângulo, stack, garantia e preço com a conta, seguida do texto e do layout da página, conferidos pelo revisor-de-promessas."
+    },
+    {
+      "prompt": "02-emails-do-lancamento",
+      "agente": "copywriter-emails",
+      "resultado": "As sequências do lançamento com cronograma por data, hora e segmento, dois assuntos por e-mail e o CTA de cada envio, prontas para colar na ferramenta."
+    },
+    {
+      "prompt": "07-metricas",
+      "agente": "analista-metricas",
+      "resultado": "O funil com a taxa de cada etapa e a conta mostrada, a maior perda, as vendas sem origem rastreada e as recomendações com quem executa."
+    }
+  ]
+}

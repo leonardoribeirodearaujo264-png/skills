@@ -52,6 +52,9 @@ export type VitrineLeve = {
   qtd: number;
   precoTexto: string;
   referenciaTexto: string | null;
+  // diferença entre 3 avulsos pelo preço padrão do avulso (do banco) e o preço da oferta; com um pacote
+  // de preço próprio maior (edição de vídeo) a economia real é maior, nunca menor
+  economiaTexto: string | null;
   escolherUrl: string;
   // a loja abre com o pacote do vídeo já marcado
   comPacote: boolean;
@@ -135,8 +138,8 @@ export function montarVitrine(catalogo: Catalogo, pagina: string): Vitrine {
           slug: produto.slug,
           capa: capaDoPacote(produto.slug, produto.titulo),
           titulo: produto.titulo,
-          gancho: config.gancho,
-          descricao: produto.resumo,
+          gancho: config.gancho.replace("{preco}", formatarReais(precoNaOferta(catalogo, avulso, produto))),
+          descricao: config.descricao ?? produto.resumo,
           precoTexto: formatarReais(precoNaOferta(catalogo, avulso, produto)),
           comprarUrl: urlComprar(avulso.codigo, produto.slug),
         }
@@ -173,6 +176,7 @@ export function montarVitrine(catalogo: Catalogo, pagina: string): Vitrine {
       qtd: multi.qtdEscolha,
       precoTexto: formatarReais(multi.precoCentavos),
       referenciaTexto: referencia > multi.precoCentavos ? formatarReais(referencia) : null,
+      economiaTexto: referencia > multi.precoCentavos ? formatarReais(referencia - multi.precoCentavos) : null,
       escolherUrl: `/loja/?${q}#passo-produtos`,
       comPacote: pacote !== null,
     };

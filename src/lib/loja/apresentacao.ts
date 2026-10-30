@@ -11,8 +11,10 @@ export type Apresentacao = {
   capaAlt: string;
   // Frase depois do resumo, na página do pacote
   complemento?: string;
-  // Explica cada número do bloco "O que vem no pacote"
+  // Explica cada número do bloco "O que você leva e o que ganha"
   inclui?: { agentes?: string; skills?: string; prompts?: string };
+  // Resultado prático de cada item, conferido no README do pacote
+  ganhos?: { agentes?: string; skills?: string; prompts?: string };
   // Números que não estão em loja_produtos (ex.: quantos times)
   numerosExtras?: { n: number; rotulo: string; texto: string }[];
   times?: { titulo: string; texto: string; nomes: string[] };
@@ -27,6 +29,11 @@ const APRESENTACOES: Record<string, Apresentacao> = {
       agentes: "O diretor-geral e seis times, cada um com líder, dois especialistas e revisor.",
       skills: "Uma autoral, que monta um time novo para qualquer área, e duas gratuitas de código aberto.",
       prompts: "Um por time, um para o diretor-geral e um para criar um time novo.",
+    },
+    ganhos: {
+      agentes: "Você pede em português a um só agente e recebe a entrega já conferida pelo revisor do time.",
+      skills: "Quando faltar uma área, como jurídico ou RH, a skill entrevista você e monta o time novo.",
+      prompts: "Você começa a usar cada time sem escrever o pedido do zero.",
     },
     numerosExtras: [{ n: 6, rotulo: "times", texto: "Marketing, vendas, financeiro, atendimento, operações e conteúdo." }],
     times: {
@@ -54,6 +61,9 @@ const APRESENTACOES: Record<string, Apresentacao> = {
   },
   "motion-mockup-fontes": {
     capaAlt: "Capa do pacote Motion, mockup e fontes: notebook com tipografia, celular e trilha de animação.",
+  },
+  "lancamento-pro": {
+    capaAlt: "Capa do pacote Lançamento Pro: página, anúncio, e-mail e balão de atendimento.",
   },
   "programacao-sem-codigo": {
     capaAlt: "Capa do pacote Programação para quem não programa: terminal, bloco de código e sinal de concluído.",

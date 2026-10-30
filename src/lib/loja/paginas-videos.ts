@@ -1,9 +1,16 @@
 // Qual pacote cada página de vídeo oferece no fim. Para trocar o pacote ou o gancho de um vídeo, mude só aqui.
 // A chave é a pasta da página (/agentes/ -> "agentes"). Preço e conteúdo do pacote vêm do banco.
-export type OfertaDoVideo = { pacote: string; gancho: string };
+// {preco} no gancho vira o preço atual do pacote no banco. descricao troca o resumo do pacote neste card.
+export type OfertaDoVideo = { pacote: string; gancho: string; descricao?: string };
 
 export const OFERTA_DOS_VIDEOS: Record<string, OfertaDoVideo> = {
-  agentes: { pacote: "times-de-agentes", gancho: "Gostou da empresa de agentes? No pacote tem um time pronto para cada área do negócio." },
+  agentes: {
+    pacote: "times-de-agentes",
+    gancho: "Sua equipe inteira de IA, por {preco}",
+    // Conferido no README do pacote: 25 agentes, seis times, cada um com líder e revisor
+    descricao:
+      "25 agentes cobrindo marketing, vendas, financeiro, atendimento, operações e conteúdo. Cada área tem um líder que coordena e um revisor que confere antes de entregar.",
+  },
   clonadora: { pacote: "design-copy-anuncios", gancho: "Gostou da bancada? No pacote tem as skills de design, copy e anúncios prontas." },
   harvey: { pacote: "times-de-agentes", gancho: "Gostou do Harvey? No pacote tem o time de vendas e mais cinco times de agentes." },
   banca: { pacote: "programacao-sem-codigo", gancho: "Gostou da banca? No pacote tem o time que planeja, programa, testa e revisa para você." },

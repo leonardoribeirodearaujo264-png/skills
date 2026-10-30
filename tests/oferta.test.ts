@@ -1,7 +1,17 @@
+import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { destinoSeguro } from "@/lib/auth/cookies";
-import { formatarReais, montarPedido, ofertaParaMaisUm, PedidoInvalido, precoNaOferta, type Catalogo } from "@/lib/loja/dominio";
+import {
+  adicionarBump,
+  bumpParaPedido,
+  formatarReais,
+  montarPedido,
+  ofertaParaMaisUm,
+  PedidoInvalido,
+  precoNaOferta,
+  type Catalogo,
+} from "@/lib/loja/dominio";
 import { OFERTA_DOS_VIDEOS } from "@/lib/loja/paginas-videos";
 import { montarCatalogo, montarVitrine } from "@/lib/loja/vitrine";
 
@@ -23,6 +33,8 @@ function catalogoDoSeed(): Catalogo {
       qtdAgentes: 0,
       qtdPrompts: 0,
       aulaDuracaoS: null,
+      precoBumpCentavos: null,
+      soBump: false,
     })),
     ofertas: ofertas.map((m) => ({
       codigo: m[1]!,
@@ -36,12 +48,13 @@ function catalogoDoSeed(): Catalogo {
       ordem: Number(m[7]),
       itens: [],
     })),
+    bumps: [],
   };
 }
 
-// 0006: o leve 3 passou para R$ 47 (o seed do 0001 ainda tem o preço antigo)
+// 0006 e 0008: leve 3 a R$ 47 e combo a R$ 97 (o seed do 0001 ainda tem os preços antigos)
 const seed = catalogoDoSeed();
-const cat: Catalogo = { ...seed, ofertas: seed.ofertas.map((o) => (o.codigo === "leve-3" ? { ...o, precoCentavos: 4700 } : o)) };
+const cat: Catalogo = { ...seed, ofertas: seed.ofertas.map((o) => (o.codigo === "leve-3" ? { ...o, precoCentavos: 4700 } : o.codigo === "combo" ? { ...o, precoCentavos: 9700 } : o)) };
 const nada = new Set<string>();
 
 function motivo(fn: () => unknown): string {
@@ -98,11 +111,11 @@ describe("valores das ofertas", () => {
     expect(p.itens).toHaveLength(5);
   });
 
-  it("combo sai R$ 127,00 com todos os produtos", () => {
+  it("combo sai R$ 97,00 com todos os produtos", () => {
     const p = montarPedido(cat, "combo", [], nada);
-    expect(p.valorCentavos).toBe(12700);
+    expect(p.valorCentavos).toBe(9700);
     expect(p.itens).toEqual(cat.produtos.map((x) => x.slug).sort());
-    expect(formatarReais(p.valorCentavos)).toBe("R$\u00a0127,00");
+    expect(formatarReais(p.valorCentavos)).toBe("R$\u00a097,00");
   });
 });
 
@@ -201,6 +214,9 @@ describe("vitrine das páginas dos vídeos (preços do banco)", () => {
     expect(v.pacote?.comprarUrl).toBe("/loja/checkout/?oferta=avulso&produtos=times-de-agentes");
     expect(montarVitrine(cat, "clonadora").pacote?.slug).toBe("design-copy-anuncios");
     expect(montarVitrine(cat, "harvey").pacote?.slug).toBe("times-de-agentes");
+    // Gancho com o preço vindo do banco e descrição própria do card na página /agentes/
+    expect(v.pacote?.gancho).toBe("Sua equipe inteira de IA, por R$ 37,00");
+    expect(v.pacote?.descricao).toContain("25 agentes cobrindo marketing, vendas, financeiro");
   });
 
   it("o pacote de edição de vídeo, se for o do vídeo, sai por R$ 47", () => {
@@ -209,11 +225,11 @@ describe("vitrine das páginas dos vídeos (preços do banco)", () => {
     expect(formatarReais(precoNaOferta(cat, avulso, video))).toBe("R$\u00a047,00");
   });
 
-  it("o combo mostra a soma dos avulsos (R$ 195), o preço (R$ 127) e a economia (R$ 68)", () => {
+  it("o combo mostra a soma dos avulsos (R$ 195), o preço (R$ 97) e a economia (R$ 98)", () => {
     const c = montarVitrine(cat, "agentes").combo!;
     expect(c.somaTexto).toBe("R$\u00a0195,00");
-    expect(c.precoTexto).toBe("R$\u00a0127,00");
-    expect(c.economiaTexto).toBe("R$\u00a068,00");
+    expect(c.precoTexto).toBe("R$\u00a097,00");
+    expect(c.economiaTexto).toBe("R$\u00a098,00");
     expect(c.itens).toHaveLength(5);
     expect(c.comprarUrl).toBe("/loja/checkout/?oferta=combo");
   });
@@ -252,11 +268,11 @@ describe("catálogo da página inicial", () => {
     expect(c.pacotes.map((p) => p.slug)).toContain("edicao-de-video");
   });
 
-  it("preços vêm das ofertas do banco: R$ 37, edição de vídeo R$ 47 e combo R$ 127", () => {
+  it("preços vêm das ofertas do banco: R$ 37, edição de vídeo R$ 47 e combo R$ 97", () => {
     const c = montarCatalogo(ordenado);
     expect(c.destaque?.precoTexto).toBe("R$ 37,00");
     expect(c.pacotes.find((p) => p.slug === "edicao-de-video")?.precoTexto).toBe("R$ 47,00");
-    expect(c.combo?.precoTexto).toBe("R$ 127,00");
+    expect(c.combo?.precoTexto).toBe("R$ 97,00");
     expect(c.combo?.itens).toHaveLength(5);
   });
 
@@ -285,5 +301,64 @@ describe("catálogo da página inicial", () => {
     const c = montarCatalogo({ ...ordenado, ofertas: ordenado.ofertas.filter((o) => o.codigo !== "avulso") });
     expect(c.destaque).toBeNull();
     expect(c.pacotes).toEqual([]);
+  });
+});
+
+describe("oferta complementar (order bump)", () => {
+  const bump = {
+    slug: "lancamento-pro",
+    titulo: "Lançamento Pro",
+    resumo: "15 agentes e 50 skills.",
+    ordem: 90,
+    githubUrl: null,
+    precoAvulsoCentavos: null,
+    destaques: [],
+    qtdSkills: 50,
+    qtdAgentes: 15,
+    qtdPrompts: 0,
+    aulaDuracaoS: null,
+    precoBumpCentavos: 1990,
+    soBump: true,
+  };
+  const comBump: Catalogo = { ...cat, bumps: [bump] };
+
+  it("marcado, soma o preço de bump do banco ao pedido e entra como item", () => {
+    const base = montarPedido(comBump, "avulso", ["times-de-agentes"], nada);
+    const p = adicionarBump(comBump, base, "lancamento-pro", nada);
+    expect(p.valorCentavos).toBe(3700 + 1990);
+    expect(p.itens).toEqual(["times-de-agentes", "lancamento-pro"]);
+    expect(p.chaveItens).toBe("avulso:times-de-agentes+bump:lancamento-pro");
+  });
+
+  it("vale também com o leve 3 (R$ 47 + R$ 19,90)", () => {
+    const base = montarPedido(comBump, "leve-3", ["times-de-agentes", "edicao-de-video", "design-copy-anuncios"], nada);
+    expect(adicionarBump(comBump, base, "lancamento-pro", nada).valorCentavos).toBe(4700 + 1990);
+  });
+
+  it("recusa bump inexistente e bump que a pessoa já tem", () => {
+    const base = montarPedido(comBump, "avulso", ["times-de-agentes"], nada);
+    expect(motivo(() => adicionarBump(comBump, base, "nao-existe", nada))).toBe("produto_inexistente");
+    expect(motivo(() => adicionarBump(comBump, base, "lancamento-pro", new Set(["lancamento-pro"])))).toBe("ja_possui");
+  });
+
+  it("o bump não entra na vitrine nem no combo", () => {
+    expect(comBump.produtos.some((p) => p.slug === "lancamento-pro")).toBe(false);
+    expect(montarPedido(comBump, "combo", [], nada).itens).not.toContain("lancamento-pro");
+  });
+
+  it("só é oferecido a quem ainda não tem", () => {
+    expect(bumpParaPedido(comBump, ["times-de-agentes"], nada)?.slug).toBe("lancamento-pro");
+    expect(bumpParaPedido(comBump, ["times-de-agentes"], new Set(["lancamento-pro"]))).toBeNull();
+  });
+});
+
+describe("conteúdo público dos pacotes", () => {
+  it("src/lib/loja/conteudo-pacotes.json está igual ao que os arquivos de pacotes/ geram", () => {
+    expect(() => execFileSync(process.execPath, ["scripts/gerar-vitrine-pacotes.mjs", "--conferir"], { stdio: "pipe" })).not.toThrow();
+  });
+
+  it("o slug do bump não entra como produto de uma oferta de escolha", () => {
+    const comBump: Catalogo = { ...cat, bumps: [{ ...cat.produtos[0]!, slug: "lancamento-pro", precoBumpCentavos: 1990, soBump: true }] };
+    expect(motivo(() => montarPedido(comBump, "avulso", ["lancamento-pro"], nada))).toBe("produto_inexistente");
   });
 });

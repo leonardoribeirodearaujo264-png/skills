@@ -4,21 +4,44 @@ import { enviarEmailPix } from "../email/pix";
 import { ErroMercadoPago, type Pagamento, type Pix } from "../mercadopago/api";
 import { clientePublico, clienteServico } from "../supabase/clientes";
 import { partesDoNome } from "./comprador";
-import { formatarReais, montarPedido, PedidoInvalido, type Catalogo, type ItensDoPedido, type MotivoRecusa } from "./dominio";
+import {
+  adicionarBump,
+  bumpParaPedido,
+  formatarReais,
+  montarPedido,
+  PedidoInvalido,
+  type Catalogo,
+  type ItensDoPedido,
+  type MotivoRecusa,
+} from "./dominio";
 import { meusProdutos } from "./membros";
 import { permitir } from "./limites";
 import { aplicarPagamento, type ResultadoPagamento } from "./pagamento";
-import { carregarCatalogo, criarOuReusarPedido, pedidoParaPix, pedidoParaRetorno, salvarDadosComprador } from "./repositorio";
+import {
+  acessosAtivos,
+  cancelarPedidoPendente,
+  carregarCatalogo,
+  contaPorEmail,
+  criarOuReusarPedido,
+  pedidoParaPix,
+  pedidoParaRetorno,
+  pedidosIrmaosPendentes,
+  salvarDadosComprador,
+} from "./repositorio";
 import { depsPagamento } from "./servicos";
 
 // Checkout no próprio site, sem login: o comprador informa o e-mail e paga por Pix ou cartão ali mesmo.
 // Preço, itens e regra da oferta saem sempre do servidor. A conta nasce na aprovação do pagamento.
 // O preço de cliente exige sessão (prova de que o e-mail é dele).
 
+// Oferta complementar mostrada no checkout, desmarcada por padrão. Preço vem do banco.
+export type BumpNaTela = { slug: string; titulo: string; resumo: string; precoCentavos: number };
+
 export type Previa = {
   ofertaTitulo: string;
   itens: { slug: string; titulo: string }[];
   valorCentavos: number;
+  bump: BumpNaTela | null;
 };
 export type Falha = { motivo: MotivoRecusa | "falha" };
 
@@ -26,6 +49,8 @@ export type Falha = { motivo: MotivoRecusa | "falha" };
 type Comprador = { usuario: Usuario | null; email: string; nome: string; telefone: string };
 type PedidoPronto = {
   pedidoId: string;
+  // chave dos itens principais, sem a oferta complementar: identifica o mesmo pedido com e sem bump
+  chaveBase: string;
   valorCentavos: number;
   descricao: string;
   pacote: string;
@@ -42,16 +67,23 @@ async function produtosJaComprados(usuario: Usuario | null): Promise<Set<string>
   return usuario ? new Set((await meusProdutos(usuario)).map((p) => p.slug)) : new Set();
 }
 
+// bump: slug da oferta complementar marcada no checkout, ou null
 async function calcular(
   usuario: Usuario | null,
   oferta: string,
   produtos: string[],
-): Promise<{ catalogo: Catalogo; itens: ItensDoPedido }> {
+  bump: string | null = null,
+): Promise<{ catalogo: Catalogo; itens: ItensDoPedido; possui: Set<string> }> {
   const catalogo = await carregarCatalogo(clientePublico());
   const ofertaInfo = catalogo.ofertas.find((o) => o.codigo === oferta);
   if (ofertaInfo?.exigeCliente && !usuario) throw new PedidoInvalido("so_clientes");
   const possui = await produtosJaComprados(usuario);
-  return { catalogo, itens: montarPedido(catalogo, oferta, produtos, possui) };
+  const base = montarPedido(catalogo, oferta, produtos, possui);
+  return { catalogo, possui, itens: bump ? adicionarBump(catalogo, base, bump, possui) : base };
+}
+
+function tituloDe(catalogo: Catalogo, slug: string): string {
+  return [...catalogo.produtos, ...catalogo.bumps].find((p) => p.slug === slug)?.titulo ?? slug;
 }
 
 function tratar(e: unknown, onde: string): Falha {
@@ -63,11 +95,16 @@ function tratar(e: unknown, onde: string): Falha {
 // Prévia para a página do checkout: itens e valor calculados no servidor, sem criar nada
 export async function previaCompra(usuario: Usuario | null, oferta: string, produtos: string[]): Promise<Previa | Falha> {
   try {
-    const { catalogo, itens } = await calcular(usuario, oferta, produtos);
+    const { catalogo, itens, possui } = await calcular(usuario, oferta, produtos);
+    const bump = bumpParaPedido(catalogo, itens.itens, possui);
     return {
       ofertaTitulo: catalogo.ofertas.find((o) => o.codigo === oferta)?.titulo ?? "Pacote",
-      itens: itens.itens.map((s) => ({ slug: s, titulo: catalogo.produtos.find((p) => p.slug === s)?.titulo ?? s })),
+      itens: itens.itens.map((s) => ({ slug: s, titulo: tituloDe(catalogo, s) })),
       valorCentavos: itens.valorCentavos,
+      bump:
+        bump && bump.precoBumpCentavos !== null
+          ? { slug: bump.slug, titulo: bump.titulo, resumo: bump.resumo, precoCentavos: bump.precoBumpCentavos }
+          : null,
     };
   } catch (e) {
     return tratar(e, "previa");
@@ -75,16 +112,23 @@ export async function previaCompra(usuario: Usuario | null, oferta: string, prod
 }
 
 // Grava (ou reaproveita) o pedido pendente pelo e-mail, com o valor calculado agora no servidor
-async function prepararPedido(comprador: Comprador, oferta: string, produtos: string[]): Promise<PedidoPronto> {
+async function prepararPedido(comprador: Comprador, oferta: string, produtos: string[], bump: string | null): Promise<PedidoPronto> {
   const email = (comprador.usuario?.email ?? comprador.email).trim().toLowerCase();
-  const { catalogo, itens } = await calcular(comprador.usuario, oferta, produtos);
   const db = clienteServico();
+  // Sem sessão, o "já tem" não é conferido (revelaria o que outro e-mail comprou). Só para o bump, que
+  // aparece para todos, confere pelo e-mail: pagar de novo não daria nada a mais (a liberação não duplica).
+  if (bump && !comprador.usuario) {
+    const conta = await contaPorEmail(db, email);
+    if (conta && (await acessosAtivos(db, conta)).has(bump)) throw new PedidoInvalido("ja_possui");
+  }
+  const { catalogo, itens } = await calcular(comprador.usuario, oferta, produtos, bump);
   const pedido = await criarOuReusarPedido(db, { email, userId: comprador.usuario?.id ?? null }, oferta, itens);
   await salvarDadosComprador(db, pedido.id, comprador.nome, comprador.telefone);
   const ofertaTitulo = catalogo.ofertas.find((o) => o.codigo === oferta)?.titulo ?? "Pacote";
-  const titulos = itens.itens.map((s) => catalogo.produtos.find((p) => p.slug === s)?.titulo ?? s);
+  const titulos = itens.itens.map((s) => tituloDe(catalogo, s));
   return {
     pedidoId: pedido.id,
+    chaveBase: itens.chaveItens.split("+bump:")[0] ?? itens.chaveItens,
     valorCentavos: pedido.valorCentavos,
     descricao: `${ofertaTitulo}: ${titulos.join(", ")}`.slice(0, 250),
     pacote: titulos.length === 1 ? (titulos[0] ?? ofertaTitulo) : ofertaTitulo,
@@ -122,6 +166,26 @@ async function cobrancaExistente(
   return null;
 }
 
+// Marcar ou desmarcar o bump cria outro pedido com os mesmos itens principais. Antes de cobrar este,
+// o anterior não pode continuar pagável: se já foi pago ou está em análise, não cobra de novo; senão o
+// Pix pendente dele é cancelado (se não der, confere de novo, porque pode ter sido pago agora) e o pedido sai.
+async function resolverPedidosIrmaos(deps: ReturnType<typeof depsPagamento>, pedido: PedidoPronto): Promise<JaCobrado | null> {
+  const db = clienteServico();
+  for (const id of await pedidosIrmaosPendentes(db, pedido.email, pedido.chaveBase, pedido.pedidoId)) {
+    const ja = await cobrancaExistente(deps, id, true);
+    if (ja) return ja;
+    const pixPendentes = (await deps.mp.pagamentosDoPedido(id)).filter((p) => p.payment_method_id === "pix" && p.status === "pending");
+    for (const pix of pixPendentes) {
+      if (!(await deps.mp.cancelarPagamento(pix.id))) {
+        const depois = await cobrancaExistente(deps, id, false);
+        if (depois) return depois;
+      }
+    }
+    await cancelarPedidoPendente(db, id);
+  }
+  return null;
+}
+
 // agora: hora do servidor, para a tela ajustar o relógio do aparelho e contar a validade certa
 export type PixGerado = { pedidoId: string; valorCentavos: number; pix: Pix; agora: string };
 
@@ -147,7 +211,7 @@ async function lembrarPorEmail(pedido: PedidoPronto, pix: Pix): Promise<void> {
 async function cobrarPix(pedido: PedidoPronto): Promise<PixGerado | JaCobrado> {
   const deps = depsPagamento();
   // Se o pedido já foi pago ou tem cartão em análise, não gera cobrança nova. Pix pendente é reaproveitado.
-  const ja = await cobrancaExistente(deps, pedido.pedidoId, true);
+  const ja = (await resolverPedidosIrmaos(deps, pedido)) ?? (await cobrancaExistente(deps, pedido.pedidoId, true));
   if (ja) return ja;
   const pix = await deps.mp.criarPix({
     ...pedido,
@@ -159,9 +223,14 @@ async function cobrarPix(pedido: PedidoPronto): Promise<PixGerado | JaCobrado> {
   return { pedidoId: pedido.pedidoId, valorCentavos: pedido.valorCentavos, pix, agora: new Date().toISOString() };
 }
 
-export async function gerarPix(comprador: Comprador, oferta: string, produtos: string[]): Promise<PixGerado | JaCobrado | Falha> {
+export async function gerarPix(
+  comprador: Comprador,
+  oferta: string,
+  produtos: string[],
+  bump: string | null = null,
+): Promise<PixGerado | JaCobrado | Falha> {
   try {
-    return await cobrarPix(await prepararPedido(comprador, oferta, produtos));
+    return await cobrarPix(await prepararPedido(comprador, oferta, produtos, bump));
   } catch (e) {
     return tratar(e, "pix");
   }
@@ -224,6 +293,7 @@ export async function renovarPix(pedidoId: string): Promise<PixGerado | JaCobrad
     const pacote = p.produtos.length === 1 ? (p.produtos[0] ?? p.ofertaTitulo) : p.ofertaTitulo;
     return await cobrarPix({
       pedidoId,
+      chaveBase: p.chaveItens.split("+bump:")[0] ?? p.chaveItens,
       valorCentavos: p.valorCentavos,
       descricao: `${p.ofertaTitulo}: ${p.produtos.join(", ")}`.slice(0, 250),
       pacote,
@@ -252,16 +322,17 @@ export async function pagarComCartao(
   oferta: string,
   produtos: string[],
   cartao: DadosCartao,
+  bump: string | null = null,
 ): Promise<ResultadoCartao> {
   try {
-    const pedido = await prepararPedido(comprador, oferta, produtos);
+    const pedido = await prepararPedido(comprador, oferta, produtos, bump);
     // O valor mostrado no formulário tem de ser o mesmo do servidor; senão, a tela está desatualizada
     if (cartao.valorCentavos !== pedido.valorCentavos) return { motivo: "falha" };
     const deps = depsPagamento();
 
     // Nada de cobrança dupla: pedido já pago ou com cartão em análise não é cobrado de novo,
     // e o Pix pendente do mesmo pedido é cancelado antes do cartão (se não der, ele já foi pago)
-    const ja = await cobrancaExistente(deps, pedido.pedidoId, true);
+    const ja = (await resolverPedidosIrmaos(deps, pedido)) ?? (await cobrancaExistente(deps, pedido.pedidoId, true));
     if (ja) return ja;
     const pixPendentes = (await deps.mp.pagamentosDoPedido(pedido.pedidoId)).filter(
       (p) => p.payment_method_id === "pix" && p.status === "pending",

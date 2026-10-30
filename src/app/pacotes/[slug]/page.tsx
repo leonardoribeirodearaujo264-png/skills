@@ -6,15 +6,19 @@ import { Cabecalho, Rodape } from "@/components/Cabecalho";
 import { CapaPacote } from "@/components/CapaPacote";
 import { Icone } from "@/components/Icone";
 import { apresentacao, capaDoPacote, type Capa } from "@/lib/loja/apresentacao";
+import { conteudoDoPacote } from "@/lib/loja/conteudo";
 import { ehAvulsoPorProduto, formatarReais, precoNaOferta, type Catalogo, type Produto } from "@/lib/loja/dominio";
 import { carregarCatalogo } from "@/lib/loja/repositorio";
 import { urlComprar } from "@/lib/loja/vitrine";
 import { env } from "@/lib/env";
 import { clientePublico } from "@/lib/supabase/clientes";
 import { BarraCompra } from "./BarraCompra";
+import { SecaoCatalogoVenda, SecaoDemonstracoes, SecaoLevaGanha, type ItemLeva } from "./Secoes";
 
-// Página pública do pacote, aberta sem login. Título, resumo, números e preço vêm do banco;
-// textos extras e capa, de src/lib/loja/apresentacao.ts. O botão leva direto ao checkout.
+// Página pública do pacote, aberta sem login. Título, resumo, números e preço vêm do banco; capa e textos
+// extras, de src/lib/loja/apresentacao.ts; prompts de demonstração e lista de venda, dos arquivos do pacote
+// (src/lib/loja/conteudo.ts). O botão leva direto ao checkout. Pacote vendido só como complemento (bump)
+// mostra o preço de bump e manda escolher um pacote principal.
 
 // O cabeçalho lê a sessão (cookies): a página é montada a cada visita, com o preço atual do banco
 export const dynamic = "force-dynamic";
@@ -26,7 +30,8 @@ type Dados = {
   destaque: boolean;
   capa: Capa | null;
   precoTexto: string;
-  comprarUrl: string;
+  // null: só como complemento no checkout
+  comprarUrl: string | null;
   combo: { precoTexto: string; qtd: number } | null;
 };
 
@@ -34,16 +39,17 @@ type Dados = {
 const dadosDoPacote = cache(async (slug: string): Promise<Dados | null> => {
   if (!/^[a-z0-9-]{1,60}$/.test(slug)) return null;
   const cat: Catalogo = await carregarCatalogo(clientePublico());
-  const produto = cat.produtos.find((p) => p.slug === slug);
   const avulso = cat.ofertas.find(ehAvulsoPorProduto);
+  const produto = cat.produtos.find((p) => p.slug === slug) ?? cat.bumps.find((p) => p.slug === slug && p.soBump);
   if (!produto || !avulso) return null;
   const todos = cat.ofertas.find((o) => o.tipo === "todos");
+  const soBump = produto.soBump && produto.precoBumpCentavos !== null;
   return {
     produto,
     destaque: cat.produtos[0]?.slug === slug,
     capa: capaDoPacote(produto.slug, produto.titulo),
-    precoTexto: formatarReais(precoNaOferta(cat, avulso, produto)),
-    comprarUrl: urlComprar(avulso.codigo, produto.slug),
+    precoTexto: formatarReais(soBump ? (produto.precoBumpCentavos ?? 0) : precoNaOferta(cat, avulso, produto)),
+    comprarUrl: soBump ? null : urlComprar(avulso.codigo, produto.slug),
     combo: todos ? { precoTexto: formatarReais(todos.precoCentavos), qtd: cat.produtos.length } : null,
   };
 });
@@ -71,22 +77,71 @@ function plural(n: number, um: string, varios: string): string {
   return n === 1 ? um : varios;
 }
 
+// O que você leva e o que ganha: números do banco; textos do pacote (apresentacao.ts) ou o resultado
+// genérico, que vale para todo pacote do site (guia, instaladores e prompts existem em todos)
+function itensLeva(p: Produto): ItemLeva[] {
+  const a = apresentacao(p.slug);
+  const itens: (ItemLeva | null)[] = [
+    p.qtdAgentes > 0
+      ? {
+          icone: "raio",
+          titulo: `${p.qtdAgentes} ${plural(p.qtdAgentes, "agente", "agentes")}`,
+          leva: a?.inclui?.agentes ?? "Nos formatos do Claude Code e do Codex, cada um com papel, entradas e formato de entrega definidos.",
+          ganha: a?.ganhos?.agentes ?? "Cada parte do trabalho tem um responsável que devolve a entrega no formato combinado.",
+        }
+      : null,
+    ...(a?.numerosExtras ?? []).map((x) => ({
+      icone: "check" as const,
+      titulo: `${x.n} ${x.rotulo}`,
+      leva: x.texto,
+      ganha: "Cada área tem o seu time, com líder e revisor.",
+    })),
+    p.qtdSkills > 0
+      ? {
+          icone: "pacote",
+          titulo: `${p.qtdSkills} ${plural(p.qtdSkills, "skill", "skills")}`,
+          leva: a?.inclui?.skills ?? "Cada skill com um passo a passo que o Claude Code segue.",
+          ganha: a?.ganhos?.skills ?? "O Claude Code segue um roteiro pronto para cada tarefa em vez de improvisar.",
+        }
+      : null,
+    p.qtdPrompts > 0
+      ? {
+          icone: "terminal",
+          titulo: `${p.qtdPrompts} ${plural(p.qtdPrompts, "prompt pronto", "prompts prontos")}`,
+          leva: a?.inclui?.prompts ?? "Pedidos prontos para copiar, com o que trocar marcado entre colchetes.",
+          ganha: a?.ganhos?.prompts ?? "Você começa a usar sem escrever o pedido do zero.",
+        }
+      : null,
+    p.aulaDuracaoS
+      ? { icone: "play", titulo: `Aula de ${p.aulaDuracaoS} s`, leva: "Da instalação ao primeiro uso.", ganha: "Você vê o caminho inteiro antes de começar." }
+      : null,
+    {
+      icone: "terminal",
+      titulo: "Instaladores",
+      leva: "Para Claude Code e Codex, no Windows, Mac e Linux.",
+      ganha: "Tudo vai para as pastas certas com um comando.",
+    },
+    { icone: "baixar", titulo: "Guia em português", leva: "Instalação e uso, passo a passo.", ganha: "Você consulta como usar quando precisar." },
+  ];
+  return itens.filter((x): x is ItemLeva => x !== null);
+}
+
 export default async function PaginaPacote({ params }: Params) {
   const d = await dadosDoPacote((await params).slug);
   if (!d) notFound();
   const { produto: p } = d;
   const a = apresentacao(p.slug);
-
-  const inclui = [
-    { n: p.qtdAgentes, rotulo: plural(p.qtdAgentes, "agente", "agentes"), texto: a?.inclui?.agentes },
-    ...(a?.numerosExtras ?? []),
-    { n: p.qtdSkills, rotulo: plural(p.qtdSkills, "skill", "skills"), texto: a?.inclui?.skills },
-    { n: p.qtdPrompts, rotulo: plural(p.qtdPrompts, "prompt pronto", "prompts prontos"), texto: a?.inclui?.prompts },
-  ].filter((x) => x.n > 0);
+  const { demonstracoes, venda } = conteudoDoPacote(p.slug);
+  const bump = d.comprarUrl === null;
 
   const comprar = (texto: string, observar: boolean) => (
-    <a className="btn" href={d.comprarUrl} aria-label={`${texto}: ${p.titulo}`} data-observa-compra={observar || undefined}>
-      {texto}
+    <a
+      className="btn"
+      href={d.comprarUrl ?? "/loja/"}
+      aria-label={bump ? `Escolher um pacote para levar o ${p.titulo}` : `${texto}: ${p.titulo}`}
+      data-observa-compra={observar || undefined}
+    >
+      {bump ? "Escolher um pacote" : texto}
       <span className="ico" aria-hidden="true">
         <Icone nome="seta" tamanho={16} />
       </span>
@@ -120,11 +175,16 @@ export default async function PaginaPacote({ params }: Params) {
               <div className="pp-painel-linha">
                 <div className="pp-painel-preco">
                   <div>
-                    <span className="cat-preco-rotulo">Pacote avulso</span>
+                    <span className="cat-preco-rotulo">{bump ? "Complemento no checkout" : "Pacote avulso"}</span>
                     <span className="cat-preco grande">{d.precoTexto}</span>
                   </div>
                   {comprar("Comprar", true)}
                 </div>
+                {bump ? (
+                  <p className="small muted">
+                    O {p.titulo} aparece no checkout de qualquer pacote por {d.precoTexto}. Basta marcar a opção antes de pagar.
+                  </p>
+                ) : null}
                 <ul className="pp-garantias">
                   <li>
                     <Icone nome="pix" tamanho={16} />
@@ -145,57 +205,10 @@ export default async function PaginaPacote({ params }: Params) {
           </p>
 
           <div className="pp-corpo">
-            <section className="pp-secao" aria-labelledby="h-vem">
-              <h2 id="h-vem">O que vem no pacote</h2>
-              <p className="sub">Guia, instaladores e prompts em português, nos formatos do Claude Code e do Codex.</p>
-              <ul className="inclui-grade">
-                {inclui.map((x) => (
-                  <li className="inclui-item" key={x.rotulo}>
-                    <span className="n num">{x.n}</span>
-                    <span className="r">{x.rotulo}</span>
-                    {x.texto ? <p>{x.texto}</p> : null}
-                  </li>
-                ))}
-              </ul>
-              {!a?.inclui && p.destaques.length ? (
-                <ul className="pp-destaques">
-                  {p.destaques.map((t) => (
-                    <li key={t}>
-                      <Icone nome="check" tamanho={16} />
-                      {t}
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-              <ul className="extras">
-                {p.aulaDuracaoS ? (
-                  <li>
-                    <span className="ic" aria-hidden="true">
-                      <Icone nome="play" tamanho={20} />
-                    </span>
-                    <span>
-                      <strong>Aula de {p.aulaDuracaoS} s</strong>Da instalação ao primeiro uso.
-                    </span>
-                  </li>
-                ) : null}
-                <li>
-                  <span className="ic" aria-hidden="true">
-                    <Icone nome="terminal" tamanho={20} />
-                  </span>
-                  <span>
-                    <strong>Instaladores</strong>Para Claude Code e Codex, no Windows, Mac e Linux.
-                  </span>
-                </li>
-                <li>
-                  <span className="ic" aria-hidden="true">
-                    <Icone nome="pacote" tamanho={20} />
-                  </span>
-                  <span>
-                    <strong>Guia em português</strong>Instalação e uso, passo a passo.
-                  </span>
-                </li>
-              </ul>
-            </section>
+            {venda ? <p className="pp-promessa">{venda.promessa}</p> : null}
+            <SecaoDemonstracoes demonstracoes={demonstracoes} />
+            <SecaoLevaGanha itens={itensLeva(p)} />
+            {venda ? <SecaoCatalogoVenda venda={venda} /> : null}
 
             {a?.times ? (
               <section className="pp-secao" aria-labelledby="h-times">
@@ -252,7 +265,7 @@ export default async function PaginaPacote({ params }: Params) {
           </div>
         </div>
       </main>
-      <BarraCompra titulo={p.titulo} precoTexto={d.precoTexto} comprarUrl={d.comprarUrl} />
+      {d.comprarUrl ? <BarraCompra titulo={p.titulo} precoTexto={d.precoTexto} comprarUrl={d.comprarUrl} /> : null}
       <Rodape />
     </>
   );
