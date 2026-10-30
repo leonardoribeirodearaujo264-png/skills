@@ -28,7 +28,6 @@ export function BlocoBump({
         checked={marcado}
         disabled={bloqueado}
         onChange={(e) => aoMudar(e.target.checked)}
-        aria-describedby={`${id}-desc`}
       />
       <label htmlFor={id} className="bump-corpo">
         {mini ? (
@@ -47,6 +46,7 @@ export function BlocoBump({
       </label>
       <Link className="bump-ver" href={`/pacotes/${bump.slug}/`} target="_blank" rel="noopener">
         Ver o que vem no {bump.titulo}
+        <span className="sr-only"> (abre em nova aba)</span>
       </Link>
     </div>
   );

@@ -401,13 +401,6 @@ main.narrow { max-width: 760px; padding: 48px 16px 96px; }
 .checkout-aguardando { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink-soft); }
 .checkout-cartao { min-height: 120px; }
 .checkout-resultado { justify-items: start; }
-.checkout-lembrete {
-  display: flex; align-items: center; gap: 8px; margin: 0; font-size: 13px; color: var(--ink-soft);
-}
-.checkout-lembrete .num { font-family: var(--font-mono); color: var(--ink); }
-.checkout-lembrete.zerado {
-  justify-content: space-between; flex-wrap: wrap; padding: 10px 12px; border-radius: 12px; background: var(--accent-soft); color: var(--ink);
-}
 .checkout-validade {
   display: inline-flex; align-items: center; gap: 8px; justify-self: start; margin: 0; padding: 6px 12px;
   border-radius: 999px; background: var(--accent-soft); color: var(--ink); font-size: 14px;
@@ -527,6 +520,7 @@ main.narrow { max-width: 760px; padding: 48px 16px 96px; }
   background: var(--surface); box-shadow: 0 0 0 1.5px var(--line); transition: box-shadow .3s var(--ease), background .3s var(--ease);
 }
 .bump.marcado { background: var(--accent-soft); box-shadow: 0 0 0 2px var(--accent); }
+.bump:focus-within { outline: 3px solid var(--accent); outline-offset: 3px; }
 .bump input { position: absolute; top: 18px; left: 16px; width: 22px; height: 22px; margin: 0; accent-color: var(--accent); cursor: pointer; }
 .bump-corpo { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: start; padding-left: 34px; cursor: pointer; }
 .bump-mini { width: 72px; height: 48px; border-radius: 8px; object-fit: cover; }

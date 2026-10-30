@@ -186,6 +186,32 @@ export async function expirarPendentes(db: SupabaseClient): Promise<void> {
   if (error) falhar("expirar pendentes", error);
 }
 
+// Outros pedidos pendentes do mesmo comprador com os mesmos itens principais (com ou sem oferta
+// complementar). Filtra no código: a chave tem ":" e ",", que atrapalham o filtro "or" do PostgREST.
+export async function pedidosIrmaosPendentes(db: SupabaseClient, email: string, chaveBase: string, excetoId: string): Promise<string[]> {
+  const { data, error } = await db
+    .from("loja_pedidos")
+    .select("id, chave_itens")
+    .eq("comprador_email", email)
+    .eq("status", "pendente")
+    .neq("id", excetoId);
+  if (error) falhar("ler pedidos irmãos", error);
+  return z
+    .array(z.object({ id: z.uuid(), chave_itens: z.string() }))
+    .parse(data)
+    .filter((p) => p.chave_itens === chaveBase || p.chave_itens.startsWith(`${chaveBase}+bump:`))
+    .map((p) => p.id);
+}
+
+export async function cancelarPedidoPendente(db: SupabaseClient, pedidoId: string): Promise<void> {
+  const { error } = await db
+    .from("loja_pedidos")
+    .update({ status: "cancelado", atualizado_em: new Date().toISOString() })
+    .eq("id", pedidoId)
+    .eq("status", "pendente");
+  if (error) falhar("cancelar pedido pendente", error);
+}
+
 // Trava do e-mail de acesso: um único UPDATE condicional, então só uma chamada concorrente ganha
 export async function reservarEmailAcesso(db: SupabaseClient, pedidoId: string): Promise<string | null> {
   const { data, error } = await db
@@ -324,6 +350,7 @@ export type PedidoParaPix = {
   ofertaTitulo: string;
   produtos: string[];
   slugs: string[];
+  chaveItens: string;
 };
 
 // Dados para gerar de novo o Pix de um pedido (página de pagamento aberta pelo e-mail)
@@ -331,7 +358,7 @@ export async function pedidoParaPix(db: SupabaseClient, id: string): Promise<Ped
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) return null;
   const { data, error } = await db
     .from("loja_pedidos")
-    .select("status, valor_centavos, comprador_email, comprador_nome, loja_ofertas(titulo), loja_pedido_itens(produto_slug, loja_produtos(titulo))")
+    .select("status, valor_centavos, comprador_email, comprador_nome, chave_itens, loja_ofertas(titulo), loja_pedido_itens(produto_slug, loja_produtos(titulo))")
     .eq("id", id)
     .maybeSingle();
   if (error) falhar("ler pedido para Pix", error);
@@ -342,6 +369,7 @@ export async function pedidoParaPix(db: SupabaseClient, id: string): Promise<Ped
       valor_centavos: z.number(),
       comprador_email: z.string(),
       comprador_nome: z.string().nullable(),
+      chave_itens: z.string(),
       loja_ofertas: z.object({ titulo: z.string() }).nullable(),
       loja_pedido_itens: z.array(z.object({ produto_slug: z.string(), loja_produtos: z.object({ titulo: z.string() }).nullable() })),
     })
@@ -354,5 +382,6 @@ export async function pedidoParaPix(db: SupabaseClient, id: string): Promise<Ped
     ofertaTitulo: r.loja_ofertas?.titulo ?? "Pacote",
     produtos: r.loja_pedido_itens.map((i) => i.loja_produtos?.titulo ?? "").filter(Boolean),
     slugs: r.loja_pedido_itens.map((i) => i.produto_slug),
+    chaveItens: r.chave_itens,
   };
 }

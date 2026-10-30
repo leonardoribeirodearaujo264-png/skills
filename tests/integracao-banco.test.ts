@@ -110,8 +110,8 @@ describe.skipIf(!ativo)("banco da loja: RLS e liberação", () => {
     expect(contB.data ?? []).toHaveLength(0);
   });
 
-  it("o combo libera todos os produtos ativos", async () => {
-    const { data } = await anon.from("loja_produtos").select("slug");
+  it("o combo libera todos os produtos ativos da vitrine (o que só é vendido como complemento fica de fora)", async () => {
+    const { data } = await anon.from("loja_produtos").select("slug").eq("so_bump", false);
     const todos = (data ?? []).map((p) => p.slug as string);
     const rc = await comprar(c, "combo", todos, 9700);
     expect(rc.r).toBe("liberado");

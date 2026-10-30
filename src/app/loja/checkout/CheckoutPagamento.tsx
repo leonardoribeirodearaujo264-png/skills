@@ -236,7 +236,10 @@ export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos
           email={emailFinal}
           pagar={async (dados) => {
             setErro(null);
+            // O bump fica travado durante o envio: o valor do cartão é o que estava na tela
+            setGerando(true);
             const r = await acaoPagarCartao(entrada, dados).catch(() => ({ ok: false as const, erro: "Sem conexão. Tente de novo." }));
+            setGerando(false);
             if (!r.ok) return setErro(r.erro);
             setEtapa(r.situacao === "aprovado" ? { tipo: "aprovado" } : { tipo: "analise", pedidoId: r.pedidoId });
           }}

@@ -26,13 +26,16 @@ describe.skipIf(!ativo)("order bump: do checkout ao acesso", () => {
     });
   let pedidoId: string | null = null;
   let pixId: string | null = null;
+  // Pedido sem o bump, gerado antes de marcar: tem de ser cancelado para não ser pago duas vezes
+  let pedidoSemBump: string | null = null;
 
   afterAll(async () => {
     const db = admin();
     if (pixId) await depsPagamento().mp.cancelarPagamento(pixId);
-    if (pedidoId) {
-      await db.from("loja_acessos").delete().eq("pedido_id", pedidoId);
-      await db.from("loja_pedidos").delete().eq("id", pedidoId);
+    for (const id of [pedidoId, pedidoSemBump]) {
+      if (!id) continue;
+      await db.from("loja_acessos").delete().eq("pedido_id", id);
+      await db.from("loja_pedidos").delete().eq("id", id);
     }
     const { data } = await db.auth.admin.listUsers({ perPage: 1000 });
     const u = data.users.find((x) => x.email === EMAIL);
@@ -46,6 +49,22 @@ describe.skipIf(!ativo)("order bump: do checkout ao acesso", () => {
     expect(p.bump).toMatchObject({ slug: BUMP, precoCentavos: 1990 });
     expect(p.itens.map((i) => i.slug)).toEqual([PRINCIPAL]);
   });
+
+  it("marcar o bump depois de gerar o Pix sem ele cancela o Pix e o pedido anteriores", async () => {
+    const comprador = { usuario: null, email: EMAIL, nome: "Teste Bump", telefone: "11987654321" };
+    const sem = await gerarPix(comprador, "avulso", [PRINCIPAL]);
+    if ("motivo" in sem || "situacao" in sem) throw new Error(JSON.stringify(sem));
+    pedidoSemBump = sem.pedidoId;
+    const com = await gerarPix(comprador, "avulso", [PRINCIPAL], BUMP);
+    if ("motivo" in com || "situacao" in com) throw new Error(JSON.stringify(com));
+    pedidoId = com.pedidoId;
+    pixId = com.pix.id;
+    expect(com.pedidoId).not.toBe(sem.pedidoId);
+    const anterior = await admin().from("loja_pedidos").select("status").eq("id", sem.pedidoId).single();
+    expect(anterior.data?.status).toBe("cancelado");
+    const pagamentos = await depsPagamento().mp.pagamentosDoPedido(sem.pedidoId);
+    expect(pagamentos.find((p) => p.id === sem.pix.id)?.status).toBe("cancelled");
+  }, 90_000);
 
   it("marcado, o Pix sai com o total somado e o pedido grava os dois itens", async () => {
     const r = await gerarPix({ usuario: null, email: EMAIL, nome: "Teste Bump", telefone: "11987654321" }, "avulso", [PRINCIPAL], BUMP);

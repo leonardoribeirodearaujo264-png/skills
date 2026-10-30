@@ -52,7 +52,8 @@ export type VitrineLeve = {
   qtd: number;
   precoTexto: string;
   referenciaTexto: string | null;
-  // diferença entre os 3 avulsos e o preço da oferta, calculada com os preços reais do banco
+  // diferença entre 3 avulsos pelo preço padrão do avulso (do banco) e o preço da oferta; com um pacote
+  // de preço próprio maior (edição de vídeo) a economia real é maior, nunca menor
   economiaTexto: string | null;
   escolherUrl: string;
   // a loja abre com o pacote do vídeo já marcado

@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { destinoSeguro } from "@/lib/auth/cookies";
@@ -345,5 +346,16 @@ describe("oferta complementar (order bump)", () => {
   it("só é oferecido a quem ainda não tem", () => {
     expect(bumpParaPedido(comBump, ["times-de-agentes"], nada)?.slug).toBe("lancamento-pro");
     expect(bumpParaPedido(comBump, ["times-de-agentes"], new Set(["lancamento-pro"]))).toBeNull();
+  });
+});
+
+describe("conteúdo público dos pacotes", () => {
+  it("src/lib/loja/conteudo-pacotes.json está igual ao que os arquivos de pacotes/ geram", () => {
+    expect(() => execFileSync(process.execPath, ["scripts/gerar-vitrine-pacotes.mjs", "--conferir"], { stdio: "pipe" })).not.toThrow();
+  });
+
+  it("o slug do bump não entra como produto de uma oferta de escolha", () => {
+    const comBump: Catalogo = { ...cat, bumps: [{ ...cat.produtos[0]!, slug: "lancamento-pro", precoBumpCentavos: 1990, soBump: true }] };
+    expect(motivo(() => montarPedido(comBump, "avulso", ["lancamento-pro"], nada))).toBe("produto_inexistente");
   });
 });
