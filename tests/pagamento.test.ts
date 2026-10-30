@@ -124,6 +124,13 @@ describe("liberação pelo pagamento", () => {
     expect([...m.acessos.keys()]).toEqual(["a", "b", "c"]);
   });
 
+  it("pedido cancelado (vencido ou trocado por outro com bump) que recebeu pagamento é entregue, com a conta criada", async () => {
+    const m = repoEmMemoria({ ...novoPedido(), userId: null, status: "cancelado" }, ["a"]);
+    const deps = { mp: mpCom({ "111": pagamento({}) }), repo: m.repo };
+    expect((await processarPagamento(deps, "111")).resultado).toBe("liberado");
+    expect([...m.acessos.keys()]).toEqual(["a"]);
+  });
+
   it("não libera com valor diferente do pedido nem com outra moeda", async () => {
     const m = repoEmMemoria(novoPedido(), ["a"]);
     const deps = { mp: mpCom({ "1": pagamento({ id: "1", transaction_amount: 1 }), "2": pagamento({ id: "2", currency_id: "USD" }) }), repo: m.repo };

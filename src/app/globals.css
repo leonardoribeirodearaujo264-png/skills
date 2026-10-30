@@ -580,3 +580,4 @@ main.narrow { max-width: 760px; padding: 48px 16px 96px; }
   .prod .meta { grid-column: 1 / -1; }
   .prod p { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 }
+.bumps { display: grid; gap: 10px; }

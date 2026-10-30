@@ -84,10 +84,12 @@ export async function aplicarPagamento(
   if (pagamento.status === "approved") {
     const valor = Math.round(pagamento.transaction_amount * 100);
     // Compra feita sem login: a conta do e-mail é criada ou encontrada só quando o pagamento vai liberar
-    // de fato (valor certo, pedido em aberto, pagamento não estornado). A função SQL confere tudo de novo.
+    // de fato (valor certo, pedido não pago nem reembolsado, pagamento não estornado). Pedido cancelado
+    // (vencido ou trocado por outro com bump) que mesmo assim recebeu pagamento é entregue: o dinheiro entrou.
+    // A função SQL confere tudo de novo.
     const vaiLiberar =
       valor === pedido.valorCentavos &&
-      (pedido.status === "pendente" || pedido.status === "recusado") &&
+      (pedido.status === "pendente" || pedido.status === "recusado" || pedido.status === "cancelado") &&
       !pedido.estornados.includes(pagamento.id);
     if (!pedido.userId && vaiLiberar) await repo.garantirConta(pedido.id, pedido.email);
     const resultado = (await repo.liberar(pedido.id, pagamento.id, valor)) as ResultadoPagamento;

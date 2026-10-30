@@ -5,8 +5,8 @@ import { ErroMercadoPago, type Pagamento, type Pix } from "../mercadopago/api";
 import { clientePublico, clienteServico } from "../supabase/clientes";
 import { partesDoNome } from "./comprador";
 import {
-  adicionarBump,
-  bumpParaPedido,
+  adicionarBumps,
+  bumpsParaPedido,
   formatarReais,
   montarPedido,
   PedidoInvalido,
@@ -41,7 +41,7 @@ export type Previa = {
   ofertaTitulo: string;
   itens: { slug: string; titulo: string }[];
   valorCentavos: number;
-  bump: BumpNaTela | null;
+  bumps: BumpNaTela[];
 };
 export type Falha = { motivo: MotivoRecusa | "falha" };
 
@@ -67,19 +67,19 @@ async function produtosJaComprados(usuario: Usuario | null): Promise<Set<string>
   return usuario ? new Set((await meusProdutos(usuario)).map((p) => p.slug)) : new Set();
 }
 
-// bump: slug da oferta complementar marcada no checkout, ou null
+// bumps: slugs das ofertas complementares marcadas no checkout
 async function calcular(
   usuario: Usuario | null,
   oferta: string,
   produtos: string[],
-  bump: string | null = null,
+  bumps: readonly string[] = [],
 ): Promise<{ catalogo: Catalogo; itens: ItensDoPedido; possui: Set<string> }> {
   const catalogo = await carregarCatalogo(clientePublico());
   const ofertaInfo = catalogo.ofertas.find((o) => o.codigo === oferta);
   if (ofertaInfo?.exigeCliente && !usuario) throw new PedidoInvalido("so_clientes");
   const possui = await produtosJaComprados(usuario);
   const base = montarPedido(catalogo, oferta, produtos, possui);
-  return { catalogo, possui, itens: bump ? adicionarBump(catalogo, base, bump, possui) : base };
+  return { catalogo, possui, itens: adicionarBumps(catalogo, base, bumps, possui) };
 }
 
 function tituloDe(catalogo: Catalogo, slug: string): string {
@@ -96,15 +96,12 @@ function tratar(e: unknown, onde: string): Falha {
 export async function previaCompra(usuario: Usuario | null, oferta: string, produtos: string[]): Promise<Previa | Falha> {
   try {
     const { catalogo, itens, possui } = await calcular(usuario, oferta, produtos);
-    const bump = bumpParaPedido(catalogo, itens.itens, possui);
+    const bumps = bumpsParaPedido(catalogo, itens.itens, possui);
     return {
       ofertaTitulo: catalogo.ofertas.find((o) => o.codigo === oferta)?.titulo ?? "Pacote",
       itens: itens.itens.map((s) => ({ slug: s, titulo: tituloDe(catalogo, s) })),
       valorCentavos: itens.valorCentavos,
-      bump:
-        bump && bump.precoBumpCentavos !== null
-          ? { slug: bump.slug, titulo: bump.titulo, resumo: bump.resumo, precoCentavos: bump.precoBumpCentavos }
-          : null,
+      bumps: bumps.map((b) => ({ slug: b.slug, titulo: b.titulo, resumo: b.resumo, precoCentavos: b.precoBumpCentavos ?? 0 })),
     };
   } catch (e) {
     return tratar(e, "previa");
@@ -112,16 +109,17 @@ export async function previaCompra(usuario: Usuario | null, oferta: string, prod
 }
 
 // Grava (ou reaproveita) o pedido pendente pelo e-mail, com o valor calculado agora no servidor
-async function prepararPedido(comprador: Comprador, oferta: string, produtos: string[], bump: string | null): Promise<PedidoPronto> {
+async function prepararPedido(comprador: Comprador, oferta: string, produtos: string[], bumps: readonly string[]): Promise<PedidoPronto> {
   const email = (comprador.usuario?.email ?? comprador.email).trim().toLowerCase();
   const db = clienteServico();
   // Sem sessão, o "já tem" não é conferido (revelaria o que outro e-mail comprou). Só para o bump, que
   // aparece para todos, confere pelo e-mail: pagar de novo não daria nada a mais (a liberação não duplica).
-  if (bump && !comprador.usuario) {
+  if (bumps.length && !comprador.usuario) {
     const conta = await contaPorEmail(db, email);
-    if (conta && (await acessosAtivos(db, conta)).has(bump)) throw new PedidoInvalido("ja_possui");
+    const tem = conta ? await acessosAtivos(db, conta) : new Set<string>();
+    if (bumps.some((b) => tem.has(b))) throw new PedidoInvalido("ja_possui");
   }
-  const { catalogo, itens } = await calcular(comprador.usuario, oferta, produtos, bump);
+  const { catalogo, itens } = await calcular(comprador.usuario, oferta, produtos, bumps);
   const pedido = await criarOuReusarPedido(db, { email, userId: comprador.usuario?.id ?? null }, oferta, itens);
   await salvarDadosComprador(db, pedido.id, comprador.nome, comprador.telefone);
   const ofertaTitulo = catalogo.ofertas.find((o) => o.codigo === oferta)?.titulo ?? "Pacote";
@@ -227,10 +225,10 @@ export async function gerarPix(
   comprador: Comprador,
   oferta: string,
   produtos: string[],
-  bump: string | null = null,
+  bumps: readonly string[] = [],
 ): Promise<PixGerado | JaCobrado | Falha> {
   try {
-    return await cobrarPix(await prepararPedido(comprador, oferta, produtos, bump));
+    return await cobrarPix(await prepararPedido(comprador, oferta, produtos, bumps));
   } catch (e) {
     return tratar(e, "pix");
   }
@@ -322,10 +320,10 @@ export async function pagarComCartao(
   oferta: string,
   produtos: string[],
   cartao: DadosCartao,
-  bump: string | null = null,
+  bumps: readonly string[] = [],
 ): Promise<ResultadoCartao> {
   try {
-    const pedido = await prepararPedido(comprador, oferta, produtos, bump);
+    const pedido = await prepararPedido(comprador, oferta, produtos, bumps);
     // O valor mostrado no formulário tem de ser o mesmo do servidor; senão, a tela está desatualizada
     if (cartao.valorCentavos !== pedido.valorCentavos) return { motivo: "falha" };
     const deps = depsPagamento();

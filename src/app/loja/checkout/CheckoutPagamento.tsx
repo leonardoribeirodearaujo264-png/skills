@@ -26,9 +26,8 @@ type Props = {
   produtos: string;
   emailSessao: string | null;
   valorCentavos: number;
-  bump: BumpNaTela | null;
-  // miniatura do bump (src/lib/loja/apresentacao.ts)
-  bumpMini: string | null;
+  // ofertas complementares, cada uma com a miniatura da capa (src/lib/loja/apresentacao.ts)
+  bumps: (BumpNaTela & { mini: string | null })[];
   chavePublica: string | null;
 };
 
@@ -41,10 +40,12 @@ type Etapa =
 const VALIDADORES: Record<Campo, (v: string) => string | null> = { nome: erroNome, email: erroEmail, telefone: erroTelefone };
 const INTERVALO_CONSULTA_MS = 5000;
 
-export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos: base, bump, bumpMini, chavePublica }: Props) {
-  // Oferta complementar: desmarcada por padrão; o total muda na hora e o servidor confere de novo
-  const [comBump, setComBump] = useState(false);
-  const valorCentavos = base + (comBump && bump ? bump.precoCentavos : 0);
+export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos: base, bumps, chavePublica }: Props) {
+  // Ofertas complementares: todas desmarcadas; a pessoa marca quantas quiser, o total muda na hora
+  // e o servidor confere tudo de novo
+  const [marcados, setMarcados] = useState<string[]>([]);
+  const escolhidos = bumps.filter((b) => marcados.includes(b.slug));
+  const valorCentavos = base + escolhidos.reduce((t, b) => t + b.precoCentavos, 0);
   const totalTexto = formatarReais(valorCentavos);
   const [campos, setCampos] = useState<Record<Campo, string>>({ nome: "", email: emailSessao ?? "", telefone: "" });
   const [tocados, setTocados] = useState<Partial<Record<Campo, boolean>>>({});
@@ -60,7 +61,7 @@ export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos
     telefone: VALIDADORES.telefone(campos.telefone) ?? undefined,
   };
   const tudoValido = !erros.nome && !erros.email && !erros.telefone;
-  const entrada = { oferta, produtos, bump: comBump && bump ? bump.slug : "", ...campos };
+  const entrada = { oferta, produtos, bumps: escolhidos.map((b) => b.slug).join(","), ...campos };
   const erroVisivel = (c: Campo) => (tocados[c] ? erros[c] : undefined) ?? errosServidor[c];
 
   function mudar(c: Campo, valor: string) {
@@ -178,8 +179,19 @@ export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos
         aoSair={() => setTocados((t) => ({ ...t, telefone: true }))}
       />
 
-      {bump ? (
-        <BlocoBump bump={bump} mini={bumpMini} marcado={comBump} aoMudar={setComBump} bloqueado={gerando} />
+      {bumps.length ? (
+        <div className="bumps" role="group" aria-label="Ofertas complementares, opcionais">
+          {bumps.map((b) => (
+            <BlocoBump
+              key={b.slug}
+              bump={b}
+              mini={b.mini}
+              marcado={marcados.includes(b.slug)}
+              aoMudar={(m) => setMarcados((atual) => (m ? [...atual, b.slug] : atual.filter((s) => s !== b.slug)))}
+              bloqueado={gerando}
+            />
+          ))}
+        </div>
       ) : null}
       <p className="checkout-total" aria-live="polite">
         <span>Total</span>

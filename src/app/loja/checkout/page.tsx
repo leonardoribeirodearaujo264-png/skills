@@ -72,8 +72,7 @@ export default async function Checkout({ searchParams }: { searchParams: Busca }
                   produtos={produtos.join(",")}
                   emailSessao={usuario?.email ?? null}
                   valorCentavos={previa.valorCentavos}
-                  bump={previa.bump}
-                  bumpMini={previa.bump ? (capaDoPacote(previa.bump.slug, previa.bump.titulo)?.mini ?? null) : null}
+                  bumps={previa.bumps.map((b) => ({ ...b, mini: capaDoPacote(b.slug, b.titulo)?.mini ?? null }))}
                   chavePublica={process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY ?? null}
                 />
                 <p className="small muted">
