@@ -138,8 +138,8 @@ export function montarVitrine(catalogo: Catalogo, pagina: string): Vitrine {
           slug: produto.slug,
           capa: capaDoPacote(produto.slug, produto.titulo),
           titulo: produto.titulo,
-          gancho: config.gancho,
-          descricao: produto.resumo,
+          gancho: config.gancho.replace("{preco}", formatarReais(precoNaOferta(catalogo, avulso, produto))),
+          descricao: config.descricao ?? produto.resumo,
           precoTexto: formatarReais(precoNaOferta(catalogo, avulso, produto)),
           comprarUrl: urlComprar(avulso.codigo, produto.slug),
         }

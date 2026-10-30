@@ -214,6 +214,9 @@ describe("vitrine das páginas dos vídeos (preços do banco)", () => {
     expect(v.pacote?.comprarUrl).toBe("/loja/checkout/?oferta=avulso&produtos=times-de-agentes");
     expect(montarVitrine(cat, "clonadora").pacote?.slug).toBe("design-copy-anuncios");
     expect(montarVitrine(cat, "harvey").pacote?.slug).toBe("times-de-agentes");
+    // Gancho com o preço vindo do banco e descrição própria do card na página /agentes/
+    expect(v.pacote?.gancho).toBe("Sua equipe inteira de IA, por R$ 37,00");
+    expect(v.pacote?.descricao).toContain("25 agentes cobrindo marketing, vendas, financeiro");
   });
 
   it("o pacote de edição de vídeo, se for o do vídeo, sai por R$ 47", () => {
