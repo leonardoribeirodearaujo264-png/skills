@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Find Skills: a skill que acha skills</title>
+<meta name="description" content="Como instalar a find-skills, a skill do time da Vercel que encontra e instala as skills certas para cada tarefa no Claude Code.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este passo a passo é grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">passo a passo grátis</span>
+  <h1>A skill que acha <span class="nowrap">as skills por você</span></h1>
+  <p class="lead">A find-skills, do time da Vercel, procura no catálogo aberto de skills, acha as que combinam com a sua tarefa e instala no seu Claude Code. Passou de 4 milhões de instalações no skills.sh.</p>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Instale</h2></div>
+    <p>No terminal, dentro da pasta do seu projeto:</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-find">Copiar</button></div>
+<pre id="cmd-find">npx skills add https://github.com/vercel-labs/skills --skill find-skills</pre>
+    </div>
+    <div class="note">Precisa do Node.js instalado. A skill é do repositório vercel-labs/skills; esta página não tem ligação com a Vercel.</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Peça o que você quer fazer</h2></div>
+    <p>Abra o Claude Code e diga a tarefa. Exemplo:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-busca">Copiar</button></div>
+<pre id="prompt-busca">Quero criar conteúdo para o Instagram. Use a find-skills para achar as melhores skills para isso, me mostre as opções com o número de instalações e de onde vem cada uma, e só instale depois que eu escolher.</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Como ela escolhe</h2></div>
+    <div class="cards">
+      <article class="card"><h3>Identifica</h3><p class="when">Entende a tarefa e busca no catálogo aberto com <code class="inline">npx skills find</code>.</p></article>
+      <article class="card"><h3>Filtra</h3><p class="when">Prefere skills com muitas instalações e de fontes oficiais.</p></article>
+      <article class="card"><h3>Instala</h3><p class="when">Coloca no seu setup com <code class="inline">npx skills add</code>.</p></article>
+    </div>
+    <div class="note">Skills são instruções de terceiros. Antes de instalar, leia o que cada uma faz.</div>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou? O pacote traz as melhores skills de design e copy explicadas em português."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>

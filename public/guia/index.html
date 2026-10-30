@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guia: virar vermelho na IA</title>
+<meta name="description" content="Guia grátis para sair do uso básico da IA e colocar o Claude para trabalhar sozinho: Claude Code, agentes e automações.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este guia é grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">guia grátis</span>
+  <h1>Como virar <span class="nowrap">vermelho na IA</span></h1>
+  <p class="lead">No gráfico do vídeo, o vermelho é quem põe a IA para trabalhar sozinha: programando, automatizando e com agentes. Este é o caminho mais curto até lá.</p>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Qual cor você é</h2></div>
+    <div class="cards">
+      <article class="card"><h3>Cinza</h3><p class="when">Ainda não usa IA. Segundo a Microsoft, cerca de 8 em cada 10 adultos em idade de trabalhar estão aqui.</p></article>
+      <article class="card"><h3>Verde</h3><p class="when">Usa de graça, para perguntas e textos.</p></article>
+      <article class="card"><h3>Amarelo</h3><p class="when">Paga uma IA. Só o ChatGPT tem pouco mais de 50 milhões de assinantes.</p></article>
+      <article class="card"><h3>Vermelho</h3><p class="when">Põe a IA para fazer o trabalho: código, automações e agentes.</p></article>
+    </div>
+    <div class="note">Fontes: Microsoft, Global AI Diffusion Report, 2º trimestre de 2026 (18,8% de uso de IA generativa); OpenAI, anúncio de fevereiro de 2026 (mais de 50 milhões de assinantes).</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Instale o Claude Code</h2></div>
+    <p>É o Claude trabalhando no seu computador: ele lê arquivos, escreve código e roda comandos, sempre pedindo a sua aprovação. Precisa de uma assinatura Claude Pro ou Max. No Windows, no PowerShell:</p>
+    <div class="code">
+      <div class="code-bar"><span>PowerShell</span><button class="copy" type="button" data-copy="cmd-instalar">Copiar</button></div>
+<pre id="cmd-instalar">irm https://claude.ai/install.ps1 | iex</pre>
+    </div>
+    <p>No Mac ou Linux:</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-instalar-mac">Copiar</button></div>
+<pre id="cmd-instalar-mac">curl -fsSL https://claude.ai/install.sh | bash</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Dê o primeiro trabalho de verdade</h2></div>
+    <p>Crie uma pasta para o seu projeto, abra o terminal nela, rode <code class="inline">claude</code> e envie:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-primeiro">Copiar</button></div>
+<pre id="prompt-primeiro">Quero automatizar uma tarefa que eu faço toda semana: [DESCREVA A TAREFA]. Me faça perguntas até entender, proponha um plano em passos pequenos e só comece depois que eu aprovar. Responda em português.</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo4">
+    <div class="step-head"><span class="step-num">4</span><h2 id="passo4">Monte um time de agentes</h2></div>
+    <p>Quando o primeiro trabalho rodar, monte agentes que dividem o serviço. Os prompts grátis dos outros vídeos ajudam:</p>
+    <div class="cards two">
+      <a class="card" href="../agentes/"><h3>13 agentes</h3><p class="when">Uma empresa inteira no Claude Code.</p><span class="go">Abrir →</span></a>
+      <a class="card" href="../biblioteca/"><h3>A skill que acha skills</h3><p class="when">Ache a ferramenta certa para cada tarefa.</p><span class="go">Abrir →</span></a>
+    </div>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Quer chegar no vermelho mais rápido? O pacote traz os times de agentes prontos."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>

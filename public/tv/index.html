@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tire os anúncios da sua TV: passo a passo</title>
+<meta name="description" content="Passo a passo grátis do CleanYourTV: o Claude Code tira anúncios e apps de fábrica da Android TV ou Google TV pelo Wi-Fi e instala uma tela inicial limpa.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este passo a passo é grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">passo a passo grátis</span>
+  <h1>Tire os anúncios da sua TV <span class="nowrap">com o Claude Code</span></h1>
+  <p class="lead">O CleanYourTV desliga os apps de fábrica, os anúncios e o rastreamento da Android TV ou Google TV pelo Wi-Fi, sem root e sem desinstalar nada, e instala uma tela inicial limpa parecida com a da Apple TV. Um comando volta tudo como era.</p>
+
+  <a class="btn" href="https://github.com/Gathin23/cleanyourtv" target="_blank" rel="noopener">Abrir o repositório no GitHub</a>
+  <div class="note">Projeto de terceiros (Gathin23/cleanyourtv). Funciona em Android TV e Google TV. Mexer no sistema da TV tem risco: siga o passo a passo, que faz backup e aplica em pequenos lotes. Esta página não tem ligação com o autor.</div>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Na TV</h2></div>
+    <ul class="plain">
+      <li>Configurações, Preferências do dispositivo, Sobre: aperte OK em <strong>Build</strong> sete vezes.</li>
+      <li>Volte, abra Opções do desenvolvedor e ligue a <strong>Depuração USB</strong>. Se aparecer depuração pela rede, ligue também.</li>
+      <li>Deixe a TV ligada e no mesmo Wi-Fi do computador.</li>
+    </ul>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">No computador</h2></div>
+    <p>Baixe o projeto e abra a pasta no Claude Code:</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-tv">Copiar</button></div>
+<pre id="cmd-tv">git clone https://github.com/Gathin23/cleanyourtv
+cd cleanyourtv
+claude</pre>
+    </div>
+    <p>Depois cole o conteúdo do arquivo <code class="inline">PROMPT.md</code> do projeto e preencha o modelo da sua TV.</p>
+    <div class="note">O computador precisa de Python 3, um JDK da versão 17 à 22 e o Android SDK platform 34 com build-tools 34. O README do projeto explica.</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Acompanhe</h2></div>
+    <ul class="plain">
+      <li>Aceite o aviso "Permitir depuração USB?" na TV.</li>
+      <li>Responda o checklist: quais apps você usa, a ordem do dock, se mantém o assistente de voz, o Chromecast e as atualizações.</li>
+      <li>Ele faz backup, desliga o lixo, instala a tela nova e confere cada passo com prints da TV. Leva uns 15 minutos.</li>
+    </ul>
+  </section>
+
+  <section class="step" aria-labelledby="passo4">
+    <div class="step-head"><span class="step-num">4</span><h2 id="passo4">Para desfazer</h2></div>
+    <p>O projeto grava o que mudou e restaura com um comando. Peça ao Claude Code:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-restaurar">Copiar</button></div>
+<pre id="prompt-restaurar">Restaure a minha TV como estava antes, usando o tools/restore do projeto e o registro salvo.</pre>
+    </div>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou? O pacote traz o caminho completo do pedido ao projeto no ar."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>
