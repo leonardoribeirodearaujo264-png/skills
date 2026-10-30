@@ -14,8 +14,8 @@ export function depsPagamento(): DepsPagamento {
     mp: criarClienteMercadoPago(e.MERCADOPAGO_ACCESS_TOKEN),
     repo: repoPagamento(db),
     // Código e link de acesso pelo Resend; a conta já foi criada na aprovação (garantirConta)
-    avisarAcesso: criarAvisoAcesso(db, async (email) => {
-      const r = await enviarAcesso(email, "compra", { proximo: "/membros/" });
+    avisarAcesso: criarAvisoAcesso(db, async (email, pacotes) => {
+      const r = await enviarAcesso(email, "compra", { proximo: "/membros/", pacotes });
       return { erro: r === "enviado" ? null : r };
     }),
   };

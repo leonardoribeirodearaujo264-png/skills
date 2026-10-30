@@ -14,12 +14,20 @@ export type Motivo = "login" | "compra";
 export type ResultadoAcesso = "enviado" | "sem_conta" | "aguarde";
 
 
-function montar(motivo: Motivo, codigo: string, link: string): { assunto: string; html: string; texto: string } {
+function listar(itens: string[]): string {
+  return itens.length <= 1 ? (itens[0] ?? "") : `${itens.slice(0, -1).join(", ")} e ${itens.at(-1)}`;
+}
+
+function montar(motivo: Motivo, codigo: string, link: string, pacotes: string[]): { assunto: string; html: string; texto: string } {
   const titulo = motivo === "compra" ? "Seu acesso está liberado" : "Seu código de acesso";
+  // Na compra, o e-mail diz o que foi liberado neste pedido
+  const comprados = listar(pacotes);
   const intro =
-    motivo === "compra"
-      ? "Pagamento aprovado. Os seus pacotes já estão na área de membros."
-      : "Use o código abaixo para entrar na área de membros.";
+    motivo !== "compra"
+      ? "Use o código abaixo para entrar na área de membros."
+      : comprados
+        ? `Pagamento aprovado. ${pacotes.length > 1 ? "Os pacotes" : "O pacote"} ${comprados} já ${pacotes.length > 1 ? "estão" : "está"} na sua área de membros.`
+        : "Pagamento aprovado. Os seus pacotes já estão na área de membros.";
   const texto = `${titulo}\n\n${intro}\n\nCódigo: ${codigo}\n\nOu entre por este link: ${link}\n\nO código vale por pouco tempo e só uma vez. Se não foi você, ignore este e-mail.`;
   const html = `<!doctype html><html lang="pt-BR"><body style="margin:0;background:#F6F5F1;font-family:Arial,Helvetica,sans-serif;color:#14161A">
 <div style="max-width:480px;margin:0 auto;padding:32px 20px">
@@ -32,13 +40,14 @@ function montar(motivo: Motivo, codigo: string, link: string): { assunto: string
 <a href="${escaparHtml(link)}" style="display:inline-block;background:#C03F00;color:#FFFFFF;text-decoration:none;font-weight:bold;padding:14px 22px;border-radius:12px">Entrar na área de membros</a>
 <p style="font-size:12px;color:#565B66;margin:20px 0 0">O código vale por pouco tempo e só uma vez. Se não foi você, ignore este e-mail.</p>
 </div></div></body></html>`;
-  return { assunto: motivo === "compra" ? "Seu acesso aos pacotes" : `Seu código de acesso: ${codigo}`, html, texto };
+  const assunto = motivo !== "compra" ? `Seu código de acesso: ${codigo}` : comprados ? `Seu acesso: ${comprados}` : "Seu acesso aos pacotes";
+  return { assunto, html, texto };
 }
 
 export async function enviarAcesso(
   emailBruto: string,
   motivo: Motivo,
-  opcoes: { proximo?: string; idempotencia?: string } = {},
+  opcoes: { proximo?: string; idempotencia?: string; pacotes?: string[] } = {},
 ): Promise<ResultadoAcesso> {
   const e = env();
   const email = emailBruto.trim().toLowerCase();
@@ -60,7 +69,7 @@ export async function enviarAcesso(
     token_hash: data.properties.hashed_token,
     type: "magiclink",
   })}`;
-  const msg = montar(motivo, data.properties.email_otp, link);
+  const msg = montar(motivo, data.properties.email_otp, link, opcoes.pacotes ?? []);
   await enviarEmail(e.RESEND_API_KEY, e.EMAIL_REMETENTE, { para: email, ...msg, idempotencia: opcoes.idempotencia });
   return "enviado";
 }

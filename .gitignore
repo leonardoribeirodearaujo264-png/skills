@@ -32,3 +32,6 @@ Thumbs.db
 # Memória local dos agentes
 .claude/agent-memory/
 .claude/settings.local.json
+
+# SQL combinado só para rodar no SQL Editor (as migrações numeradas são a fonte)
+banco/rodar-*.sql
