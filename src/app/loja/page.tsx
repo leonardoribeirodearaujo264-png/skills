@@ -3,6 +3,7 @@ import { Alerta } from "@/components/Alerta";
 import { Cabecalho, Rodape } from "@/components/Cabecalho";
 import { Icone } from "@/components/Icone";
 import { usuarioAtual } from "@/lib/auth/sessao";
+import { capaDoPacote } from "@/lib/loja/apresentacao";
 import { MENSAGEM_FALHA_CHECKOUT } from "@/lib/loja/checkout";
 import {
   ehAvulsoPorProduto,
@@ -67,6 +68,7 @@ function produtosVista(cat: Catalogo): ProdutoVista[] {
   return cat.produtos.map((p) => ({
     precoAvulsoCentavos: avulso ? precoNaOferta(cat, avulso, p) : null,
     slug: p.slug,
+    capa: capaDoPacote(p.slug, p.titulo),
     titulo: p.titulo,
     resumo: p.resumo,
     destaques: p.destaques,
@@ -111,7 +113,7 @@ export default async function Loja({ searchParams }: { searchParams: Busca }) {
           <ul className="trust">
             <li>
               <Icone nome="escudo" tamanho={16} />
-              Pagamento pelo Mercado Pago, Pix ou cartão
+              Pagamento por Pix ou cartão
             </li>
             <li>
               <Icone nome="raio" tamanho={16} />
@@ -148,13 +150,13 @@ export default async function Loja({ searchParams }: { searchParams: Busca }) {
             <details>
               <summary>Como recebo o acesso?</summary>
               <p>
-                Assim que o Mercado Pago aprova o pagamento, os produtos aparecem na sua área de membros. Você entra com o
+                Assim que o pagamento é aprovado, os produtos aparecem na sua área de membros. Você entra com o
                 código enviado ao seu e-mail, sem senha.
               </p>
             </details>
             <details>
               <summary>Posso pagar com Pix?</summary>
-              <p>Sim. O acesso é liberado quando o Mercado Pago confirma o pagamento.</p>
+              <p>Sim. O acesso é liberado assim que o pagamento é confirmado.</p>
             </details>
             <details>
               <summary>Funciona no Codex também?</summary>

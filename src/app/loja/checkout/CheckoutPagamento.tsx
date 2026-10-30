@@ -3,13 +3,20 @@
 import Link from "next/link";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Alerta } from "@/components/Alerta";
-import { BlocoCodigo } from "@/components/BlocoCodigo";
 import { Icone } from "@/components/Icone";
-import { acaoGerarPix, acaoPagarCartao, acaoSituacao } from "../acoes";
+import {
+  erroEmail,
+  erroNome,
+  erroTelefone,
+  mascararTelefone,
+  type Campo,
+  type ErrosComprador,
+} from "@/lib/loja/comprador";
+import { acaoGerarPix, acaoPagarCartao, acaoSituacao, type PixNaTela } from "../acoes";
+import { PixTela } from "./PixTela";
 
-// Pagamento no próprio site. Pix: QR Code e copia e cola, e a tela muda sozinha quando o pagamento cai.
-// Cartão: formulário seguro do Mercado Pago (Card Payment Brick); os dados do cartão vão direto para eles
-// e aqui chega só um token de uso único.
+// Checkout no próprio site: nome, e-mail e telefone, e pagamento por Pix ou cartão sem sair da página.
+// As regras dos campos são as mesmas do servidor (src/lib/loja/comprador.ts), que valida tudo de novo.
 
 type Props = {
   oferta: string;
@@ -20,63 +27,68 @@ type Props = {
   chavePublica: string | null;
 };
 
-type PixNaTela = { pedidoId: string; copiaECola: string; qrBase64: string };
 type Etapa =
-  | { tipo: "escolha" }
+  | { tipo: "formulario" }
   | { tipo: "pix"; pix: PixNaTela }
-  | { tipo: "aprovado"; email: string }
-  | { tipo: "analise"; pedidoId: string; email: string };
+  | { tipo: "aprovado" }
+  | { tipo: "analise"; pedidoId: string };
 
-const EMAIL_VALIDO = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+const VALIDADORES: Record<Campo, (v: string) => string | null> = { nome: erroNome, email: erroEmail, telefone: erroTelefone };
+const LEMBRETE_S = 120;
 const INTERVALO_CONSULTA_MS = 5000;
-const LIMITE_CONSULTAS = 720; // uma hora, a validade do Pix
 
 export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos, totalTexto, chavePublica }: Props) {
-  const [email, setEmail] = useState(emailSessao ?? "");
+  const [campos, setCampos] = useState<Record<Campo, string>>({ nome: "", email: emailSessao ?? "", telefone: "" });
+  const [tocados, setTocados] = useState<Partial<Record<Campo, boolean>>>({});
+  const [errosServidor, setErrosServidor] = useState<ErrosComprador>({});
   const [aba, setAba] = useState<"pix" | "cartao">("pix");
-  const [etapa, setEtapa] = useState<Etapa>({ tipo: "escolha" });
+  const [etapa, setEtapa] = useState<Etapa>({ tipo: "formulario" });
   const [erro, setErro] = useState<string | null>(null);
   const [gerando, setGerando] = useState(false);
-  const emailOk = EMAIL_VALIDO.test(email.trim());
-  const entrada = { oferta, produtos, email: email.trim() };
 
-  // Consulta a situação do pedido até ser pago (Pix ou cartão em análise)
-  const pedidoAguardando = etapa.tipo === "pix" ? etapa.pix.pedidoId : etapa.tipo === "analise" ? etapa.pedidoId : null;
-  useEffect(() => {
-    if (!pedidoAguardando) return;
-    let consultas = 0;
-    let parar = false;
-    const id = setInterval(async () => {
-      if (parar || ++consultas > LIMITE_CONSULTAS) return clearInterval(id);
-      const s = await acaoSituacao(pedidoAguardando).catch(() => "outro" as const);
-      if (s === "pago") {
-        parar = true;
-        clearInterval(id);
-        setEtapa({ tipo: "aprovado", email: email.trim() });
-      }
-    }, INTERVALO_CONSULTA_MS);
-    return () => {
-      parar = true;
-      clearInterval(id);
-    };
-  }, [pedidoAguardando, email]);
+  const erros: ErrosComprador = {
+    nome: VALIDADORES.nome(campos.nome) ?? undefined,
+    email: VALIDADORES.email(campos.email) ?? undefined,
+    telefone: VALIDADORES.telefone(campos.telefone) ?? undefined,
+  };
+  const tudoValido = !erros.nome && !erros.email && !erros.telefone;
+  const entrada = { oferta, produtos, ...campos };
+  const erroVisivel = (c: Campo) => (tocados[c] ? erros[c] : undefined) ?? errosServidor[c];
+
+  function mudar(c: Campo, valor: string) {
+    setCampos((atual) => ({ ...atual, [c]: c === "telefone" ? mascararTelefone(valor) : valor }));
+    setErrosServidor((atual) => ({ ...atual, [c]: undefined }));
+  }
 
   async function gerar() {
     setErro(null);
-    if (!emailOk) return setErro("Digite um e-mail válido. É nele que o acesso vai chegar.");
+    setTocados({ nome: true, email: true, telefone: true });
+    if (!tudoValido) return;
     setGerando(true);
     const r = await acaoGerarPix(entrada).catch(() => ({ ok: false as const, erro: "Sem conexão. Tente de novo." }));
     setGerando(false);
-    if (!r.ok) return setErro(r.erro);
-    if ("situacao" in r) {
-      return setEtapa(
-        r.situacao === "aprovado"
-          ? { tipo: "aprovado", email: email.trim() }
-          : { tipo: "analise", pedidoId: r.pedidoId, email: email.trim() },
-      );
+    if (!r.ok) {
+      setErro(r.erro);
+      if ("campos" in r && r.campos) setErrosServidor(r.campos);
+      return;
     }
-    setEtapa({ tipo: "pix", pix: { pedidoId: r.pedidoId, copiaECola: r.copiaECola, qrBase64: r.qrBase64 } });
+    if ("situacao" in r) return setEtapa(r.situacao === "aprovado" ? { tipo: "aprovado" } : { tipo: "analise", pedidoId: r.pedidoId });
+    setEtapa({ tipo: "pix", pix: r });
   }
+
+  // Cartão em análise: confere até aprovar
+  const analise = etapa.tipo === "analise" ? etapa.pedidoId : null;
+  useEffect(() => {
+    if (!analise) return;
+    const id = setInterval(async () => {
+      if ((await acaoSituacao(analise).catch(() => "outro")) === "pago") setEtapa({ tipo: "aprovado" });
+    }, INTERVALO_CONSULTA_MS);
+    return () => clearInterval(id);
+  }, [analise]);
+
+  const emailFinal = emailSessao ?? campos.email.trim().toLowerCase();
+
+  if (etapa.tipo === "pix") return <PixTela inicial={etapa.pix} totalTexto={totalTexto} email={emailFinal} />;
 
   if (etapa.tipo === "aprovado") {
     return (
@@ -86,7 +98,7 @@ export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos
         </span>
         <h2>Pagamento aprovado</h2>
         <p className="muted">
-          Enviamos o acesso para <strong>{etapa.email}</strong>. Entre na área de membros com o código desse e-mail.
+          Enviamos o acesso para <strong>{emailFinal}</strong>. Entre na área de membros com o código desse e-mail.
         </p>
         <Link className="btn lg" href="/entrar/?next=%2Fmembros%2F">
           Entrar na área de membros
@@ -106,8 +118,8 @@ export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos
         </span>
         <h2>Pagamento em análise</h2>
         <p className="muted">
-          O banco está conferindo o pagamento. Assim que aprovar, o acesso chega em <strong>{etapa.email}</strong>. Pode
-          fechar esta página.
+          O banco está conferindo o pagamento. Assim que aprovar, o acesso chega em <strong>{emailFinal}</strong>. Pode fechar
+          esta página.
         </p>
         <div className="progresso" role="progressbar" aria-label="Aguardando aprovação">
           <span />
@@ -116,57 +128,48 @@ export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos
     );
   }
 
-  if (etapa.tipo === "pix") {
-    return (
-      <div className="checkout-pix">
-        <h2>Pague com Pix</h2>
-        <p className="muted">
-          Copie o código e cole no app do seu banco, em Pix copia e cola. Ou leia o QR Code com o celular. Valor:{" "}
-          <strong>{totalTexto}</strong>.
-        </p>
-        <BlocoCodigo rotulo="Pix copia e cola" texto={etapa.pix.copiaECola} />
-        {/* eslint-disable-next-line @next/next/no-img-element -- imagem gerada pelo Mercado Pago em base64 */}
-        <img
-          className="checkout-qr"
-          src={`data:image/png;base64,${etapa.pix.qrBase64}`}
-          alt="QR Code do Pix para pagar este pedido"
-          width={220}
-          height={220}
-        />
-        <p className="checkout-aguardando" role="status" aria-live="polite">
-          <span className="spinner" aria-hidden="true" />
-          Aguardando o pagamento. Esta tela muda sozinha quando ele cair.
-        </p>
-        <p className="small muted">O código vale por 1 hora. Pagamento único, sem mensalidade.</p>
-      </div>
-    );
-  }
-
   return (
     <div className="checkout-pagamento">
+      <Lembrete />
+      <CampoTexto
+        id="nome"
+        rotulo="Nome completo"
+        valor={campos.nome}
+        erro={erroVisivel("nome")}
+        autoComplete="name"
+        aoMudar={(v) => mudar("nome", v)}
+        aoSair={() => setTocados((t) => ({ ...t, nome: true }))}
+      />
       {emailSessao ? (
         <p className="ajuda">
           O acesso fica no e-mail <strong>{emailSessao}</strong>.
         </p>
       ) : (
-        <div className="campo">
-          <label htmlFor="email">Seu e-mail</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            inputMode="email"
-            required
-            value={email}
-            onChange={(ev) => setEmail(ev.target.value)}
-            aria-describedby="email-ajuda"
-          />
-          <p className="ajuda" id="email-ajuda">
-            O acesso chega neste e-mail logo depois do pagamento.
-          </p>
-        </div>
+        <CampoTexto
+          id="email"
+          rotulo="E-mail"
+          tipo="email"
+          valor={campos.email}
+          erro={erroVisivel("email")}
+          ajuda="O acesso e o código do Pix chegam neste e-mail."
+          autoComplete="email"
+          inputMode="email"
+          aoMudar={(v) => mudar("email", v)}
+          aoSair={() => setTocados((t) => ({ ...t, email: true }))}
+        />
       )}
+      <CampoTexto
+        id="telefone"
+        rotulo="Telefone com DDD"
+        tipo="tel"
+        valor={campos.telefone}
+        erro={erroVisivel("telefone")}
+        autoComplete="tel-national"
+        inputMode="tel"
+        placeholder="(11) 91234-5678"
+        aoMudar={(v) => mudar("telefone", v)}
+        aoSair={() => setTocados((t) => ({ ...t, telefone: true }))}
+      />
 
       <div className="abas checkout-abas" role="tablist" aria-label="Forma de pagamento">
         <button type="button" role="tab" aria-selected={aba === "pix"} onClick={() => setAba("pix")}>
@@ -180,33 +183,47 @@ export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos
       <div aria-live="assertive">{erro && <Alerta tipo="danger" titulo="Não deu para continuar">{erro}</Alerta>}</div>
 
       {aba === "pix" ? (
-        <button className="btn lg" type="button" onClick={gerar} disabled={gerando} aria-busy={gerando || undefined}>
-          {gerando ? (
-            <>
-              <span className="spinner" aria-hidden="true" />
-              Gerando o Pix
-            </>
-          ) : (
-            <>
-              Pagar {totalTexto} com Pix
-              <span className="ico">
-                <Icone nome="direita" tamanho={16} />
-              </span>
-            </>
+        <>
+          <button
+            className="btn lg"
+            type="button"
+            onClick={gerar}
+            disabled={!tudoValido || gerando}
+            aria-busy={gerando || undefined}
+            aria-describedby={!tudoValido ? "checkout-falta" : undefined}
+          >
+            {gerando ? (
+              <>
+                <span className="spinner" aria-hidden="true" />
+                Gerando o Pix
+              </>
+            ) : (
+              <>
+                Pagar {totalTexto} com Pix
+                <span className="ico">
+                  <Icone nome="direita" tamanho={16} />
+                </span>
+              </>
+            )}
+          </button>
+          {!tudoValido && (
+            <p className="motivo" id="checkout-falta">
+              Preencha nome, e-mail e telefone para gerar o Pix.
+            </p>
           )}
-        </button>
-      ) : !emailOk ? (
-        <p className="ajuda">Digite o seu e-mail acima para abrir o pagamento com cartão.</p>
+        </>
+      ) : !tudoValido ? (
+        <p className="ajuda">Preencha nome, e-mail e telefone acima para abrir o pagamento com cartão.</p>
       ) : chavePublica ? (
         <FormularioCartao
           chavePublica={chavePublica}
           valorCentavos={valorCentavos}
-          email={email.trim()}
+          email={emailFinal}
           pagar={async (dados) => {
             setErro(null);
             const r = await acaoPagarCartao(entrada, dados).catch(() => ({ ok: false as const, erro: "Sem conexão. Tente de novo." }));
             if (!r.ok) return setErro(r.erro);
-            setEtapa(r.situacao === "aprovado" ? { tipo: "aprovado", email: email.trim() } : { tipo: "analise", pedidoId: r.pedidoId, email: email.trim() });
+            setEtapa(r.situacao === "aprovado" ? { tipo: "aprovado" } : { tipo: "analise", pedidoId: r.pedidoId });
           }}
         />
       ) : (
@@ -217,9 +234,91 @@ export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos
 
       <p className="selo-mp">
         <Icone nome="escudo" tamanho={14} />
-        Pagamento processado pelo Mercado Pago, sem sair desta página
+        Pix ou cartão, sem sair desta página
       </p>
     </div>
+  );
+}
+
+function CampoTexto({
+  id,
+  rotulo,
+  valor,
+  erro,
+  ajuda,
+  tipo = "text",
+  autoComplete,
+  inputMode,
+  placeholder,
+  aoMudar,
+  aoSair,
+}: {
+  id: string;
+  rotulo: string;
+  valor: string;
+  erro: string | undefined;
+  ajuda?: string;
+  tipo?: "text" | "email" | "tel";
+  autoComplete: string;
+  inputMode?: "email" | "tel";
+  placeholder?: string;
+  aoMudar: (v: string) => void;
+  aoSair: () => void;
+}) {
+  return (
+    <div className="campo">
+      <label htmlFor={id}>{rotulo}</label>
+      <input
+        id={id}
+        name={id}
+        type={tipo}
+        value={valor}
+        autoComplete={autoComplete}
+        inputMode={inputMode}
+        placeholder={placeholder}
+        required
+        aria-invalid={erro ? true : undefined}
+        aria-describedby={erro ? `${id}-erro` : ajuda ? `${id}-ajuda` : undefined}
+        onChange={(ev) => aoMudar(ev.target.value)}
+        onBlur={aoSair}
+      />
+      {erro ? (
+        <p className="erro-campo" id={`${id}-erro`}>
+          {erro}
+        </p>
+      ) : ajuda ? (
+        <p className="ajuda" id={`${id}-ajuda`}>
+          {ajuda}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+// Lembrete discreto de 2 minutos. Ao zerar, só avisa que o pedido continua pronto e pode recomeçar a contagem:
+// nada é cancelado, o preço não muda e os campos preenchidos ficam como estão.
+function Lembrete() {
+  const [resta, setResta] = useState(LEMBRETE_S);
+  useEffect(() => {
+    if (resta <= 0) return;
+    const id = setTimeout(() => setResta((r) => r - 1), 1000);
+    return () => clearTimeout(id);
+  }, [resta]);
+  if (resta <= 0) {
+    return (
+      <div className="checkout-lembrete zerado" role="status">
+        <span>Ainda está por aqui? O seu pedido continua pronto, com o mesmo preço.</span>
+        <button type="button" className="btn ghost sm" onClick={() => setResta(LEMBRETE_S)}>
+          Continuar
+        </button>
+      </div>
+    );
+  }
+  return (
+    <p className="checkout-lembrete" aria-live="off">
+      <Icone nome="relogio" tamanho={14} />
+      Seu pedido está pronto <span className="num">{`${Math.floor(resta / 60)}:${String(resta % 60).padStart(2, "0")}`}</span>
+    </p>
   );
 }
 

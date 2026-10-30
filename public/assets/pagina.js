@@ -80,7 +80,35 @@ function cardPacote(p) {
   preco.append(el("span", "oferta-preco-rotulo", "Por apenas"), el("span", "price", p.precoTexto));
   const cta = el("a", "cta", "Quero este pacote");
   cta.href = p.comprarUrl;
-  card.append(el("span", "kicker", "PACOTE DO VÍDEO"), titulo, el("p", null, p.descricao), lista, preco, cta);
+  const filhos = [el("span", "kicker", "PACOTE DO VÍDEO"), titulo, el("p", null, p.descricao), lista, preco, cta];
+  if (p.capa) filhos.unshift(capa(p.capa, false));
+  card.append(...filhos);
+  return card;
+}
+
+// Pague 2, leve 3: abre a loja com o pacote do vídeo marcado para escolher os outros
+function cardLeve(l) {
+  const card = el("div", "oferta-leve");
+  card.setAttribute("role", "group");
+  card.setAttribute("aria-labelledby", "leve-titulo");
+  const titulo = el("h3", null, "Leve " + l.qtd + " pacotes por " + l.precoTexto);
+  titulo.id = "leve-titulo";
+  const precos = el("div", "oferta-combo-precos");
+  if (l.referenciaTexto) {
+    const de = el("s", "oferta-de");
+    de.append(el("span", "sr-only", "de "), l.referenciaTexto);
+    precos.append(de);
+  }
+  const por = el("span", "price");
+  por.append(el("span", "sr-only", "por "), l.precoTexto);
+  precos.append(por);
+  const cta = el("a", "cta", "Escolher meus " + l.qtd + " pacotes");
+  cta.href = l.escolherUrl;
+  const outros = l.qtd - 1;
+  const desc = l.comPacote
+    ? "O pacote deste vídeo já vem marcado. Escolha os outros " + (outros === 2 ? "dois" : outros) + " na loja."
+    : l.descricao;
+  card.append(el("span", "oferta-selo", l.titulo.toUpperCase()), titulo, el("p", "oferta-leve-desc", desc), precos, cta);
   return card;
 }
 
@@ -93,7 +121,16 @@ function cardCombo(c, comoTitulo) {
   const lista = el("ul", "oferta-combo-itens");
   lista.replaceChildren(...c.itens.map(i => {
     const li = el("li");
-    li.append(el("span", null, i.titulo), el("span", "oferta-combo-qtd", i.conteudo));
+    const nome = el("span", "oferta-combo-nome");
+    if (i.mini) {
+      // Miniatura decorativa: o nome do pacote vem logo ao lado
+      const img = document.createElement("img");
+      Object.assign(img, { src: i.mini, alt: "", width: 240, height: 160, loading: "lazy", decoding: "async" });
+      img.className = "oferta-combo-mini";
+      nome.append(img);
+    }
+    nome.append(i.titulo);
+    li.append(nome, el("span", "oferta-combo-qtd", i.conteudo));
     return li;
   }));
   const precos = el("div", "oferta-combo-precos");
@@ -110,8 +147,201 @@ function cardCombo(c, comoTitulo) {
   const cta = el("a", "cta", "Quero o pacote completo");
   cta.href = c.comprarUrl;
   filhos.push(cta, el("p", "price-note", "Pagamento único. Acesso na hora, logo depois do pagamento."));
+  if (c.capa) filhos.unshift(capa(c.capa, false));
   card.append(...filhos);
   return card;
+}
+
+// ---------- Catálogo da página inicial (todos os pacotes à venda) ----------
+
+const SVG = "http://www.w3.org/2000/svg";
+// Ícones de traço iguais aos da loja (src/components/Icone.tsx)
+const ICONES = {
+  seta: ["M7 17L17 7M9 7h8v8"],
+  check: ["M5 12.5l4.5 4.5L19 7.5"],
+  erro: ["M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z", "M9 9l6 6M15 9l-6 6"],
+};
+
+function icone(nome, tamanho) {
+  const s = document.createElementNS(SVG, "svg");
+  for (const [k, v] of Object.entries({ width: tamanho, height: tamanho, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "1.8", "stroke-linecap": "round", "stroke-linejoin": "round", "aria-hidden": "true", focusable: "false" })) {
+    s.setAttribute(k, String(v));
+  }
+  ICONES[nome].forEach(d => {
+    const p = document.createElementNS(SVG, "path");
+    p.setAttribute("d", d);
+    s.append(p);
+  });
+  return s;
+}
+
+// Capa 3:2 em WebP com PNG de reserva; só o destaque carrega de imediato
+function capa(c, imediata) {
+  const pic = el("picture", "capa-img");
+  if (!c) return pic;
+  const src = document.createElement("source");
+  src.srcset = c.webp;
+  src.type = "image/webp";
+  const img = document.createElement("img");
+  Object.assign(img, { src: c.png, alt: c.alt, width: 1200, height: 800, decoding: "async", loading: imediata ? "eager" : "lazy" });
+  pic.append(src, img);
+  return pic;
+}
+
+function botaoComprar(href, texto, pequeno, nome) {
+  const a = el("a", pequeno ? "btn sm" : "btn", texto);
+  a.href = href;
+  // Vários "Comprar" na mesma página: o leitor de tela ouve qual pacote
+  a.setAttribute("aria-label", texto + ": " + nome);
+  if (!pequeno) {
+    const ico = el("span", "ico");
+    ico.setAttribute("aria-hidden", "true");
+    ico.append(icone("seta", 16));
+    a.append(ico);
+  }
+  return a;
+}
+
+function titulo3(texto, href, id) {
+  const h = el("h3");
+  h.id = id;
+  const a = el("a", null, texto);
+  a.href = href;
+  h.append(a);
+  return h;
+}
+
+function cartaoCatalogo(p, tipo) {
+  const li = el("li", tipo === "destaque" ? "largo" : null);
+  const art = el("article", "cat-card" + (tipo === "destaque" ? " destaque" : ""));
+  art.setAttribute("aria-labelledby", "cat-" + p.slug);
+  const corpo = el("div", "cat-corpo");
+  if (tipo === "destaque") corpo.append(el("span", "cat-marcador", "Pacote principal"));
+  corpo.append(titulo3(p.titulo, p.paginaUrl, "cat-" + p.slug), el("p", "cat-resumo", p.resumo));
+  if (tipo === "destaque" && p.numeros.length) {
+    const nums = el("ul", "cat-numeros");
+    nums.setAttribute("aria-label", "O que vem");
+    nums.replaceChildren(...p.numeros.map(x => {
+      const item = el("li");
+      item.append(el("b", null, String(x.n)), " " + x.rotulo);
+      return item;
+    }));
+    corpo.append(nums);
+  }
+  const rodape = el("div", "cat-rodape");
+  const preco = el("div");
+  if (tipo === "destaque") preco.append(el("span", "cat-preco-rotulo", "Pacote avulso"));
+  preco.append(el("span", "cat-preco", p.precoTexto));
+  rodape.append(preco, botaoComprar(p.comprarUrl, "Comprar", tipo !== "destaque", p.titulo));
+  if (tipo === "destaque") {
+    const lado = el("div", "cat-lado");
+    lado.append(corpo, rodape);
+    art.append(capa(p.capa, true), lado);
+  } else {
+    art.append(capa(p.capa, false), corpo, rodape);
+  }
+  li.append(art);
+  return li;
+}
+
+function cartaoComboCatalogo(c) {
+  const li = el("li", "largo");
+  const art = el("article", "cat-card combo");
+  art.setAttribute("aria-labelledby", "cat-combo");
+  const corpo = el("div", "cat-corpo");
+  const h = el("h3", null, c.titulo);
+  h.id = "cat-combo";
+  const itens = el("ul", "cat-combo-itens");
+  itens.replaceChildren(...c.itens.map(t => {
+    const item = el("li");
+    item.append(icone("check", 16), t);
+    return item;
+  }));
+  corpo.append(h, el("p", "cat-resumo", c.resumo), itens);
+  const rodape = el("div", "cat-rodape");
+  const preco = el("div");
+  preco.append(el("span", "cat-preco-rotulo", "Os " + c.itens.length + " pacotes"), el("span", "cat-preco", c.precoTexto));
+  rodape.append(preco, botaoComprar(c.comprarUrl, "Comprar o completo", false, c.titulo));
+  const lado = el("div", "cat-lado");
+  lado.append(corpo, rodape);
+  art.append(capa(c.capa, false), lado);
+  li.append(art);
+  return li;
+}
+
+function topoCatalogo() {
+  const topo = el("header", "cat-topo");
+  const h = el("h2", null, "Skills e agentes prontos para instalar");
+  h.id = "cat-titulo";
+  topo.append(el("span", "badge", "pacotes pagos"), h, el("p", null, "Para Claude Code e Codex, com instalador e guia em português."));
+  return topo;
+}
+
+function montarCatalogo(secao, c) {
+  const lista = el("ul", "cat-lista");
+  const itens = [];
+  if (c.destaque) itens.push(cartaoCatalogo(c.destaque, "destaque"));
+  c.pacotes.forEach(p => itens.push(cartaoCatalogo(p, "padrao")));
+  if (c.combo) itens.push(cartaoComboCatalogo(c.combo));
+  if (!itens.length) {
+    const vazio = el("div", "cat-vazio");
+    vazio.append(el("h3", null, "Os pacotes voltam em breve"), el("p", null, "Enquanto isso, os prompts grátis dos vídeos continuam logo acima."));
+    secao.replaceChildren(topoCatalogo(), vazio);
+    return;
+  }
+  lista.replaceChildren(...itens);
+  const nota = el("p", "cat-nota", "Quer escolher três? ");
+  const loja = el("a", null, "Monte o seu pedido na loja");
+  loja.href = "/loja/";
+  nota.append(loja, ".");
+  secao.replaceChildren(topoCatalogo(), lista, nota);
+}
+
+function catalogoCarregando(secao) {
+  const status = el("span", "sr-only", "Carregando os pacotes");
+  status.setAttribute("role", "status");
+  const lista = el("ul", "cat-lista");
+  lista.setAttribute("aria-hidden", "true");
+  lista.replaceChildren(...[0, 1, 2].map(i => {
+    const li = el("li", i === 0 ? "largo" : null);
+    const card = el("div", "cat-card");
+    card.append(el("span", "cat-skel capa"), el("span", "cat-skel linha"), el("span", "cat-skel linha curta"));
+    li.append(card);
+    return li;
+  }));
+  secao.replaceChildren(topoCatalogo(), status, lista);
+}
+
+// Preço não carregou: não mostra valor inventado nem botão de compra, só o motivo e como tentar de novo
+function catalogoErro(secao) {
+  const alerta = el("div", "cat-alerta");
+  alerta.setAttribute("role", "alert");
+  alerta.append(icone("erro", 18));
+  const texto = el("div");
+  const tentar = el("button", "btn sm", "Tentar de novo");
+  tentar.type = "button";
+  tentar.addEventListener("click", () => {
+    // O botão some ao recarregar: o foco fica na seção, não no começo da página
+    secao.tabIndex = -1;
+    secao.focus();
+    montarOferta();
+  });
+  const loja = el("a", null, "abrir a loja");
+  loja.href = "/loja/";
+  const p = el("p", null, "Nada foi cobrado. Tente de novo ou ");
+  p.append(loja, ".");
+  texto.append(el("strong", null, "Não conseguimos carregar os pacotes agora."), p, tentar);
+  alerta.append(texto);
+  secao.replaceChildren(topoCatalogo(), alerta);
+}
+
+function carregarEstiloCatalogo() {
+  if (document.querySelector('link[data-estilo="catalogo"]')) return;
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = "/assets/catalogo.css";
+  link.dataset.estilo = "catalogo";
+  document.head.append(link);
 }
 
 // Se a vitrine não responder, a página continua útil: um card simples leva à loja
@@ -128,22 +358,38 @@ function cardReserva() {
 async function montarOferta() {
   const secao = document.querySelector("[data-oferta]");
   if (!secao) return;
-  carregarEstiloOferta();
   const pagina = location.pathname.split("/").filter(Boolean)[0] || "";
-  secao.classList.add("oferta-bloco");
+  // A página inicial mostra o catálogo inteiro; as dos vídeos, o pacote do vídeo e o combo
+  const inicial = pagina === "";
   secao.setAttribute("aria-busy", "true");
-  const carregando = el("p", "oferta-carregando", "Carregando a oferta");
-  carregando.setAttribute("role", "status");
-  secao.replaceChildren(carregando);
+  if (inicial) {
+    carregarEstiloCatalogo();
+    secao.classList.add("catalogo");
+    secao.setAttribute("aria-labelledby", "cat-titulo");
+    catalogoCarregando(secao);
+  } else {
+    carregarEstiloOferta();
+    secao.classList.add("oferta-bloco");
+    const carregando = el("p", "oferta-carregando", "Carregando a oferta");
+    carregando.setAttribute("role", "status");
+    secao.replaceChildren(carregando);
+  }
   try {
     const r = await fetch("/api/loja/vitrine?pagina=" + encodeURIComponent(pagina), {
       headers: { accept: "application/json" },
       signal: AbortSignal.timeout(8000),
     });
     const v = await r.json();
+    if (inicial) {
+      if (!r.ok || !v.ok || !v.catalogo) throw new Error("catálogo indisponível");
+      montarCatalogo(secao, v.catalogo);
+      secao.removeAttribute("aria-busy");
+      return;
+    }
     if (!r.ok || !v.ok || (!v.pacote && !v.combo)) throw new Error("vitrine indisponível");
     const filhos = [];
     if (v.pacote) filhos.push(cardPacote(v.pacote));
+    if (v.leve) filhos.push(cardLeve(v.leve));
     if (v.combo) filhos.push(cardCombo(v.combo, !v.pacote));
     secao.replaceChildren(...filhos);
     if (v.pacote) {
@@ -151,7 +397,8 @@ async function montarOferta() {
       barraFixa(v.pacote);
     }
   } catch {
-    secao.replaceChildren(cardReserva());
+    if (inicial) catalogoErro(secao);
+    else secao.replaceChildren(cardReserva());
   }
   secao.removeAttribute("aria-busy");
 }

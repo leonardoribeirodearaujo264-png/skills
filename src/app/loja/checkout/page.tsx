@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Alerta } from "@/components/Alerta";
+import { CapaPacote } from "@/components/CapaPacote";
 import { Cabecalho, Rodape } from "@/components/Cabecalho";
 import { Icone } from "@/components/Icone";
 import { usuarioAtual } from "@/lib/auth/sessao";
+import { capaDoPacote } from "@/lib/loja/apresentacao";
 import { MENSAGEM_FALHA_CHECKOUT, previaCompra } from "@/lib/loja/checkout";
 import { formatarReais, MENSAGEM_RECUSA } from "@/lib/loja/dominio";
 import { CheckoutPagamento } from "./CheckoutPagamento";
@@ -58,7 +60,10 @@ export default async function Checkout({ searchParams }: { searchParams: Busca }
                   {previa.itens.map((i) => (
                     <div key={i.slug}>
                       <dt>Pacote</dt>
-                      <dd>{i.titulo}</dd>
+                      <dd className="pedido-pacote">
+                        <CapaPacote capa={capaDoPacote(i.slug, i.titulo)} mini />
+                        {i.titulo}
+                      </dd>
                     </div>
                   ))}
                   <div>

@@ -1,12 +1,14 @@
 import type { Usuario } from "../auth/sessao";
 import { env } from "../env";
+import { enviarEmailPix } from "../email/pix";
 import { ErroMercadoPago, type Pagamento, type Pix } from "../mercadopago/api";
 import { clientePublico, clienteServico } from "../supabase/clientes";
-import { montarPedido, PedidoInvalido, type Catalogo, type ItensDoPedido, type MotivoRecusa } from "./dominio";
+import { partesDoNome } from "./comprador";
+import { formatarReais, montarPedido, PedidoInvalido, type Catalogo, type ItensDoPedido, type MotivoRecusa } from "./dominio";
 import { meusProdutos } from "./membros";
 import { permitir } from "./limites";
 import { aplicarPagamento, type ResultadoPagamento } from "./pagamento";
-import { carregarCatalogo, criarOuReusarPedido, pedidoParaRetorno } from "./repositorio";
+import { carregarCatalogo, criarOuReusarPedido, pedidoParaPix, pedidoParaRetorno, salvarDadosComprador } from "./repositorio";
 import { depsPagamento } from "./servicos";
 
 // Checkout no próprio site, sem login: o comprador informa o e-mail e paga por Pix ou cartão ali mesmo.
@@ -20,10 +22,19 @@ export type Previa = {
 };
 export type Falha = { motivo: MotivoRecusa | "falha" };
 
-type Comprador = { usuario: Usuario | null; email: string };
-type PedidoPronto = { pedidoId: string; valorCentavos: number; descricao: string; email: string };
+// Nome, e-mail e telefone já validados (src/lib/loja/comprador.ts); com sessão, vale o e-mail da conta
+type Comprador = { usuario: Usuario | null; email: string; nome: string; telefone: string };
+type PedidoPronto = {
+  pedidoId: string;
+  valorCentavos: number;
+  descricao: string;
+  pacote: string;
+  email: string;
+  nome: string;
+};
 
-const PIX_VALIDO_MS = 60 * 60 * 1000;
+export const MINUTOS_PIX = 14;
+const PIX_VALIDO_MS = MINUTOS_PIX * 60 * 1000;
 
 // O que a pessoa já tem só é conferido com sessão. Para visitante, consultar pelo e-mail digitado
 // revelaria o que outra pessoa comprou; a liberação já não duplica acesso de quem compra de novo.
@@ -67,14 +78,18 @@ export async function previaCompra(usuario: Usuario | null, oferta: string, prod
 async function prepararPedido(comprador: Comprador, oferta: string, produtos: string[]): Promise<PedidoPronto> {
   const email = (comprador.usuario?.email ?? comprador.email).trim().toLowerCase();
   const { catalogo, itens } = await calcular(comprador.usuario, oferta, produtos);
-  const pedido = await criarOuReusarPedido(clienteServico(), { email, userId: comprador.usuario?.id ?? null }, oferta, itens);
+  const db = clienteServico();
+  const pedido = await criarOuReusarPedido(db, { email, userId: comprador.usuario?.id ?? null }, oferta, itens);
+  await salvarDadosComprador(db, pedido.id, comprador.nome, comprador.telefone);
   const ofertaTitulo = catalogo.ofertas.find((o) => o.codigo === oferta)?.titulo ?? "Pacote";
   const titulos = itens.itens.map((s) => catalogo.produtos.find((p) => p.slug === s)?.titulo ?? s);
   return {
     pedidoId: pedido.id,
     valorCentavos: pedido.valorCentavos,
     descricao: `${ofertaTitulo}: ${titulos.join(", ")}`.slice(0, 250),
+    pacote: titulos.length === 1 ? (titulos[0] ?? ofertaTitulo) : ofertaTitulo,
     email,
+    nome: comprador.nome,
   };
 }
 
@@ -107,23 +122,116 @@ async function cobrancaExistente(
   return null;
 }
 
-export type PixGerado = { pedidoId: string; valorCentavos: number; pix: Pix };
+// agora: hora do servidor, para a tela ajustar o relógio do aparelho e contar a validade certa
+export type PixGerado = { pedidoId: string; valorCentavos: number; pix: Pix; agora: string };
+
+// Lembrete por e-mail: falha não interrompe a compra, só fica no log
+async function lembrarPorEmail(pedido: PedidoPronto, pix: Pix): Promise<void> {
+  try {
+    await enviarEmailPix({
+      para: pedido.email,
+      nome: pedido.nome,
+      pacote: pedido.pacote,
+      valorTexto: formatarReais(pedido.valorCentavos),
+      copiaECola: pix.copiaECola,
+      qrBase64: pix.qrBase64,
+      minutosValidade: MINUTOS_PIX,
+      link: `${env().SITE_URL}/loja/pagamento/${pedido.pedidoId}/`,
+      pixId: pix.id,
+    });
+  } catch (e) {
+    console.error("email do pix", { pedidoId: pedido.pedidoId, erro: e instanceof Error ? e.message : "erro desconhecido" });
+  }
+}
+
+async function cobrarPix(pedido: PedidoPronto): Promise<PixGerado | JaCobrado> {
+  const deps = depsPagamento();
+  // Se o pedido já foi pago ou tem cartão em análise, não gera cobrança nova. Pix pendente é reaproveitado.
+  const ja = await cobrancaExistente(deps, pedido.pedidoId, true);
+  if (ja) return ja;
+  const pix = await deps.mp.criarPix({
+    ...pedido,
+    nome: pedido.nome ? partesDoNome(pedido.nome) : null,
+    urlNotificacao: urlNotificacao(),
+    expiraEm: new Date(Date.now() + PIX_VALIDO_MS),
+  });
+  await lembrarPorEmail(pedido, pix);
+  return { pedidoId: pedido.pedidoId, valorCentavos: pedido.valorCentavos, pix, agora: new Date().toISOString() };
+}
 
 export async function gerarPix(comprador: Comprador, oferta: string, produtos: string[]): Promise<PixGerado | JaCobrado | Falha> {
   try {
-    const pedido = await prepararPedido(comprador, oferta, produtos);
-    const deps = depsPagamento();
-    // Se o pedido já foi pago ou tem cartão em análise, não gera cobrança nova. Pix pendente é reaproveitado.
-    const ja = await cobrancaExistente(deps, pedido.pedidoId, true);
-    if (ja) return ja;
-    const pix = await deps.mp.criarPix({
-      ...pedido,
-      urlNotificacao: urlNotificacao(),
-      expiraEm: new Date(Date.now() + PIX_VALIDO_MS),
-    });
-    return { pedidoId: pedido.pedidoId, valorCentavos: pedido.valorCentavos, pix };
+    return await cobrarPix(await prepararPedido(comprador, oferta, produtos));
   } catch (e) {
     return tratar(e, "pix");
+  }
+}
+
+export type PixDoPedido =
+  | { situacao: "pago" }
+  | { situacao: "aguardando"; pedidoId: string; pix: Pix; agora: string; valorCentavos: number; pacote: string }
+  | { situacao: "vencido"; pedidoId: string; valorCentavos: number; pacote: string }
+  | { situacao: "inexistente" };
+
+// Página de pagamento aberta pelo e-mail: mostra o Pix ainda válido do pedido, ou diz que venceu
+export async function pixDoPedido(pedidoId: string): Promise<PixDoPedido> {
+  const p = await pedidoParaPix(clienteServico(), pedidoId);
+  if (!p) return { situacao: "inexistente" };
+  if (p.status === "pago") return { situacao: "pago" };
+  if (p.status !== "pendente" && p.status !== "recusado") return { situacao: "inexistente" };
+  const pacote = p.produtos.length === 1 ? (p.produtos[0] ?? p.ofertaTitulo) : p.ofertaTitulo;
+  const deps = depsPagamento();
+  const pagamentos = await deps.mp.pagamentosDoPedido(pedidoId);
+  const aprovado = pagamentos.find((x) => x.status === "approved");
+  if (aprovado) {
+    const r = await liberarAprovado(deps, aprovado, pedidoId);
+    if (r.situacao === "aprovado") return { situacao: "pago" };
+  }
+  const agora = Date.now();
+  const valido = pagamentos.find(
+    (x) =>
+      x.payment_method_id === "pix" &&
+      x.status === "pending" &&
+      Boolean(x.point_of_interaction?.transaction_data?.qr_code) &&
+      Boolean(x.date_of_expiration) &&
+      Date.parse(x.date_of_expiration ?? "") > agora,
+  );
+  const dados = valido?.point_of_interaction?.transaction_data;
+  if (valido && dados?.qr_code && dados.qr_code_base64) {
+    return {
+      situacao: "aguardando",
+      pedidoId,
+      valorCentavos: p.valorCentavos,
+      pacote,
+      agora: new Date(agora).toISOString(),
+      pix: {
+        id: valido.id,
+        status: valido.status,
+        copiaECola: dados.qr_code,
+        qrBase64: dados.qr_code_base64,
+        expiraEm: valido.date_of_expiration ?? null,
+      },
+    };
+  }
+  return { situacao: "vencido", pedidoId, valorCentavos: p.valorCentavos, pacote };
+}
+
+// Novo código para um pedido cujo Pix venceu: mesmo valor gravado, mesmo e-mail e nome
+export async function renovarPix(pedidoId: string): Promise<PixGerado | JaCobrado | Falha> {
+  try {
+    const p = await pedidoParaPix(clienteServico(), pedidoId);
+    if (!p || (p.status !== "pendente" && p.status !== "recusado")) return { motivo: "falha" };
+    const pacote = p.produtos.length === 1 ? (p.produtos[0] ?? p.ofertaTitulo) : p.ofertaTitulo;
+    return await cobrarPix({
+      pedidoId,
+      valorCentavos: p.valorCentavos,
+      descricao: `${p.ofertaTitulo}: ${p.produtos.join(", ")}`.slice(0, 250),
+      pacote,
+      email: p.email,
+      nome: p.nome ?? "",
+    });
+  } catch (e) {
+    return tratar(e, "renovar pix");
   }
 }
 

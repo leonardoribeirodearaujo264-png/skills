@@ -3,6 +3,8 @@
 import { useMemo, useState } from "react";
 import { formatarReais } from "@/lib/loja/dominio";
 import { Alerta } from "@/components/Alerta";
+import { CapaPacote } from "@/components/CapaPacote";
+import type { Capa } from "@/lib/loja/apresentacao";
 import { Icone } from "@/components/Icone";
 
 // Tudo o que é preço chega pronto do servidor. Esta tela só mostra e monta a escolha;
@@ -29,6 +31,7 @@ export type OfertaVista = {
 
 export type ProdutoVista = {
   slug: string;
+  capa: Capa | null;
   titulo: string;
   resumo: string;
   destaques: string[];
@@ -46,7 +49,9 @@ type Props = {
 
 export function SeletorLoja({ ofertas, produtos, possui, ofertaInicial, produtosIniciais }: Props) {
   const jaTem = useMemo(() => new Set(possui), [possui]);
-  const padrao = ofertas.find((o) => o.codigo === ofertaInicial) ?? ofertas.find((o) => o.destaque) ?? ofertas[0];
+  // Avulso vem marcado: um clique no pacote já libera o pagamento
+  const avulso = ofertas.find((o) => o.porProduto && o.qtdEscolha === 1);
+  const padrao = ofertas.find((o) => o.codigo === ofertaInicial) ?? avulso ?? ofertas.find((o) => o.destaque) ?? ofertas[0];
   const [codigo, setCodigo] = useState(padrao?.codigo ?? "");
   const [escolhidos, setEscolhidos] = useState<string[]>(() =>
     padrao?.tipo === "escolha"
@@ -54,11 +59,22 @@ export function SeletorLoja({ ofertas, produtos, possui, ofertaInicial, produtos
       : [],
   );
 
-  const oferta = ofertas.find((o) => o.codigo === codigo);
-  if (!oferta) return <Alerta tipo="warn" titulo="Nenhuma oferta disponível agora" />;
+  const marcada = ofertas.find((o) => o.codigo === codigo);
+  if (!marcada) return <Alerta tipo="warn" titulo="Nenhuma oferta disponível agora" />;
+
+  // Combo de escolha com um só pacote marcado não trava: segue como avulso daquele pacote
+  const unico = escolhidos.length === 1 ? escolhidos[0] : undefined;
+  const comoAvulso =
+    marcada.tipo === "escolha" && (marcada.qtdEscolha ?? 0) > 1 && avulso !== undefined && unico !== undefined && !jaTem.has(unico);
+  const oferta = comoAvulso && avulso ? avulso : marcada;
+  const dica = comoAvulso
+    ? `Quer economizar? Escolha mais ${(marcada.qtdEscolha ?? 0) - 1} e leve ${marcada.qtdEscolha} por ${marcada.precoTexto}.`
+    : "";
 
   const escolha = oferta.tipo === "escolha";
   const limite = oferta.qtdEscolha ?? 0;
+  // A lista de pacotes segue a oferta marcada (no leve 3 dá para marcar até 3), o resumo segue a efetiva
+  const limiteLista = marcada.qtdEscolha ?? 0;
   const itens = escolha ? escolhidos : (oferta.incluidos ?? []);
   const novos = itens.filter((s) => !jaTem.has(s));
   const faltam = escolha ? limite - escolhidos.length : 0;
@@ -80,8 +96,8 @@ export function SeletorLoja({ ofertas, produtos, possui, ofertaInicial, produtos
 
   function alternar(slug: string, marcado: boolean) {
     if (!escolha) return;
-    if (limite === 1) return setEscolhidos(marcado ? [slug] : []);
-    setEscolhidos((atual) => (marcado ? (atual.length < limite ? [...atual, slug] : atual) : atual.filter((s) => s !== slug)));
+    if (limiteLista === 1) return setEscolhidos(marcado ? [slug] : []);
+    setEscolhidos((atual) => (marcado ? (atual.length < limiteLista ? [...atual, slug] : atual) : atual.filter((s) => s !== slug)));
   }
 
   const titulo = (slug: string) => produtos.find((p) => p.slug === slug)?.titulo ?? slug;
@@ -154,9 +170,9 @@ export function SeletorLoja({ ofertas, produtos, possui, ofertaInicial, produtos
               </div>
               <p id="dica-produtos">
                 {escolha
-                  ? limite === 1
+                  ? limiteLista === 1
                     ? "Escolha 1 produto."
-                    : `Escolha ${limite} produtos.`
+                    : `Escolha ${limiteLista} produtos.`
                   : oferta.tipo === "todos"
                     ? "O combo inclui todos os produtos."
                     : "Este pacote tem composição fixa."}
@@ -165,7 +181,7 @@ export function SeletorLoja({ ofertas, produtos, possui, ofertaInicial, produtos
             <span className="contador" aria-live="polite">
               {escolha ? (
                 <>
-                  <b>{escolhidos.length}</b> de {limite} escolhidos
+                  <b>{escolhidos.length}</b> de {limiteLista} escolhidos
                 </>
               ) : (
                 `${itens.length} incluídos`
@@ -185,12 +201,12 @@ export function SeletorLoja({ ofertas, produtos, possui, ofertaInicial, produtos
               const seu = jaTem.has(p.slug);
               const incluido = !escolha && itens.includes(p.slug);
               const marcado = escolha ? escolhidos.includes(p.slug) : incluido;
-              const cheio = escolha && limite > 1 && escolhidos.length >= limite && !marcado;
+              const cheio = escolha && limiteLista > 1 && escolhidos.length >= limiteLista && !marcado;
               const trava = seu ? "possui" : !escolha ? (incluido ? "fixo" : "fora") : cheio ? "limite" : undefined;
               return (
                 <label key={p.slug} className="prod" data-trava={trava}>
                   <input
-                    type={escolha && limite === 1 ? "radio" : "checkbox"}
+                    type={escolha && limiteLista === 1 ? "radio" : "checkbox"}
                     name="produto-escolha"
                     value={p.slug}
                     checked={marcado && !seu}
@@ -200,6 +216,7 @@ export function SeletorLoja({ ofertas, produtos, possui, ofertaInicial, produtos
                   />
                   <div className="shell">
                     <div className="core">
+                      <CapaPacote capa={p.capa} />
                       <div className="topo">
                         <h3>{p.titulo}</h3>
                         <span className="check" aria-hidden="true">
@@ -276,11 +293,11 @@ export function SeletorLoja({ ofertas, produtos, possui, ofertaInicial, produtos
               </div>
               <BotaoContinuar bloqueado={Boolean(motivo)} />
               <p className="motivo" id="r-motivo">
-                {motivo}
+                {motivo || dica}
               </p>
               <p className="selo-mp">
                 <Icone nome="escudo" tamanho={14} />
-                Pagamento processado pelo Mercado Pago
+                Pagamento por Pix ou cartão
               </p>
             </div>
           </div>

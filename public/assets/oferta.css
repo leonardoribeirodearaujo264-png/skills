@@ -91,3 +91,25 @@
 
 /* Âncora da faixa do topo: o card não fica escondido atrás de nada */
 #oferta { scroll-margin-top: 16px; }
+
+/* Capa 3:2 dos pacotes no card do vídeo e no combo (mesmas imagens do catálogo) */
+.offer .capa-img, .oferta-combo .capa-img {
+  display: block; aspect-ratio: 3 / 2; max-width: 520px; margin: 0 auto 24px;
+  border-radius: 14px; overflow: hidden; background: var(--code-bg);
+}
+.offer .capa-img img, .oferta-combo .capa-img img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* Pague 2, leve 3: entre o pacote do vídeo e o combo */
+.oferta-leve {
+  text-align: center; border-radius: 22px; padding: 32px 24px 28px;
+  background: var(--accent-soft); box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.oferta-leve h3 { font: 800 clamp(22px, 3.6vw, 28px)/1.15 var(--font-display); letter-spacing: -.02em; margin: 14px 0 8px; color: var(--ink); }
+.oferta-leve-desc { margin: 0 auto 18px; max-width: 46ch; color: var(--ink-soft); }
+.oferta-leve .oferta-de { color: var(--ink-soft); }
+.oferta-leve .price { color: var(--ink); margin: 0; }
+
+/* Miniatura de cada pacote na lista do combo */
+.oferta-combo-nome { display: inline-flex; align-items: center; gap: 10px; min-width: 0; }
+.oferta-combo-mini { flex: none; width: 48px; height: 32px; border-radius: 6px; object-fit: cover; }
+.oferta-combo-itens li { align-items: center; }

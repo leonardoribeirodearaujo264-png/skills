@@ -297,3 +297,52 @@ export async function pedidoParaRetorno(db: SupabaseClient, id: string): Promise
   const r = z.object({ status: z.string(), valor_centavos: z.number(), comprador_email: z.string() }).parse(data);
   return { status: r.status, valorCentavos: r.valor_centavos, email: r.comprador_email };
 }
+
+export async function salvarDadosComprador(db: SupabaseClient, pedidoId: string, nome: string, telefone: string): Promise<void> {
+  const { error } = await db
+    .from("loja_pedidos")
+    .update({ comprador_nome: nome, comprador_telefone: telefone, atualizado_em: new Date().toISOString() })
+    .eq("id", pedidoId);
+  if (error) falhar("salvar dados do comprador", error);
+}
+
+export type PedidoParaPix = {
+  status: string;
+  valorCentavos: number;
+  email: string;
+  nome: string | null;
+  ofertaTitulo: string;
+  produtos: string[];
+  slugs: string[];
+};
+
+// Dados para gerar de novo o Pix de um pedido (página de pagamento aberta pelo e-mail)
+export async function pedidoParaPix(db: SupabaseClient, id: string): Promise<PedidoParaPix | null> {
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) return null;
+  const { data, error } = await db
+    .from("loja_pedidos")
+    .select("status, valor_centavos, comprador_email, comprador_nome, loja_ofertas(titulo), loja_pedido_itens(produto_slug, loja_produtos(titulo))")
+    .eq("id", id)
+    .maybeSingle();
+  if (error) falhar("ler pedido para Pix", error);
+  if (!data) return null;
+  const r = z
+    .object({
+      status: z.string(),
+      valor_centavos: z.number(),
+      comprador_email: z.string(),
+      comprador_nome: z.string().nullable(),
+      loja_ofertas: z.object({ titulo: z.string() }).nullable(),
+      loja_pedido_itens: z.array(z.object({ produto_slug: z.string(), loja_produtos: z.object({ titulo: z.string() }).nullable() })),
+    })
+    .parse(data);
+  return {
+    status: r.status,
+    valorCentavos: r.valor_centavos,
+    email: r.comprador_email,
+    nome: r.comprador_nome,
+    ofertaTitulo: r.loja_ofertas?.titulo ?? "Pacote",
+    produtos: r.loja_pedido_itens.map((i) => i.loja_produtos?.titulo ?? "").filter(Boolean),
+    slugs: r.loja_pedido_itens.map((i) => i.produto_slug),
+  };
+}

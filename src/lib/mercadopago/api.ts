@@ -24,7 +24,7 @@ type BaseCobranca = {
   urlNotificacao: string;
 };
 
-export type NovoPix = BaseCobranca & { expiraEm: Date };
+export type NovoPix = BaseCobranca & { expiraEm: Date; nome: { primeiro: string; sobrenome: string } | null };
 
 export type NovoCartao = BaseCobranca & {
   token: string;
@@ -50,6 +50,11 @@ const respostaPagamento = z.object({
   status: z.string(),
   status_detail: z.string().nullish(),
   payment_method_id: z.string().nullish(),
+  date_of_expiration: z.string().nullish(),
+  // QR do Pix ainda pendente, para mostrar de novo na página de pagamento
+  point_of_interaction: z
+    .object({ transaction_data: z.object({ qr_code: z.string().nullish(), qr_code_base64: z.string().nullish() }).nullish() })
+    .nullish(),
   external_reference: z.string().nullish(),
   transaction_amount: z.number(),
   currency_id: z.string(),
@@ -93,7 +98,10 @@ export function criarClienteMercadoPago(accessToken: string, fetchImpl: typeof f
       transaction_amount: p.valorCentavos / 100,
       description: p.descricao,
       payment_method_id: "pix",
-      payer: { email: p.email },
+      payer: {
+        email: p.email,
+        ...(p.nome ? { first_name: p.nome.primeiro, last_name: p.nome.sobrenome } : {}),
+      },
       external_reference: p.pedidoId,
       date_of_expiration: p.expiraEm.toISOString(),
       // Notificação só com endereço público; em localhost a tela consulta o pagamento direto
@@ -118,10 +126,10 @@ export function criarClienteMercadoPago(accessToken: string, fetchImpl: typeof f
   return {
     async criarPix(p) {
       // Mesmo pedido, mesma chave: clicar duas vezes devolve o mesmo Pix em vez de criar outro.
-      // Se o Pix devolvido já venceu, foi cancelado ou vence em menos de 5 min, gera outro com chave nova.
+      // Se o Pix devolvido já venceu, foi cancelado ou vence em menos de 3 min, gera outro com chave nova.
       const primeiro = await criarPixComChave(p, `pix-${p.pedidoId}`);
       const vence = primeiro.expiraEm ? Date.parse(primeiro.expiraEm) : Infinity;
-      if (primeiro.status === "pending" && vence > Date.now() + 5 * 60_000) return primeiro;
+      if (primeiro.status === "pending" && vence > Date.now() + 3 * 60_000) return primeiro;
       return criarPixComChave(p, `pix-${p.pedidoId}-${Date.now()}`);
     },
 

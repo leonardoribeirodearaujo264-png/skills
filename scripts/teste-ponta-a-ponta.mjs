@@ -46,9 +46,21 @@ try {
   // Sem login
   const loja = await pagina("/loja/");
   conferir("loja responde 200 para visitante", loja.status === 200, String(loja.status));
-  conferir("loja mostra R$ 37, R$ 67 e R$ 127 vindos do banco", ["37", "67", "127"].every((v) => loja.texto.includes(`<small>R$</small>${v}`)));
+  conferir("loja mostra a capa de cada pacote", ["times-de-agentes", "edicao-de-video", "design-copy-anuncios"].every((p) => loja.texto.includes(`/capas/${p}.webp`)));
+  conferir("loja mostra R$ 37, R$ 47 do leve 3 e R$ 127 vindos do banco", ["37", "47", "127"].every((v) => loja.texto.includes(`<small>R$</small>${v}`)));
   conferir("loja mostra o avulso de edição de vídeo a R$ 47", loja.texto.includes("R$\u00a047,00") || loja.texto.includes("R$&nbsp;47,00"));
   conferir("loja não mostra a oferta de cliente para visitante", !loja.texto.includes("Preço de cliente"));
+  // Catálogo da página inicial e página pública do pacote
+  const vitrine = await fetch(`${SITE}/api/loja/vitrine?pagina=`, { headers: bypass }).then((r) => r.json());
+  const cartoes = vitrine.catalogo ? [vitrine.catalogo.destaque, ...vitrine.catalogo.pacotes].filter(Boolean) : [];
+  conferir("página inicial recebe os 5 pacotes à venda e o combo", cartoes.length === 5 && vitrine.catalogo?.combo?.precoTexto.includes("127,00"), String(cartoes.length));
+  conferir("catálogo traz edição de vídeo a R$ 47 e capa com texto alternativo em todos", cartoes.find((c) => c.slug === "edicao-de-video")?.precoTexto.includes("47,00") && cartoes.every((c) => c.capa?.alt));
+  const capa = await fetch(`${SITE}${cartoes[0]?.capa?.webp ?? "/capas/x.webp"}`, { headers: bypass });
+  conferir("capa do catálogo responde 200 como WebP", capa.status === 200 && (capa.headers.get("content-type") ?? "").includes("webp"), String(capa.status));
+  const pp = await pagina(`/pacotes/${BLOQUEADO}/`);
+  conferir("página do pacote abre sem login, com preço do banco e compra direta", pp.status === 200 && /<h1>Equipe Completa de Agentes<\/h1>/.test(pp.texto) && pp.texto.includes("37,00") && pp.texto.includes(`/loja/checkout/?oferta=avulso&amp;produtos=${BLOQUEADO}`), String(pp.status));
+  conferir("página do pacote não cita o Mercado Pago", !pp.texto.includes("Mercado Pago"));
+  conferir("pacote inexistente responde 404", (await pagina("/pacotes/nao-existe/")).status === 404);
   // Compra sem login: do botão do vídeo ao checkout, sem passar pela tela de entrar
   const direta = await pagina(`/loja/comprar/?oferta=avulso&produtos=${COMPRADO}`);
   conferir("compra direta leva ao checkout, não ao login", direta.status === 303 && direta.local.includes("/loja/checkout/") && !direta.local.includes("/entrar/"), direta.local);
@@ -79,6 +91,7 @@ try {
 
   const membros = await pagina("/membros/", cookie);
   conferir("área de membros lista o produto comprado", membros.texto.includes(`/membros/${COMPRADO}/`));
+  conferir("área de membros mostra a capa do comprado e dos bloqueados", membros.texto.includes(`/capas/${COMPRADO}.webp`) && membros.texto.includes(`/capas/${BLOQUEADO}.webp`));
   conferir("área de membros mostra os outros como bloqueados com preço", membros.texto.includes("Outros pacotes") && membros.texto.includes(`produtos=${BLOQUEADO}`));
   conferir("cliente vê 20% de desconto nos outros pacotes (R$ 37,00 vira R$ 29,60)", membros.texto.includes("20% de desconto") && membros.texto.includes("29,60"));
   conferir("a vitrine não oferece o pacote que ele já tem", !membros.texto.includes(`produtos=${COMPRADO}`));

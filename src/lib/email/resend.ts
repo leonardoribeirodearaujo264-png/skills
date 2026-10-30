@@ -3,7 +3,17 @@ import { z } from "zod";
 // Envio de e-mail pela API do Resend (POST https://api.resend.com/emails, Authorization: Bearer).
 // A chave de idempotência evita e-mail repetido quando a mesma operação roda de novo (vale 24 h).
 
-export type NovoEmail = { para: string; assunto: string; html: string; texto: string; idempotencia?: string };
+// Anexo em base64; com idConteudo ele vira imagem dentro do corpo (no HTML: <img src="cid:idConteudo">)
+export type Anexo = { nome: string; base64: string; tipo: string; idConteudo?: string };
+
+export type NovoEmail = {
+  para: string;
+  assunto: string;
+  html: string;
+  texto: string;
+  idempotencia?: string;
+  anexos?: Anexo[];
+};
 
 export class ErroEmail extends Error {
   constructor(readonly status: number, detalhe: string) {
@@ -25,7 +35,23 @@ export async function enviarEmail(
       "Content-Type": "application/json",
       ...(e.idempotencia ? { "Idempotency-Key": e.idempotencia.slice(0, 256) } : {}),
     },
-    body: JSON.stringify({ from: remetente, to: [e.para], subject: e.assunto, html: e.html, text: e.texto }),
+    body: JSON.stringify({
+      from: remetente,
+      to: [e.para],
+      subject: e.assunto,
+      html: e.html,
+      text: e.texto,
+      ...(e.anexos?.length
+        ? {
+            attachments: e.anexos.map((a) => ({
+              filename: a.nome,
+              content: a.base64,
+              content_type: a.tipo,
+              ...(a.idConteudo ? { content_id: a.idConteudo } : {}),
+            })),
+          }
+        : {}),
+    }),
     signal: AbortSignal.timeout(10_000),
   });
   const corpo: unknown = await r.json().catch(() => ({}));
