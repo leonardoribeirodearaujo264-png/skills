@@ -4,7 +4,7 @@ Passo a passo único para pôr a loja no ar. Nenhum segredo vai para o repositó
 
 ## 1. Banco (Supabase, mesmo projeto da automação)
 
-1. Abra o SQL Editor do projeto e rode `banco/0001_loja.sql` inteiro, uma vez. Ele cria só tabelas com prefixo `loja_`, as funções de liberação (executáveis só pela service_role), o RLS e os buckets privados `loja-aulas` e `loja-pacotes`. Não mexe nas tabelas da automação.
+1. Abra o SQL Editor do projeto e rode `banco/0001_loja.sql` inteiro, uma vez (se uma versão anterior dele já foi rodada, rode `banco/0002_ajuste.sql`, que pode rodar mais de uma vez). Ele cria só tabelas com prefixo `loja_`, as funções de liberação (executáveis só pela service_role), o RLS e os buckets privados `loja-aulas` e `loja-pacotes`. Não mexe nas tabelas da automação.
 2. Preços: tabela `loja_ofertas` (`preco_centavos`: avulso 3700, leve 3 6700, combo 12700) e `loja_produtos.preco_avulso_centavos` (preço próprio no avulso; hoje só edição de vídeo, 4700). `loja_oferta_itens` serve para ofertas de composição fixa. Mudou ali, a loja muda; não há preço no código.
 3. Desconto de cliente: a oferta `cliente` (um pacote, só para quem já comprou) nasce desativada. Para ligar:
    `update loja_ofertas set preco_centavos = <valor em centavos>, ativo = true where codigo = 'cliente';`
