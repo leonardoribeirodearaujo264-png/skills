@@ -81,7 +81,10 @@ function repoEmMemoria(pedido: PedidoSalvo, itens: string[]) {
 
 function mpCom(pagamentos: Record<string, Pagamento>): ClienteMercadoPago {
   return {
-    criarPreferencia: async () => {
+    criarPix: async () => {
+      throw new Error("não usado");
+    },
+    pagarComCartao: async () => {
       throw new Error("não usado");
     },
     buscarPagamento: async (id) => pagamentos[id] ?? null,
