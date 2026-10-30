@@ -266,6 +266,7 @@ describe("catálogo da página inicial", () => {
       expect(p.capa?.webp).toBe(`/capas/${p.slug}.webp`);
       expect(existsSync(new URL(`../public${p.capa!.webp}`, import.meta.url)), p.slug).toBe(true);
       expect(existsSync(new URL(`../public${p.capa!.png}`, import.meta.url)), p.slug).toBe(true);
+      expect(existsSync(new URL(`../public${p.capa!.mini}`, import.meta.url)), p.slug).toBe(true);
       expect(p.paginaUrl).toBe(`/pacotes/${p.slug}/`);
       expect(p.comprarUrl).toBe(`/loja/checkout/?oferta=avulso&produtos=${p.slug}`);
     }

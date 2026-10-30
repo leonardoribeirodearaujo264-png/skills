@@ -108,3 +108,8 @@
 .oferta-leve-desc { margin: 0 auto 18px; max-width: 46ch; color: var(--ink-soft); }
 .oferta-leve .oferta-de { color: var(--ink-soft); }
 .oferta-leve .price { color: var(--ink); margin: 0; }
+
+/* Miniatura de cada pacote na lista do combo */
+.oferta-combo-nome { display: inline-flex; align-items: center; gap: 10px; min-width: 0; }
+.oferta-combo-mini { flex: none; width: 48px; height: 32px; border-radius: 6px; object-fit: cover; }
+.oferta-combo-itens li { align-items: center; }

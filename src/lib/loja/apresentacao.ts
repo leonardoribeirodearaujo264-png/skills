@@ -2,7 +2,8 @@
 // Preço, título, resumo, ordem e contagens vêm sempre de loja_produtos. Tudo aqui foi conferido no README
 // e no roteiro da aula de cada pacote (pacotes/<slug>/): nada de benefício que o pacote não entrega.
 
-export type Capa = { webp: string; png: string; alt: string };
+// mini: 240x160 em WebP (~5 KB), para miniaturas ao lado do nome
+export type Capa = { webp: string; png: string; mini: string; alt: string };
 
 export type ItemFluxo = { titulo: string; texto: string };
 
@@ -62,6 +63,7 @@ const APRESENTACOES: Record<string, Apresentacao> = {
 export const CAPA_COMBO: Capa = {
   webp: "/capas/combo.webp",
   png: "/capas/combo.png",
+  mini: "/capas/mini/combo.webp",
   alt: "Capa do pacote completo: todos os pacotes empilhados.",
 };
 
@@ -73,7 +75,7 @@ export function apresentacao(slug: string): Apresentacao | null {
 export function capaDoPacote(slug: string, titulo: string): Capa | null {
   const a = APRESENTACOES[slug];
   if (!a) return null;
-  return { webp: `/capas/${slug}.webp`, png: `/capas/${slug}.png`, alt: a.capaAlt || `Capa do pacote ${titulo}.` };
+  return { webp: `/capas/${slug}.webp`, png: `/capas/${slug}.png`, mini: `/capas/mini/${slug}.webp`, alt: a.capaAlt || `Capa do pacote ${titulo}.` };
 }
 
 export function urlDoPacote(slug: string): string {

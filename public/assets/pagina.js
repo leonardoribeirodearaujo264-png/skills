@@ -121,7 +121,16 @@ function cardCombo(c, comoTitulo) {
   const lista = el("ul", "oferta-combo-itens");
   lista.replaceChildren(...c.itens.map(i => {
     const li = el("li");
-    li.append(el("span", null, i.titulo), el("span", "oferta-combo-qtd", i.conteudo));
+    const nome = el("span", "oferta-combo-nome");
+    if (i.mini) {
+      // Miniatura decorativa: o nome do pacote vem logo ao lado
+      const img = document.createElement("img");
+      Object.assign(img, { src: i.mini, alt: "", width: 240, height: 160, loading: "lazy", decoding: "async" });
+      img.className = "oferta-combo-mini";
+      nome.append(img);
+    }
+    nome.append(i.titulo);
+    li.append(nome, el("span", "oferta-combo-qtd", i.conteudo));
     return li;
   }));
   const precos = el("div", "oferta-combo-precos");

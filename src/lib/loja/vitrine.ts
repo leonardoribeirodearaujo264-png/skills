@@ -19,7 +19,7 @@ export type VitrineCombo = {
   titulo: string;
   capa: Capa;
   descricao: string;
-  itens: { titulo: string; conteudo: string }[];
+  itens: { titulo: string; conteudo: string; mini: string | null }[];
   somaTexto: string | null;
   precoTexto: string;
   economiaTexto: string | null;
@@ -153,7 +153,7 @@ export function montarVitrine(catalogo: Catalogo, pagina: string): Vitrine {
       capa: CAPA_COMBO,
       // Deixa claro que a contagem inclui skills de outros autores, instaladas pelo instalador a partir do repositório original
       descricao: `Os ${catalogo.produtos.length} pacotes de uma vez, com aula, prompts e instalador. As contagens somam as skills autorais e as de outros autores que o instalador seleciona e instala.`,
-      itens: catalogo.produtos.map((p) => ({ titulo: p.titulo, conteudo: contagem(p) })),
+      itens: catalogo.produtos.map((p) => ({ titulo: p.titulo, conteudo: contagem(p), mini: capaDoPacote(p.slug, p.titulo)?.mini ?? null })),
       somaTexto: economia !== null && soma !== null ? formatarReais(soma) : null,
       precoTexto: formatarReais(todos.precoCentavos),
       economiaTexto: economia !== null ? formatarReais(economia) : null,

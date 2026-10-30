@@ -104,3 +104,7 @@
   .cat-rodape .btn { width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) { .cat-skel { animation: none; } }
+
+/* Miniatura ao lado do nome do pacote (resumo do checkout, combo das páginas dos vídeos) */
+.capa-img.mini { flex: none; width: 54px; border-radius: 8px; }
+.pedido-pacote { display: inline-flex; align-items: center; gap: 10px; justify-content: flex-end; text-align: right; }

@@ -313,6 +313,7 @@ export type PedidoParaPix = {
   nome: string | null;
   ofertaTitulo: string;
   produtos: string[];
+  slugs: string[];
 };
 
 // Dados para gerar de novo o Pix de um pedido (página de pagamento aberta pelo e-mail)
@@ -320,7 +321,7 @@ export async function pedidoParaPix(db: SupabaseClient, id: string): Promise<Ped
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) return null;
   const { data, error } = await db
     .from("loja_pedidos")
-    .select("status, valor_centavos, comprador_email, comprador_nome, loja_ofertas(titulo), loja_pedido_itens(loja_produtos(titulo))")
+    .select("status, valor_centavos, comprador_email, comprador_nome, loja_ofertas(titulo), loja_pedido_itens(produto_slug, loja_produtos(titulo))")
     .eq("id", id)
     .maybeSingle();
   if (error) falhar("ler pedido para Pix", error);
@@ -332,7 +333,7 @@ export async function pedidoParaPix(db: SupabaseClient, id: string): Promise<Ped
       comprador_email: z.string(),
       comprador_nome: z.string().nullable(),
       loja_ofertas: z.object({ titulo: z.string() }).nullable(),
-      loja_pedido_itens: z.array(z.object({ loja_produtos: z.object({ titulo: z.string() }).nullable() })),
+      loja_pedido_itens: z.array(z.object({ produto_slug: z.string(), loja_produtos: z.object({ titulo: z.string() }).nullable() })),
     })
     .parse(data);
   return {
@@ -342,5 +343,6 @@ export async function pedidoParaPix(db: SupabaseClient, id: string): Promise<Ped
     nome: r.comprador_nome,
     ofertaTitulo: r.loja_ofertas?.titulo ?? "Pacote",
     produtos: r.loja_pedido_itens.map((i) => i.loja_produtos?.titulo ?? "").filter(Boolean),
+    slugs: r.loja_pedido_itens.map((i) => i.produto_slug),
   };
 }

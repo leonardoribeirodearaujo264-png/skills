@@ -18,7 +18,9 @@ function listar(itens: string[]): string {
   return itens.length <= 1 ? (itens[0] ?? "") : `${itens.slice(0, -1).join(", ")} e ${itens.at(-1)}`;
 }
 
-function montar(motivo: Motivo, codigo: string, link: string, pacotes: string[]): { assunto: string; html: string; texto: string } {
+type CapaEmail = { url: string; alt: string };
+
+function montar(motivo: Motivo, codigo: string, link: string, pacotes: string[], capa: CapaEmail | null): { assunto: string; html: string; texto: string } {
   const titulo = motivo === "compra" ? "Seu acesso está liberado" : "Seu código de acesso";
   // Na compra, o e-mail diz o que foi liberado neste pedido
   const comprados = listar(pacotes);
@@ -33,6 +35,7 @@ function montar(motivo: Motivo, codigo: string, link: string, pacotes: string[])
 <div style="max-width:480px;margin:0 auto;padding:32px 20px">
 <p style="font-size:13px;color:#565B66;margin:0 0 16px">Leonardo Araujo</p>
 <div style="background:#FFFFFF;border:1px solid #E3E1DA;border-radius:16px;padding:28px">
+${capa ? `<img src="${escaparHtml(capa.url)}" width="424" height="283" alt="${escaparHtml(capa.alt)}" style="display:block;width:100%;max-width:424px;height:auto;border-radius:12px;margin:0 0 20px">` : ""}
 <h1 style="font-size:22px;margin:0 0 10px">${escaparHtml(titulo)}</h1>
 <p style="font-size:15px;line-height:1.5;color:#565B66;margin:0 0 20px">${escaparHtml(intro)}</p>
 <p style="font-size:13px;color:#565B66;margin:0 0 6px">Código</p>
@@ -47,7 +50,7 @@ function montar(motivo: Motivo, codigo: string, link: string, pacotes: string[])
 export async function enviarAcesso(
   emailBruto: string,
   motivo: Motivo,
-  opcoes: { proximo?: string; idempotencia?: string; pacotes?: string[] } = {},
+  opcoes: { proximo?: string; idempotencia?: string; pacotes?: string[]; capa?: CapaEmail | null } = {},
 ): Promise<ResultadoAcesso> {
   const e = env();
   const email = emailBruto.trim().toLowerCase();
@@ -69,7 +72,7 @@ export async function enviarAcesso(
     token_hash: data.properties.hashed_token,
     type: "magiclink",
   })}`;
-  const msg = montar(motivo, data.properties.email_otp, link, opcoes.pacotes ?? []);
+  const msg = montar(motivo, data.properties.email_otp, link, opcoes.pacotes ?? [], opcoes.capa ?? null);
   await enviarEmail(e.RESEND_API_KEY, e.EMAIL_REMETENTE, { para: email, ...msg, idempotencia: opcoes.idempotencia });
   return "enviado";
 }
