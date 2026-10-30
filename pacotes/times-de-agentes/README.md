@@ -1,4 +1,4 @@
-# Times de agentes por área do negócio
+# Equipe Completa de Agentes
 
 Depois de instalar, você tem seis times de agentes trabalhando no seu Claude Code e no seu Codex: marketing, vendas, financeiro, atendimento, operações e conteúdo. Cada time tem um líder que divide o trabalho, dois especialistas que executam e um revisor que confere antes de chegar até você. Um diretor-geral recebe o seu pedido, escolhe o time e cobra a entrega. Nenhum agente publica, envia, compra ou paga nada sem o seu OK. E quando faltar uma área, uma skill entrevista você e monta o time novo.
 

@@ -280,7 +280,7 @@ export function SeletorLoja({ ofertas, produtos, possui, ofertaInicial, produtos
               </p>
               <p className="selo-mp">
                 <Icone nome="escudo" tamanho={14} />
-                Pagamento processado pelo Mercado Pago
+                Pagamento por Pix ou cartão
               </p>
             </div>
           </div>

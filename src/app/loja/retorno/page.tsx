@@ -81,8 +81,8 @@ export default async function Retorno({ searchParams }: { searchParams: Busca })
                 <h1>{b.status === "approved" ? "Confirmando o pagamento" : "Pagamento em análise"}</h1>
                 <p className="lead muted">
                   {b.status === "approved"
-                    ? "O Mercado Pago aprovou. Estamos liberando o seu acesso, leva poucos segundos."
-                    : "Assim que o Mercado Pago confirmar, o acesso é liberado e aparece na sua área."}
+                    ? "Pagamento aprovado. Estamos liberando o seu acesso, leva poucos segundos."
+                    : "Assim que o pagamento for confirmado, o acesso é liberado e aparece na sua área."}
                 </p>
                 <Resumo valor={pedido.valorCentavos} status="Aguardando confirmação" />
                 <Atualizador ativo />
@@ -97,7 +97,7 @@ export default async function Retorno({ searchParams }: { searchParams: Busca })
                 </span>
                 <h1>{pedido.status === "reembolsado" ? "Pedido reembolsado" : "Pagamento não aprovado"}</h1>
                 <Alerta tipo="danger" titulo="Nenhum valor foi liberado para este pedido">
-                  Tente de novo com outro meio de pagamento. Se o valor aparecer na fatura, o Mercado Pago estorna automaticamente.
+                  Tente de novo com outro meio de pagamento. Se o valor aparecer na fatura, ele é estornado automaticamente.
                 </Alerta>
                 <Link className="btn lg" href="/loja/">
                   Tentar de novo

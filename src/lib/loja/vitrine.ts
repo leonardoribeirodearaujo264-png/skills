@@ -1,4 +1,5 @@
 import { ehAvulsoPorProduto, formatarReais, precoNaOferta, somaAvulsos, type Catalogo, type Produto } from "./dominio";
+import { apresentacao, CAPA_COMBO, capaDoPacote, urlDoPacote, type Capa } from "./apresentacao";
 import { OFERTA_DOS_VIDEOS } from "./paginas-videos";
 
 // Dados do bloco de oferta no fim das páginas dos vídeos. Tudo calculado aqui, a partir do banco;
@@ -23,7 +24,26 @@ export type VitrineCombo = {
   comprarUrl: string;
 };
 
-export type Vitrine = { pacote: VitrinePacote | null; combo: VitrineCombo | null };
+// Catálogo completo da página inicial: todos os pacotes à venda, com capa, resumo e preço
+export type CartaoCatalogo = {
+  slug: string;
+  titulo: string;
+  resumo: string;
+  capa: Capa | null;
+  precoTexto: string;
+  comprarUrl: string;
+  paginaUrl: string;
+  numeros: { n: number; rotulo: string }[];
+};
+
+export type CatalogoVitrine = {
+  // O primeiro pela ordem do banco é o pacote principal
+  destaque: CartaoCatalogo | null;
+  pacotes: CartaoCatalogo[];
+  combo: { titulo: string; resumo: string; itens: string[]; capa: Capa; precoTexto: string; comprarUrl: string } | null;
+};
+
+export type Vitrine = { pacote: VitrinePacote | null; combo: VitrineCombo | null; catalogo: CatalogoVitrine | null };
 
 function plural(n: number, um: string, varios: string): string {
   return `${n} ${n === 1 ? um : varios}`;
@@ -37,10 +57,52 @@ function contagem(p: Produto): string {
   return partes.length ? partes.join(" e ") : "skills e agentes";
 }
 
-function urlComprar(oferta: string, produto?: string): string {
+export function urlComprar(oferta: string, produto?: string): string {
   const q = new URLSearchParams({ oferta });
   if (produto) q.set("produtos", produto);
   return `/loja/checkout/?${q}`;
+}
+
+// Números do pacote para a vitrine: os do banco e os extras conferidos em apresentacao.ts
+export function numerosDoPacote(p: Produto): { n: number; rotulo: string }[] {
+  const doBanco = [
+    { n: p.qtdAgentes, rotulo: p.qtdAgentes === 1 ? "agente" : "agentes" },
+    ...(apresentacao(p.slug)?.numerosExtras ?? []).map((x) => ({ n: x.n, rotulo: x.rotulo })),
+    { n: p.qtdSkills, rotulo: p.qtdSkills === 1 ? "skill" : "skills" },
+    { n: p.qtdPrompts, rotulo: p.qtdPrompts === 1 ? "prompt" : "prompts" },
+  ];
+  return doBanco.filter((x) => x.n > 0);
+}
+
+export function montarCatalogo(catalogo: Catalogo): CatalogoVitrine {
+  const avulso = catalogo.ofertas.find(ehAvulsoPorProduto);
+  const cartoes: CartaoCatalogo[] = avulso
+    ? catalogo.produtos.map((p) => ({
+        slug: p.slug,
+        titulo: p.titulo,
+        resumo: p.resumo,
+        capa: capaDoPacote(p.slug, p.titulo),
+        precoTexto: formatarReais(precoNaOferta(catalogo, avulso, p)),
+        comprarUrl: urlComprar(avulso.codigo, p.slug),
+        paginaUrl: urlDoPacote(p.slug),
+        numeros: numerosDoPacote(p),
+      }))
+    : [];
+  const todos = catalogo.ofertas.find((o) => o.tipo === "todos");
+  return {
+    destaque: cartoes[0] ?? null,
+    pacotes: cartoes.slice(1),
+    combo: todos
+      ? {
+          titulo: todos.titulo,
+          resumo: `Os ${catalogo.produtos.length} pacotes juntos, numa compra só.`,
+          itens: catalogo.produtos.map((p) => p.titulo),
+          capa: CAPA_COMBO,
+          precoTexto: formatarReais(todos.precoCentavos),
+          comprarUrl: urlComprar(todos.codigo),
+        }
+      : null,
+  };
 }
 
 export function montarVitrine(catalogo: Catalogo, pagina: string): Vitrine {
@@ -77,5 +139,7 @@ export function montarVitrine(catalogo: Catalogo, pagina: string): Vitrine {
       comprarUrl: urlComprar(todos.codigo),
     };
   }
-  return { pacote, combo };
+  // A página inicial mostra o catálogo inteiro no lugar do combo sozinho
+  if (pagina === "") return { pacote, combo: null, catalogo: montarCatalogo(catalogo) };
+  return { pacote, combo, catalogo: null };
 }

@@ -234,7 +234,7 @@ export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos
 
       <p className="selo-mp">
         <Icone nome="escudo" tamanho={14} />
-        Pagamento processado pelo Mercado Pago, sem sair desta página
+        Pix ou cartão, sem sair desta página
       </p>
     </div>
   );

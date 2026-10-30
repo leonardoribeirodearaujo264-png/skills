@@ -128,7 +128,7 @@ html, body { overflow-x: clip; }
 .inclui-item .r { font: 700 17px/1.25 var(--font-display); }
 .inclui-item p { margin: 0; font-size: 14px; color: var(--ink-soft); }
 .inclui-item.largo { grid-column: 1 / -1; }
-.extras { margin: 12px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.extras { margin: 12px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: 1fr; gap: 8px; }
 .extras li { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 12px; align-items: center; background: var(--surface); border-radius: 16px; box-shadow: 0 0 0 1px var(--line); padding: 14px 16px; font-size: 14px; color: var(--ink-soft); }
 .extras strong { display: block; font-weight: 600; color: var(--ink); font-size: 15px; }
 .extras .ic { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); }
@@ -190,7 +190,7 @@ html, body { overflow-x: clip; }
   .cta-final .acao { justify-items: stretch; }
   .inclui-item .n { font-size: 34px; }
 }
-@media (max-width: 380px) {
+@media (max-width: 340px) {
   .inclui-grade { grid-template-columns: 1fr; }
   .times { grid-template-columns: 1fr; }
 }

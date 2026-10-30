@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Protótipo: catálogo da página inicial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../public/assets/estilo.css">
+<link rel="stylesheet" href="../../src/app/globals.css">
+<link rel="stylesheet" href="catalogo.css">
+</head>
+<body>
+
+<nav class="proto-barra" aria-label="Controles do protótipo">
+  <span>Protótipo</span>
+  <span class="grupo">
+    <a data-estado-link="normal" href="index.html">Normal</a>
+    <a data-estado-link="carregando" href="index.html">Carregando</a>
+    <a data-estado-link="erro" href="index.html">Erro no preço</a>
+    <a data-estado-link="vazio" href="index.html">Vazio</a>
+  </span>
+  <span class="grupo">
+    <button type="button" data-tema="sistema">Sistema</button>
+    <button type="button" data-tema="claro">Claro</button>
+    <button type="button" data-tema="escuro">Escuro</button>
+  </span>
+  <button type="button" data-marcar-servidor aria-pressed="false">Marcar dados do servidor</button>
+  <a href="produto.html">Página do pacote</a>
+</nav>
+
+<!-- Topo atual da página inicial (sem mudança), só para dar contexto -->
+<a class="topbar" href="#"><span class="dot" aria-hidden="true"></span><span>Leonardo Araujo</span></a>
+
+<section class="catalogo" id="pacotes" aria-labelledby="cat-titulo">
+  <header class="cat-topo">
+    <span class="eyebrow" style="justify-self:start">pacotes pagos</span>
+    <h2 id="cat-titulo">Skills e agentes prontos para instalar</h2>
+    <p>Para Claude Code e Codex, com instalador e guia em português.</p>
+  </header>
+
+  <!-- Erro: preço não carregou. A lista continua visível, sem valor e sem compra -->
+  <div class="alert danger" role="alert" id="motivo-erro" data-mostrar="erro" style="margin-bottom:16px">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>
+    <div>
+      <strong>Não conseguimos carregar os preços agora.</strong>
+      <p>A compra volta assim que o preço carregar. Nada foi cobrado.</p>
+      <div class="acoes"><a class="btn secondary sm" href="?estado=normal">Tentar de novo</a></div>
+    </div>
+  </div>
+
+  <!-- Normal e erro -->
+  <ul class="cat-lista" data-mostrar="normal erro">
+
+    <!-- Pacote principal em destaque -->
+    <li class="largo revela">
+      <article class="cat-card destaque shell" aria-labelledby="p-times">
+        <div class="core">
+          <picture class="capa-img">
+            <source srcset="../../public/capas/times-de-agentes.webp" type="image/webp">
+            <img src="../../public/capas/times-de-agentes.png" width="1200" height="800" alt="Capa do pacote Equipe Completa de Agentes: um diretor no centro ligado a seis times." loading="eager" decoding="async">
+          </picture>
+          <div>
+            <div class="cat-corpo">
+              <span class="chip accent marcador">Pacote principal</span>
+              <h3 id="p-times"><a href="produto.html">Equipe Completa de Agentes</a></h3>
+              <p class="cat-resumo">25 agentes por área do negócio, do marketing ao financeiro, cada time com líder e revisor.</p>
+              <ul class="numeros" aria-label="O que vem">
+                <li><b>25</b> agentes</li>
+                <li><b>6</b> times</li>
+                <li><b>3</b> skills</li>
+                <li><b>8</b> prompts</li>
+              </ul>
+            </div>
+            <div class="cat-rodape">
+              <div>
+                <span class="preco-rotulo">Pacote avulso</span>
+                <span class="preco" data-fonte="servidor" data-centavos="3700">R$ 37,00</span>
+              </div>
+              <a class="btn" data-comprar href="/loja/checkout/?oferta=avulso&amp;produtos=times-de-agentes">
+                <span data-texto>Comprar</span>
+                <span class="ico" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+    </li>
+
+    <li class="revela">
+      <article class="cat-card shell" aria-labelledby="p-design">
+        <div class="core">
+          <picture class="capa-img">
+            <source srcset="../../public/capas/design-copy-anuncios.webp" type="image/webp">
+            <img src="../../public/capas/design-copy-anuncios.png" width="1200" height="800" alt="Capa do pacote Design, copy, anúncios e velocidade: uma página, um anúncio e um medidor de velocidade." loading="lazy" decoding="async">
+          </picture>
+          <div class="cat-corpo">
+            <h3 id="p-design"><a href="#">Design, copy, anúncios e velocidade</a></h3>
+            <p class="cat-resumo">Páginas com cara de produto profissional, texto que vende, anúncios e site rápido.</p>
+          </div>
+          <div class="cat-rodape">
+            <span class="preco" data-fonte="servidor" data-centavos="3700">R$ 37,00</span>
+            <a class="btn sm" data-comprar href="/loja/checkout/?oferta=avulso&amp;produtos=design-copy-anuncios"><span data-texto>Comprar</span></a>
+          </div>
+        </div>
+      </article>
+    </li>
+
+    <li class="revela">
+      <article class="cat-card shell" aria-labelledby="p-video">
+        <div class="core">
+          <picture class="capa-img">
+            <source srcset="../../public/capas/edicao-de-video.webp" type="image/webp">
+            <img src="../../public/capas/edicao-de-video.png" width="1200" height="800" alt="Capa do pacote Edição de vídeo por skills: tela vertical com legenda, tesoura e linha do tempo." loading="lazy" decoding="async">
+          </picture>
+          <div class="cat-corpo">
+            <h3 id="p-video"><a href="#">Edição de vídeo por skills</a></h3>
+            <p class="cat-resumo">Corte, legenda e montagem de Reels, Shorts e aulas pedindo em português.</p>
+          </div>
+          <div class="cat-rodape">
+            <span class="preco" data-fonte="servidor" data-centavos="4700">R$ 47,00</span>
+            <a class="btn sm" data-comprar href="/loja/checkout/?oferta=avulso&amp;produtos=edicao-de-video"><span data-texto>Comprar</span></a>
+          </div>
+        </div>
+      </article>
+    </li>
+
+    <li class="revela">
+      <article class="cat-card shell" aria-labelledby="p-motion">
+        <div class="core">
+          <picture class="capa-img">
+            <source srcset="../../public/capas/motion-mockup-fontes.webp" type="image/webp">
+            <img src="../../public/capas/motion-mockup-fontes.png" width="1200" height="800" alt="Capa do pacote Motion, mockup e fontes: notebook com tipografia, celular e trilha de animação." loading="lazy" decoding="async">
+          </picture>
+          <div class="cat-corpo">
+            <h3 id="p-motion"><a href="#">Motion, mockup e fontes</a></h3>
+            <p class="cat-resumo">Animações, mockups de produto e pares de fontes sem programa de design.</p>
+          </div>
+          <div class="cat-rodape">
+            <span class="preco" data-fonte="servidor" data-centavos="3700">R$ 37,00</span>
+            <a class="btn sm" data-comprar href="/loja/checkout/?oferta=avulso&amp;produtos=motion-mockup-fontes"><span data-texto>Comprar</span></a>
+          </div>
+        </div>
+      </article>
+    </li>
+
+    <li class="revela">
+      <article class="cat-card shell" aria-labelledby="p-prog">
+        <div class="core">
+          <picture class="capa-img">
+            <source srcset="../../public/capas/programacao-sem-codigo.webp" type="image/webp">
+            <img src="../../public/capas/programacao-sem-codigo.png" width="1200" height="800" alt="Capa do pacote Programação para quem não programa: terminal, bloco de código e sinal de concluído." loading="lazy" decoding="async">
+          </picture>
+          <div class="cat-corpo">
+            <h3 id="p-prog"><a href="#">Programação para quem não programa</a></h3>
+            <p class="cat-resumo">Do pedido em português ao projeto no ar, com testes e revisão de segurança.</p>
+          </div>
+          <div class="cat-rodape">
+            <span class="preco" data-fonte="servidor" data-centavos="3700">R$ 37,00</span>
+            <a class="btn sm" data-comprar href="/loja/checkout/?oferta=avulso&amp;produtos=programacao-sem-codigo"><span data-texto>Comprar</span></a>
+          </div>
+        </div>
+      </article>
+    </li>
+
+    <!-- Combo -->
+    <li class="largo revela">
+      <article class="cat-card combo shell" aria-labelledby="p-combo">
+        <div class="core">
+          <picture class="capa-img">
+            <source srcset="../../public/capas/combo.webp" type="image/webp">
+            <img src="../../public/capas/combo.png" width="1200" height="800" alt="Capa do Pacote completo: os cinco pacotes empilhados." loading="lazy" decoding="async">
+          </picture>
+          <div>
+            <div class="cat-corpo">
+              <h3 id="p-combo"><a href="#">Pacote completo</a></h3>
+              <p class="cat-resumo">Os 5 pacotes juntos, numa compra só.</p>
+              <ul class="combo-itens">
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Equipe Completa de Agentes</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Design, copy, anúncios e velocidade</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Edição de vídeo por skills</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Motion, mockup e fontes</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Programação para quem não programa</li>
+              </ul>
+            </div>
+            <div class="cat-rodape">
+              <div>
+                <span class="preco-rotulo">Os 5 pacotes</span>
+                <span class="preco" data-fonte="servidor" data-centavos="12700">R$ 127,00</span>
+              </div>
+              <a class="btn" data-comprar href="/loja/checkout/?oferta=combo">
+                <span data-texto>Comprar o completo</span>
+                <span class="ico" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+    </li>
+  </ul>
+
+  <p class="cat-nota" data-mostrar="normal erro">Quer escolher três? <a href="/loja/">Monte o seu pedido na loja</a>.</p>
+
+  <!-- Carregando -->
+  <div data-mostrar="carregando" aria-busy="true">
+    <span class="sr-only" role="status">Carregando pacotes</span>
+    <ul class="cat-lista" aria-hidden="true">
+      <li class="largo"><div class="cat-card shell"><div class="core" style="padding-bottom:20px"><span class="skel capa" style="max-width:520px"></span><div class="cat-corpo"><span class="skel" style="width:60%;height:26px"></span><span class="skel" style="width:90%;height:14px"></span></div></div></div></li>
+      <li><div class="cat-card shell"><div class="core" style="padding-bottom:20px"><span class="skel capa"></span><div class="cat-corpo"><span class="skel" style="width:70%;height:20px"></span><span class="skel" style="width:95%;height:14px"></span><span class="skel" style="width:30%;height:28px;margin-top:12px"></span></div></div></div></li>
+      <li><div class="cat-card shell"><div class="core" style="padding-bottom:20px"><span class="skel capa"></span><div class="cat-corpo"><span class="skel" style="width:70%;height:20px"></span><span class="skel" style="width:95%;height:14px"></span><span class="skel" style="width:30%;height:28px;margin-top:12px"></span></div></div></div></li>
+    </ul>
+  </div>
+
+  <!-- Vazio: nenhum pacote ativo no banco -->
+  <div class="shell" data-mostrar="vazio">
+    <div class="core vazio-box">
+      <span class="icone-grande" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7.5L12 3l8.5 4.5v9L12 21l-8.5-4.5z"/><path d="M3.5 7.5L12 12l8.5-4.5M12 12v9"/></svg></span>
+      <h3 style="margin:0;font:700 20px/1.2 var(--font-display)">Os pacotes voltam em breve</h3>
+      <p class="muted" style="margin:0;max-width:42ch">Enquanto isso, os prompts grátis dos vídeos continuam logo acima.</p>
+    </div>
+  </div>
+</section>
+
+<footer>© 2026 Leonardo Araujo</footer>
+<script src="proto.js"></script>
+</body>
+</html>

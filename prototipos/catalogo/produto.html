@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Equipe Completa de Agentes | Leonardo Araujo</title>
+<meta name="description" content="25 agentes por área do negócio, do marketing ao financeiro, cada time com líder e revisor. Para Claude Code e Codex.">
+<meta property="og:image" content="/capas/times-de-agentes.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="../../public/capas/times-de-agentes.webp" type="image/webp">
+<link rel="stylesheet" href="../../public/assets/estilo.css">
+<link rel="stylesheet" href="../../src/app/globals.css">
+<link rel="stylesheet" href="catalogo.css">
+</head>
+<body class="pp-body">
+
+<nav class="proto-barra" aria-label="Controles do protótipo">
+  <span>Protótipo</span>
+  <span class="grupo">
+    <a data-estado-link="normal" href="produto.html">Normal</a>
+    <a data-estado-link="carregando" href="produto.html">Carregando preço</a>
+    <a data-estado-link="erro" href="produto.html">Erro no preço</a>
+    <a data-estado-link="vazio" href="produto.html">Fora de venda</a>
+  </span>
+  <span class="grupo">
+    <button type="button" data-tema="sistema">Sistema</button>
+    <button type="button" data-tema="claro">Claro</button>
+    <button type="button" data-tema="escuro">Escuro</button>
+  </span>
+  <button type="button" data-marcar-servidor aria-pressed="false">Marcar dados do servidor</button>
+  <a href="index.html">Catálogo</a>
+</nav>
+
+<header class="site-head">
+  <a class="brand" href="#"><span class="dot" aria-hidden="true"></span>Leonardo Araujo</a>
+  <nav class="nav" aria-label="Principal">
+    <a href="/loja/">Loja</a>
+    <a href="/membros/" class="so-desk">Minha área</a>
+    <a href="/entrar/">Entrar</a>
+  </nav>
+</header>
+
+<main class="pp">
+  <ol class="migalha" aria-label="Você está em">
+    <li><a href="/">Início</a></li>
+    <li><a href="index.html">Pacotes</a></li>
+    <li aria-current="page">Equipe Completa de Agentes</li>
+  </ol>
+
+  <div class="pp-grid">
+    <div class="pp-head">
+      <span class="eyebrow">Pacote principal · Claude Code e Codex</span>
+      <h1>Equipe Completa de Agentes</h1>
+    </div>
+
+    <!-- Painel de compra: logo abaixo do título no celular, fixo à direita no desktop -->
+    <aside class="pp-painel" aria-label="Comprar">
+      <div class="painel shell">
+        <div class="core">
+          <picture class="capa-img">
+            <source srcset="../../public/capas/times-de-agentes.webp" type="image/webp">
+            <img src="../../public/capas/times-de-agentes.png" width="1200" height="800" alt="Capa do pacote Equipe Completa de Agentes: um diretor no centro ligado a seis times." fetchpriority="high" decoding="async">
+          </picture>
+
+          <div class="painel-linha" data-mostrar="normal erro">
+            <div class="painel-preco">
+              <div>
+                <span class="preco-rotulo">Pacote avulso</span>
+                <span class="preco grande" data-fonte="servidor" data-centavos="3700">R$ 37,00</span>
+              </div>
+              <a class="btn" data-comprar data-observa-compra href="/loja/checkout/?oferta=avulso&amp;produtos=times-de-agentes">
+                <span data-texto>Comprar</span>
+                <span class="ico" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
+              </a>
+            </div>
+            <p class="alert danger" role="alert" id="motivo-erro" data-mostrar="erro" style="margin:0;display:block">
+              <strong>O preço não carregou.</strong> A compra volta assim que carregar. Nada foi cobrado. <a href="?estado=normal">Tentar de novo</a>
+            </p>
+            <ul class="painel-garantias">
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"/><path d="M8 12h8"/></svg>Pix ou cartão, pelo Mercado Pago</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 19.5h14"/></svg>Download na sua área de membros</li>
+            </ul>
+          </div>
+
+          <!-- Carregando o preço -->
+          <div class="painel-linha" data-mostrar="carregando" aria-busy="true">
+            <span class="sr-only" role="status">Carregando o preço</span>
+            <div class="painel-preco" aria-hidden="true">
+              <div style="display:grid;gap:8px"><span class="skel" style="width:90px;height:12px"></span><span class="skel" style="width:150px;height:40px"></span></div>
+              <span class="skel" style="width:120px;height:48px;border-radius:14px"></span>
+            </div>
+          </div>
+
+          <!-- Fora de venda (produto inativo no banco) -->
+          <div class="painel-linha" data-mostrar="vazio">
+            <div class="alert warn" style="margin:0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg>
+              <div><strong>Fora de venda no momento</strong><p>Quem já comprou continua com acesso na área de membros.</p></div>
+            </div>
+            <a class="btn secondary" href="index.html">Ver os outros pacotes</a>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <p class="lead pp-lead">25 agentes por área do negócio, do marketing ao financeiro, cada time com líder e revisor. Um diretor-geral recebe o seu pedido, escolhe o time e cobra a entrega.</p>
+
+    <div class="pp-corpo">
+      <section class="pp-secao revela" id="o-que-vem" aria-labelledby="h-vem">
+        <h2 id="h-vem">O que vem no pacote</h2>
+        <p class="sub">Tudo em português, nos formatos do Claude Code e do Codex.</p>
+        <ul class="inclui-grade">
+          <li class="inclui-item"><span class="n num">25</span><span class="r">agentes</span><p>O diretor-geral e seis times, cada um com líder, dois especialistas e revisor.</p></li>
+          <li class="inclui-item"><span class="n num">6</span><span class="r">times</span><p>Marketing, vendas, financeiro, atendimento, operações e conteúdo.</p></li>
+          <li class="inclui-item"><span class="n num">3</span><span class="r">skills</span><p>Uma autoral, que monta um time novo para qualquer área, e duas gratuitas de código aberto.</p></li>
+          <li class="inclui-item"><span class="n num">8</span><span class="r">prompts prontos</span><p>Um por time, um para o diretor-geral e um para criar um time novo.</p></li>
+        </ul>
+        <ul class="extras">
+          <li><span class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none"/></svg></span><span><strong>Aula de 56 s</strong>Da instalação ao primeiro pedido para um time.</span></li>
+          <li><span class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M7 9.5l3 2.5-3 2.5M12.5 15h4.5"/></svg></span><span><strong>Instaladores</strong>Para Claude Code e Codex, no Windows, Mac e Linux.</span></li>
+          <li><span class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5h10l4 4V19.5H5z"/><path d="M8.5 11h7M8.5 14.5h7M8.5 7.5h3"/></svg></span><span><strong>Guia em português</strong>Instalação e uso, passo a passo.</span></li>
+        </ul>
+      </section>
+
+      <section class="pp-secao revela" id="times" aria-labelledby="h-times">
+        <h2 id="h-times">Os 6 times</h2>
+        <p class="sub">Cada um com líder, dois especialistas e revisor.</p>
+        <ul class="times">
+          <li><span class="ic" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4h3l7 4V6L7 10z"/><path d="M18 9.5a4 4 0 0 1 0 5"/></svg></span>Marketing</li>
+          <li><span class="ic" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19v-4M10 19v-8M15 19V8M20 19V4"/></svg></span>Vendas</li>
+          <li><span class="ic" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M14.5 9.5c-.5-1-1.5-1.5-2.5-1.5-1.4 0-2.5.8-2.5 2s1.1 1.7 2.5 2 2.5.8 2.5 2-1.1 2-2.5 2c-1 0-2-.5-2.5-1.5M12 6.5V8M12 16v1.5"/></svg></span>Financeiro</li>
+          <li><span class="ic" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v7a2.5 2.5 0 0 1-2.5 2.5H10l-4 4v-4h0A2 2 0 0 1 4 14z"/></svg></span>Atendimento</li>
+          <li><span class="ic" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg></span>Operações</li>
+          <li><span class="ic" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3.5" width="14" height="17" rx="2.5"/><path d="M10.5 9.5l4 2.5-4 2.5z" fill="currentColor"/></svg></span>Conteúdo</li>
+        </ul>
+      </section>
+
+      <section class="pp-secao revela" id="como" aria-labelledby="h-como">
+        <h2 id="h-como">Como o pedido anda</h2>
+        <p class="sub">Você fala com um só agente. Ele organiza o resto.</p>
+        <ol class="fluxo">
+          <li><strong>Você pede</strong><span>Em português, para o diretor-geral.</span></li>
+          <li><strong>Diretor escolhe o time</strong><span>E cobra a entrega.</span></li>
+          <li><strong>Líder divide</strong><span>Dois especialistas executam.</span></li>
+          <li><strong>Revisor confere</strong><span>Antes de chegar até você.</span></li>
+        </ol>
+        <p class="fluxo-nota"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6z"/></svg>Nenhum agente publica, envia, compra ou paga nada sem o seu OK.</p>
+      </section>
+
+      <section class="cta-final shell revela" aria-labelledby="h-cta" data-mostrar="normal erro carregando">
+        <div class="core">
+          <div>
+            <h2 id="h-cta">Sua equipe de 25 agentes</h2>
+            <p>Para Claude Code e Codex, com aula de 56 s e guia em português.</p>
+          </div>
+          <div class="acao">
+            <span class="preco" data-fonte="servidor" data-centavos="3700">R$ 37,00</span>
+            <a class="btn" data-comprar data-observa-compra href="/loja/checkout/?oferta=avulso&amp;produtos=times-de-agentes">
+              <span data-texto>Comprar agora</span>
+              <span class="ico" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <p class="cat-nota">Quer os 5 pacotes? <a href="index.html#pacotes">O Pacote completo sai por <span data-fonte="servidor" data-centavos="12700">R$ 127,00</span></a>.</p>
+    </div>
+  </div>
+</main>
+
+<!-- Barra fixa no celular: aparece quando os botões de compra saem da tela -->
+<div class="barra-compra" aria-hidden="true" inert data-mostrar="normal">
+  <div>
+    <span class="nome">Equipe Completa de Agentes</span><br>
+    <span class="preco" data-fonte="servidor" data-centavos="3700">R$ 37,00</span>
+  </div>
+  <a class="btn" data-comprar href="/loja/checkout/?oferta=avulso&amp;produtos=times-de-agentes"><span data-texto>Comprar</span></a>
+</div>
+
+<footer>© 2026 Leonardo Araujo</footer>
+<script src="proto.js"></script>
+</body>
+</html>

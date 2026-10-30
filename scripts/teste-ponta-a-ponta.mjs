@@ -49,6 +49,17 @@ try {
   conferir("loja mostra R$ 37, R$ 67 e R$ 127 vindos do banco", ["37", "67", "127"].every((v) => loja.texto.includes(`<small>R$</small>${v}`)));
   conferir("loja mostra o avulso de edição de vídeo a R$ 47", loja.texto.includes("R$\u00a047,00") || loja.texto.includes("R$&nbsp;47,00"));
   conferir("loja não mostra a oferta de cliente para visitante", !loja.texto.includes("Preço de cliente"));
+  // Catálogo da página inicial e página pública do pacote
+  const vitrine = await fetch(`${SITE}/api/loja/vitrine?pagina=`, { headers: bypass }).then((r) => r.json());
+  const cartoes = vitrine.catalogo ? [vitrine.catalogo.destaque, ...vitrine.catalogo.pacotes].filter(Boolean) : [];
+  conferir("página inicial recebe os 5 pacotes à venda e o combo", cartoes.length === 5 && vitrine.catalogo?.combo?.precoTexto.includes("127,00"), String(cartoes.length));
+  conferir("catálogo traz edição de vídeo a R$ 47 e capa com texto alternativo em todos", cartoes.find((c) => c.slug === "edicao-de-video")?.precoTexto.includes("47,00") && cartoes.every((c) => c.capa?.alt));
+  const capa = await fetch(`${SITE}${cartoes[0]?.capa?.webp ?? "/capas/x.webp"}`, { headers: bypass });
+  conferir("capa do catálogo responde 200 como WebP", capa.status === 200 && (capa.headers.get("content-type") ?? "").includes("webp"), String(capa.status));
+  const pp = await pagina(`/pacotes/${BLOQUEADO}/`);
+  conferir("página do pacote abre sem login, com preço do banco e compra direta", pp.status === 200 && /<h1>Equipe Completa de Agentes<\/h1>/.test(pp.texto) && pp.texto.includes("37,00") && pp.texto.includes(`/loja/checkout/?oferta=avulso&amp;produtos=${BLOQUEADO}`), String(pp.status));
+  conferir("página do pacote não cita o Mercado Pago", !pp.texto.includes("Mercado Pago"));
+  conferir("pacote inexistente responde 404", (await pagina("/pacotes/nao-existe/")).status === 404);
   // Compra sem login: do botão do vídeo ao checkout, sem passar pela tela de entrar
   const direta = await pagina(`/loja/comprar/?oferta=avulso&produtos=${COMPRADO}`);
   conferir("compra direta leva ao checkout, não ao login", direta.status === 303 && direta.local.includes("/loja/checkout/") && !direta.local.includes("/entrar/"), direta.local);

@@ -18,7 +18,7 @@ export function Atualizador({ ativo }: { ativo: boolean }) {
   if (!ativo) return null;
   return tentativas >= 20 ? (
     <p className="small muted">
-      Ainda sem confirmação. Pode fechar esta página: o acesso aparece na sua área assim que o Mercado Pago confirmar.
+      Ainda sem confirmação. Pode fechar esta página: o acesso aparece na sua área assim que o pagamento for confirmado.
     </p>
   ) : (
     <div className="progresso" role="progressbar" aria-label="Confirmando o pagamento">

@@ -52,7 +52,7 @@ export default async function Membros() {
         {pendente && (
           <div style={{ marginBottom: 20 }}>
             <Alerta tipo="warn" titulo="Você tem um pagamento aguardando confirmação">
-              Assim que o Mercado Pago confirmar, o produto aparece aqui. Pix costuma levar segundos.
+              Assim que o pagamento for confirmado, o produto aparece aqui. Pix costuma levar segundos.
             </Alerta>
           </div>
         )}
