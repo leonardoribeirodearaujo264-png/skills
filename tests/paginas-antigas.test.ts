@@ -54,7 +54,7 @@ describe.skipIf(!BASE)("páginas antigas dos vídeos", () => {
     expect(v.pacote.slug).toBe("times-de-agentes");
     expect(v.pacote.precoTexto).toBe("R$\u00a037,00");
     expect(v.pacote.comprarUrl).toContain("/loja/checkout/");
-    expect([v.combo.somaTexto, v.combo.precoTexto, v.combo.economiaTexto]).toEqual(["R$\u00a0195,00", "R$\u00a0127,00", "R$\u00a068,00"]);
+    expect([v.combo.somaTexto, v.combo.precoTexto, v.combo.economiaTexto]).toEqual(["R$\u00a0195,00", "R$\u00a097,00", "R$\u00a098,00"]);
     const css = await fetch(`${BASE}/assets/oferta.css`, { headers: cabecalhos });
     expect(css.status).toBe(200);
   }, 15_000); // primeira chamada fria ao Supabase pode passar de 5 s fora da CDN

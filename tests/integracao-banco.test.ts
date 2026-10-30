@@ -70,14 +70,14 @@ describe.skipIf(!ativo)("banco da loja: RLS e liberação", () => {
     for (const id of criados) await admin.auth.admin.deleteUser(id);
   }, 60_000);
 
-  it("os preços do banco são 37, 47 (vídeo), 47 (leve 3), 127 e 20% de desconto para cliente", async () => {
+  it("os preços do banco são 37, 47 (vídeo), 47 (leve 3), 97 (combo) e 20% de desconto para cliente", async () => {
     const { data, error } = await anon.from("loja_ofertas").select("codigo, preco_centavos, desconto_percentual").order("ordem");
     expect(error).toBeNull();
     const ofertas = data ?? [];
     expect(Object.fromEntries(ofertas.filter((o) => o.desconto_percentual === null).map((o) => [o.codigo, o.preco_centavos]))).toEqual({
       avulso: 3700,
       "leve-3": 4700,
-      combo: 12700,
+      combo: 9700,
     });
     expect(ofertas.find((o) => o.codigo === "cliente")?.desconto_percentual).toBe(20);
     const video = await anon.from("loja_produtos").select("preco_avulso_centavos").eq("slug", "edicao-de-video").single();
@@ -113,7 +113,7 @@ describe.skipIf(!ativo)("banco da loja: RLS e liberação", () => {
   it("o combo libera todos os produtos ativos", async () => {
     const { data } = await anon.from("loja_produtos").select("slug");
     const todos = (data ?? []).map((p) => p.slug as string);
-    const rc = await comprar(c, "combo", todos, 12700);
+    const rc = await comprar(c, "combo", todos, 9700);
     expect(rc.r).toBe("liberado");
     expect(await slugsComAcesso(c)).toEqual([...todos].sort());
   });

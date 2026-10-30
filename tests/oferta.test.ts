@@ -51,9 +51,9 @@ function catalogoDoSeed(): Catalogo {
   };
 }
 
-// 0006: o leve 3 passou para R$ 47 (o seed do 0001 ainda tem o preço antigo)
+// 0006 e 0008: leve 3 a R$ 47 e combo a R$ 97 (o seed do 0001 ainda tem os preços antigos)
 const seed = catalogoDoSeed();
-const cat: Catalogo = { ...seed, ofertas: seed.ofertas.map((o) => (o.codigo === "leve-3" ? { ...o, precoCentavos: 4700 } : o)) };
+const cat: Catalogo = { ...seed, ofertas: seed.ofertas.map((o) => (o.codigo === "leve-3" ? { ...o, precoCentavos: 4700 } : o.codigo === "combo" ? { ...o, precoCentavos: 9700 } : o)) };
 const nada = new Set<string>();
 
 function motivo(fn: () => unknown): string {
@@ -110,11 +110,11 @@ describe("valores das ofertas", () => {
     expect(p.itens).toHaveLength(5);
   });
 
-  it("combo sai R$ 127,00 com todos os produtos", () => {
+  it("combo sai R$ 97,00 com todos os produtos", () => {
     const p = montarPedido(cat, "combo", [], nada);
-    expect(p.valorCentavos).toBe(12700);
+    expect(p.valorCentavos).toBe(9700);
     expect(p.itens).toEqual(cat.produtos.map((x) => x.slug).sort());
-    expect(formatarReais(p.valorCentavos)).toBe("R$\u00a0127,00");
+    expect(formatarReais(p.valorCentavos)).toBe("R$\u00a097,00");
   });
 });
 
@@ -221,11 +221,11 @@ describe("vitrine das páginas dos vídeos (preços do banco)", () => {
     expect(formatarReais(precoNaOferta(cat, avulso, video))).toBe("R$\u00a047,00");
   });
 
-  it("o combo mostra a soma dos avulsos (R$ 195), o preço (R$ 127) e a economia (R$ 68)", () => {
+  it("o combo mostra a soma dos avulsos (R$ 195), o preço (R$ 97) e a economia (R$ 98)", () => {
     const c = montarVitrine(cat, "agentes").combo!;
     expect(c.somaTexto).toBe("R$\u00a0195,00");
-    expect(c.precoTexto).toBe("R$\u00a0127,00");
-    expect(c.economiaTexto).toBe("R$\u00a068,00");
+    expect(c.precoTexto).toBe("R$\u00a097,00");
+    expect(c.economiaTexto).toBe("R$\u00a098,00");
     expect(c.itens).toHaveLength(5);
     expect(c.comprarUrl).toBe("/loja/checkout/?oferta=combo");
   });
@@ -264,11 +264,11 @@ describe("catálogo da página inicial", () => {
     expect(c.pacotes.map((p) => p.slug)).toContain("edicao-de-video");
   });
 
-  it("preços vêm das ofertas do banco: R$ 37, edição de vídeo R$ 47 e combo R$ 127", () => {
+  it("preços vêm das ofertas do banco: R$ 37, edição de vídeo R$ 47 e combo R$ 97", () => {
     const c = montarCatalogo(ordenado);
     expect(c.destaque?.precoTexto).toBe("R$ 37,00");
     expect(c.pacotes.find((p) => p.slug === "edicao-de-video")?.precoTexto).toBe("R$ 47,00");
-    expect(c.combo?.precoTexto).toBe("R$ 127,00");
+    expect(c.combo?.precoTexto).toBe("R$ 97,00");
     expect(c.combo?.itens).toHaveLength(5);
   });
 

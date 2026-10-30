@@ -108,3 +108,24 @@
 /* Miniatura ao lado do nome do pacote (resumo do checkout, combo das páginas dos vídeos) */
 .capa-img.mini { flex: none; width: 54px; border-radius: 8px; }
 .pedido-pacote { display: inline-flex; align-items: center; gap: 10px; justify-content: flex-end; text-align: right; }
+
+/* Celular: cards compactos, com a capa como miniatura ao lado do texto (o destaque mantém a capa grande) */
+@media (max-width: 760px) {
+  .cat-lista { gap: 10px; }
+  .cat-card:not(.destaque):not(.combo) {
+    display: grid; grid-template-columns: 104px minmax(0, 1fr); grid-template-areas: "capa corpo" "rodape rodape";
+    border-radius: 16px;
+  }
+  .cat-card:not(.destaque):not(.combo) > .capa-img { grid-area: capa; margin: 10px 0 0 10px; border-radius: 10px; align-self: start; }
+  .cat-card:not(.destaque):not(.combo) .cat-corpo { grid-area: corpo; padding: 10px 12px 0; gap: 4px; }
+  .cat-card:not(.destaque):not(.combo) .cat-corpo h3 { font-size: 16px; }
+  .cat-card:not(.destaque):not(.combo) .cat-resumo { font-size: 13px; -webkit-line-clamp: 2; }
+  .cat-card:not(.destaque):not(.combo) .cat-rodape { grid-area: rodape; padding: 10px 12px 12px; }
+  .cat-card:not(.destaque):not(.combo) .cat-preco { font-size: 22px; }
+  .cat-card.destaque .cat-corpo, .cat-card.combo .cat-corpo { padding: 14px 16px 0; }
+  .cat-card.destaque .cat-rodape, .cat-card.combo .cat-rodape { padding: 14px 16px 16px; }
+  .cat-card.combo > .capa-img { display: none; }
+}
+@media (max-width: 400px) {
+  .cat-card:not(.destaque):not(.combo) .cat-rodape .btn { width: auto; }
+}
