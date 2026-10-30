@@ -4,6 +4,7 @@ import { enviarAcesso } from "../auth/acesso";
 import { clienteServico } from "../supabase/clientes";
 import { capaDoPacote } from "./apresentacao";
 import { criarAvisoAcesso } from "./emailAcesso";
+import { permitir } from "./limites";
 import { repoPagamento } from "./repositorio";
 import type { DepsPagamento } from "./pagamento";
 
@@ -25,7 +26,7 @@ export function depsPagamento(): DepsPagamento {
         capa: capa ? { url: `${e.SITE_URL}${capa.png}`, alt: capa.alt } : null,
       });
       return { erro: r === "enviado" ? null : r };
-    }),
+    }, (chave) => permitir(chave, 1, 0)),
   };
 }
 

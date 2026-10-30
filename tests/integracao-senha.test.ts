@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 import { afterAll, describe, expect, it } from "vitest";
-import { gerarSenha, gravarSenhaGerada, marcarSenhaDefinida, temSenha, trocarSenha } from "@/lib/auth/senha";
+import { gerarSenha, gravarSenhaGerada, temSenha, trocarSenha } from "@/lib/auth/senha";
 
 // Senha da área de membros com o Supabase real: gerada na liberação, login com e-mail e senha, troca de senha.
 // Cria uma conta de teste (@example.com) e apaga no fim. Rodar com:
@@ -30,27 +30,23 @@ describe.skipIf(!ativo)("senha da área de membros", () => {
     expect(s).not.toMatch(/[0O1lI]/);
   });
 
-  it("a senha gerada na liberação entra com e-mail e senha; a marca só vem depois", async () => {
+  it("a senha gerada na liberação entra com e-mail e senha e já grava a marca", async () => {
     const u = await adminDb().auth.admin.createUser({ email, email_confirm: true });
     if (u.error) throw u.error;
     userId = u.data.user.id;
     expect(temSenha(u.data.user)).toBe(false);
     const senha = await gravarSenhaGerada(adminDb(), userId);
-    const antes = await adminDb().auth.admin.getUserById(userId);
-    expect(temSenha(antes.data.user!)).toBe(false);
     const login = await publico().auth.signInWithPassword({ email, password: senha });
     expect(login.error).toBeNull();
     expect(login.data.session?.access_token).toBeTruthy();
-    await marcarSenhaDefinida(adminDb(), antes.data.user!);
     const depois = await adminDb().auth.admin.getUserById(userId);
     expect(temSenha(depois.data.user!)).toBe(true);
   }, 30_000);
 
   it("depois de trocar, a senha nova entra e a antiga não", async () => {
     const antiga = await gravarSenhaGerada(adminDb(), userId);
-    const u = await adminDb().auth.admin.getUserById(userId);
     const nova = `minha-${randomUUID().slice(0, 8)}`;
-    await trocarSenha(adminDb(), u.data.user!, nova);
+    await trocarSenha(adminDb(), userId, nova);
     expect((await publico().auth.signInWithPassword({ email, password: antiga })).error).not.toBeNull();
     expect((await publico().auth.signInWithPassword({ email, password: nova })).error).toBeNull();
   }, 30_000);

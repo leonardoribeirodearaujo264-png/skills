@@ -49,7 +49,7 @@ function montar(
   const urlEntrar = new URL("/entrar/", link).toString();
   const blocoCompra = senha
     ? `${destaque("Seu login", email, false)}${destaque("Sua senha", senha, false)}<p style="font-size:13px;line-height:1.5;color:#565B66;margin:0 0 20px">Entre em <a href="${escaparHtml(urlEntrar)}" style="color:#C03F00">${escaparHtml(urlEntrar)}</a> com esse e-mail e essa senha. Na área de membros você pode trocar a senha quando quiser.</p>`
-    : `${destaque("Seu login", email, false)}<p style="font-size:13px;line-height:1.5;color:#565B66;margin:0 0 20px">Use a senha que você já tem. Esqueceu? Na página de entrar, peça um código por e-mail.</p>`;
+    : `${destaque("Seu login", email, false)}<p style="font-size:13px;line-height:1.5;color:#565B66;margin:0 0 20px">Use a senha que chegou no seu primeiro e-mail de acesso (ou a que você trocou). Esqueceu? Na página de entrar, peça um código por e-mail.</p>`;
   const corpo = motivo === "compra" ? blocoCompra : destaque("Código", codigo, true);
   const rodape =
     motivo === "compra"
@@ -57,7 +57,7 @@ function montar(
       : "O código vale por pouco tempo e só uma vez. Se não foi você, ignore este e-mail.";
   const texto =
     motivo === "compra"
-      ? `${titulo}\n\n${intro}\n\nSeu login: ${email}\n${senha ? `Sua senha: ${senha}\n\nEntre em ${urlEntrar} com esse e-mail e essa senha.` : "Use a senha que você já tem. Esqueceu? Na página de entrar, peça um código."}\n\nOu entre direto por este link: ${link}\n\n${rodape}`
+      ? `${titulo}\n\n${intro}\n\nSeu login: ${email}\n${senha ? `Sua senha: ${senha}\n\nEntre em ${urlEntrar} com esse e-mail e essa senha.` : "Use a senha do seu primeiro e-mail de acesso (ou a que você trocou). Esqueceu? Na página de entrar, peça um código."}\n\nOu entre direto por este link: ${link}\n\n${rodape}`
       : `${titulo}\n\n${intro}\n\nCódigo: ${codigo}\n\nOu entre por este link: ${link}\n\n${rodape}`;
   const html = `<!doctype html><html lang="pt-BR"><body style="margin:0;background:#F6F5F1;font-family:Arial,Helvetica,sans-serif;color:#14161A">
 <div style="max-width:480px;margin:0 auto;padding:32px 20px">

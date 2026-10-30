@@ -151,7 +151,7 @@ export default async function Membros() {
           </section>
         )}
 
-        <TrocarSenha minimo={SENHA_MINIMA} />
+        <TrocarSenha minimo={SENHA_MINIMA} email={usuario.email} />
       </main>
       <Rodape />
     </>

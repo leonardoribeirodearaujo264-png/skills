@@ -18,31 +18,56 @@ export function FormEntrar({ proximo, erroLink }: { proximo: string; erroLink: b
 }
 
 function FormSenha({ proximo, usarCodigo }: { proximo: string; usarCodigo: () => void }) {
-  const [estado, entrar] = useActionState(entrarComSenha, { erro: null, email: "" } as EstadoSenha);
+  const [estado, entrar] = useActionState(entrarComSenha, { erro: null, campo: null, email: "" } as EstadoSenha);
+  const titulo = useRef<HTMLHeadingElement>(null);
+  const [mostrar, setMostrar] = useState(false);
+  const erroEmail = estado.campo === "email" ? estado.erro : null;
+  const erroSenha = estado.campo === "senha" ? estado.erro : null;
   return (
     <>
       <span className="icone-grande" aria-hidden="true">
         <Icone nome="cadeado" tamanho={26} />
       </span>
-      <h1>Entrar na sua área</h1>
+      <h1 ref={titulo} tabIndex={-1}>
+        Entrar na sua área
+      </h1>
       <p className="lead muted">Use o e-mail da compra e a senha que chegou no e-mail de acesso.</p>
       <form action={entrar} className="campo" noValidate>
         <input type="hidden" name="next" value={proximo} />
         <label htmlFor="email">E-mail</label>
-        <input id="email" name="email" type="email" autoComplete="username" inputMode="email" required defaultValue={estado.email} />
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autoComplete="username"
+          inputMode="email"
+          required
+          defaultValue={estado.email}
+          aria-invalid={erroEmail ? true : undefined}
+          aria-describedby={erroEmail ? "email-erro" : undefined}
+        />
+        {erroEmail ? (
+          <p className="erro-campo" id="email-erro" role="alert">
+            {erroEmail}
+          </p>
+        ) : null}
         <label htmlFor="senha">Senha</label>
         <input
           id="senha"
           name="senha"
-          type="password"
+          type={mostrar ? "text" : "password"}
           autoComplete="current-password"
           required
-          aria-invalid={estado.erro ? true : undefined}
-          aria-describedby={estado.erro ? "senha-erro" : undefined}
+          maxLength={128}
+          aria-invalid={erroSenha ? true : undefined}
+          aria-describedby={erroSenha ? "senha-erro" : undefined}
         />
-        {estado.erro ? (
+        <label className="mostrar-senha">
+          <input type="checkbox" checked={mostrar} onChange={(ev) => setMostrar(ev.target.checked)} /> Mostrar a senha
+        </label>
+        {erroSenha ? (
           <p className="erro-campo" id="senha-erro" role="alert">
-            {estado.erro}
+            {erroSenha}
           </p>
         ) : null}
         <Enviar rotulo="Entrar" carregando="Entrando" />
@@ -50,6 +75,7 @@ function FormSenha({ proximo, usarCodigo }: { proximo: string; usarCodigo: () =>
       <button className="btn ghost" type="button" onClick={usarCodigo}>
         Esqueci a senha, quero receber um código
       </button>
+      <p className="small muted">Comprou antes de existir senha? Entre com o código; na sua área você cria uma senha.</p>
     </>
   );
 }
