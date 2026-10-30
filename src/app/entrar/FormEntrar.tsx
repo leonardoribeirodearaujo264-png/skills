@@ -5,11 +5,82 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { Alerta } from "@/components/Alerta";
 import { Icone } from "@/components/Icone";
-import { enviarCodigo, verificarCodigo, type EstadoEntrar } from "./acoes";
+import { entrarComSenha, enviarCodigo, verificarCodigo, type EstadoEntrar, type EstadoSenha } from "./acoes";
 
 const ESPERA_REENVIO_S = 45;
 
+// Entrada padrão: e-mail e senha (a senha chega no e-mail de acesso da compra). Quem esqueceu a senha,
+// ou prefere, entra com um código de uso único mandado para o e-mail.
 export function FormEntrar({ proximo, erroLink }: { proximo: string; erroLink: boolean }) {
+  const [modo, setModo] = useState<"senha" | "codigo">(erroLink ? "codigo" : "senha");
+  if (modo === "senha") return <FormSenha proximo={proximo} usarCodigo={() => setModo("codigo")} />;
+  return <FormCodigo proximo={proximo} erroLink={erroLink} usarSenha={() => setModo("senha")} />;
+}
+
+function FormSenha({ proximo, usarCodigo }: { proximo: string; usarCodigo: () => void }) {
+  const [estado, entrar] = useActionState(entrarComSenha, { erro: null, campo: null, email: "" } as EstadoSenha);
+  const titulo = useRef<HTMLHeadingElement>(null);
+  const [mostrar, setMostrar] = useState(false);
+  const erroEmail = estado.campo === "email" ? estado.erro : null;
+  const erroSenha = estado.campo === "senha" ? estado.erro : null;
+  return (
+    <>
+      <span className="icone-grande" aria-hidden="true">
+        <Icone nome="cadeado" tamanho={26} />
+      </span>
+      <h1 ref={titulo} tabIndex={-1}>
+        Entrar na sua área
+      </h1>
+      <p className="lead muted">Use o e-mail da compra e a senha que chegou no e-mail de acesso.</p>
+      <form action={entrar} className="campo" noValidate>
+        <input type="hidden" name="next" value={proximo} />
+        <label htmlFor="email">E-mail</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autoComplete="username"
+          inputMode="email"
+          required
+          defaultValue={estado.email}
+          aria-invalid={erroEmail ? true : undefined}
+          aria-describedby={erroEmail ? "email-erro" : undefined}
+        />
+        {erroEmail ? (
+          <p className="erro-campo" id="email-erro" role="alert">
+            {erroEmail}
+          </p>
+        ) : null}
+        <label htmlFor="senha">Senha</label>
+        <input
+          id="senha"
+          name="senha"
+          type={mostrar ? "text" : "password"}
+          autoComplete="current-password"
+          required
+          maxLength={128}
+          aria-invalid={erroSenha ? true : undefined}
+          aria-describedby={erroSenha ? "senha-erro" : undefined}
+        />
+        <label className="mostrar-senha">
+          <input type="checkbox" checked={mostrar} onChange={(ev) => setMostrar(ev.target.checked)} /> Mostrar a senha
+        </label>
+        {erroSenha ? (
+          <p className="erro-campo" id="senha-erro" role="alert">
+            {erroSenha}
+          </p>
+        ) : null}
+        <Enviar rotulo="Entrar" carregando="Entrando" />
+      </form>
+      <button className="btn ghost" type="button" onClick={usarCodigo}>
+        Esqueci a senha, quero receber um código
+      </button>
+      <p className="small muted">Comprou antes de existir senha? Entre com o código; na sua área você cria uma senha.</p>
+    </>
+  );
+}
+
+function FormCodigo({ proximo, erroLink, usarSenha }: { proximo: string; erroLink: boolean; usarSenha: () => void }) {
   const [envio, enviar] = useActionState(enviarCodigo, { etapa: "email", erro: null, email: "" } as EstadoEntrar);
   const [verif, verificar] = useActionState(verificarCodigo, { etapa: "codigo", erro: null, email: "" } as EstadoEntrar);
   const [voltou, setVoltou] = useState(false);
@@ -74,7 +145,7 @@ export function FormEntrar({ proximo, erroLink }: { proximo: string; erroLink: b
       <h1 ref={titulo} tabIndex={-1}>
         Entrar na sua área
       </h1>
-      <p className="lead muted">Para quem já comprou. Mandamos um código para o e-mail da compra.</p>
+      <p className="lead muted">Mandamos um código para o e-mail da compra. Depois de entrar, você pode criar uma senha nova.</p>
       {erroLink && (
         <Alerta tipo="warn" titulo="Esse link já foi usado ou expirou">
           Peça um novo abaixo. Por segurança, cada link vale uma vez e por pouco tempo.
@@ -119,6 +190,9 @@ export function FormEntrar({ proximo, erroLink }: { proximo: string; erroLink: b
         )}
         <Enviar rotulo="Enviar código" carregando="Enviando" />
       </form>
+      <button className="btn ghost" type="button" onClick={usarSenha}>
+        Entrar com e-mail e senha
+      </button>
     </>
   );
 }

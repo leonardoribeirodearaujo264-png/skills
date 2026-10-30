@@ -381,10 +381,11 @@ async function montarOferta() {
       return;
     }
     if (!r.ok || !v.ok || (!v.pacote && !v.combo)) throw new Error("vitrine indisponível");
+    // Ordem pedida pelo dono: o combo primeiro, depois o pacote do vídeo e o leve 3
     const filhos = [];
+    if (v.combo) filhos.push(cardCombo(v.combo, true));
     if (v.pacote) filhos.push(cardPacote(v.pacote));
     if (v.leve) filhos.push(cardLeve(v.leve));
-    if (v.combo) filhos.push(cardCombo(v.combo, !v.pacote));
     secao.replaceChildren(...filhos);
     if (v.pacote) {
       chamadaAposPrompt(v.pacote);

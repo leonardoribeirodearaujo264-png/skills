@@ -4,11 +4,13 @@ import { redirect } from "next/navigation";
 import { Alerta } from "@/components/Alerta";
 import { Cabecalho, Rodape } from "@/components/Cabecalho";
 import { CapaPacote } from "@/components/CapaPacote";
+import { SENHA_MINIMA } from "@/lib/auth/senha";
 import { Icone } from "@/components/Icone";
 import { usuarioAtual } from "@/lib/auth/sessao";
 import { capaDoPacote } from "@/lib/loja/apresentacao";
 import { formatarReais, ofertaParaMaisUm, precoAvulso, precoNaOferta } from "@/lib/loja/dominio";
 import { meusProdutos, pedidosRecentes } from "@/lib/loja/membros";
+import { TrocarSenha } from "./TrocarSenha";
 import { carregarCatalogo } from "@/lib/loja/repositorio";
 import { clientePublico } from "@/lib/supabase/clientes";
 
@@ -148,6 +150,8 @@ export default async function Membros() {
             </div>
           </section>
         )}
+
+        <TrocarSenha minimo={SENHA_MINIMA} email={usuario.email} />
       </main>
       <Rodape />
     </>
