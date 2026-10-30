@@ -1,7 +1,8 @@
 import { z } from "zod";
 
-// Chamadas REST do Mercado Pago (Checkout Pro). Endpoints da documentação oficial:
-// POST /checkout/preferences e GET /v1/payments/{id}, com Authorization: Bearer <access token>.
+// Chamadas REST do Mercado Pago (pagamento direto no site: Pix e cartão). Endpoints da documentação oficial:
+// POST /v1/payments (com X-Idempotency-Key), PUT /v1/payments/{id} (cancelar pendente),
+// GET /v1/payments/{id} e GET /v1/payments/search, com Authorization: Bearer <access token>.
 const BASE = "https://api.mercadopago.com";
 
 export class ErroMercadoPago extends Error {
@@ -15,26 +16,40 @@ export class ErroMercadoPago extends Error {
   }
 }
 
-export type NovaPreferencia = {
+type BaseCobranca = {
   pedidoId: string;
-  titulo: string;
   valorCentavos: number;
-  emailComprador: string;
-  urlRetorno: string;
+  descricao: string;
+  email: string;
   urlNotificacao: string;
 };
 
-const respostaPreferencia = z.object({
-  id: z.string(),
-  init_point: z.url(),
-  sandbox_init_point: z.url().optional(),
+export type NovoPix = BaseCobranca & { expiraEm: Date };
+
+export type NovoCartao = BaseCobranca & {
+  token: string;
+  parcelas: number;
+  metodo: string;
+  emissor: string | null;
+  documento: { tipo: string; numero: string } | null;
+  idempotencia: string;
+};
+
+const respostaPix = z.object({
+  id: z.union([z.number(), z.string()]).transform(String),
+  status: z.string(),
+  date_of_expiration: z.string().nullish(),
+  point_of_interaction: z.object({
+    transaction_data: z.object({ qr_code: z.string(), qr_code_base64: z.string() }),
+  }),
 });
-export type Preferencia = z.infer<typeof respostaPreferencia>;
+export type Pix = { id: string; status: string; copiaECola: string; qrBase64: string; expiraEm: string | null };
 
 const respostaPagamento = z.object({
   id: z.union([z.number(), z.string()]).transform(String),
   status: z.string(),
   status_detail: z.string().nullish(),
+  payment_method_id: z.string().nullish(),
   external_reference: z.string().nullish(),
   transaction_amount: z.number(),
   currency_id: z.string(),
@@ -55,45 +70,93 @@ async function motivoDoErro(r: Response): Promise<string> {
 }
 
 export type ClienteMercadoPago = {
-  criarPreferencia(p: NovaPreferencia): Promise<Preferencia>;
+  criarPix(p: NovoPix): Promise<Pix>;
+  pagarComCartao(p: NovoCartao): Promise<Pagamento>;
+  // Cancela um pagamento ainda pendente (Pix não pago). Devolve false se ele não pode mais ser cancelado.
+  cancelarPagamento(id: string): Promise<boolean>;
   buscarPagamento(id: string): Promise<Pagamento | null>;
   pagamentosDoPedido(pedidoId: string): Promise<Pagamento[]>;
 };
 
 export function criarClienteMercadoPago(accessToken: string, fetchImpl: typeof fetch = fetch): ClienteMercadoPago {
   async function chamar(operacao: string, caminho: string, init: RequestInit = {}): Promise<Response> {
-    const r = await fetchImpl(`${BASE}${caminho}`, {
+    return fetchImpl(`${BASE}${caminho}`, {
       ...init,
       headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json", ...init.headers },
       signal: AbortSignal.timeout(10_000),
       cache: "no-store",
     });
-    return r;
+  }
+
+  async function criarPixComChave(p: NovoPix, chave: string): Promise<Pix> {
+    const corpo = {
+      transaction_amount: p.valorCentavos / 100,
+      description: p.descricao,
+      payment_method_id: "pix",
+      payer: { email: p.email },
+      external_reference: p.pedidoId,
+      date_of_expiration: p.expiraEm.toISOString(),
+      // Notificação só com endereço público; em localhost a tela consulta o pagamento direto
+      ...(p.urlNotificacao.startsWith("https://") ? { notification_url: p.urlNotificacao } : {}),
+    };
+    const r = await chamar("criar Pix", "/v1/payments", {
+      method: "POST",
+      body: JSON.stringify(corpo),
+      headers: { "X-Idempotency-Key": chave },
+    });
+    if (!r.ok) throw new ErroMercadoPago("criar Pix", r.status, await motivoDoErro(r));
+    const j = respostaPix.parse(await r.json());
+    return {
+      id: j.id,
+      status: j.status,
+      copiaECola: j.point_of_interaction.transaction_data.qr_code,
+      qrBase64: j.point_of_interaction.transaction_data.qr_code_base64,
+      expiraEm: j.date_of_expiration ?? null,
+    };
   }
 
   return {
-    async criarPreferencia(p) {
+    async criarPix(p) {
+      // Mesmo pedido, mesma chave: clicar duas vezes devolve o mesmo Pix em vez de criar outro.
+      // Se o Pix devolvido já venceu, foi cancelado ou vence em menos de 5 min, gera outro com chave nova.
+      const primeiro = await criarPixComChave(p, `pix-${p.pedidoId}`);
+      const vence = primeiro.expiraEm ? Date.parse(primeiro.expiraEm) : Infinity;
+      if (primeiro.status === "pending" && vence > Date.now() + 5 * 60_000) return primeiro;
+      return criarPixComChave(p, `pix-${p.pedidoId}-${Date.now()}`);
+    },
+
+    async pagarComCartao(p) {
       const corpo = {
-        items: [
-          { id: p.pedidoId, title: p.titulo, quantity: 1, currency_id: "BRL", unit_price: p.valorCentavos / 100 },
-        ],
-        payer: { email: p.emailComprador },
+        transaction_amount: p.valorCentavos / 100,
+        description: p.descricao,
+        token: p.token,
+        installments: p.parcelas,
+        payment_method_id: p.metodo,
+        ...(p.emissor ? { issuer_id: p.emissor } : {}),
+        payer: {
+          email: p.email,
+          ...(p.documento ? { identification: { type: p.documento.tipo, number: p.documento.numero } } : {}),
+        },
         external_reference: p.pedidoId,
-        back_urls: { success: p.urlRetorno, pending: p.urlRetorno, failure: p.urlRetorno },
-        // Notificação e retorno automático exigem endereço público. Em localhost o comprador volta pelo
-        // botão e a página de retorno consulta o pagamento direto na API.
-        ...(p.urlNotificacao.startsWith("https://") ? { notification_url: p.urlNotificacao } : {}),
-        ...(p.urlRetorno.startsWith("https://") ? { auto_return: "approved" } : {}),
         statement_descriptor: "PACOTES SKILLS",
+        ...(p.urlNotificacao.startsWith("https://") ? { notification_url: p.urlNotificacao } : {}),
       };
-      // A chave de idempotência evita duas preferências se a requisição for repetida
-      const r = await chamar("criar preferência", "/checkout/preferences", {
+      const r = await chamar("pagar com cartão", "/v1/payments", {
         method: "POST",
         body: JSON.stringify(corpo),
-        headers: { "X-Idempotency-Key": p.pedidoId },
+        headers: { "X-Idempotency-Key": p.idempotencia },
       });
-      if (!r.ok) throw new ErroMercadoPago("criar preferência", r.status, await motivoDoErro(r));
-      return respostaPreferencia.parse(await r.json());
+      if (!r.ok) throw new ErroMercadoPago("pagar com cartão", r.status, await motivoDoErro(r));
+      return respostaPagamento.parse(await r.json());
+    },
+
+    async cancelarPagamento(id) {
+      if (!/^\d+$/.test(id)) return false;
+      const r = await chamar("cancelar pagamento", `/v1/payments/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({ status: "cancelled" }),
+      });
+      return r.ok;
     },
 
     async buscarPagamento(id) {

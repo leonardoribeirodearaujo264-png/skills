@@ -7,7 +7,7 @@ import { contaPorEmail, criarOuReusarPedido, liberarReservaEmail, repoPagamento,
 // descartáveis pelo admin, sem senha, e apaga tudo no fim. Só roda quando pedido:
 // INTEGRACAO=1 node --env-file=.env.local node_modules/vitest/vitest.mjs run tests/integracao-banco.test.ts
 const URL_SB = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-const ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
+const ANON = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
 const SERVICO = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
 const ativo = process.env.INTEGRACAO === "1" && Boolean(URL_SB && ANON && SERVICO);
 

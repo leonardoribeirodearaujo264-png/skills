@@ -9,7 +9,7 @@ const SITE = (process.argv[2] ?? "http://localhost:3000").replace(/\/$/, "");
 const env = process.env;
 const semSessao = { auth: { persistSession: false, autoRefreshToken: false } };
 const admin = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, semSessao);
-const anon = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_ANON_KEY, semSessao);
+const anon = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? env.NEXT_PUBLIC_SUPABASE_ANON_KEY, semSessao);
 // next start roda em produção (cookies __Host-); use DEV=1 para next dev
 const producao = env.DEV !== "1";
 const COMPRADO = "motion-mockup-fontes";

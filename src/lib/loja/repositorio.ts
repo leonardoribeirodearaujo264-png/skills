@@ -143,14 +143,6 @@ export async function criarOuReusarPedido(
   return { id: r.pedido_id, valorCentavos: r.valor_centavos };
 }
 
-export async function salvarPreferencia(db: SupabaseClient, pedidoId: string, preferenceId: string): Promise<void> {
-  const { error } = await db
-    .from("loja_pedidos")
-    .update({ mp_preference_id: preferenceId, atualizado_em: new Date().toISOString() })
-    .eq("id", pedidoId);
-  if (error) falhar("salvar preferência", error);
-}
-
 const SETE_DIAS_MS = 7 * 24 * 60 * 60_000;
 
 // Pendentes e recusados recentes (o cliente pode ter pago com outro cartão na mesma preferência),

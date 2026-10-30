@@ -12,13 +12,13 @@ export function clienteServico(): SupabaseClient {
 // Chave pública, sem usuário: vitrine e chamadas de Auth (enviar código, trocar token).
 export function clientePublico(): SupabaseClient {
   const e = env();
-  return createClient(e.NEXT_PUBLIC_SUPABASE_URL, e.NEXT_PUBLIC_SUPABASE_ANON_KEY, { auth: semSessao });
+  return createClient(e.NEXT_PUBLIC_SUPABASE_URL, e.chavePublicaSupabase, { auth: semSessao });
 }
 
 // Em nome do usuário logado: toda leitura passa pelo RLS com o JWT dele.
 export function clienteDoUsuario(accessToken: string): SupabaseClient {
   const e = env();
-  return createClient(e.NEXT_PUBLIC_SUPABASE_URL, e.NEXT_PUBLIC_SUPABASE_ANON_KEY, {
+  return createClient(e.NEXT_PUBLIC_SUPABASE_URL, e.chavePublicaSupabase, {
     auth: semSessao,
     global: { headers: { Authorization: `Bearer ${accessToken}` } },
   });
