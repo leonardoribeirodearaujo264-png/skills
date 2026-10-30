@@ -14,7 +14,7 @@ export async function proxy(req: NextRequest): Promise<NextResponse> {
   if (!renovacao || (acesso && expiraEmSegundos(acesso) > 60)) return NextResponse.next();
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const chave = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const chave = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!url || !chave) return NextResponse.next();
 
   const supabase = createClient(url, chave, {
