@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { criarOuReusarPedido, liberarReservaEmail, repoPagamento, reservarEmailAcesso } from "@/lib/loja/repositorio";
+import { contaPorEmail, criarOuReusarPedido, liberarReservaEmail, repoPagamento, reservarEmailAcesso } from "@/lib/loja/repositorio";
 
 // Teste contra o Supabase real (precisa do banco/0001_loja.sql aplicado). Cria usuários de teste
 // descartáveis pelo admin, sem senha, e apaga tudo no fim. Só roda quando pedido:
@@ -43,7 +43,7 @@ describe.skipIf(!ativo)("banco da loja: RLS e liberação", () => {
 
   async function comprar(u: Teste, oferta: string, itens: string[], valor: number) {
     const itensOrd = [...itens].sort();
-    const pedido = await criarOuReusarPedido(admin, u.id, oferta, {
+    const pedido = await criarOuReusarPedido(admin, { email: u.email, userId: u.id }, oferta, {
       itens: itensOrd,
       valorCentavos: valor,
       chaveItens: `${oferta}:${itensOrd.join(",")}`,
@@ -70,14 +70,16 @@ describe.skipIf(!ativo)("banco da loja: RLS e liberação", () => {
     for (const id of criados) await admin.auth.admin.deleteUser(id);
   }, 60_000);
 
-  it("os preços do banco são 37, 67, 97 e 127", async () => {
-    const { data, error } = await anon.from("loja_ofertas").select("codigo, preco_centavos").order("ordem");
+  it("os preços do banco são 37, 47 (vídeo), 67, 127 e 20% de desconto para cliente", async () => {
+    const { data, error } = await anon.from("loja_ofertas").select("codigo, preco_centavos, desconto_percentual").order("ordem");
     expect(error).toBeNull();
-    expect(Object.fromEntries((data ?? []).map((o) => [o.codigo, o.preco_centavos]))).toEqual({
+    const ofertas = data ?? [];
+    expect(Object.fromEntries(ofertas.filter((o) => o.desconto_percentual === null).map((o) => [o.codigo, o.preco_centavos]))).toEqual({
       avulso: 3700,
       "leve-3": 6700,
       combo: 12700,
     });
+    expect(ofertas.find((o) => o.codigo === "cliente")?.desconto_percentual).toBe(20);
     const video = await anon.from("loja_produtos").select("preco_avulso_centavos").eq("slug", "edicao-de-video").single();
     expect(video.data?.preco_avulso_centavos).toBe(4700);
   });
@@ -133,8 +135,8 @@ describe.skipIf(!ativo)("banco da loja: RLS e liberação", () => {
 
   it("notificação repetida não duplica acesso e o duplo clique devolve o mesmo pedido", async () => {
     const itens = ["motion-mockup-fontes"];
-    const p1 = await criarOuReusarPedido(admin, a.id, "avulso", { itens, valorCentavos: 3700, chaveItens: "avulso:motion-mockup-fontes" });
-    const p2 = await criarOuReusarPedido(admin, a.id, "avulso", { itens, valorCentavos: 3700, chaveItens: "avulso:motion-mockup-fontes" });
+    const p1 = await criarOuReusarPedido(admin, { email: a.email, userId: a.id }, "avulso", { itens, valorCentavos: 3700, chaveItens: "avulso:motion-mockup-fontes" });
+    const p2 = await criarOuReusarPedido(admin, { email: a.email, userId: a.id }, "avulso", { itens, valorCentavos: 3700, chaveItens: "avulso:motion-mockup-fontes" });
     expect(p2.id).toBe(p1.id);
     const repo = repoPagamento(admin);
     expect(await repo.liberar(p1.id, "teste-dup-1", 3700)).toBe("liberado");
@@ -145,7 +147,7 @@ describe.skipIf(!ativo)("banco da loja: RLS e liberação", () => {
   });
 
   it("valor diferente do pedido não libera", async () => {
-    const p = await criarOuReusarPedido(admin, b.id, "avulso", { itens: ["edicao-de-video"], valorCentavos: 4700, chaveItens: "avulso:edicao-de-video" });
+    const p = await criarOuReusarPedido(admin, { email: b.email, userId: b.id }, "avulso", { itens: ["edicao-de-video"], valorCentavos: 4700, chaveItens: "avulso:edicao-de-video" });
     expect(await repoPagamento(admin).liberar(p.id, "teste-valor", 100)).toBe("valor_divergente");
     expect(await slugsComAcesso(b)).not.toContain("edicao-de-video");
   });
@@ -158,6 +160,38 @@ describe.skipIf(!ativo)("banco da loja: RLS e liberação", () => {
     expect(await reservarEmailAcesso(admin, id)).toBeNull();
     await liberarReservaEmail(admin, id);
     expect(await reservarEmailAcesso(admin, id)).toBe(c.id);
+  });
+
+  it("compra sem login: a aprovação cria uma única conta pelo e-mail e libera só o produto do pedido", async () => {
+    const email = `teste-loja-convidado-${randomUUID()}@example.com`;
+    const pedido = await criarOuReusarPedido(admin, { email, userId: null }, "avulso", {
+      itens: ["programacao-sem-codigo"],
+      valorCentavos: 3700,
+      chaveItens: "avulso:programacao-sem-codigo",
+    });
+    const repo = repoPagamento(admin);
+    // Webhook repetido e simultâneo: as duas chamadas caem na mesma conta
+    const [v1, v2] = await Promise.all([repo.garantirConta(pedido.id, email), repo.garantirConta(pedido.id, email)]);
+    const conta = await contaPorEmail(admin, email);
+    expect(conta).not.toBeNull();
+    criados.push(conta!);
+    expect([v1, v2].sort()).toEqual(["ja_vinculado", "vinculado"]);
+    expect(await repo.liberar(pedido.id, `teste-${randomUUID()}`, 3700)).toBe("liberado");
+    const { data } = await admin.auth.admin.listUsers({ perPage: 1000 });
+    expect(data.users.filter((u) => u.email === email)).toHaveLength(1);
+    const acessos = await admin.from("loja_acessos").select("produto_slug").eq("user_id", conta!);
+    expect((acessos.data ?? []).map((x) => x.produto_slug)).toEqual(["programacao-sem-codigo"]);
+  });
+
+  it("pedido sem conta não libera acesso", async () => {
+    const email = `teste-loja-semconta-${randomUUID()}@example.com`;
+    const p = await criarOuReusarPedido(admin, { email, userId: null }, "avulso", {
+      itens: ["times-de-agentes"],
+      valorCentavos: 3700,
+      chaveItens: "avulso:times-de-agentes",
+    });
+    expect(await repoPagamento(admin).liberar(p.id, `teste-${randomUUID()}`, 3700)).toBe("sem_conta");
+    await admin.from("loja_pedidos").delete().eq("id", p.id);
   });
 
   it("estorno revoga, mas mantém o que outra compra paga cobre", async () => {

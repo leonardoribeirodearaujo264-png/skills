@@ -6,7 +6,8 @@ import { PAGINAS_ANTIGAS } from "@/lib/paginas-antigas";
 // Rode com o servidor de pé: SITE_TESTE=http://localhost:3100 npm test
 // No preview: SITE_TESTE=https://<preview>.vercel.app node --env-file=.env.local node_modules/vitest/vitest.mjs run tests/paginas-antigas.test.ts
 const BASE = process.env.SITE_TESTE;
-const REF = process.env.REF_ORIGINAL ?? "main";
+// Último commit do site estático antes da migração (o que a automação de DM já divulgou)
+const REF = process.env.REF_ORIGINAL ?? "eb532be";
 // Preview da Vercel com proteção de login: o token "Protection Bypass for Automation" vai no cabeçalho
 const BYPASS = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
 const cabecalhos: Record<string, string> = BYPASS ? { "x-vercel-protection-bypass": BYPASS } : {};
@@ -52,7 +53,7 @@ describe.skipIf(!BASE)("páginas antigas dos vídeos", () => {
     };
     expect(v.pacote.slug).toBe("times-de-agentes");
     expect(v.pacote.precoTexto).toBe("R$\u00a037,00");
-    expect(v.pacote.comprarUrl).toContain("/loja/comprar/");
+    expect(v.pacote.comprarUrl).toContain("/loja/checkout/");
     expect([v.combo.somaTexto, v.combo.precoTexto, v.combo.economiaTexto]).toEqual(["R$\u00a0195,00", "R$\u00a0127,00", "R$\u00a068,00"]);
     const css = await fetch(`${BASE}/assets/oferta.css`, { headers: cabecalhos });
     expect(css.status).toBe(200);

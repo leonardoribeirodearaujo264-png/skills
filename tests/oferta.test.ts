@@ -32,6 +32,7 @@ function catalogoDoSeed(): Catalogo {
       qtdEscolha: m[5] === "null" ? null : Number(m[5]),
       precoCentavos: Number(m[6]),
       exigeCliente: false,
+      descontoPercentual: null,
       ordem: Number(m[7]),
       itens: [],
     })),
@@ -134,30 +135,41 @@ describe("regra validada no backend", () => {
   });
 });
 
-describe("oferta de cliente (preço vem do banco)", () => {
-  const comCliente: Catalogo = {
-    ...cat,
-    ofertas: [
-      ...cat.ofertas,
-      { codigo: "cliente", titulo: "Preço de cliente", descricao: "x", tipo: "escolha", qtdEscolha: 1, precoCentavos: 2700, exigeCliente: true, ordem: 5, itens: [] },
-    ],
+describe("desconto de cliente de 20% (percentual vem do banco)", () => {
+  // Mesma linha que a migração 0003 deixa ativa: oferta "cliente", um pacote, 20% sobre o avulso
+  const cliente = {
+    codigo: "cliente",
+    titulo: "Preço de cliente",
+    descricao: "x",
+    tipo: "escolha" as const,
+    qtdEscolha: 1,
+    precoCentavos: 3700,
+    exigeCliente: true,
+    descontoPercentual: 20,
+    ordem: 5,
+    itens: [],
   };
+  const comCliente: Catalogo = { ...cat, ofertas: [...cat.ofertas, cliente] };
+  const jaCliente = new Set(["times-de-agentes"]);
 
   it("quem ainda não comprou não usa a oferta de cliente", () => {
     expect(motivo(() => montarPedido(comCliente, "cliente", ["edicao-de-video"], nada))).toBe("so_clientes");
   });
 
-  it("cliente paga o preço de cliente gravado no banco", () => {
-    const p = montarPedido(comCliente, "cliente", ["edicao-de-video"], new Set(["times-de-agentes"]));
-    expect(p.valorCentavos).toBe(2700);
+  it("cliente paga 80% do avulso de cada pacote, calculado no servidor", () => {
+    expect(montarPedido(comCliente, "cliente", ["design-copy-anuncios"], jaCliente).valorCentavos).toBe(2960);
+    expect(montarPedido(comCliente, "cliente", ["edicao-de-video"], jaCliente).valorCentavos).toBe(3760);
+    expect(formatarReais(2960)).toBe("R$ 29,60");
   });
 
-  it("a vitrine da área de membros mostra o preço de cliente com o avulso como referência", () => {
-    const r = ofertaParaMaisUm(comCliente, true);
-    expect(r?.oferta.codigo).toBe("cliente");
-    expect(r?.referenciaCentavos).toBe(3700);
-    expect(ofertaParaMaisUm(comCliente, false)?.oferta.codigo).toBe("avulso");
-    expect(ofertaParaMaisUm(cat, true)?.oferta.codigo).toBe("avulso");
+  it("o desconto não vale para pacote que o cliente já tem", () => {
+    expect(motivo(() => montarPedido(comCliente, "cliente", ["times-de-agentes"], jaCliente))).toBe("ja_possui");
+  });
+
+  it("a área de membros usa a oferta de cliente só para quem já comprou", () => {
+    expect(ofertaParaMaisUm(comCliente, true)?.codigo).toBe("cliente");
+    expect(ofertaParaMaisUm(comCliente, false)?.codigo).toBe("avulso");
+    expect(ofertaParaMaisUm(cat, true)?.codigo).toBe("avulso");
   });
 });
 
@@ -184,7 +196,7 @@ describe("vitrine das páginas dos vídeos (preços do banco)", () => {
     const v = montarVitrine(cat, "agentes");
     expect(v.pacote?.slug).toBe("times-de-agentes");
     expect(v.pacote?.precoTexto).toBe("R$\u00a037,00");
-    expect(v.pacote?.comprarUrl).toBe("/loja/comprar/?oferta=avulso&produtos=times-de-agentes");
+    expect(v.pacote?.comprarUrl).toBe("/loja/checkout/?oferta=avulso&produtos=times-de-agentes");
     expect(montarVitrine(cat, "clonadora").pacote?.slug).toBe("design-copy-anuncios");
     expect(montarVitrine(cat, "harvey").pacote?.slug).toBe("times-de-agentes");
   });
@@ -192,7 +204,7 @@ describe("vitrine das páginas dos vídeos (preços do banco)", () => {
   it("o pacote de edição de vídeo, se for o do vídeo, sai por R$ 47", () => {
     const avulso = cat.ofertas.find((o) => o.codigo === "avulso")!;
     const video = cat.produtos.find((p) => p.slug === "edicao-de-video")!;
-    expect(formatarReais(precoNaOferta(avulso, video))).toBe("R$\u00a047,00");
+    expect(formatarReais(precoNaOferta(cat, avulso, video))).toBe("R$\u00a047,00");
   });
 
   it("o combo mostra a soma dos avulsos (R$ 195), o preço (R$ 127) e a economia (R$ 68)", () => {
@@ -201,7 +213,7 @@ describe("vitrine das páginas dos vídeos (preços do banco)", () => {
     expect(c.precoTexto).toBe("R$\u00a0127,00");
     expect(c.economiaTexto).toBe("R$\u00a068,00");
     expect(c.itens).toHaveLength(5);
-    expect(c.comprarUrl).toBe("/loja/comprar/?oferta=combo");
+    expect(c.comprarUrl).toBe("/loja/checkout/?oferta=combo");
   });
 
   it("página sem pacote no mapa mostra só o combo", () => {

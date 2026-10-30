@@ -28,27 +28,34 @@ export const dynamic = "force-dynamic";
 function ofertasVista(cat: Catalogo, ehCliente: boolean): OfertaVista[] {
   const avulso = cat.ofertas.find(ehAvulsoPorProduto);
   const ativos = cat.produtos.map((p) => p.slug);
-  const comPrecoProprio = avulso ? cat.produtos.filter((p) => precoNaOferta(avulso, p) !== avulso.precoCentavos) : [];
+  const comPrecoProprio = avulso ? cat.produtos.filter((p) => precoNaOferta(cat, avulso, p) !== avulso.precoCentavos) : [];
   return cat.ofertas.filter((o) => ehCliente || !o.exigeCliente).map((o) => {
     const incluidos = o.tipo === "todos" ? ativos : o.tipo === "fixa" ? o.itens.filter((s) => ativos.includes(s)) : null;
     const qtd = incluidos?.length ?? o.qtdEscolha ?? 1;
     // Referência só para exibir a economia: os itens fixos somados, ou o avulso padrão vezes a quantidade
     const referencia = !avulso || (qtd <= 1 && !o.exigeCliente) ? null : incluidos ? somaAvulsos(cat, incluidos) : avulso.precoCentavos * qtd;
     const nota = ehAvulsoPorProduto(o) && comPrecoProprio.length
-      ? comPrecoProprio.map((p) => `${p.titulo}: ${formatarReais(precoNaOferta(o, p))}`).join(". ")
-      : null;
+      ? comPrecoProprio.map((p) => `${p.titulo}: ${formatarReais(precoNaOferta(cat, o, p))}`).join(". ")
+      : o.descontoPercentual !== null
+        ? `${o.descontoPercentual}% de desconto sobre o avulso de cada pacote`
+        : null;
+    const porProduto = ehAvulsoPorProduto(o) || o.descontoPercentual !== null;
+    const precos = porProduto ? Object.fromEntries(cat.produtos.map((p) => [p.slug, precoNaOferta(cat, o, p)])) : null;
+    // Por produto, o cartão mostra o menor preço; o total certo aparece ao escolher
+    const exibido = precos ? Math.min(...Object.values(precos)) : o.precoCentavos;
     return {
       codigo: o.codigo,
       titulo: o.titulo,
       descricao: o.descricao,
       tipo: o.tipo,
       qtdEscolha: o.qtdEscolha,
-      precoTexto: formatarReais(o.precoCentavos),
-      precoReais: (o.precoCentavos / 100).toLocaleString("pt-BR", { maximumFractionDigits: 2 }),
-      precoCentavos: o.precoCentavos,
+      precoTexto: formatarReais(exibido),
+      precoReais: (exibido / 100).toLocaleString("pt-BR", { maximumFractionDigits: 2 }),
+      precoCentavos: exibido,
       referenciaTexto: referencia && referencia > o.precoCentavos ? formatarReais(referencia) : null,
       nota,
-      porProduto: ehAvulsoPorProduto(o),
+      porProduto,
+      precos,
       incluidos,
       destaque: o.tipo === "escolha" && (o.qtdEscolha ?? 0) > 1,
     };
@@ -58,7 +65,7 @@ function ofertasVista(cat: Catalogo, ehCliente: boolean): OfertaVista[] {
 function produtosVista(cat: Catalogo): ProdutoVista[] {
   const avulso = cat.ofertas.find(ehAvulsoPorProduto);
   return cat.produtos.map((p) => ({
-    precoAvulsoCentavos: avulso ? precoNaOferta(avulso, p) : null,
+    precoAvulsoCentavos: avulso ? precoNaOferta(cat, avulso, p) : null,
     slug: p.slug,
     titulo: p.titulo,
     resumo: p.resumo,
@@ -129,7 +136,6 @@ export default async function Loja({ searchParams }: { searchParams: Busca }) {
           ofertas={ofertasVista(catalogo, possui.length > 0)}
           produtos={produtosVista(catalogo)}
           possui={possui}
-          logado={Boolean(usuario)}
           ofertaInicial={busca.oferta ?? (busca.produto ? "avulso" : null)}
           produtosIniciais={iniciais}
         />

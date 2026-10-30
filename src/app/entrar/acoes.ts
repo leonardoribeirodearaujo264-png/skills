@@ -4,35 +4,43 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { destinoSeguro } from "@/lib/auth/cookies";
 import { gravarSessao, limparSessao, usuarioAtual } from "@/lib/auth/sessao";
-import { env } from "@/lib/env";
+import { enviarAcesso } from "@/lib/auth/acesso";
 import { clientePublico, clienteServico } from "@/lib/supabase/clientes";
 
 export type EstadoEntrar =
-  | { etapa: "email"; erro: string | null; email: string }
+  | { etapa: "email"; erro: string | null; email: string; semCompra?: boolean }
   | { etapa: "codigo"; erro: string | null; email: string };
 
 const email = z.email().max(254).transform((e) => e.trim().toLowerCase());
 const codigo = z.string().regex(/^\d{6,10}$/);
 
-function mensagemAuth(status: number | undefined): string {
-  if (status === 429) return "Muitas tentativas em pouco tempo. Espere um minuto e tente de novo.";
-  return "Não conseguimos enviar agora. Confira o e-mail e tente de novo.";
-}
-
-// Envia o código e o link de acesso. A resposta é a mesma exista ou não a conta.
+// A conta só existe para quem comprou (ela nasce na aprovação do pagamento). O código sai pelo Resend
+// e só é gerado se houver conta; e-mail sem compra recebe uma mensagem com o caminho para a loja.
 export async function enviarCodigo(_anterior: EstadoEntrar, form: FormData): Promise<EstadoEntrar> {
   const r = email.safeParse(form.get("email"));
   if (!r.success) return { etapa: "email", erro: "Digite um e-mail válido.", email: String(form.get("email") ?? "") };
-  const proximo = destinoSeguro(form.get("next"));
-  const { error } = await clientePublico().auth.signInWithOtp({
-    email: r.data,
-    options: {
-      shouldCreateUser: true,
-      emailRedirectTo: `${env().SITE_URL}/entrar/confirmar/?next=${encodeURIComponent(proximo)}`,
-    },
-  });
-  if (error) return { etapa: "email", erro: mensagemAuth(error.status), email: r.data };
-  return { etapa: "codigo", erro: null, email: r.data };
+  try {
+    const resultado = await enviarAcesso(r.data, "login", { proximo: destinoSeguro(form.get("next")) });
+    if (resultado === "sem_conta") {
+      return {
+        etapa: "email",
+        erro: "Não encontramos compra aprovada para este e-mail. Confira se é o mesmo e-mail usado no pagamento.",
+        email: r.data,
+        semCompra: true,
+      };
+    }
+    if (resultado === "aguarde") {
+      return {
+        etapa: "email",
+        erro: "Muitas tentativas seguidas. Confira o código que já chegou no e-mail ou tente de novo em alguns minutos.",
+        email: r.data,
+      };
+    }
+    return { etapa: "codigo", erro: null, email: r.data };
+  } catch (e) {
+    console.error("enviar codigo", e instanceof Error ? e.message : "erro desconhecido");
+    return { etapa: "email", erro: "Não conseguimos enviar agora. Tente de novo em instantes.", email: r.data };
+  }
 }
 
 export async function verificarCodigo(anterior: EstadoEntrar, form: FormData): Promise<EstadoEntrar> {

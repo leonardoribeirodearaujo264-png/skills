@@ -5,14 +5,20 @@ import type { ClienteMercadoPago, Pagamento } from "../mercadopago/api";
 
 export type PedidoSalvo = {
   id: string;
-  userId: string;
+  // null enquanto a compra (feita sem login) não foi aprovada
+  userId: string | null;
+  email: string;
   status: "pendente" | "pago" | "recusado" | "cancelado" | "reembolsado";
   valorCentavos: number;
   mpPaymentId: string | null;
+  // pagamentos deste pedido já estornados (nunca liberam)
+  estornados: string[];
 };
 
 export type RepoPagamento = {
   pedidoPorId(id: string): Promise<PedidoSalvo | null>;
+  // Liga ao pedido a conta do e-mail da compra, criando-a se não existir. Idempotente.
+  garantirConta(pedidoId: string, email: string): Promise<string>;
   liberar(pedidoId: string, paymentId: string, valorCentavos: number): Promise<string>;
   estornar(pedidoId: string, paymentId: string): Promise<string>;
   marcarRecusado(pedidoId: string): Promise<void>;
@@ -32,10 +38,16 @@ export type ResultadoPagamento =
   | "pedido_inexistente"
   | "moeda_divergente"
   | "valor_divergente"
+  | "sem_conta"
   | "reembolsado";
 
 // Resultados que precisam de alguém olhando: dinheiro entrou e o acesso não saiu, ou cobrança em dobro
-export const RESULTADOS_ALERTA = new Set<ResultadoPagamento>(["valor_divergente", "moeda_divergente", "pagamento_duplicado"]);
+export const RESULTADOS_ALERTA = new Set<ResultadoPagamento>([
+  "valor_divergente",
+  "moeda_divergente",
+  "pagamento_duplicado",
+  "sem_conta",
+]);
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const RECUSADOS = new Set(["rejected", "cancelled"]);
@@ -71,6 +83,13 @@ export async function aplicarPagamento(
 
   if (pagamento.status === "approved") {
     const valor = Math.round(pagamento.transaction_amount * 100);
+    // Compra feita sem login: a conta do e-mail é criada ou encontrada só quando o pagamento vai liberar
+    // de fato (valor certo, pedido em aberto, pagamento não estornado). A função SQL confere tudo de novo.
+    const vaiLiberar =
+      valor === pedido.valorCentavos &&
+      (pedido.status === "pendente" || pedido.status === "recusado") &&
+      !pedido.estornados.includes(pagamento.id);
+    if (!pedido.userId && vaiLiberar) await repo.garantirConta(pedido.id, pedido.email);
     const resultado = (await repo.liberar(pedido.id, pagamento.id, valor)) as ResultadoPagamento;
     // ja_pago também tenta: o envio anterior pode ter falhado. A trava no banco garante um único e-mail.
     if ((resultado === "liberado" || resultado === "ja_pago") && deps.avisarAcesso) await deps.avisarAcesso(pedido.id);
