@@ -80,7 +80,9 @@ function cardPacote(p) {
   preco.append(el("span", "oferta-preco-rotulo", "Por apenas"), el("span", "price", p.precoTexto));
   const cta = el("a", "cta", "Quero este pacote");
   cta.href = p.comprarUrl;
-  card.append(el("span", "kicker", "PACOTE DO VÍDEO"), titulo, el("p", null, p.descricao), lista, preco, cta);
+  const filhos = [el("span", "kicker", "PACOTE DO VÍDEO"), titulo, el("p", null, p.descricao), lista, preco, cta];
+  if (p.capa) filhos.unshift(capa(p.capa, false));
+  card.append(...filhos);
   return card;
 }
 
@@ -110,6 +112,7 @@ function cardCombo(c, comoTitulo) {
   const cta = el("a", "cta", "Quero o pacote completo");
   cta.href = c.comprarUrl;
   filhos.push(cta, el("p", "price-note", "Pagamento único. Acesso na hora, logo depois do pagamento."));
+  if (c.capa) filhos.unshift(capa(c.capa, false));
   card.append(...filhos);
   return card;
 }

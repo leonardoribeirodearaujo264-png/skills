@@ -7,6 +7,7 @@ import { OFERTA_DOS_VIDEOS } from "./paginas-videos";
 
 export type VitrinePacote = {
   slug: string;
+  capa: Capa | null;
   titulo: string;
   gancho: string;
   descricao: string;
@@ -16,6 +17,7 @@ export type VitrinePacote = {
 
 export type VitrineCombo = {
   titulo: string;
+  capa: Capa;
   descricao: string;
   itens: { titulo: string; conteudo: string }[];
   somaTexto: string | null;
@@ -114,6 +116,7 @@ export function montarVitrine(catalogo: Catalogo, pagina: string): Vitrine {
     config && produto && avulso
       ? {
           slug: produto.slug,
+          capa: capaDoPacote(produto.slug, produto.titulo),
           titulo: produto.titulo,
           gancho: config.gancho,
           descricao: produto.resumo,
@@ -130,6 +133,7 @@ export function montarVitrine(catalogo: Catalogo, pagina: string): Vitrine {
     const economia = soma !== null && soma > todos.precoCentavos ? soma - todos.precoCentavos : null;
     combo = {
       titulo: todos.titulo,
+      capa: CAPA_COMBO,
       // Deixa claro que a contagem inclui skills de outros autores, instaladas pelo instalador a partir do repositório original
       descricao: `Os ${catalogo.produtos.length} pacotes de uma vez, com aula, prompts e instalador. As contagens somam as skills autorais e as de outros autores que o instalador seleciona e instala.`,
       itens: catalogo.produtos.map((p) => ({ titulo: p.titulo, conteudo: contagem(p) })),

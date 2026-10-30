@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Bricolage_Grotesque, Inter, JetBrains_Mono } from "next/font/google";
 // Mesma identidade das páginas dos vídeos: o estilo.css delas é a base, a loja é uma camada por cima
 import "../../public/assets/estilo.css";
+import "../../public/assets/catalogo.css";
 import "./globals.css";
 
 const display = Bricolage_Grotesque({ subsets: ["latin"], weight: ["500", "700", "800"], variable: "--fonte-display" });

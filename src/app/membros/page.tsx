@@ -3,8 +3,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Alerta } from "@/components/Alerta";
 import { Cabecalho, Rodape } from "@/components/Cabecalho";
+import { CapaPacote } from "@/components/CapaPacote";
 import { Icone } from "@/components/Icone";
 import { usuarioAtual } from "@/lib/auth/sessao";
+import { capaDoPacote } from "@/lib/loja/apresentacao";
 import { formatarReais, ofertaParaMaisUm, precoAvulso, precoNaOferta } from "@/lib/loja/dominio";
 import { meusProdutos, pedidosRecentes } from "@/lib/loja/membros";
 import { carregarCatalogo } from "@/lib/loja/repositorio";
@@ -81,9 +83,7 @@ export default async function Membros() {
             {produtos.map((p) => (
               <article key={p.slug} className="item-membro shell">
                 <div className="core">
-                  <div className="capa" aria-hidden="true">
-                    <span>{p.slug}</span>
-                  </div>
+                  <CapaPacote capa={capaDoPacote(p.slug, p.titulo)} />
                   <h3>{p.titulo}</h3>
                   <p>{p.resumo}</p>
                   <div className="rodape">
@@ -121,6 +121,7 @@ export default async function Membros() {
               {outros.map((p) => (
                 <article key={p.slug} className="item-membro shell">
                   <div className="core">
+                    <CapaPacote capa={capaDoPacote(p.slug, p.titulo)} />
                     <h3>{p.titulo}</h3>
                     <p>{p.resumo}</p>
                     <div className="rodape">

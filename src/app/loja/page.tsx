@@ -3,6 +3,7 @@ import { Alerta } from "@/components/Alerta";
 import { Cabecalho, Rodape } from "@/components/Cabecalho";
 import { Icone } from "@/components/Icone";
 import { usuarioAtual } from "@/lib/auth/sessao";
+import { capaDoPacote } from "@/lib/loja/apresentacao";
 import { MENSAGEM_FALHA_CHECKOUT } from "@/lib/loja/checkout";
 import {
   ehAvulsoPorProduto,
@@ -67,6 +68,7 @@ function produtosVista(cat: Catalogo): ProdutoVista[] {
   return cat.produtos.map((p) => ({
     precoAvulsoCentavos: avulso ? precoNaOferta(cat, avulso, p) : null,
     slug: p.slug,
+    capa: capaDoPacote(p.slug, p.titulo),
     titulo: p.titulo,
     resumo: p.resumo,
     destaques: p.destaques,

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { Cabecalho, Rodape } from "@/components/Cabecalho";
+import { CapaPacote } from "@/components/CapaPacote";
 import { Icone } from "@/components/Icone";
 import { apresentacao, capaDoPacote, type Capa } from "@/lib/loja/apresentacao";
 import { ehAvulsoPorProduto, formatarReais, precoNaOferta, type Catalogo, type Produto } from "@/lib/loja/dominio";
@@ -11,7 +12,6 @@ import { urlComprar } from "@/lib/loja/vitrine";
 import { env } from "@/lib/env";
 import { clientePublico } from "@/lib/supabase/clientes";
 import { BarraCompra } from "./BarraCompra";
-import "../../../../public/assets/catalogo.css";
 
 // Página pública do pacote, aberta sem login. Título, resumo, números e preço vêm do banco;
 // textos extras e capa, de src/lib/loja/apresentacao.ts. O botão leva direto ao checkout.
@@ -116,12 +116,7 @@ export default async function PaginaPacote({ params }: Params) {
           {/* Painel de compra: logo abaixo do título no celular, fixo à direita no desktop */}
           <aside className="pp-painel" aria-label="Comprar">
             <div className="pp-painel-card">
-              {d.capa ? (
-                <picture className="capa-img">
-                  <source srcSet={d.capa.webp} type="image/webp" />
-                  <img src={d.capa.png} width={1200} height={800} alt={d.capa.alt} fetchPriority="high" decoding="async" />
-                </picture>
-              ) : null}
+              <CapaPacote capa={d.capa} imediata />
               <div className="pp-painel-linha">
                 <div className="pp-painel-preco">
                   <div>

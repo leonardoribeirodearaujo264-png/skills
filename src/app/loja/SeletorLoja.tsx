@@ -3,6 +3,8 @@
 import { useMemo, useState } from "react";
 import { formatarReais } from "@/lib/loja/dominio";
 import { Alerta } from "@/components/Alerta";
+import { CapaPacote } from "@/components/CapaPacote";
+import type { Capa } from "@/lib/loja/apresentacao";
 import { Icone } from "@/components/Icone";
 
 // Tudo o que é preço chega pronto do servidor. Esta tela só mostra e monta a escolha;
@@ -29,6 +31,7 @@ export type OfertaVista = {
 
 export type ProdutoVista = {
   slug: string;
+  capa: Capa | null;
   titulo: string;
   resumo: string;
   destaques: string[];
@@ -200,6 +203,7 @@ export function SeletorLoja({ ofertas, produtos, possui, ofertaInicial, produtos
                   />
                   <div className="shell">
                     <div className="core">
+                      <CapaPacote capa={p.capa} />
                       <div className="topo">
                         <h3>{p.titulo}</h3>
                         <span className="check" aria-hidden="true">

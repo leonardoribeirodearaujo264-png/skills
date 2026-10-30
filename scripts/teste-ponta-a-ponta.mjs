@@ -46,6 +46,7 @@ try {
   // Sem login
   const loja = await pagina("/loja/");
   conferir("loja responde 200 para visitante", loja.status === 200, String(loja.status));
+  conferir("loja mostra a capa de cada pacote", ["times-de-agentes", "edicao-de-video", "design-copy-anuncios"].every((p) => loja.texto.includes(`/capas/${p}.webp`)));
   conferir("loja mostra R$ 37, R$ 67 e R$ 127 vindos do banco", ["37", "67", "127"].every((v) => loja.texto.includes(`<small>R$</small>${v}`)));
   conferir("loja mostra o avulso de edição de vídeo a R$ 47", loja.texto.includes("R$\u00a047,00") || loja.texto.includes("R$&nbsp;47,00"));
   conferir("loja não mostra a oferta de cliente para visitante", !loja.texto.includes("Preço de cliente"));
@@ -90,6 +91,7 @@ try {
 
   const membros = await pagina("/membros/", cookie);
   conferir("área de membros lista o produto comprado", membros.texto.includes(`/membros/${COMPRADO}/`));
+  conferir("área de membros mostra a capa do comprado e dos bloqueados", membros.texto.includes(`/capas/${COMPRADO}.webp`) && membros.texto.includes(`/capas/${BLOQUEADO}.webp`));
   conferir("área de membros mostra os outros como bloqueados com preço", membros.texto.includes("Outros pacotes") && membros.texto.includes(`produtos=${BLOQUEADO}`));
   conferir("cliente vê 20% de desconto nos outros pacotes (R$ 37,00 vira R$ 29,60)", membros.texto.includes("20% de desconto") && membros.texto.includes("29,60"));
   conferir("a vitrine não oferece o pacote que ele já tem", !membros.texto.includes(`produtos=${COMPRADO}`));
