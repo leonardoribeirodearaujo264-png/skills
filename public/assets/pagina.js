@@ -86,6 +86,32 @@ function cardPacote(p) {
   return card;
 }
 
+// Pague 2, leve 3: abre a loja com o pacote do vídeo marcado para escolher os outros
+function cardLeve(l) {
+  const card = el("div", "oferta-leve");
+  card.setAttribute("role", "group");
+  card.setAttribute("aria-labelledby", "leve-titulo");
+  const titulo = el("h3", null, "Leve " + l.qtd + " pacotes por " + l.precoTexto);
+  titulo.id = "leve-titulo";
+  const precos = el("div", "oferta-combo-precos");
+  if (l.referenciaTexto) {
+    const de = el("s", "oferta-de");
+    de.append(el("span", "sr-only", "de "), l.referenciaTexto);
+    precos.append(de);
+  }
+  const por = el("span", "price");
+  por.append(el("span", "sr-only", "por "), l.precoTexto);
+  precos.append(por);
+  const cta = el("a", "cta", "Escolher meus " + l.qtd + " pacotes");
+  cta.href = l.escolherUrl;
+  const outros = l.qtd - 1;
+  const desc = l.comPacote
+    ? "O pacote deste vídeo já vem marcado. Escolha os outros " + (outros === 2 ? "dois" : outros) + " na loja."
+    : l.descricao;
+  card.append(el("span", "oferta-selo", l.titulo.toUpperCase()), titulo, el("p", "oferta-leve-desc", desc), precos, cta);
+  return card;
+}
+
 function cardCombo(c, comoTitulo) {
   const card = el("div", "oferta-combo");
   card.setAttribute("role", "group");
@@ -354,6 +380,7 @@ async function montarOferta() {
     if (!r.ok || !v.ok || (!v.pacote && !v.combo)) throw new Error("vitrine indisponível");
     const filhos = [];
     if (v.pacote) filhos.push(cardPacote(v.pacote));
+    if (v.leve) filhos.push(cardLeve(v.leve));
     if (v.combo) filhos.push(cardCombo(v.combo, !v.pacote));
     secao.replaceChildren(...filhos);
     if (v.pacote) {

@@ -39,7 +39,9 @@ function catalogoDoSeed(): Catalogo {
   };
 }
 
-const cat = catalogoDoSeed();
+// 0006: o leve 3 passou para R$ 47 (o seed do 0001 ainda tem o preço antigo)
+const seed = catalogoDoSeed();
+const cat: Catalogo = { ...seed, ofertas: seed.ofertas.map((o) => (o.codigo === "leve-3" ? { ...o, precoCentavos: 4700 } : o)) };
 const nada = new Set<string>();
 
 function motivo(fn: () => unknown): string {
@@ -75,16 +77,16 @@ describe("valores das ofertas", () => {
     expect(formatarReais(p.valorCentavos)).toBe("R$\u00a047,00");
   });
 
-  it("pague 2, leve 3 sai R$ 67,00 com três produtos", () => {
+  it("pague 2, leve 3 sai R$ 47,00 com três produtos", () => {
     const p = montarPedido(cat, "leve-3", ["times-de-agentes", "edicao-de-video", "programacao-sem-codigo"], nada);
-    expect(p.valorCentavos).toBe(6700);
+    expect(p.valorCentavos).toBe(4700);
     expect(p.itens).toHaveLength(3);
-    expect(formatarReais(p.valorCentavos)).toBe("R$\u00a067,00");
+    expect(formatarReais(p.valorCentavos)).toBe("R$\u00a047,00");
   });
 
-  it("o leve 3 com o de vídeo dentro continua R$ 67,00", () => {
+  it("o leve 3 com o de vídeo dentro continua R$ 47,00", () => {
     const p = montarPedido(cat, "leve-3", ["edicao-de-video", "design-copy-anuncios", "times-de-agentes"], nada);
-    expect(p.valorCentavos).toBe(6700);
+    expect(p.valorCentavos).toBe(4700);
   });
 
   it("o pacote de vídeo de R$ 97,00 não existe mais", () => {

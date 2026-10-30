@@ -45,7 +45,24 @@ export type CatalogoVitrine = {
   combo: { titulo: string; resumo: string; itens: string[]; capa: Capa; precoTexto: string; comprarUrl: string } | null;
 };
 
-export type Vitrine = { pacote: VitrinePacote | null; combo: VitrineCombo | null; catalogo: CatalogoVitrine | null };
+// "Pague 2, leve 3": leva à loja com o pacote do vídeo já marcado, para escolher os outros dois
+export type VitrineLeve = {
+  titulo: string;
+  descricao: string;
+  qtd: number;
+  precoTexto: string;
+  referenciaTexto: string | null;
+  escolherUrl: string;
+  // a loja abre com o pacote do vídeo já marcado
+  comPacote: boolean;
+};
+
+export type Vitrine = {
+  pacote: VitrinePacote | null;
+  leve: VitrineLeve | null;
+  combo: VitrineCombo | null;
+  catalogo: CatalogoVitrine | null;
+};
 
 function plural(n: number, um: string, varios: string): string {
   return `${n} ${n === 1 ? um : varios}`;
@@ -144,6 +161,23 @@ export function montarVitrine(catalogo: Catalogo, pagina: string): Vitrine {
     };
   }
   // A página inicial mostra o catálogo inteiro no lugar do combo sozinho
-  if (pagina === "") return { pacote, combo: null, catalogo: montarCatalogo(catalogo) };
-  return { pacote, combo, catalogo: null };
+  const multi = catalogo.ofertas.find((o) => o.tipo === "escolha" && (o.qtdEscolha ?? 0) > 1 && !o.exigeCliente);
+  let leve: VitrineLeve | null = null;
+  if (multi && avulso && multi.qtdEscolha) {
+    const q = new URLSearchParams({ oferta: multi.codigo });
+    if (pacote) q.set("produtos", pacote.slug);
+    const referencia = avulso.precoCentavos * multi.qtdEscolha;
+    leve = {
+      titulo: multi.titulo,
+      descricao: multi.descricao,
+      qtd: multi.qtdEscolha,
+      precoTexto: formatarReais(multi.precoCentavos),
+      referenciaTexto: referencia > multi.precoCentavos ? formatarReais(referencia) : null,
+      escolherUrl: `/loja/?${q}#passo-produtos`,
+      comPacote: pacote !== null,
+    };
+  }
+
+  if (pagina === "") return { pacote, leve: null, combo: null, catalogo: montarCatalogo(catalogo) };
+  return { pacote, leve, combo, catalogo: null };
 }

@@ -47,7 +47,7 @@ try {
   const loja = await pagina("/loja/");
   conferir("loja responde 200 para visitante", loja.status === 200, String(loja.status));
   conferir("loja mostra a capa de cada pacote", ["times-de-agentes", "edicao-de-video", "design-copy-anuncios"].every((p) => loja.texto.includes(`/capas/${p}.webp`)));
-  conferir("loja mostra R$ 37, R$ 67 e R$ 127 vindos do banco", ["37", "67", "127"].every((v) => loja.texto.includes(`<small>R$</small>${v}`)));
+  conferir("loja mostra R$ 37, R$ 47 do leve 3 e R$ 127 vindos do banco", ["37", "47", "127"].every((v) => loja.texto.includes(`<small>R$</small>${v}`)));
   conferir("loja mostra o avulso de edição de vídeo a R$ 47", loja.texto.includes("R$\u00a047,00") || loja.texto.includes("R$&nbsp;47,00"));
   conferir("loja não mostra a oferta de cliente para visitante", !loja.texto.includes("Preço de cliente"));
   // Catálogo da página inicial e página pública do pacote
