@@ -50,21 +50,6 @@
   .oferta-combo-qtd { text-align: left; }
 }
 
-/* Chamada curta logo depois do prompt */
-.oferta-rapida {
-  margin: 20px 0 8px; padding: 18px 20px; border-radius: 16px;
-  background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px;
-}
-.oferta-rapida-texto { display: grid; gap: 2px; font-size: 15px; min-width: 0; flex: 1 1 260px; }
-.oferta-rapida-texto strong { font: 700 17px/1.3 var(--font-display); color: var(--ink); }
-.oferta-rapida-texto span { color: var(--ink-soft); }
-.oferta-rapida-acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; }
-.oferta-rapida .cta { width: auto; max-width: none; padding: 14px 20px; min-height: 44px; box-shadow: none; }
-.oferta-rapida-ver {
-  display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px;
-  color: var(--accent); font-weight: 600; font-size: 14px; text-underline-offset: 3px;
-}
 
 /* Barra fixa de compra no celular */
 .barra-compra { display: none; }
@@ -85,7 +70,6 @@
   .barra-compra .cta { width: auto; max-width: none; flex: none; padding: 13px 18px; min-height: 44px; font-size: 15px; box-shadow: none; }
   /* Espaço para a barra não cobrir o fim da página */
   body.com-barra-compra { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
-  .oferta-rapida .cta { flex: 1 1 auto; justify-content: center; }
 }
 @media (prefers-reduced-motion: reduce) { .barra-compra { transition: none; } }
 
@@ -117,3 +101,7 @@
 /* Comparação com os preços reais dos pacotes separados (no lugar de preço riscado) */
 .oferta-comparacao { margin: 0 auto 20px; max-width: 46ch; font-size: 14px; color: var(--ink-soft); }
 .oferta-combo .oferta-comparacao { color: var(--code-muted); }
+
+/* Card do pacote logo depois do prompt (o mesmo do fim da página) */
+.offer.oferta-apos-prompt { margin: 24px 0 8px; }
+.oferta-ver-pacote { display: inline-block; margin-top: 14px; font-size: 14px; font-weight: 600; color: var(--accent); }

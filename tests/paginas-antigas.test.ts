@@ -1,4 +1,5 @@
 import { execFileSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { PAGINAS_ANTIGAS } from "@/lib/paginas-antigas";
 
@@ -12,9 +13,11 @@ const REF = process.env.REF_ORIGINAL ?? "eb532be";
 const BYPASS = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
 const cabecalhos: Record<string, string> = BYPASS ? { "x-vercel-protection-bypass": BYPASS } : {};
 
+// A página inicial mudou a pedido do dono (lista das páginas novas); ela é comparada com o arquivo atual
+// do repositório. As páginas dos vídeos continuam comparadas com o HTML que a automação divulgou.
 function original(pasta: string): string {
-  const caminho = pasta === "" ? "index.html" : `${pasta}/index.html`;
-  return execFileSync("git", ["show", `${REF}:${caminho}`], { encoding: "utf8" });
+  if (pasta === "") return readFileSync(new URL("../public/index.html", import.meta.url), "utf8");
+  return execFileSync("git", ["show", `${REF}:${pasta}/index.html`], { encoding: "utf8" });
 }
 
 describe.skipIf(!BASE)("páginas antigas dos vídeos", () => {

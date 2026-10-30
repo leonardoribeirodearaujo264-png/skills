@@ -27,22 +27,17 @@ function carregarEstiloOferta() {
   document.head.append(link);
 }
 
-// Chamada curta logo depois do prompt: a pessoa acabou de ver o valor do prompt grátis
-function chamadaAposPrompt(p) {
+// Logo depois do prompt: o card completo do pacote do vídeo (capa, título, preço e compra), igual ao do fim
+// da página, com o link para a página do pacote. A pessoa acabou de ver o valor do prompt grátis.
+function cardAposPrompt(p) {
   const passoDoPrompt = [...document.querySelectorAll("main .step")].find(s => s.querySelector(".code"));
   if (!passoDoPrompt) return;
-  const box = el("aside", "oferta-rapida");
-  box.setAttribute("aria-label", "Pacote deste vídeo");
-  const texto = el("div", "oferta-rapida-texto");
-  texto.append(el("strong", null, "Quer o resto pronto?"), el("span", null, "O pacote " + p.titulo + " por " + p.precoTexto + ", pagamento único."));
-  const acoes = el("div", "oferta-rapida-acoes");
-  const cta = el("a", "cta", "Quero este pacote");
-  cta.href = p.comprarUrl;
-  const ver = el("a", "oferta-rapida-ver", "Ver o que vem no pacote");
-  ver.href = "#oferta";
-  acoes.append(cta, ver);
-  box.append(texto, acoes);
-  passoDoPrompt.after(box);
+  const card = cardPacote(p, "oferta-apos-prompt-titulo");
+  card.classList.add("oferta-apos-prompt");
+  const ver = el("a", "oferta-ver-pacote", "Ver o que vem no pacote");
+  ver.href = "/pacotes/" + encodeURIComponent(p.slug) + "/";
+  card.append(ver);
+  passoDoPrompt.after(card);
 }
 
 // Barra fixa no celular com preço e botão. Some quando o card do pacote ou a chamada estão na tela,
@@ -58,7 +53,7 @@ function barraFixa(p) {
   barra.append(info, cta);
   document.body.append(barra);
   document.body.classList.add("com-barra-compra");
-  const alvos = document.querySelectorAll(".oferta-pacote, .oferta-rapida");
+  const alvos = document.querySelectorAll(".oferta-pacote");
   if (!("IntersectionObserver" in window) || !alvos.length) return;
   const visiveis = new Set();
   const obs = new IntersectionObserver(entradas => {
@@ -68,12 +63,13 @@ function barraFixa(p) {
   alvos.forEach(a => obs.observe(a));
 }
 
-function cardPacote(p) {
+// idTitulo: o mesmo card aparece depois do prompt e no fim da página, cada um com o seu id
+function cardPacote(p, idTitulo = "oferta-titulo") {
   const card = el("div", "offer oferta-pacote");
   card.setAttribute("role", "group");
-  card.setAttribute("aria-labelledby", "oferta-titulo");
+  card.setAttribute("aria-labelledby", idTitulo);
   const titulo = el("h2", null, p.gancho);
-  titulo.id = "oferta-titulo";
+  titulo.id = idTitulo;
   const lista = el("ul", "oferta-confianca");
   lista.replaceChildren(...CONFIG.confianca.map(t => el("li", null, t)));
   const preco = el("p", "oferta-preco");
@@ -388,7 +384,7 @@ async function montarOferta() {
     if (v.leve) filhos.push(cardLeve(v.leve));
     secao.replaceChildren(...filhos);
     if (v.pacote) {
-      chamadaAposPrompt(v.pacote);
+      cardAposPrompt(v.pacote);
       barraFixa(v.pacote);
     }
   } catch {
