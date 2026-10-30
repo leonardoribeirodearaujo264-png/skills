@@ -22,11 +22,11 @@ import { ipDaRequisicao, permitir } from "@/lib/loja/limites";
 const escolhaEntrada = z.object({
   oferta: z.string().regex(/^[a-z0-9-]{1,40}$/),
   produtos: z.array(z.string().regex(/^[a-z0-9-]{1,60}$/)).max(20),
-  // oferta complementar marcada no checkout; vazio = sem bump. O preço é sempre o do banco.
-  bump: z.string().regex(/^[a-z0-9-]{1,60}$/).nullable(),
+  // ofertas complementares marcadas no checkout (separadas por vírgula). O preço é sempre o do banco.
+  bumps: z.array(z.string().regex(/^[a-z0-9-]{1,60}$/)).max(10),
 });
 
-export type Entrada = { oferta: string; produtos: string; bump: string; nome: string; email: string; telefone: string };
+export type Entrada = { oferta: string; produtos: string; bumps: string; nome: string; email: string; telefone: string };
 
 function mensagem(f: Falha): string {
   return f.motivo === "falha" ? MENSAGEM_FALHA_CHECKOUT : MENSAGEM_RECUSA[f.motivo];
@@ -37,7 +37,7 @@ async function validar(e: Entrada) {
   const escolha = escolhaEntrada.safeParse({
     oferta: e.oferta,
     produtos: e.produtos.split(",").filter(Boolean),
-    bump: e.bump || null,
+    bumps: e.bumps.split(",").filter(Boolean),
   });
   if (!escolha.success) return { erro: "Escolha uma oferta válida." };
   // Com sessão, o e-mail é o da conta; nome e telefone sempre vêm do formulário
@@ -64,7 +64,7 @@ function paraTela(r: PixGerado): PixNaTela {
 export async function acaoGerarPix(e: Entrada): Promise<RespostaPix> {
   const v = await validar(e);
   if ("erro" in v) return { ok: false, erro: v.erro ?? MENSAGEM_FALHA_CHECKOUT, campos: "campos" in v ? v.campos : undefined };
-  const r = await gerarPix({ usuario: v.usuario, ...v.comprador }, v.escolha.oferta, v.escolha.produtos, v.escolha.bump);
+  const r = await gerarPix({ usuario: v.usuario, ...v.comprador }, v.escolha.oferta, v.escolha.produtos, v.escolha.bumps);
   if ("motivo" in r) return { ok: false, erro: mensagem(r) };
   // Pedido já pago ou com cartão em análise: não gera outra cobrança
   if ("situacao" in r) return { ok: true, situacao: r.situacao, pedidoId: r.pedidoId };
@@ -128,7 +128,7 @@ export async function acaoPagarCartao(e: Entrada, dadosCartao: unknown): Promise
     emissor: c.data.issuer_id ?? null,
     valorCentavos: Math.round(c.data.transaction_amount * 100),
     documento: doc?.type && doc.number ? { tipo: doc.type, numero: doc.number.replace(/\D/g, "") } : null,
-  }, v.escolha.bump);
+  }, v.escolha.bumps);
   if ("motivo" in r) return { ok: false, erro: mensagem(r) };
   if (r.situacao === "recusado") {
     return {

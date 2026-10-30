@@ -3,8 +3,8 @@ import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { destinoSeguro } from "@/lib/auth/cookies";
 import {
-  adicionarBump,
-  bumpParaPedido,
+  adicionarBumps,
+  bumpsParaPedido,
   formatarReais,
   montarPedido,
   ofertaParaMaisUm,
@@ -304,8 +304,8 @@ describe("catálogo da página inicial", () => {
   });
 });
 
-describe("oferta complementar (order bump)", () => {
-  const bump = {
+describe("ofertas complementares (order bumps)", () => {
+  const lancamento = {
     slug: "lancamento-pro",
     titulo: "Lançamento Pro",
     resumo: "15 agentes e 50 skills.",
@@ -315,40 +315,68 @@ describe("oferta complementar (order bump)", () => {
     destaques: [],
     qtdSkills: 50,
     qtdAgentes: 15,
-    qtdPrompts: 0,
+    qtdPrompts: 8,
     aulaDuracaoS: null,
     precoBumpCentavos: 1990,
     soBump: true,
   };
-  const comBump: Catalogo = { ...cat, bumps: [bump] };
+  // 0009: Edição de vídeo por R$ 27 e Motion por R$ 9,90 como complemento (seguem à venda normalmente)
+  const comPreco = (slug: string, centavos: number) => ({ ...cat.produtos.find((p) => p.slug === slug)!, precoBumpCentavos: centavos });
+  const comBumps: Catalogo = {
+    ...cat,
+    bumps: [comPreco("edicao-de-video", 2700), comPreco("motion-mockup-fontes", 990), lancamento],
+  };
 
-  it("marcado, soma o preço de bump do banco ao pedido e entra como item", () => {
-    const base = montarPedido(comBump, "avulso", ["times-de-agentes"], nada);
-    const p = adicionarBump(comBump, base, "lancamento-pro", nada);
-    expect(p.valorCentavos).toBe(3700 + 1990);
-    expect(p.itens).toEqual(["times-de-agentes", "lancamento-pro"]);
-    expect(p.chaveItens).toBe("avulso:times-de-agentes+bump:lancamento-pro");
+  it("o checkout oferece os três, o vendido só como complemento primeiro", () => {
+    expect(bumpsParaPedido(comBumps, ["times-de-agentes"], nada).map((b) => [b.slug, b.precoBumpCentavos])).toEqual([
+      ["lancamento-pro", 1990],
+      ["edicao-de-video", 2700],
+      ["motion-mockup-fontes", 990],
+    ]);
+  });
+
+  it("não oferece o pacote que já está no pedido nem o que a pessoa já tem", () => {
+    const slugs = bumpsParaPedido(comBumps, ["edicao-de-video"], new Set(["lancamento-pro"])).map((b) => b.slug);
+    expect(slugs).toEqual(["motion-mockup-fontes"]);
+  });
+
+  it("com os três marcados, soma os preços de bump do banco e grava os três itens", () => {
+    const base = montarPedido(comBumps, "avulso", ["times-de-agentes"], nada);
+    const p = adicionarBumps(comBumps, base, ["lancamento-pro", "motion-mockup-fontes", "edicao-de-video"], nada);
+    expect(p.valorCentavos).toBe(3700 + 1990 + 2700 + 990);
+    expect(formatarReais(p.valorCentavos)).toBe("R$\u00a093,80");
+    expect(p.itens).toEqual(["times-de-agentes", "edicao-de-video", "lancamento-pro", "motion-mockup-fontes"]);
+    expect(p.chaveItens).toBe("avulso:times-de-agentes+bump:edicao-de-video,lancamento-pro,motion-mockup-fontes");
+  });
+
+  it("a ordem em que a pessoa marca não muda a chave do pedido", () => {
+    const base = montarPedido(comBumps, "avulso", ["times-de-agentes"], nada);
+    const a = adicionarBumps(comBumps, base, ["motion-mockup-fontes", "lancamento-pro"], nada);
+    const b = adicionarBumps(comBumps, base, ["lancamento-pro", "motion-mockup-fontes"], nada);
+    expect(a.chaveItens).toBe(b.chaveItens);
+  });
+
+  it("sem nenhum marcado, o pedido fica igual", () => {
+    const base = montarPedido(comBumps, "avulso", ["times-de-agentes"], nada);
+    expect(adicionarBumps(comBumps, base, [], nada)).toEqual(base);
   });
 
   it("vale também com o leve 3 (R$ 47 + R$ 19,90)", () => {
-    const base = montarPedido(comBump, "leve-3", ["times-de-agentes", "edicao-de-video", "design-copy-anuncios"], nada);
-    expect(adicionarBump(comBump, base, "lancamento-pro", nada).valorCentavos).toBe(4700 + 1990);
+    const base = montarPedido(comBumps, "leve-3", ["times-de-agentes", "programacao-sem-codigo", "design-copy-anuncios"], nada);
+    expect(adicionarBumps(comBumps, base, ["lancamento-pro"], nada).valorCentavos).toBe(4700 + 1990);
   });
 
-  it("recusa bump inexistente e bump que a pessoa já tem", () => {
-    const base = montarPedido(comBump, "avulso", ["times-de-agentes"], nada);
-    expect(motivo(() => adicionarBump(comBump, base, "nao-existe", nada))).toBe("produto_inexistente");
-    expect(motivo(() => adicionarBump(comBump, base, "lancamento-pro", new Set(["lancamento-pro"])))).toBe("ja_possui");
+  it("recusa bump inexistente, repetido, já no pedido ou que a pessoa já tem", () => {
+    const base = montarPedido(comBumps, "avulso", ["edicao-de-video"], nada);
+    expect(motivo(() => adicionarBumps(comBumps, base, ["nao-existe"], nada))).toBe("produto_inexistente");
+    expect(motivo(() => adicionarBumps(comBumps, base, ["lancamento-pro", "lancamento-pro"], nada))).toBe("produto_repetido");
+    expect(motivo(() => adicionarBumps(comBumps, base, ["edicao-de-video"], nada))).toBe("ja_possui");
+    expect(motivo(() => adicionarBumps(comBumps, base, ["lancamento-pro"], new Set(["lancamento-pro"])))).toBe("ja_possui");
   });
 
-  it("o bump não entra na vitrine nem no combo", () => {
-    expect(comBump.produtos.some((p) => p.slug === "lancamento-pro")).toBe(false);
-    expect(montarPedido(comBump, "combo", [], nada).itens).not.toContain("lancamento-pro");
-  });
-
-  it("só é oferecido a quem ainda não tem", () => {
-    expect(bumpParaPedido(comBump, ["times-de-agentes"], nada)?.slug).toBe("lancamento-pro");
-    expect(bumpParaPedido(comBump, ["times-de-agentes"], new Set(["lancamento-pro"]))).toBeNull();
+  it("o vendido só como complemento não entra na vitrine nem no combo", () => {
+    expect(comBumps.produtos.some((p) => p.slug === "lancamento-pro")).toBe(false);
+    expect(montarPedido(comBumps, "combo", [], nada).itens).not.toContain("lancamento-pro");
   });
 });
 

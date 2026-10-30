@@ -101,27 +101,37 @@ export function montarPedido(
   return { itens, valorCentavos, chaveItens: `${oferta.codigo}:${itens.join(",")}` };
 }
 
-// Oferta complementar marcada no checkout: entra como mais um item do pedido, pelo preço de bump do banco.
-// Não oferece o que a pessoa já tem nem o que já está no pedido.
-export function adicionarBump(
+// Ofertas complementares marcadas no checkout (quantas a pessoa quiser): cada uma entra como mais um item
+// do pedido, pelo preço de bump do banco. Não aceita repetida, o que já está no pedido nem o que a pessoa tem.
+export function adicionarBumps(
   catalogo: Catalogo,
   pedido: ItensDoPedido,
-  slug: string,
+  slugs: readonly string[],
   possui: ReadonlySet<string>,
 ): ItensDoPedido {
-  const bump = catalogo.bumps.find((p) => p.slug === slug);
-  if (!bump || bump.precoBumpCentavos === null) throw new PedidoInvalido("produto_inexistente");
-  if (pedido.itens.includes(slug) || possui.has(slug)) throw new PedidoInvalido("ja_possui");
+  if (!slugs.length) return pedido;
+  if (new Set(slugs).size !== slugs.length) throw new PedidoInvalido("produto_repetido");
+  let valor = pedido.valorCentavos;
+  for (const slug of slugs) {
+    const bump = catalogo.bumps.find((p) => p.slug === slug);
+    if (!bump || bump.precoBumpCentavos === null) throw new PedidoInvalido("produto_inexistente");
+    if (pedido.itens.includes(slug) || possui.has(slug)) throw new PedidoInvalido("ja_possui");
+    valor += bump.precoBumpCentavos;
+  }
+  const ordenados = [...slugs].sort();
   return {
-    itens: [...pedido.itens, slug],
-    valorCentavos: pedido.valorCentavos + bump.precoBumpCentavos,
-    chaveItens: `${pedido.chaveItens}+bump:${slug}`,
+    itens: [...pedido.itens, ...ordenados],
+    valorCentavos: valor,
+    chaveItens: `${pedido.chaveItens}+bump:${ordenados.join(",")}`,
   };
 }
 
-// Bump que aparece no checkout para estes itens: o primeiro que a pessoa ainda não tem
-export function bumpParaPedido(catalogo: Catalogo, itens: readonly string[], possui: ReadonlySet<string>): Produto | null {
-  return catalogo.bumps.find((p) => p.precoBumpCentavos !== null && !itens.includes(p.slug) && !possui.has(p.slug)) ?? null;
+// Bumps que aparecem no checkout para estes itens: os que a pessoa ainda não tem e não estão no pedido.
+// Os vendidos só como complemento vêm primeiro; depois, a ordem da vitrine.
+export function bumpsParaPedido(catalogo: Catalogo, itens: readonly string[], possui: ReadonlySet<string>): Produto[] {
+  return catalogo.bumps
+    .filter((p) => p.precoBumpCentavos !== null && !itens.includes(p.slug) && !possui.has(p.slug))
+    .sort((a, b) => Number(b.soBump) - Number(a.soBump) || a.ordem - b.ordem);
 }
 
 // Avulso comum é por produto: cada produto pode ter preço próprio no banco (ex.: edição de vídeo).

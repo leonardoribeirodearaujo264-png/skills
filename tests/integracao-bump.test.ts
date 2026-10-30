@@ -28,11 +28,13 @@ describe.skipIf(!ativo)("order bump: do checkout ao acesso", () => {
   let pixId: string | null = null;
   // Pedido sem o bump, gerado antes de marcar: tem de ser cancelado para não ser pago duas vezes
   let pedidoSemBump: string | null = null;
+  const pedidosExtras: string[] = [];
+  const pixExtras: string[] = [];
 
   afterAll(async () => {
     const db = admin();
-    if (pixId) await depsPagamento().mp.cancelarPagamento(pixId);
-    for (const id of [pedidoId, pedidoSemBump]) {
+    for (const id of [pixId, ...pixExtras]) if (id) await depsPagamento().mp.cancelarPagamento(id);
+    for (const id of [pedidoId, pedidoSemBump, ...pedidosExtras]) {
       if (!id) continue;
       await db.from("loja_acessos").delete().eq("pedido_id", id);
       await db.from("loja_pedidos").delete().eq("id", id);
@@ -46,7 +48,7 @@ describe.skipIf(!ativo)("order bump: do checkout ao acesso", () => {
     const p = await previaCompra(null, "avulso", [PRINCIPAL]);
     if ("motivo" in p) throw new Error(p.motivo);
     expect(p.valorCentavos).toBe(3700);
-    expect(p.bump).toMatchObject({ slug: BUMP, precoCentavos: 1990 });
+    expect(p.bumps.find((b) => b.slug === BUMP)).toMatchObject({ slug: BUMP, precoCentavos: 1990 });
     expect(p.itens.map((i) => i.slug)).toEqual([PRINCIPAL]);
   });
 
@@ -55,7 +57,7 @@ describe.skipIf(!ativo)("order bump: do checkout ao acesso", () => {
     const sem = await gerarPix(comprador, "avulso", [PRINCIPAL]);
     if ("motivo" in sem || "situacao" in sem) throw new Error(JSON.stringify(sem));
     pedidoSemBump = sem.pedidoId;
-    const com = await gerarPix(comprador, "avulso", [PRINCIPAL], BUMP);
+    const com = await gerarPix(comprador, "avulso", [PRINCIPAL], [BUMP]);
     if ("motivo" in com || "situacao" in com) throw new Error(JSON.stringify(com));
     pedidoId = com.pedidoId;
     pixId = com.pix.id;
@@ -67,7 +69,7 @@ describe.skipIf(!ativo)("order bump: do checkout ao acesso", () => {
   }, 90_000);
 
   it("marcado, o Pix sai com o total somado e o pedido grava os dois itens", async () => {
-    const r = await gerarPix({ usuario: null, email: EMAIL, nome: "Teste Bump", telefone: "11987654321" }, "avulso", [PRINCIPAL], BUMP);
+    const r = await gerarPix({ usuario: null, email: EMAIL, nome: "Teste Bump", telefone: "11987654321" }, "avulso", [PRINCIPAL], [BUMP]);
     if ("motivo" in r || "situacao" in r) throw new Error(JSON.stringify(r));
     pedidoId = r.pedidoId;
     pixId = r.pix.id;
@@ -76,6 +78,23 @@ describe.skipIf(!ativo)("order bump: do checkout ao acesso", () => {
     expect(pagamentos.find((x) => x.id === r.pix.id)?.transaction_amount).toBe(56.9);
     const itens = await admin().from("loja_pedido_itens").select("produto_slug").eq("pedido_id", r.pedidoId);
     expect((itens.data ?? []).map((i) => i.produto_slug).sort()).toEqual([PRINCIPAL, BUMP].sort());
+  }, 60_000);
+
+  it("com dois bumps marcados, a prévia oferece os três e o Pix soma os dois (0009)", async () => {
+    const p = await previaCompra(null, "avulso", [PRINCIPAL]);
+    if ("motivo" in p) throw new Error(p.motivo);
+    expect(p.bumps.map((b) => [b.slug, b.precoCentavos])).toEqual([
+      [BUMP, 1990],
+      ["edicao-de-video", 2700],
+      ["motion-mockup-fontes", 990],
+    ]);
+    const r = await gerarPix({ usuario: null, email: EMAIL, nome: "Teste Bump", telefone: "11987654321" }, "avulso", [PRINCIPAL], [BUMP, "motion-mockup-fontes"]);
+    if ("motivo" in r || "situacao" in r) throw new Error(JSON.stringify(r));
+    pedidosExtras.push(r.pedidoId);
+    pixExtras.push(r.pix.id);
+    expect(r.valorCentavos).toBe(3700 + 1990 + 990);
+    const itens = await admin().from("loja_pedido_itens").select("produto_slug").eq("pedido_id", r.pedidoId);
+    expect((itens.data ?? []).map((i) => i.produto_slug).sort()).toEqual([PRINCIPAL, BUMP, "motion-mockup-fontes"].sort());
   }, 60_000);
 
   it("pagamento aprovado libera os dois pacotes e manda o e-mail de acesso uma vez", async () => {
