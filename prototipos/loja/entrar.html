@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Entrar | Leonardo Araujo</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../public/assets/estilo.css">
+<link rel="stylesheet" href="proto.css">
+<script src="proto.js"></script>
+<script src="dados.js"></script>
+</head>
+<body>
+
+<nav class="proto-bar" data-estados="padrao:Formulário,invalido:E-mail inválido,enviando:Enviando,enviado:Enviado,erro:Erro no envio,expirado:Link expirado"></nav>
+
+<header class="site-head">
+  <a class="brand" href="../../public/index.html"><span class="dot" aria-hidden="true"></span>Leonardo Araujo</a>
+  <nav class="nav" aria-label="Principal">
+    <a href="loja.html">Loja</a>
+    <a href="entrar.html" aria-current="page">Entrar</a>
+  </nav>
+</header>
+
+<main class="auth">
+  <div class="shell revela">
+    <!-- Formulário (padrão, inválido, enviando, erro, expirado) -->
+    <div class="core" data-estado="padrao invalido enviando erro expirado">
+      <span class="icone-grande" aria-hidden="true"><i data-i="email" data-t="26"></i></span>
+      <div>
+        <h1 id="titulo">Entrar na sua área</h1>
+      </div>
+      <p class="lead">Digite o e-mail usado na compra. Enviamos um link de acesso, sem senha.</p>
+
+      <div id="volta" class="alert" hidden>
+        <i data-i="pacote" data-t="18"></i>
+        <div><strong>Seu pedido está guardado</strong><p id="volta-texto"></p></div>
+      </div>
+
+      <div class="alert warn" role="status" data-estado="expirado">
+        <i data-i="relogio" data-t="20"></i>
+        <div><strong>Esse link expirou ou já foi usado</strong><p>Cada link vale por 1 hora e funciona uma vez. Peça um novo abaixo.</p></div>
+      </div>
+
+      <div class="alert danger" role="alert" data-estado="erro">
+        <i data-i="erro" data-t="20"></i>
+        <div><strong>Não conseguimos enviar o link</strong><p>Muitas tentativas seguidas. Aguarde 1 minuto e tente de novo.</p></div>
+      </div>
+
+      <form id="form" novalidate aria-labelledby="titulo">
+        <div class="campo">
+          <label for="email">E-mail</label>
+          <input id="email" name="email" type="email" inputmode="email" autocomplete="email" spellcheck="false"
+                 placeholder="voce@email.com" required aria-describedby="email-ajuda email-erro">
+          <p class="ajuda" id="email-ajuda">Use o mesmo e-mail do pagamento no Mercado Pago.</p>
+          <p class="erro-campo" id="email-erro" data-estado="invalido"><i data-i="alerta" data-t="14"></i>Confira o e-mail. Exemplo: ana.souza@gmail.com</p>
+        </div>
+        <button class="btn lg" type="submit" id="enviar" style="margin-top:20px">
+          <span class="rotulo">Enviar link de acesso</span><span class="ico"><i data-i="direita" data-t="16"></i></span>
+        </button>
+      </form>
+      <p class="small muted" style="margin:0;text-align:center">Ainda não comprou? <a href="loja.html">Ver a loja</a></p>
+    </div>
+
+    <!-- Enviado -->
+    <div class="core" data-estado="enviado" role="status" aria-live="polite">
+      <span class="icone-grande ok" aria-hidden="true"><i data-i="ok" data-t="26"></i></span>
+      <h1 id="titulo-enviado" tabindex="-1">Confira seu e-mail</h1>
+      <p class="lead">Se <strong class="mono" id="email-enviado" style="color:var(--ink)">ana.souza@gmail.com</strong> estiver certo, o link chega em instantes. Ele vale por 1 hora.</p>
+      <ul class="dicas">
+        <li>Abra o link no mesmo aparelho em que você pediu.</li>
+        <li>Não chegou em 2 minutos? Olhe Spam e Promoções.</li>
+        <li>O assunto do e-mail é "Seu link de acesso".</li>
+      </ul>
+      <div style="display:grid;gap:8px">
+        <button class="btn secondary lg" type="button" id="reenviar" aria-disabled="true" style="box-shadow:0 0 0 1px var(--line)">Reenviar em <span class="num" id="contagem">0:45</span></button>
+        <button class="btn ghost" type="button" data-ir="padrao">Usar outro e-mail</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>© 2026 Leonardo Araujo</footer>
+<p id="aviso" class="sr-only" aria-live="polite"></p>
+
+<script>
+const EMAIL_VALIDO = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+let timerReenvio = null;
+
+function mostrarContextoVolta() {
+  const p = new URL(location.href).searchParams;
+  if (p.get("volta") !== "loja") return;
+  const oferta = DADOS_SERVIDOR.ofertas.find(o => o.id === p.get("oferta"));
+  if (!oferta) return;
+  document.getElementById("volta").hidden = false;
+  document.getElementById("volta-texto").textContent =
+    `${oferta.titulo}, ${reais(oferta.precoCentavos)}. Depois de entrar, você volta direto para o pagamento.`;
+}
+
+function contarReenvio() {
+  clearInterval(timerReenvio);
+  let s = 45;
+  const btn = document.getElementById("reenviar");
+  const out = document.getElementById("contagem");
+  btn.setAttribute("aria-disabled", "true");
+  btn.innerHTML = `Reenviar em <span class="num" id="contagem">0:45</span>`;
+  timerReenvio = setInterval(() => {
+    s -= 1;
+    const alvo = document.getElementById("contagem");
+    if (alvo) alvo.textContent = `0:${String(s).padStart(2, "0")}`;
+    if (s <= 0) {
+      clearInterval(timerReenvio);
+      btn.removeAttribute("aria-disabled");
+      btn.textContent = "Reenviar link";
+    }
+  }, 1000);
+}
+
+document.addEventListener("estado", e => {
+  const estado = e.detail;
+  const input = document.getElementById("email");
+  const btn = document.getElementById("enviar");
+  input.setAttribute("aria-invalid", String(estado === "invalido"));
+  input.readOnly = estado === "enviando";
+  if (estado === "invalido" && !input.value) input.value = "ana.souza@gmail";
+  if (estado === "enviando" && !input.value) input.value = "ana.souza@gmail.com";
+  if (estado === "enviando") {
+    btn.setAttribute("aria-busy", "true");
+    btn.innerHTML = `<span class="spinner" aria-hidden="true"></span>Enviando link`;
+  } else {
+    btn.removeAttribute("aria-busy");
+    btn.innerHTML = `<span>${estado === "expirado" || estado === "erro" ? "Enviar novo link" : "Enviar link de acesso"}</span><span class="ico">${svg("direita", 16)}</span>`;
+  }
+  if (estado === "enviado") {
+    document.getElementById("email-enviado").textContent = input.value || "ana.souza@gmail.com";
+    contarReenvio();
+    requestAnimationFrame(() => document.getElementById("titulo-enviado").focus());
+  }
+  if (estado === "invalido") requestAnimationFrame(() => input.focus());
+});
+
+document.getElementById("form").addEventListener("submit", e => {
+  e.preventDefault();
+  const input = document.getElementById("email");
+  if (document.getElementById("enviar").getAttribute("aria-busy") === "true") return;
+  if (!EMAIL_VALIDO.test(input.value.trim())) { irPara("invalido"); return; }
+  // POST /api/auth/link { email, volta } -> 204. Resposta igual exista ou não a conta.
+  irPara("enviando");
+  setTimeout(() => irPara("enviado"), 1200);
+});
+document.getElementById("email").addEventListener("input", e => {
+  if (estadoAtual === "invalido" && EMAIL_VALIDO.test(e.target.value.trim())) irPara("padrao");
+});
+document.getElementById("reenviar").addEventListener("click", e => {
+  if (e.currentTarget.getAttribute("aria-disabled") === "true") return;
+  avisar("Link reenviado.");
+  contarReenvio();
+});
+document.querySelectorAll("[data-ir]").forEach(b => b.addEventListener("click", () => {
+  irPara(b.dataset.ir);
+  requestAnimationFrame(() => document.getElementById("email").focus());
+}));
+document.addEventListener("DOMContentLoaded", mostrarContextoVolta);
+</script>
+</body>
+</html>

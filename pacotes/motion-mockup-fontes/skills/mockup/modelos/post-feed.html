@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup post no feed</title>
+<style>
+  /* =========================================================
+     TROQUE AQUI
+     --imagem: a arte do post. Ex.: url("meu-post.png")
+       (caminho relativo a este arquivo). O valor padrao e um
+       marcador: nunca entregue o mockup com ele.
+     --prop: altura dividida pela largura da arte.
+       1 para post quadrado, 1.25 para post 4:5.
+     --ajuste: cover corta sem distorcer; contain mostra tudo.
+     Perfil e legenda: edite o texto no HTML, mais abaixo.
+     O tamanho do PNG vem do --window-size do navegador.
+     ========================================================= */
+  :root {
+    --imagem: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1080 1350'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23e9ecf2'/><stop offset='1' stop-color='%23cfd6e2'/></linearGradient></defs><rect width='1080' height='1350' fill='url(%23g)'/><text x='540' y='690' font-family='Arial' font-size='72' fill='%238a90a0' text-anchor='middle'>Sua arte aqui</text></svg>");
+    --prop: 1;
+    --ajuste: cover;
+    --posicao: center;
+
+    --fundo-1: #eef0ff;
+    --fundo-2: #c9cdf0;
+    --cartao: #ffffff;
+    --texto: #16171b;
+    --texto-suave: #6b6f7a;
+    --icone: #16171b;
+    --avatar-1: #ff9a5a;
+    --avatar-2: #7a5cff;
+    --sombra: rgba(30, 32, 70, 0.28);
+
+    /* largura do cartao: cabe com margem segura em 1:1, 4:5, 9:16 e 16:9 */
+    --w: min(78vw, calc(84vh / (var(--prop) + 0.36)));
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background: radial-gradient(120% 90% at 30% 10%, var(--fundo-1), var(--fundo-2));
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    color: var(--texto);
+  }
+
+  .cartao {
+    width: var(--w);
+    overflow: hidden;
+    background: var(--cartao);
+    border-radius: calc(var(--w) * 0.035);
+    box-shadow: 0 calc(var(--w) * 0.04) calc(var(--w) * 0.1) var(--sombra);
+  }
+
+  .topo {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--w) * 0.024);
+    height: calc(var(--w) * 0.13);
+    padding: 0 calc(var(--w) * 0.035);
+  }
+
+  .avatar {
+    flex: none;
+    width: calc(var(--w) * 0.075);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--avatar-1), var(--avatar-2));
+    box-shadow: 0 0 0 calc(var(--w) * 0.005) var(--cartao), 0 0 0 calc(var(--w) * 0.009) var(--avatar-2);
+  }
+
+  .perfil { flex: 1; min-width: 0; }
+  .perfil strong { display: block; font-size: calc(var(--w) * 0.032); line-height: 1.2; }
+  .perfil span { display: block; font-size: calc(var(--w) * 0.026); color: var(--texto-suave); }
+
+  .arte {
+    aspect-ratio: 1 / var(--prop);
+    background-color: #e9ecf2;
+    background-image: var(--imagem);
+    background-size: var(--ajuste);
+    background-position: var(--posicao);
+    background-repeat: no-repeat;
+  }
+
+  .acoes {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--w) * 0.035);
+    height: calc(var(--w) * 0.1);
+    padding: 0 calc(var(--w) * 0.035);
+  }
+  .acoes svg {
+    width: calc(var(--w) * 0.058);
+    height: calc(var(--w) * 0.058);
+    fill: none;
+    stroke: var(--icone);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .acoes .salvar { margin-left: auto; }
+
+  .legenda {
+    height: calc(var(--w) * 0.13);
+    padding: 0 calc(var(--w) * 0.035);
+    font-size: calc(var(--w) * 0.03);
+    line-height: 1.4;
+  }
+  .legenda p { margin: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .legenda .reacoes { font-weight: 600; }
+</style>
+</head>
+<body>
+  <article class="cartao">
+    <header class="topo">
+      <span class="avatar" aria-hidden="true"></span>
+      <div class="perfil">
+        <strong>seu_perfil</strong>
+        <span>Sua cidade</span>
+      </div>
+      <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" style="width:calc(var(--w)*0.05);height:calc(var(--w)*0.05);fill:var(--icone)"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>
+    </header>
+
+    <div class="arte" role="img" aria-label="Arte do post"></div>
+
+    <div class="acoes" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M20.5 11.5a8.5 8.5 0 1 1-3.3-6.7 8.5 8.5 0 0 1 3.3 6.7z"/><path d="M20.5 20.5l-2.6-2.6"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M21 3L10 14"/><path d="M21 3l-7 18-4-7-7-4z"/></svg>
+      <svg class="salvar" viewBox="0 0 24 24"><path d="M6 3.5h12v17l-6-4.5-6 4.5z"/></svg>
+    </div>
+
+    <div class="legenda">
+      <p class="reacoes">Curtido por você e outras pessoas</p>
+      <p><strong>seu_perfil</strong> Escreva aqui a primeira linha da legenda do post.</p>
+    </div>
+  </article>
+</body>
+</html>

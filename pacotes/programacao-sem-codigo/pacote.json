@@ -1,0 +1,107 @@
+{
+  "slug": "programacao-sem-codigo",
+  "titulo": "Programação para quem não programa",
+  "terceiros": [
+    {
+      "fonte": "mattpocock/skills",
+      "url": "https://github.com/mattpocock/skills",
+      "licenca": "MIT",
+      "skills": [
+        "grill-me",
+        "to-spec",
+        "tdd",
+        "diagnosing-bugs",
+        "code-review",
+        "improve-codebase-architecture",
+        "setup-pre-commit"
+      ],
+      "codex": true
+    },
+    {
+      "fonte": "mattpocock/skills",
+      "url": "https://github.com/mattpocock/skills",
+      "licenca": "MIT",
+      "skills": ["git-guardrails-claude-code"],
+      "codex": false,
+      "observacao": "Usa hooks do Claude Code e não funciona no Codex."
+    },
+    {
+      "fonte": "obra/superpowers",
+      "url": "https://github.com/obra/superpowers",
+      "licenca": "MIT",
+      "skills": [
+        "brainstorming",
+        "writing-plans",
+        "systematic-debugging",
+        "test-driven-development",
+        "verification-before-completion",
+        "requesting-code-review",
+        "using-git-worktrees"
+      ],
+      "codex": true
+    },
+    {
+      "fonte": "addyosmani/agent-skills",
+      "url": "https://github.com/addyosmani/agent-skills",
+      "licenca": "MIT",
+      "skills": [
+        "security-and-hardening",
+        "code-review-and-quality",
+        "shipping-and-launch",
+        "ci-cd-and-automation",
+        "browser-testing-with-devtools"
+      ],
+      "codex": true
+    },
+    {
+      "fonte": "getsentry/skills",
+      "url": "https://github.com/getsentry/skills",
+      "licenca": "Apache-2.0",
+      "skills": ["security-review", "find-bugs"],
+      "codex": true
+    },
+    {
+      "fonte": "anthropics/skills",
+      "url": "https://github.com/anthropics/skills",
+      "licenca": "Apache-2.0",
+      "skills": ["webapp-testing", "mcp-builder", "skill-creator"],
+      "codex": true
+    },
+    {
+      "fonte": "microsoft/playwright-cli",
+      "url": "https://github.com/microsoft/playwright-cli",
+      "licenca": "Apache-2.0",
+      "skills": ["playwright-cli"],
+      "codex": true
+    },
+    {
+      "fonte": "supabase/agent-skills",
+      "url": "https://github.com/supabase/agent-skills",
+      "licenca": "MIT",
+      "skills": ["supabase-postgres-best-practices", "supabase"],
+      "codex": true
+    },
+    {
+      "fonte": "stripe/ai",
+      "url": "https://github.com/stripe/ai",
+      "licenca": "MIT",
+      "skills": ["stripe-best-practices"],
+      "codex": true
+    },
+    {
+      "fonte": "vercel-labs/skills",
+      "url": "https://github.com/vercel-labs/skills",
+      "licenca": "MIT",
+      "skills": ["find-skills"],
+      "codex": true
+    },
+    {
+      "fonte": "vercel-labs/agent-skills",
+      "url": "https://github.com/vercel-labs/agent-skills",
+      "licenca": "Sem licença",
+      "skills": ["deploy-to-vercel"],
+      "codex": true,
+      "observacao": "Sem arquivo de licença no repositório. Entra só como comando de instalação, baixado direto do autor."
+    }
+  ]
+}

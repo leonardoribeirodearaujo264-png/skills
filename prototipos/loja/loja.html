@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Loja | Skills e agentes para Claude Code e Codex</title>
+<meta name="description" content="Escolha os produtos de skills e agentes para Claude Code e Codex. Pagamento pelo Mercado Pago, acesso liberado na sua área.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../public/assets/estilo.css">
+<link rel="stylesheet" href="proto.css">
+<script src="proto.js"></script>
+<script src="dados.js"></script>
+</head>
+<body class="tem-barra">
+
+<nav class="proto-bar" data-estados="visitante:Visitante,logado:Logado com 1 compra,carregando:Carregando,erro:Erro ao carregar,checkout-erro:Falha ao abrir pagamento"></nav>
+
+<header class="site-head">
+  <a class="brand" href="../../public/index.html"><span class="dot" aria-hidden="true"></span>Leonardo Araujo</a>
+  <nav class="nav" aria-label="Principal">
+    <a href="loja.html" aria-current="page">Loja</a>
+    <a href="membros.html" class="so-desk">Minha área</a>
+    <a href="entrar.html" data-estado="visitante carregando erro">Entrar</a>
+    <a href="membros.html" data-estado="logado checkout-erro"><span class="chip">ana.souza@gmail.com</span></a>
+  </nav>
+</header>
+
+<main class="wrap" id="conteudo">
+  <section class="hero revela" aria-labelledby="titulo">
+    <span class="eyebrow"><i data-i="pacote" data-t="14"></i>Loja</span>
+    <h1 id="titulo">Skills e agentes prontos para o seu Claude Code</h1>
+    <p class="lead">Cinco produtos com aula curta, prompts em português e instalação de um comando no Claude Code e no Codex. Escolha a oferta e monte o seu pedido.</p>
+    <ul class="trust">
+      <li><i data-i="escudo" data-t="16"></i>Pagamento pelo Mercado Pago, Pix ou cartão</li>
+      <li><i data-i="raio" data-t="16"></i>Acesso liberado assim que o pagamento é aprovado</li>
+      <li><i data-i="terminal" data-t="16"></i>Funciona no Claude Code e no Codex</li>
+    </ul>
+  </section>
+
+  <!-- Carregando -->
+  <div data-estado="carregando" aria-busy="true" aria-live="polite">
+    <p class="sr-only">Carregando ofertas e produtos.</p>
+    <div class="section ofertas" aria-hidden="true">
+      <span class="skel" style="height:170px;border-radius:22px"></span><span class="skel" style="height:170px;border-radius:22px"></span>
+      <span class="skel" style="height:170px;border-radius:22px"></span><span class="skel" style="height:170px;border-radius:22px"></span>
+    </div>
+    <div class="section loja-grid" aria-hidden="true">
+      <div class="produtos">
+        <span class="skel" style="height:240px;border-radius:22px"></span><span class="skel" style="height:240px;border-radius:22px"></span>
+        <span class="skel" style="height:240px;border-radius:22px"></span><span class="skel" style="height:240px;border-radius:22px"></span>
+      </div>
+      <span class="skel" style="height:420px;border-radius:22px"></span>
+    </div>
+  </div>
+
+  <!-- Erro ao carregar -->
+  <div data-estado="erro" class="section">
+    <div class="alert danger" role="alert">
+      <i data-i="erro" data-t="20"></i>
+      <div>
+        <strong>Não conseguimos carregar a loja agora</strong>
+        <p>Pode ser a sua conexão ou uma instabilidade do nosso lado. Nenhum pagamento foi iniciado.</p>
+      </div>
+      <div class="acoes">
+        <button class="btn sm" type="button" data-ir="visitante"><i data-i="atualizar" data-t="16"></i>Tentar de novo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loja -->
+  <div data-estado="visitante logado checkout-erro">
+    <section class="section" aria-labelledby="passo-oferta">
+      <div class="section-head">
+        <div>
+          <div class="step-head"><span class="step-num" aria-hidden="true">1</span><h2 id="passo-oferta">Escolha a oferta</h2></div>
+        </div>
+        <span class="small muted mono">preços vindos do servidor</span>
+      </div>
+      <fieldset class="ofertas" id="ofertas" aria-describedby="passo-oferta"><legend>Oferta</legend></fieldset>
+    </section>
+
+    <div class="section loja-grid">
+      <section aria-labelledby="passo-produtos">
+        <div class="section-head">
+          <div>
+            <div class="step-head"><span class="step-num" aria-hidden="true">2</span><h2 id="passo-produtos">Escolha os produtos</h2></div>
+            <p id="dica-produtos">Escolha 3 produtos.</p>
+          </div>
+          <span class="contador" id="contador" aria-live="polite"></span>
+        </div>
+        <div id="aviso-produtos" aria-live="polite"></div>
+        <fieldset class="produtos" id="produtos" style="border:0;margin:0;padding:0;min-width:0" aria-describedby="dica-produtos">
+          <legend class="sr-only">Produtos</legend>
+        </fieldset>
+
+        <section class="section" aria-labelledby="faq-titulo">
+          <h2 id="faq-titulo" style="margin-bottom:16px">Perguntas frequentes</h2>
+          <div class="faq">
+            <details><summary>Como recebo o acesso?</summary><p>Assim que o Mercado Pago aprova o pagamento, os produtos aparecem na sua área de membros. Você entra pelo link enviado ao seu e-mail, sem senha.</p></details>
+            <details><summary>Posso pagar com Pix?</summary><p>Sim. Pix costuma aprovar em segundos. Boleto pode levar até 3 dias úteis, e o acesso é liberado quando ele compensar.</p></details>
+            <details><summary>Funciona no Codex também?</summary><p>Sim. Cada produto traz o instalador para Claude Code e para Codex, no Windows, no macOS e no Linux.</p></details>
+            <details><summary>E se eu já tiver um dos produtos?</summary><p>Entre na sua conta antes de escolher. Os produtos que você já tem aparecem marcados e não entram de novo no pedido.</p></details>
+            <details><summary>As skills de outros autores vêm no pacote?</summary><p>Não copiamos arquivos de terceiros. O instalador baixa essas skills direto do repositório original, com a licença de cada autor.</p></details>
+          </div>
+        </section>
+      </section>
+
+      <aside class="resumo" aria-labelledby="resumo-titulo">
+        <div class="shell"><div class="core" id="resumo">
+          <h2 id="resumo-titulo" tabindex="-1">Resumo do pedido</h2>
+          <dl><div><dt>Oferta</dt><dd id="r-oferta"></dd></div></dl>
+          <ol id="r-itens" aria-label="Produtos no pedido"></ol>
+          <div class="total">
+            <div><span class="small muted">Total</span><br><span class="economia" id="r-economia"></span></div>
+            <span class="valor num" id="r-total" data-fonte="servidor"></span>
+          </div>
+          <div id="r-alerta" aria-live="assertive"></div>
+          <div id="r-login" class="alert" data-estado="visitante">
+            <i data-i="email" data-t="18"></i>
+            <div><strong>Entre com o seu e-mail para pagar</strong><p>É nele que o acesso fica guardado. Sua escolha não se perde.</p></div>
+          </div>
+          <button class="btn lg" type="button" id="r-cta" aria-describedby="r-motivo"></button>
+          <p class="motivo" id="r-motivo"></p>
+          <p class="selo-mp"><i data-i="escudo" data-t="14"></i>Pagamento processado pelo Mercado Pago</p>
+        </div></div>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<div class="barra-movel" data-estado="visitante logado checkout-erro" aria-label="Total do pedido" role="region">
+  <div><div class="rot" id="m-rot"></div><div class="valor num" id="m-total" data-fonte="servidor"></div></div>
+  <a class="btn sm" href="#resumo-titulo" id="m-cta">Revisar pedido</a>
+</div>
+
+<footer>© 2026 Leonardo Araujo</footer>
+<p id="aviso" class="sr-only" aria-live="polite"></p>
+
+<script>
+const USUARIO_EXEMPLO = { email: "ana.souza@gmail.com", possui: ["times-de-agentes"] };
+const loja = { oferta: "leve3", selecionados: new Set(), usuario: null };
+
+const elOfertas = document.getElementById("ofertas");
+const elProdutos = document.getElementById("produtos");
+
+function ofertaAtual() { return DADOS_SERVIDOR.ofertas.find(o => o.id === loja.oferta); }
+function possui(slug) { return !!loja.usuario && loja.usuario.possui.includes(slug); }
+
+function incluidosFixos(oferta) {
+  if (oferta.modo === "todos") return DADOS_SERVIDOR.produtos.map(p => p.slug);
+  if (oferta.modo === "fixo") return oferta.itens;
+  return null;
+}
+
+function montarOfertas() {
+  DADOS_SERVIDOR.ofertas.forEach(o => {
+    const label = document.createElement("label");
+    label.className = "oferta-opcao revela";
+    label.innerHTML = `
+      ${o.selo ? `<span class="selo">${o.selo}</span>` : ""}
+      <input type="radio" name="oferta" value="${o.id}" aria-describedby="of-${o.id}-d">
+      <div class="shell"><div class="core">
+        <span class="nome">${o.titulo}<span class="radio" aria-hidden="true"></span></span>
+        <p class="desc" id="of-${o.id}-d">${o.descricao}</p>
+        <span class="valor num" data-fonte="servidor" data-centavos="${o.precoCentavos}"><small>R$</small>${reaisCurto(o.precoCentavos)}</span>
+        <span class="por">${o.referenciaCentavos > o.precoCentavos ? `Avulso sairia ${reais(o.referenciaCentavos)}` : "Pagamento único"}</span>
+      </div></div>`;
+    label.querySelector("input").addEventListener("change", () => trocarOferta(o.id));
+    elOfertas.append(label);
+  });
+}
+
+function montarProdutos() {
+  DADOS_SERVIDOR.produtos.forEach(p => {
+    const label = document.createElement("label");
+    label.className = "prod revela";
+    label.dataset.slug = p.slug;
+    label.innerHTML = `
+      <input type="checkbox" name="produto" value="${p.slug}" aria-describedby="pd-${p.slug}">
+      <div class="shell"><div class="core">
+        <div class="topo"><h3>${p.titulo}</h3><span class="check" aria-hidden="true">${svg("check", 16)}</span></div>
+        <p id="pd-${p.slug}">${p.resumo}</p>
+        <ul>${p.itens.map(i => `<li>${svg("check", 14)}<span>${i}</span></li>`).join("")}</ul>
+        <div class="meta">
+          <span class="chip">${p.skills} skills</span><span class="chip">${p.prompts} prompts</span><span class="chip">aula de ${p.aula}</span>
+          <span class="chip status" hidden></span>
+        </div>
+      </div></div>`;
+    label.querySelector("input").addEventListener("change", e => alternar(p.slug, e.target.checked));
+    elProdutos.append(label);
+  });
+}
+
+function trocarOferta(id) {
+  const anterior = ofertaAtual();
+  loja.oferta = id;
+  const nova = ofertaAtual();
+  if (nova.modo === "escolha") {
+    // mantém o que dá para manter, respeitando o limite e o que a pessoa já tem
+    const manter = [...loja.selecionados].filter(s => !possui(s)).slice(0, nova.quantidade);
+    loja.selecionados = new Set(anterior.modo === "escolha" ? manter : []);
+  }
+  atualizar();
+}
+
+function alternar(slug, marcado) {
+  const o = ofertaAtual();
+  if (o.modo !== "escolha") return;
+  if (o.quantidade === 1) loja.selecionados = new Set(marcado ? [slug] : []);
+  else if (marcado) loja.selecionados.add(slug);
+  else loja.selecionados.delete(slug);
+  atualizar();
+}
+
+function itensDoPedido() {
+  const o = ofertaAtual();
+  const fixos = incluidosFixos(o);
+  return fixos ? fixos : [...loja.selecionados];
+}
+
+function atualizar() {
+  const o = ofertaAtual();
+  const fixos = incluidosFixos(o);
+  const cheio = o.modo === "escolha" && loja.selecionados.size >= o.quantidade;
+  const disponiveis = DADOS_SERVIDOR.produtos.filter(p => !possui(p.slug)).length;
+
+  elOfertas.querySelectorAll("input").forEach(i => { i.checked = i.value === o.id; });
+
+  document.getElementById("dica-produtos").textContent =
+    o.modo === "escolha" ? (o.quantidade === 1 ? "Escolha 1 produto." : `Escolha ${o.quantidade} produtos.`)
+    : o.modo === "todos" ? "O combo inclui os 5 produtos." : "Este pacote tem composição fixa.";
+  document.getElementById("contador").innerHTML =
+    o.modo === "escolha" ? `<b>${loja.selecionados.size}</b> de ${o.quantidade} escolhidos` : `${fixos.length} incluídos`;
+
+  elProdutos.querySelectorAll(".prod").forEach(card => {
+    const slug = card.dataset.slug;
+    const input = card.querySelector("input");
+    const status = card.querySelector(".status");
+    let trava = "";
+    let rotulo = "";
+    input.type = o.modo === "escolha" && o.quantidade === 1 ? "radio" : "checkbox";
+    if (possui(slug)) { trava = "possui"; rotulo = "Já é seu"; input.checked = false; input.disabled = true; }
+    else if (fixos) {
+      const dentro = fixos.includes(slug);
+      trava = dentro ? "fixo" : "fora"; rotulo = dentro ? "Incluído" : "Fora deste pacote";
+      input.checked = dentro; input.disabled = true;
+    } else {
+      const marcado = loja.selecionados.has(slug);
+      input.checked = marcado;
+      input.disabled = cheio && !marcado && o.quantidade > 1;
+      if (input.disabled) trava = "limite";
+    }
+    card.dataset.trava = trava;
+    status.hidden = !rotulo;
+    status.textContent = rotulo;
+    status.className = "chip status " + (trava === "possui" ? "ok" : trava === "fixo" ? "accent" : "");
+  });
+
+  // avisos sobre a seleção
+  const aviso = document.getElementById("aviso-produtos");
+  aviso.innerHTML = "";
+  if (o.modo === "escolha" && o.quantidade > 1 && cheio) {
+    aviso.innerHTML = `<p class="small muted" style="margin:0 0 12px">Você já escolheu ${o.quantidade}. Desmarque um para trocar.</p>`;
+  }
+  if (o.modo === "escolha" && disponiveis < o.quantidade) {
+    aviso.innerHTML = alertaHTML("warn", "Faltam produtos para esta oferta", `Você já tem ${5 - disponiveis} dos 5 produtos. Escolha a oferta avulsa para completar a coleção.`);
+  }
+  const jaTem = fixos ? fixos.filter(possui) : [];
+  if (jaTem.length) {
+    aviso.innerHTML = alertaHTML("warn", `Você já tem ${jaTem.length === 1 ? "1 produto" : jaTem.length + " produtos"} deste pacote`, "O preço do pacote não muda. Se quiser só o que falta, compare com a oferta avulsa ou Pague 2, leve 3.");
+  }
+
+  // resumo
+  const itens = itensDoPedido();
+  const faltam = o.modo === "escolha" ? o.quantidade - loja.selecionados.size : 0;
+  const tudoSeu = !!fixos && fixos.every(possui); // backend recusa com ja_possui
+  const pronto = faltam === 0 && itens.length > 0 && !tudoSeu;
+  document.getElementById("r-oferta").textContent = o.titulo;
+  const lista = itens.map((s, n) => `<li><span class="n">${String(n + 1).padStart(2, "0")}</span><span>${produtoPorSlug(s).titulo}</span></li>`);
+  for (let i = 0; i < faltam; i++) lista.push(`<li class="vazio"><span class="n">${String(itens.length + i + 1).padStart(2, "0")}</span><span>Escolha um produto</span></li>`);
+  document.getElementById("r-itens").innerHTML = lista.join("");
+  document.getElementById("r-total").textContent = reais(o.precoCentavos);
+  const economia = o.referenciaCentavos - o.precoCentavos; // na implementação vem pronto do servidor
+  document.getElementById("r-economia").textContent = economia > 0 ? `Você economiza ${reais(economia)}` : "";
+
+  const cta = document.getElementById("r-cta");
+  const motivo = document.getElementById("r-motivo");
+  const logado = !!loja.usuario;
+  if (!pronto) {
+    cta.setAttribute("aria-disabled", "true");
+    cta.innerHTML = logado ? "Pagar no Mercado Pago" : "Continuar com meu e-mail";
+    motivo.textContent = tudoSeu ? "Você já tem todos os produtos desta oferta." : faltam === 1 ? "Escolha mais 1 produto para continuar." : `Escolha mais ${faltam} produtos para continuar.`;
+  } else {
+    cta.removeAttribute("aria-disabled");
+    cta.innerHTML = logado
+      ? `Pagar ${reais(o.precoCentavos)}<span class="ico">${svg("seta", 16)}</span>`
+      : `Continuar com meu e-mail<span class="ico">${svg("direita", 16)}</span>`;
+    motivo.textContent = logado ? `Comprando como ${loja.usuario.email}` : "Você volta para cá depois de entrar.";
+  }
+
+  document.getElementById("m-rot").textContent = `${o.titulo}${faltam ? `, faltam ${faltam}` : ""}`;
+  document.getElementById("m-total").textContent = reais(o.precoCentavos);
+}
+
+function alertaHTML(tipo, titulo, texto) {
+  const icone = tipo === "danger" ? "erro" : tipo === "warn" ? "alerta" : "info";
+  return `<div class="alert ${tipo}" role="${tipo === "danger" ? "alert" : "status"}" style="margin-bottom:12px">${svg(icone, 20)}<div><strong>${titulo}</strong><p>${texto}</p></div></div>`;
+}
+
+document.getElementById("r-cta").addEventListener("click", e => {
+  const cta = e.currentTarget;
+  if (cta.getAttribute("aria-disabled") === "true" || cta.getAttribute("aria-busy") === "true") return;
+  const o = ofertaAtual();
+  if (!loja.usuario) {
+    const url = new URL("entrar.html", location.href);
+    url.searchParams.set("volta", "loja");
+    url.searchParams.set("oferta", o.id);
+    if (o.modo === "escolha") url.searchParams.set("produtos", [...loja.selecionados].join(","));
+    location.href = url.href;
+    return;
+  }
+  // POST /api/loja/checkout { oferta, produtos } -> { init_point }. O servidor recalcula tudo.
+  cta.setAttribute("aria-busy", "true");
+  cta.innerHTML = `<span class="spinner" aria-hidden="true"></span>Abrindo o pagamento seguro`;
+  document.getElementById("r-alerta").innerHTML = "";
+  setTimeout(() => {
+    cta.removeAttribute("aria-busy");
+    if (estadoAtual === "checkout-erro") {
+      document.getElementById("r-alerta").innerHTML = alertaHTML("danger", "Não conseguimos abrir o pagamento", "Nada foi cobrado. Tente de novo em alguns segundos. Se continuar, fale com o suporte pelo Instagram.");
+      atualizar();
+      cta.focus();
+    } else {
+      location.href = "retorno.html?estado=confirmando&auto=1";
+    }
+  }, 1400);
+});
+
+document.getElementById("m-cta").addEventListener("click", e => {
+  e.preventDefault();
+  const alvo = document.getElementById("resumo-titulo");
+  alvo.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+  alvo.focus({ preventScroll: true });
+});
+document.querySelectorAll("[data-ir]").forEach(b => b.addEventListener("click", () => irPara(b.dataset.ir)));
+
+// pré-seleção vinda de links (ex.: página bloqueada de um produto)
+const params = new URL(location.href).searchParams;
+if (DADOS_SERVIDOR.ofertas.some(o => o.id === params.get("oferta"))) loja.oferta = params.get("oferta");
+(params.get("produtos") || params.get("produto") || "").split(",").filter(produtoPorSlug).forEach(s => loja.selecionados.add(s));
+if (params.get("produto") && !params.get("oferta")) loja.oferta = "avulso";
+
+document.addEventListener("estado", e => {
+  loja.usuario = ["logado", "checkout-erro"].includes(e.detail) ? USUARIO_EXEMPLO : null;
+  if (loja.usuario) loja.usuario.possui.forEach(s => loja.selecionados.delete(s));
+  document.body.classList.toggle("tem-barra", ["visitante", "logado", "checkout-erro"].includes(e.detail));
+  if (elOfertas.children.length > 1) atualizar();
+});
+document.addEventListener("DOMContentLoaded", () => {
+  montarOfertas();
+  montarProdutos();
+  if (!params.get("produtos") && !params.get("produto") && !loja.usuario) {
+    ["design-copy-anuncios", "edicao-de-video"].forEach(s => loja.selecionados.add(s));
+  }
+  atualizar();
+  montarRevela();
+});
+</script>
+</body>
+</html>

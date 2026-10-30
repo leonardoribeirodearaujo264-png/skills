@@ -1,0 +1,62 @@
+1
+00:00:00,350 --> 00:00:05,800
+Corte, legende e monte Reels,
+Shorts e aulas pedindo em português.
+
+2
+00:00:05,800 --> 00:00:08,452
+Tudo roda no seu computador.
+
+3
+00:00:08,802 --> 00:00:12,876
+Antes, instale Node 22
+ou mais novo e FFmpeg, e
+
+4
+00:00:12,876 --> 00:00:16,506
+separe um disco com espaço para o render.
+
+5
+00:00:16,856 --> 00:00:20,281
+No Claude Code, rode o instalar-claude.
+
+6
+00:00:20,281 --> 00:00:22,832
+No Codex, o instalar-codex.
+
+7
+00:00:22,832 --> 00:00:25,455
+No Windows, use o ponto ps1.
+
+8
+00:00:25,805 --> 00:00:28,681
+Peça ao agente lider-edicao.
+
+9
+00:00:28,681 --> 00:00:33,555
+Ele chama roteiro, cortes,
+legenda, motion e revisão.
+
+10
+00:00:33,555 --> 00:00:37,150
+No Codex, cite cada agente pelo nome.
+
+11
+00:00:37,500 --> 00:00:42,704
+A skill reels do bruto ao post
+transcreve, corta silêncio e erro, põe o
+
+12
+00:00:42,704 --> 00:00:47,578
+gancho nos três primeiros segundos,
+legenda e exporta em vertical.
+
+13
+00:00:47,928 --> 00:00:52,425
+Os prompts prontos estão na pasta
+prompts e na área de membros.
+
+14
+00:00:52,425 --> 00:00:56,415
+Troque o que está entre
+colchetes e cole no seu agente.

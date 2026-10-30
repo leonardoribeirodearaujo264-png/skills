@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Times de agentes por área | Minha área</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../public/assets/estilo.css">
+<link rel="stylesheet" href="proto.css">
+<script src="proto.js"></script>
+<script src="dados.js"></script>
+</head>
+<body>
+
+<nav class="proto-bar" data-estados="liberado:Liberado,carregando:Carregando,video-erro:Aula com erro,download-erro:Download com erro,bloqueado:Bloqueado visitante,bloqueado-logado:Bloqueado logado"></nav>
+
+<header class="site-head">
+  <a class="brand" href="../../public/index.html"><span class="dot" aria-hidden="true"></span>Leonardo Araujo</a>
+  <nav class="nav" aria-label="Principal">
+    <a href="loja.html">Loja</a>
+    <a href="membros.html" aria-current="page">Minha área</a>
+    <a href="entrar.html" data-estado="bloqueado">Entrar</a>
+  </nav>
+</header>
+
+<main class="wrap" id="conteudo">
+  <ol class="migalha" aria-label="Você está em">
+    <li><a href="membros.html">Minha área</a></li>
+    <li aria-current="page">Times de agentes por área</li>
+  </ol>
+
+  <section class="revela" aria-labelledby="titulo" style="margin-bottom:40px">
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <span class="chip ok" data-estado="liberado carregando video-erro download-erro"><i data-i="check" data-t="12"></i>Seu desde 12 de outubro</span>
+      <span class="chip" data-estado="bloqueado bloqueado-logado"><i data-i="cadeado" data-t="12"></i>Conteúdo para quem comprou</span>
+      <span class="chip">versão 1.2, atualizada em 28/10/2026</span>
+    </div>
+    <h1 id="titulo">Times de agentes por área</h1>
+    <p class="lead" style="margin-bottom:0">Um gerente geral que divide o trabalho, times de marketing, vendas, finanças, qualidade e suporte, um conselho que testa ideias e uma banca que revisa o código antes de publicar. Tudo no seu Claude Code ou no Codex, com você no comando.</p>
+  </section>
+
+  <!-- ===================== LIBERADO ===================== -->
+  <div class="produto-grid" data-estado="liberado video-erro download-erro">
+    <nav class="indice" aria-label="Seções do produto" id="indice">
+      <a href="#aula">Aula</a>
+      <a href="#skills">Skills e agentes</a>
+      <a href="#instalar">Instalação</a>
+      <a href="#prompts">Prompts</a>
+      <a href="#arquivos">Arquivos</a>
+    </nav>
+
+    <div>
+      <section class="bloco" id="aula" aria-labelledby="aula-t">
+        <h2 id="aula-t">Aula</h2>
+        <p class="muted">57 segundos mostrando a empresa de agentes funcionando do pedido à entrega.</p>
+        <div class="shell"><div class="core" style="padding:6px">
+          <div class="player" id="player">
+            <!-- No app: <video controls playsinline preload="none" poster="..." src="URL assinada curta"><track kind="captions" srclang="pt-BR" src="..."></video> -->
+            <div class="capa-video">
+              <button class="play" type="button" id="play" aria-label="Reproduzir aula, 57 segundos"><i data-i="play" data-t="30"></i></button>
+            </div>
+            <div class="legenda" aria-hidden="true"><span>Aula 1 de 1</span><span>0:57</span></div>
+            <div class="estado-video" id="video-carregando" hidden role="status">
+              <span class="spinner" style="width:28px;height:28px" aria-hidden="true"></span>
+              <p>Preparando a aula</p>
+            </div>
+            <div class="estado-video" id="video-tocando" hidden role="status">
+              <p><strong style="color:#fff">Prévia do protótipo.</strong> No app, o vídeo toca aqui com os controles nativos e legenda em português.</p>
+            </div>
+            <div class="estado-video" id="video-erro" hidden role="alert">
+              <span class="icone-grande danger" aria-hidden="true"><i data-i="erro" data-t="26"></i></span>
+              <p><strong style="color:#fff">Não deu para carregar a aula.</strong> Por segurança, o link do vídeo expira em poucos minutos. Recarregue para gerar um novo.</p>
+              <button class="btn sm" type="button" id="recarregar-video" style="background:#fff;color:var(--code-bg)"><i data-i="atualizar" data-t="16"></i>Recarregar a aula</button>
+            </div>
+          </div>
+        </div></div>
+        <details class="faq" style="margin-top:12px;display:block">
+          <summary style="background:var(--surface);box-shadow:0 0 0 1px var(--line)">Ler a transcrição</summary>
+          <p style="padding:12px 18px 0">Você fala só com o gerente geral. Ele lê o pedido, chama o pesquisador, o desenvolvedor e o web-designer, confere cada entrega e só mostra o que está certo. Antes de publicar, a banca revisa bugs, segurança e limpeza. Para ideias novas, o conselho de 4 Claudes debate e devolve um parecer.</p>
+        </details>
+      </section>
+
+      <section class="bloco" id="skills" aria-labelledby="skills-t">
+        <h2 id="skills-t">Skills e agentes</h2>
+        <p class="muted">5 skills e 13 agentes. As de outros autores são instaladas direto do repositório original.</p>
+        <div class="skills">
+          <article class="skill"><div class="linha"><h3>equipe</h3><span class="chip accent">do pacote</span></div><p>Classifica o pedido por tamanho e chama os agentes certos em cada etapa.</p></article>
+          <article class="skill"><div class="linha"><h3>briefing</h3><span class="chip accent">do pacote</span></div><p>Faz as perguntas que faltam antes de começar um pedido vago.</p></article>
+          <article class="skill"><div class="linha"><h3>conselho</h3><span class="chip accent">do pacote</span></div><p>Quatro Claudes debatem a sua ideia e entregam um parecer com riscos.</p></article>
+          <article class="skill"><div class="linha"><h3>banca-revisao</h3><span class="chip accent">do pacote</span></div><p>Três revisões antes de publicar: bugs, segurança e limpeza.</p></article>
+          <article class="skill"><div class="linha"><h3>find-skills</h3><span class="chip">vercel-labs, MIT</span></div><p>Procura e instala novas skills quando o projeto pede.</p></article>
+          <article class="skill"><div class="linha"><h3>13 agentes</h3><span class="chip accent">do pacote</span></div><p>gerente-geral, pesquisador, desenvolvedor, web-designer, copywriter e mais 8.</p></article>
+        </div>
+      </section>
+
+      <section class="bloco" id="instalar" aria-labelledby="instalar-t">
+        <h2 id="instalar-t">Instalação</h2>
+        <p class="muted">Escolha onde você usa e o seu sistema. Os comandos mudam sozinhos.</p>
+        <div class="abas-linha">
+          <div class="abas" role="group" aria-label="Ferramenta">
+            <button type="button" data-ferramenta="claude" aria-pressed="true">Claude Code</button>
+            <button type="button" data-ferramenta="codex" aria-pressed="false">Codex</button>
+          </div>
+          <div class="abas" role="group" aria-label="Sistema">
+            <button type="button" data-sistema="win" aria-pressed="true">Windows</button>
+            <button type="button" data-sistema="unix" aria-pressed="false">macOS e Linux</button>
+          </div>
+        </div>
+        <div class="passos" aria-live="polite">
+          <div class="passo">
+            <span class="step-num" aria-hidden="true">1</span>
+            <div><h3>Baixe e extraia o pacote</h3><p>Extraia o .zip dentro da pasta do seu projeto. <a href="#arquivos">Baixar em Arquivos</a>.</p></div>
+          </div>
+          <div class="passo">
+            <span class="step-num" aria-hidden="true">2</span>
+            <div>
+              <h3>Rode o instalador</h3>
+              <p id="passo2-texto">No PowerShell, dentro da pasta do projeto:</p>
+              <div class="code"><div class="code-bar"><span id="cmd-instalar-rot">PowerShell</span><button class="copy" type="button" data-copy="cmd-instalar">Copiar</button></div><pre id="cmd-instalar"></pre></div>
+            </div>
+          </div>
+          <div class="passo">
+            <span class="step-num" aria-hidden="true">3</span>
+            <div>
+              <h3>Instale a skill de outro autor</h3>
+              <p>Baixa direto do repositório original. Precisa do Node.js 18 ou mais novo.</p>
+              <div class="code"><div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-terceiros">Copiar</button></div><pre id="cmd-terceiros">npx skills add https://github.com/vercel-labs/skills --skill find-skills -a claude-code -a codex</pre></div>
+            </div>
+          </div>
+          <div class="passo">
+            <span class="step-num" aria-hidden="true">4</span>
+            <div>
+              <h3>Confira se deu certo</h3>
+              <p id="passo4-texto">Abra o Claude Code na pasta e digite o comando abaixo. Os 13 agentes devem aparecer na lista.</p>
+              <div class="code"><div class="code-bar"><span id="cmd-conferir-rot">Claude Code</span><button class="copy" type="button" data-copy="cmd-conferir">Copiar</button></div><pre id="cmd-conferir"></pre></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="bloco" id="prompts" aria-labelledby="prompts-t">
+        <h2 id="prompts-t">Prompts</h2>
+        <p class="muted">Cole no Claude Code ou no Codex. Troque o que está entre colchetes.</p>
+        <div style="display:grid;gap:16px">
+          <div class="code"><div class="code-bar"><span>1. Primeiro pedido ao gerente geral</span><button class="copy" type="button" data-copy="pr-1">Copiar</button></div>
+<pre id="pr-1">Gerente geral: com base no meu projeto, monte o plano da primeira semana, diga qual agente faz cada parte e comece pelo que dá resultado mais rápido. Me mostre o plano antes de executar.
+O meu projeto é: [DESCREVA O PROJETO, PARA QUEM É E O OBJETIVO]</pre></div>
+          <div class="code"><div class="code-bar"><span>2. Conselho: testar uma ideia</span><button class="copy" type="button" data-copy="pr-2">Copiar</button></div>
+<pre id="pr-2">Use a skill conselho. Quero testar esta ideia antes de investir tempo nela: [SUA IDEIA]. Cada conselheiro dá a sua visão, depois vocês chegam a um parecer com os 3 maiores riscos e o primeiro teste barato que eu posso fazer esta semana.</pre></div>
+          <div class="code"><div class="code-bar"><span>3. Banca: revisar antes de publicar</span><button class="copy" type="button" data-copy="pr-3">Copiar</button></div>
+<pre id="pr-3">Use a skill banca-revisao no que mudou desde o último commit. Separe o resultado em bugs, segurança e limpeza, em ordem de gravidade. Não altere nada antes de eu aprovar a lista.</pre></div>
+          <div class="code"><div class="code-bar"><span>4. Time de marketing: campanha da semana</span><button class="copy" type="button" data-copy="pr-4">Copiar</button></div>
+<pre id="pr-4">Copywriter e gestor-de-trafego: montem a campanha desta semana para [PRODUTO]. Quero 3 variações de anúncio, o público de cada uma e o orçamento diário sugerido. Nada é publicado sem o meu OK.</pre></div>
+        </div>
+      </section>
+
+      <section class="bloco" id="arquivos" aria-labelledby="arquivos-t">
+        <h2 id="arquivos-t">Arquivos</h2>
+        <p class="muted">O .zip tem tudo o que é do pacote. As skills de terceiros vêm pelo comando do passo 3.</p>
+        <div class="arquivos">
+          <div class="arquivo shell"><div class="core">
+            <span class="icone-grande" aria-hidden="true"><i data-i="baixar" data-t="24"></i></span>
+            <h3>times-de-agentes-v1.2.zip</h3>
+            <p class="mono small">184 KB, atualizado em 28/10/2026</p>
+            <button class="btn" type="button" id="baixar"><span>Baixar o pacote</span><span class="ico"><i data-i="baixar" data-t="16"></i></span></button>
+            <div id="baixar-status" aria-live="polite"></div>
+          </div></div>
+          <div class="arquivo shell"><div class="core">
+            <span class="icone-grande" aria-hidden="true"><i data-i="github" data-t="24"></i></span>
+            <h3>Código no GitHub</h3>
+            <p>Veja cada arquivo, os créditos e as licenças antes de instalar.</p>
+            <a class="btn secondary" href="https://github.com/leonardoribeirodearaujo264-png/skills" target="_blank" rel="noopener noreferrer">Abrir no GitHub<span class="ico"><i data-i="seta" data-t="16"></i></span><span class="sr-only">(abre em nova aba)</span></a>
+          </div></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ===================== CARREGANDO ===================== -->
+  <div class="produto-grid" data-estado="carregando" aria-busy="true">
+    <p class="sr-only" role="status">Carregando o conteúdo.</p>
+    <div aria-hidden="true" style="display:grid;gap:8px;align-content:start"><span class="skel" style="height:34px"></span><span class="skel" style="height:34px"></span><span class="skel" style="height:34px"></span></div>
+    <div aria-hidden="true" style="display:grid;gap:16px"><span class="skel" style="aspect-ratio:16/9;border-radius:22px"></span><span class="skel" style="height:24px;width:40%"></span><span class="skel" style="height:120px;border-radius:16px"></span></div>
+  </div>
+
+  <!-- ===================== BLOQUEADO ===================== -->
+  <section class="bloqueio" data-estado="bloqueado bloqueado-logado" aria-labelledby="bloq-t">
+    <div class="shell"><div class="core">
+      <div style="display:flex;gap:16px;align-items:start;flex-wrap:wrap">
+        <span class="icone-grande" aria-hidden="true"><i data-i="cadeado" data-t="26"></i></span>
+        <div style="flex:1;min-width:220px">
+          <h2 id="bloq-t">Este conteúdo é de quem comprou</h2>
+          <p class="muted" style="margin:6px 0 0">Ao comprar, a aula, os instaladores, os prompts e o .zip ficam liberados na sua área para sempre, com as atualizações.</p>
+        </div>
+      </div>
+
+      <div class="alert warn" role="status" data-estado="bloqueado-logado">
+        <i data-i="info" data-t="20"></i>
+        <div><strong>Você está como ana.souza@gmail.com</strong><p>Este e-mail não tem este produto. Se você comprou com outro e-mail, entre com ele.</p></div>
+        <div class="acoes"><a class="btn sm secondary" href="entrar.html">Entrar com outro e-mail</a></div>
+      </div>
+
+      <dl class="inclui">
+        <div><dt>Aula</dt><dd class="num">0:57</dd></div>
+        <div><dt>Agentes</dt><dd class="num">13</dd></div>
+        <div><dt>Skills</dt><dd class="num">5</dd></div>
+        <div><dt>Prompts</dt><dd class="num">4</dd></div>
+      </dl>
+
+      <div class="fantasma" aria-hidden="true">
+        <div class="linha-f"><i data-i="cadeado" data-t="16"></i>Aula em vídeo com transcrição</div>
+        <div class="linha-f"><i data-i="cadeado" data-t="16"></i>Instalação para Claude Code e Codex</div>
+        <div class="linha-f"><i data-i="cadeado" data-t="16"></i>Prompts prontos para copiar</div>
+        <div class="linha-f"><i data-i="cadeado" data-t="16"></i>Download do .zip e código no GitHub</div>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid var(--line)">
+        <div>
+          <span class="small muted">a partir de</span>
+          <div style="font:800 34px/1 var(--font-display);letter-spacing:-.03em" class="num" data-fonte="servidor" id="bloq-preco"></div>
+          <span class="small muted" id="bloq-nota"></span>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <a class="btn" href="loja.html?produto=times-de-agentes">Comprar este produto<span class="ico"><i data-i="direita" data-t="16"></i></span></a>
+          <a class="btn secondary" href="entrar.html" data-estado="bloqueado">Já comprei, entrar</a>
+        </div>
+      </div>
+    </div></div>
+  </section>
+</main>
+
+<footer>© 2026 Leonardo Araujo</footer>
+<p id="aviso" class="sr-only" aria-live="polite"></p>
+
+<script>
+const PACOTE = "times-de-agentes";
+const COMANDOS = {
+  instalar: {
+    claude: { win: `powershell -ExecutionPolicy Bypass -File .\\${PACOTE}\\instalar-claude.ps1`, unix: `bash ./${PACOTE}/instalar-claude.sh` },
+    codex: { win: `powershell -ExecutionPolicy Bypass -File .\\${PACOTE}\\instalar-codex.ps1`, unix: `bash ./${PACOTE}/instalar-codex.sh` },
+  },
+  conferir: { claude: "/agents", codex: "Liste os agentes e as skills instalados neste projeto." },
+};
+const sel = { ferramenta: "claude", sistema: "win" };
+
+function atualizarComandos() {
+  document.getElementById("cmd-instalar").textContent = COMANDOS.instalar[sel.ferramenta][sel.sistema];
+  document.getElementById("cmd-instalar-rot").textContent = sel.sistema === "win" ? "PowerShell" : "Terminal";
+  document.getElementById("passo2-texto").textContent = sel.sistema === "win"
+    ? "No PowerShell, dentro da pasta do projeto:" : "No Terminal, dentro da pasta do projeto:";
+  document.getElementById("cmd-conferir").textContent = COMANDOS.conferir[sel.ferramenta];
+  document.getElementById("cmd-conferir-rot").textContent = sel.ferramenta === "claude" ? "Claude Code" : "Codex, como mensagem";
+  document.getElementById("passo4-texto").textContent = sel.ferramenta === "claude"
+    ? "Abra o Claude Code na pasta e digite o comando abaixo. Os 13 agentes devem aparecer na lista."
+    : "Abra o Codex na pasta e envie a mensagem abaixo. Ele deve listar os 13 agentes e as 5 skills.";
+}
+function ligarGrupo(attr, chave) {
+  const botoes = document.querySelectorAll(`[data-${attr}]`);
+  botoes.forEach(b => b.addEventListener("click", () => {
+    sel[chave] = b.dataset[chave];
+    botoes.forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    atualizarComandos();
+  }));
+}
+
+// Player: no app, POST /api/membros/<produto>/aula devolve a URL assinada e o <video> toca.
+function mostrarVideo(qual) {
+  ["video-carregando", "video-tocando", "video-erro"].forEach(id => { document.getElementById(id).hidden = id !== qual; });
+}
+function tocar() {
+  mostrarVideo("video-carregando");
+  setTimeout(() => {
+    mostrarVideo(estadoAtual === "video-erro" ? "video-erro" : "video-tocando");
+    if (estadoAtual === "video-erro") document.getElementById("recarregar-video").focus();
+  }, 900);
+}
+
+// Download: POST /api/membros/<produto>/download -> URL assinada de 60 s, depois location.assign(url).
+function baixar(e) {
+  const b = e.currentTarget;
+  const status = document.getElementById("baixar-status");
+  if (b.getAttribute("aria-busy") === "true") return;
+  b.setAttribute("aria-busy", "true");
+  b.innerHTML = `<span class="spinner" aria-hidden="true"></span>Gerando link seguro`;
+  status.innerHTML = "";
+  setTimeout(() => {
+    b.removeAttribute("aria-busy");
+    b.innerHTML = `<span>Baixar o pacote</span><span class="ico">${svg("baixar", 16)}</span>`;
+    status.innerHTML = estadoAtual === "download-erro"
+      ? `<div class="alert danger" role="alert">${svg("erro", 20)}<div><strong>O download não começou</strong><p>O link não foi gerado. Tente de novo. Seu acesso continua valendo.</p></div></div>`
+      : `<div class="alert ok" role="status">${svg("ok", 20)}<div><strong>Download iniciado</strong><p>Se não começou, clique de novo. O link vale por 60 segundos.</p></div></div>`;
+  }, 1100);
+}
+
+function marcarIndice() {
+  const links = [...document.querySelectorAll("#indice a")];
+  if (!("IntersectionObserver" in window)) return;
+  const obs = new IntersectionObserver(entradas => {
+    entradas.forEach(en => {
+      if (!en.isIntersecting) return;
+      links.forEach(l => l.setAttribute("aria-current", String(l.getAttribute("href") === "#" + en.target.id)));
+    });
+  }, { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll(".bloco").forEach(b => obs.observe(b));
+}
+
+document.addEventListener("estado", e => {
+  mostrarVideo(null);
+  document.getElementById("baixar-status").innerHTML = "";
+  if (e.detail.startsWith("bloqueado")) {
+    document.querySelector(".migalha li:first-child").innerHTML = '<a href="loja.html">Loja</a>';
+  } else {
+    document.querySelector(".migalha li:first-child").innerHTML = '<a href="membros.html">Minha área</a>';
+  }
+});
+document.addEventListener("DOMContentLoaded", () => {
+  ligarGrupo("ferramenta", "ferramenta");
+  ligarGrupo("sistema", "sistema");
+  if (/Mac|Linux/.test(navigator.userAgent) && !/Android/.test(navigator.userAgent)) document.querySelector('[data-sistema="unix"]').click();
+  atualizarComandos();
+  document.getElementById("play").addEventListener("click", tocar);
+  document.getElementById("recarregar-video").addEventListener("click", tocar);
+  document.getElementById("baixar").addEventListener("click", baixar);
+  const avulso = DADOS_SERVIDOR.ofertas.find(o => o.id === "avulso");
+  document.getElementById("bloq-preco").textContent = reais(avulso.precoCentavos);
+  document.getElementById("bloq-nota").textContent = "ou junto com mais 2 no Pague 2, leve 3";
+  marcarIndice();
+});
+</script>
+</body>
+</html>

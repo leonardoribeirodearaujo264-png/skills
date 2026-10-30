@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prévia do destaque laranja</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../public/assets/estilo.css">
+<link rel="stylesheet" href="../../public/assets/oferta.css">
+<style>
+/* ---------- 1. Tokens novos (é só isto que muda em estilo.css) ---------- */
+:root, .tema-claro {
+  --accent: #C03F00;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #FFEDE1;
+  --code-bg: #1F1B18;
+  --code-ink: #F5F0EA;
+  --code-muted: #BDB2A7;
+  --code-line: color-mix(in srgb, var(--code-ink) 12%, transparent);
+  --blue-block: #C03F00;          /* passa a se chamar --block; o nome antigo fica como apelido */
+  --blue-block-ink: #FFFFFF;
+  --ok-ink: #16714A; --ok-soft: #E3F4EC; --danger: #B42318;   /* sobem de globals.css para estilo.css */
+}
+/* Escuro: em produção fica em :root[data-theme="dark"] e no @media; aqui vale num contêiner */
+[data-theme="dark"] {
+  --bg: #0D0F13; --surface: #151921; --ink: #EEF0F4; --ink-soft: #9BA3B2; --line: #252B36; --ok: #3DBE86;
+  --accent: #FF8A3D;
+  --accent-ink: #0D0F13;
+  --accent-soft: #2B1A0F;
+  --code-bg: #231D19;
+  --code-ink: #F5F0EA;
+  --code-muted: #BDB2A7;
+  --code-line: color-mix(in srgb, var(--code-ink) 12%, transparent);
+  --blue-block: #C03F00;
+  --blue-block-ink: #FFFFFF;
+  --ok-ink: #5FD3A0; --ok-soft: #10261D; --danger: #FF8A7E;
+  color-scheme: dark;
+}
+
+/* ---------- 2. Correções propostas: cores escritas direto que viram token ---------- */
+.code-bar { border-bottom-color: var(--code-line); }
+.code .copy { background: var(--accent); color: var(--accent-ink); }          /* estilo.css:111 */
+.copy[data-state="erro"] { background: var(--danger); color: #fff; }          /* estilo.css:113, #C2410C colidia com o laranja */
+.offer li::before { background: var(--accent-soft); }                          /* estilo.css:155, sai o data URI azul */
+.offer li { position: relative; }
+.offer li::after {
+  content: ""; position: absolute; left: 3px; top: 6px; width: 12px; height: 12px;
+  background-color: var(--accent);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E") center / 12px no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E") center / 12px no-repeat;
+}
+.oferta-preco .price { color: var(--ink); }                                     /* herdava --ink-soft de .offer > p (já acontece hoje) */
+.oferta-combo { box-shadow: var(--shadow), inset 0 0 0 1px var(--code-line); }
+.oferta-selo { color: var(--accent-ink); }                                     /* oferta.css:21 */
+.oferta-combo h2, .oferta-combo h3,
+.oferta-combo-itens li, .oferta-combo .price { color: var(--code-ink); }       /* oferta.css:24, 32, 37 */
+.oferta-combo-itens li { background: color-mix(in srgb, var(--code-ink) 7%, transparent); }  /* oferta.css:32 */
+.oferta-economia { background: var(--ok-soft); color: var(--ok-ink); }        /* oferta.css:40 */
+.oferta-combo .cta {                                                           /* oferta.css:42 */
+  background: var(--accent); color: var(--accent-ink);
+  box-shadow: 0 12px 28px -12px var(--accent);
+}
+.oferta-combo .cta:focus-visible { outline-color: var(--code-ink); }           /* oferta.css:43 */
+
+/* ---------- Moldura da prévia (não vai para produção) ---------- */
+body { margin: 0; background: #E9E7E1; }
+.previa { display: grid; grid-template-columns: 1fr 1fr; align-items: start; }
+.tema { background: var(--bg); color: var(--ink); min-height: 100dvh; }
+.tema main { padding-top: 40px; }
+.rotulo-previa {
+  display: flex; justify-content: space-between; padding: 8px 16px;
+  font: 500 12px/1.4 var(--font-mono); letter-spacing: .04em; color: var(--ink-soft);
+  border-bottom: 1px solid var(--line);
+}
+body.so-claro .tema-escuro, body.so-escuro .tema-claro { display: none; }
+body.so-claro .previa, body.so-escuro .previa { grid-template-columns: 1fr; }
+@media (max-width: 900px) { .previa { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<script>
+  const ver = new URLSearchParams(location.search).get("ver");
+  if (ver === "claro" || ver === "escuro") document.body.classList.add("so-" + ver);
+</script>
+
+<div class="previa">
+  <div class="tema tema-claro" data-theme="light">
+    <div class="rotulo-previa"><span>TEMA CLARO</span><span>--accent #C03F00</span></div>
+    <!--#bloco-->
+  </div>
+  <div class="tema tema-escuro" data-theme="dark">
+    <div class="rotulo-previa"><span>TEMA ESCURO</span><span>--accent #FF8A3D</span></div>
+    <!--#bloco-->
+  </div>
+</div>
+
+<template id="conteudo">
+  <a class="topbar" href="#"><span class="dot" aria-hidden="true"></span><span>Leonardo Araujo</span></a>
+  <div class="strip">Este prompt é grátis. O pacote completo de skills e agentes está <a href="#">logo abaixo</a>.</div>
+  <main>
+    <span class="badge">prompt grátis</span>
+    <h1>Achou uma oferta escalada? Monte a sua com <span class="nowrap">6 Claudes</span></h1>
+    <p class="lead">Você cola o link da página de vendas. Cada Claude estuda uma parte, e o último monta a sua página com a mesma estrutura que vende, a sua oferta e as suas palavras.</p>
+
+    <section class="step">
+      <div class="step-head"><span class="step-num">1</span><h2>Monte a bancada</h2></div>
+      <p>No Claude Code, abra a pasta onde a sua página vai ficar e envie o texto abaixo. Ele cria os 6 agentes em <code class="inline">.claude/agents/</code>.</p>
+      <div class="code">
+        <div class="code-bar"><span>prompt</span><button class="copy" type="button">Copiar</button></div>
+<pre>Monte uma bancada de 6 agentes neste projeto para estudar uma página de vendas que está escalando e criar a minha versão, melhor e original. Crie um arquivo .md por agente em .claude/agents/.
+
+Página de referência: [COLE O LINK]</pre>
+      </div>
+      <div class="note">A bancada estuda como a página vende, não copia a página.</div>
+    </section>
+
+    <section class="oferta-bloco">
+      <div class="offer oferta-pacote" role="group">
+        <span class="kicker">PACOTE DO VÍDEO</span>
+        <h2>Gostou da bancada? No pacote tem as skills de design, copy e anúncios prontas.</h2>
+        <p>Páginas com cara de produto profissional, texto que vende, anúncios e site rápido.</p>
+        <ul class="oferta-confianca">
+          <li>Pagamento único, sem mensalidade</li>
+          <li>Acesso na hora, logo depois do pagamento</li>
+        </ul>
+        <p class="oferta-preco"><span class="oferta-preco-rotulo">Por apenas</span><span class="price">R$ 37,00</span></p>
+        <a class="cta" href="#">Quero este pacote</a>
+      </div>
+
+      <div class="oferta-combo" role="group">
+        <span class="oferta-selo">PACOTE COMPLETO</span>
+        <h3>Combo completo</h3>
+        <p class="oferta-combo-desc">Os 5 pacotes de uma vez, com aula, prompts e instalador de cada um.</p>
+        <ul class="oferta-combo-itens">
+          <li><span>Design, copy, anúncios e velocidade</span><span class="oferta-combo-qtd">1 skill e 6 agentes</span></li>
+          <li><span>Edição de vídeo por skills</span><span class="oferta-combo-qtd">1 skill e 6 agentes</span></li>
+          <li><span>Motion, mockup e fontes</span><span class="oferta-combo-qtd">2 skills e 5 agentes</span></li>
+          <li><span>Programação para quem não programa</span><span class="oferta-combo-qtd">1 skill e 5 agentes</span></li>
+          <li><span>Times de agentes por área do negócio</span><span class="oferta-combo-qtd">1 skill e 25 agentes</span></li>
+        </ul>
+        <div class="oferta-combo-precos">
+          <s class="oferta-de" aria-label="de R$ 195,00">R$ 195,00</s>
+          <span class="price" aria-label="por R$ 127,00">R$ 127,00</span>
+        </div>
+        <p class="oferta-economia">VOCÊ ECONOMIZA R$ 68,00</p>
+        <a class="cta" href="#">Quero o pacote completo</a>
+        <p class="price-note">Pagamento único. Acesso na hora, logo depois do pagamento.</p>
+      </div>
+    </section>
+  </main>
+</template>
+<script>
+  // Mesma marcação nos dois temas, sem duplicar o HTML
+  const modelo = document.getElementById("conteudo");
+  document.querySelectorAll(".tema").forEach(t => t.append(modelo.content.cloneNode(true)));
+</script>
+</body>
+</html>

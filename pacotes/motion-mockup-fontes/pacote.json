@@ -1,0 +1,106 @@
+{
+  "slug": "motion-mockup-fontes",
+  "titulo": "Motion, mockup e fontes",
+  "terceiros": [
+    {
+      "fonte": "greensock/gsap-skills",
+      "url": "https://github.com/greensock/gsap-skills",
+      "licenca": "MIT",
+      "skills": ["gsap-core", "gsap-timeline", "gsap-scrolltrigger", "gsap-react", "gsap-plugins", "gsap-performance"],
+      "codex": true
+    },
+    {
+      "fonte": "heygen-com/hyperframes",
+      "url": "https://github.com/heygen-com/hyperframes",
+      "licenca": "Apache-2.0",
+      "skills": ["hyperframes", "hyperframes-cli"],
+      "codex": true,
+      "observacao": "Precisa de Node 22+ e FFmpeg para renderizar. O fluxo motion-graphics não vem pelo npx skills add: instale com npx hyperframes skills update motion-graphics."
+    },
+    {
+      "fonte": "emilkowalski/skills",
+      "url": "https://github.com/emilkowalski/skills",
+      "licenca": "MIT",
+      "skills": ["review-animations", "animation-vocabulary", "improve-animations", "find-animation-opportunities", "apple-design"],
+      "codex": true
+    },
+    {
+      "fonte": "pbakaus/impeccable",
+      "url": "https://github.com/pbakaus/impeccable",
+      "licenca": "Apache-2.0",
+      "skills": ["impeccable"],
+      "codex": true,
+      "observacao": "É uma skill única. animate, delight, typeset e colorize são subcomandos usados dentro dela."
+    },
+    {
+      "fonte": "Owl-Listener/designer-skills",
+      "url": "https://github.com/Owl-Listener/designer-skills",
+      "licenca": "MIT",
+      "skills": ["animation-principles", "motion-system"],
+      "codex": true
+    },
+    {
+      "fonte": "secondsky/claude-skills",
+      "url": "https://github.com/secondsky/claude-skills",
+      "licenca": "MIT",
+      "skills": ["aceternity-ui"],
+      "codex": true
+    },
+    {
+      "fonte": "freshtechbro/claudedesignskills",
+      "url": "https://github.com/freshtechbro/claudedesignskills",
+      "licenca": "MIT",
+      "skills": ["motion-framer"],
+      "codex": true
+    },
+    {
+      "fonte": "lottiefiles/motion-design-skill",
+      "url": "https://github.com/lottiefiles/motion-design-skill",
+      "licenca": "MIT",
+      "skills": ["motion-design"],
+      "codex": true
+    },
+    {
+      "fonte": "diffusionstudio/lottie",
+      "url": "https://github.com/diffusionstudio/lottie",
+      "licenca": "MIT",
+      "skills": ["text-to-lottie"],
+      "codex": true
+    },
+    {
+      "fonte": "cloudai-x/threejs-skills",
+      "url": "https://github.com/cloudai-x/threejs-skills",
+      "licenca": "MIT",
+      "skills": ["threejs-animation"],
+      "codex": true
+    },
+    {
+      "fonte": "jakubkrehel/skills",
+      "url": "https://github.com/jakubkrehel/skills",
+      "licenca": "MIT",
+      "skills": ["better-typography", "better-colors"],
+      "codex": true
+    },
+    {
+      "fonte": "wondelai/skills",
+      "url": "https://github.com/wondelai/skills",
+      "licenca": "MIT",
+      "skills": ["web-typography"],
+      "codex": true
+    },
+    {
+      "fonte": "anthropics/skills",
+      "url": "https://github.com/anthropics/skills",
+      "licenca": "Apache-2.0",
+      "skills": ["canvas-design"],
+      "codex": true
+    },
+    {
+      "fonte": "coreyhaines31/marketingskills",
+      "url": "https://github.com/coreyhaines31/marketingskills",
+      "licenca": "MIT",
+      "skills": ["image"],
+      "codex": true
+    }
+  ]
+}

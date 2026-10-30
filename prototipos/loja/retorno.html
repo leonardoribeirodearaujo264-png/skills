@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pagamento | Leonardo Araujo</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../public/assets/estilo.css">
+<link rel="stylesheet" href="proto.css">
+<script src="proto.js"></script>
+<script src="dados.js"></script>
+</head>
+<body>
+
+<nav class="proto-bar" data-estados="confirmando:Aprovado confirmando,aprovado:Aprovado e liberado,pendente:Pendente,recusado:Recusado"></nav>
+
+<header class="site-head">
+  <a class="brand" href="../../public/index.html"><span class="dot" aria-hidden="true"></span>Leonardo Araujo</a>
+  <nav class="nav" aria-label="Principal">
+    <a href="loja.html">Loja</a>
+    <a href="membros.html">Minha área</a>
+  </nav>
+</header>
+
+<main class="auth">
+  <div class="shell revela" style="max-width:520px">
+    <div class="core">
+
+      <!-- Confirmando: o Mercado Pago voltou com approved, mas o webhook ainda não liberou -->
+      <div data-estado="confirmando" role="status" aria-live="polite" style="display:grid;gap:16px">
+        <span class="icone-grande" aria-hidden="true"><span class="spinner" style="width:24px;height:24px"></span></span>
+        <h1 tabindex="-1">Confirmando o pagamento</h1>
+        <p class="lead">O Mercado Pago já respondeu. Estamos liberando os seus produtos, leva poucos segundos.</p>
+        <div class="progresso" aria-hidden="true"><span></span></div>
+        <p class="small muted" style="margin:0">Pode fechar esta página. O acesso fica na sua área e você recebe um e-mail quando liberar.</p>
+      </div>
+
+      <!-- Aprovado e liberado -->
+      <div data-estado="aprovado" role="status" style="display:grid;gap:16px">
+        <span class="icone-grande ok" aria-hidden="true"><i data-i="ok" data-t="26"></i></span>
+        <h1 tabindex="-1">Pagamento aprovado</h1>
+        <p class="lead">Tudo liberado. Seus 3 produtos já estão na sua área.</p>
+        <a class="btn lg" href="membros.html?estado=com-produtos">Abrir minha área<span class="ico"><i data-i="direita" data-t="16"></i></span></a>
+      </div>
+
+      <!-- Pendente -->
+      <div data-estado="pendente" role="status" style="display:grid;gap:16px">
+        <span class="icone-grande warn" aria-hidden="true"><i data-i="relogio" data-t="26"></i></span>
+        <h1 tabindex="-1">Falta só o pagamento</h1>
+        <p class="lead">Seu pedido está reservado. Assim que o Mercado Pago confirmar, o acesso é liberado sozinho.</p>
+        <div class="alert warn">
+          <i data-i="pix" data-t="20"></i>
+          <div><strong>Pix vence em 30 minutos</strong><p>Pague pelo app do seu banco com o código do Mercado Pago. Boleto pode levar até 3 dias úteis para compensar.</p></div>
+        </div>
+        <div style="display:grid;gap:8px">
+          <a class="btn lg" href="#" target="_blank" rel="noopener noreferrer">Ver o Pix no Mercado Pago<span class="ico"><i data-i="seta" data-t="16"></i></span><span class="sr-only">(abre em nova aba)</span></a>
+          <a class="btn ghost" href="membros.html?estado=pendente">Ir para minha área</a>
+        </div>
+      </div>
+
+      <!-- Recusado -->
+      <div data-estado="recusado" role="alert" style="display:grid;gap:16px">
+        <span class="icone-grande danger" aria-hidden="true"><i data-i="erro" data-t="26"></i></span>
+        <h1 tabindex="-1">Pagamento não aprovado</h1>
+        <p class="lead">Nada foi cobrado. O motivo informado pelo Mercado Pago foi:</p>
+        <div class="alert danger"><i data-i="info" data-t="20"></i><div><strong>Saldo ou limite insuficiente no cartão</strong><p>Tente outro cartão ou pague com Pix, que aprova na hora.</p></div></div>
+        <div style="display:grid;gap:8px">
+          <a class="btn lg" href="loja.html?oferta=leve3&amp;produtos=design-copy-anuncios,edicao-de-video,motion-mockup-fontes&amp;estado=logado">Tentar de novo<span class="ico"><i data-i="atualizar" data-t="16"></i></span></a>
+          <a class="btn ghost" href="loja.html">Mudar o pedido</a>
+        </div>
+      </div>
+
+      <dl class="pedido" aria-label="Resumo do pedido" style="padding-top:16px;border-top:1px solid var(--line)">
+        <div><dt>Pedido</dt><dd class="mono">LJ-0042</dd></div>
+        <div><dt>Oferta</dt><dd>Pague 2, leve 3</dd></div>
+        <div><dt>Produtos</dt><dd>Design, copy, anúncios e velocidade<br>Edição de vídeo por skills<br>Motion, mockup e fontes</dd></div>
+        <div><dt>Total</dt><dd class="num" data-fonte="servidor" id="total"></dd></div>
+        <div><dt>E-mail</dt><dd class="mono">ana.souza@gmail.com</dd></div>
+      </dl>
+    </div>
+  </div>
+</main>
+
+<footer>© 2026 Leonardo Araujo</footer>
+<p id="aviso" class="sr-only" aria-live="polite"></p>
+
+<script>
+// No app: /loja/retorno/?pedido=<id>. A tela NÃO confia no status da URL do Mercado Pago:
+// consulta GET /api/loja/pedidos/<id> a cada 3 s (até 60 s) e mostra o status do banco.
+let espera = null;
+document.addEventListener("estado", e => {
+  clearTimeout(espera);
+  const titulo = document.querySelector(`[data-estado="${e.detail}"] h1`);
+  if (titulo) requestAnimationFrame(() => titulo.focus());
+  const auto = new URL(location.href).searchParams.get("auto") === "1";
+  if (e.detail === "confirmando" && auto) espera = setTimeout(() => irPara("aprovado"), 3500);
+});
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("total").textContent = reais(DADOS_SERVIDOR.ofertas.find(o => o.id === "leve3").precoCentavos);
+});
+</script>
+</body>
+</html>

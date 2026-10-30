@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Protótipos da loja</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../public/assets/estilo.css">
+<link rel="stylesheet" href="proto.css">
+<script src="proto.js"></script>
+</head>
+<body>
+<nav class="proto-bar" data-estados="indice:Índice"></nav>
+<header class="site-head">
+  <a class="brand" href="../../public/index.html"><span class="dot" aria-hidden="true"></span>Leonardo Araujo</a>
+  <span class="chip">protótipo para aprovação</span>
+</header>
+<main class="wrap">
+  <span class="eyebrow">loja e área de membros</span>
+  <h1>Telas para aprovar</h1>
+  <p class="lead">Cada tela tem uma barra escura no topo para trocar de estado e de tema. Preços e composição são exemplos que, no app, vêm do servidor.</p>
+  <div class="telas">
+    <article class="tela shell revela"><div class="core">
+      <span class="mono small muted">/loja/</span><h2><a href="loja.html">Catálogo e pedido</a></h2>
+      <p>4 ofertas, 5 produtos com seleção guiada e resumo fixo.</p>
+      <div class="estados"><a class="chip" href="loja.html?estado=visitante">visitante</a><a class="chip" href="loja.html?estado=logado">logado</a><a class="chip" href="loja.html?estado=carregando">carregando</a><a class="chip" href="loja.html?estado=erro">erro</a><a class="chip" href="loja.html?estado=checkout-erro">falha no pagamento</a></div>
+    </div></article>
+    <article class="tela shell revela"><div class="core">
+      <span class="mono small muted">/entrar/</span><h2><a href="entrar.html">Login por link</a></h2>
+      <p>E-mail, envio do link, reenvio com espera e link expirado.</p>
+      <div class="estados"><a class="chip" href="entrar.html?estado=padrao">formulário</a><a class="chip" href="entrar.html?estado=invalido">inválido</a><a class="chip" href="entrar.html?estado=enviando">enviando</a><a class="chip" href="entrar.html?estado=enviado">enviado</a><a class="chip" href="entrar.html?estado=erro">erro</a><a class="chip" href="entrar.html?estado=expirado">expirado</a></div>
+    </div></article>
+    <article class="tela shell revela"><div class="core">
+      <span class="mono small muted">/membros/</span><h2><a href="membros.html">Minha área</a></h2>
+      <p>Produtos liberados, pagamento pendente e nenhuma compra.</p>
+      <div class="estados"><a class="chip" href="membros.html?estado=com-produtos">com produtos</a><a class="chip" href="membros.html?estado=pendente">pendente</a><a class="chip" href="membros.html?estado=vazio">vazio</a><a class="chip" href="membros.html?estado=carregando">carregando</a><a class="chip" href="membros.html?estado=erro">erro</a></div>
+    </div></article>
+    <article class="tela shell revela"><div class="core">
+      <span class="mono small muted">/membros/times-de-agentes/</span><h2><a href="produto.html">Conteúdo do produto</a></h2>
+      <p>Aula, skills, instalação Claude Code e Codex, prompts, GitHub e .zip.</p>
+      <div class="estados"><a class="chip" href="produto.html?estado=liberado">liberado</a><a class="chip" href="produto.html?estado=carregando">carregando</a><a class="chip" href="produto.html?estado=video-erro">aula com erro</a><a class="chip" href="produto.html?estado=download-erro">download com erro</a></div>
+    </div></article>
+    <article class="tela shell revela"><div class="core">
+      <span class="mono small muted">/membros/times-de-agentes/</span><h2><a href="produto.html?estado=bloqueado">Bloqueado</a></h2>
+      <p>Para quem não comprou, sem expor o conteúdo pago.</p>
+      <div class="estados"><a class="chip" href="produto.html?estado=bloqueado">visitante</a><a class="chip" href="produto.html?estado=bloqueado-logado">logado com outro e-mail</a></div>
+    </div></article>
+    <article class="tela shell revela"><div class="core">
+      <span class="mono small muted">/loja/retorno/</span><h2><a href="retorno.html">Retorno do pagamento</a></h2>
+      <p>Status lido do banco, nunca da URL do Mercado Pago.</p>
+      <div class="estados"><a class="chip" href="retorno.html?estado=confirmando&amp;auto=1">confirmando</a><a class="chip" href="retorno.html?estado=aprovado">aprovado</a><a class="chip" href="retorno.html?estado=pendente">pendente</a><a class="chip" href="retorno.html?estado=recusado">recusado</a></div>
+    </div></article>
+  </div>
+</main>
+<footer>Protótipo. Não é código de produção.</footer>
+</body>
+</html>

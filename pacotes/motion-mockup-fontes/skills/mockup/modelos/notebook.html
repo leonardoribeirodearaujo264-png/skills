@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup notebook</title>
+<style>
+  /* =========================================================
+     TROQUE AQUI
+     --imagem: a tela do usuario. Ex.: url("minha-tela.png")
+       (caminho relativo a este arquivo). O valor padrao e um
+       marcador cinza: nunca entregue o mockup com ele.
+     --ajuste: cover preenche a tela cortando as bordas, sem
+       distorcer. contain mostra a imagem inteira, com faixas.
+     --posicao: que parte da imagem fica visivel no cover.
+     O tamanho do PNG vem do --window-size do navegador.
+     ========================================================= */
+  :root {
+    --imagem: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 1000'><rect width='1600' height='1000' fill='%23f4f5f8'/><rect width='1600' height='72' fill='%23e3e6ec'/><rect x='48' y='120' width='300' height='820' rx='16' fill='%23e3e6ec'/><rect x='392' y='120' width='1160' height='260' rx='16' fill='%23dde1e8'/><rect x='392' y='420' width='560' height='520' rx='16' fill='%23e3e6ec'/><rect x='992' y='420' width='560' height='520' rx='16' fill='%23e3e6ec'/><text x='800' y='272' font-family='Arial' font-size='64' fill='%238a90a0' text-anchor='middle'>Sua tela aqui</text></svg>");
+    --ajuste: cover;
+    --posicao: top center;
+
+    --fundo-1: #f3f5f9;
+    --fundo-2: #c7d0de;
+    --corpo: #1b1d22;
+    --aro: #43464e;
+    --base-1: #dfe2e7;
+    --base-2: #a7abb4;
+    --sombra: rgba(18, 22, 33, 0.38);
+    --brilho: 0.07;
+
+    --rotacao-x: 0deg;
+    --rotacao-y: 0deg;
+
+    /* largura do notebook: cabe com margem segura em 1:1, 4:5, 9:16 e 16:9 */
+    --l: min(84vw, 120vh);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background: radial-gradient(120% 90% at 50% 18%, var(--fundo-1), var(--fundo-2));
+  }
+
+  .cena { width: var(--l); perspective: calc(var(--l) * 2.4); }
+
+  .notebook {
+    position: relative;
+    transform: rotateX(var(--rotacao-x)) rotateY(var(--rotacao-y));
+  }
+
+  .tampa {
+    position: relative;
+    width: 88%;
+    margin: 0 auto;
+    padding: calc(var(--l) * 0.022) calc(var(--l) * 0.022) calc(var(--l) * 0.03);
+    background: var(--corpo);
+    border-radius: calc(var(--l) * 0.024) calc(var(--l) * 0.024) calc(var(--l) * 0.006) calc(var(--l) * 0.006);
+    box-shadow:
+      inset 0 0 0 max(1px, calc(var(--l) * 0.0016)) var(--aro),
+      0 calc(var(--l) * 0.03) calc(var(--l) * 0.06) var(--sombra);
+  }
+
+  .camera {
+    position: absolute;
+    top: calc(var(--l) * 0.0085);
+    left: 50%;
+    width: calc(var(--l) * 0.0055);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #0a0b0d;
+    box-shadow: inset 0 0 0 max(1px, calc(var(--l) * 0.0012)) #2b2e35;
+    transform: translateX(-50%);
+  }
+
+  .tela {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-radius: calc(var(--l) * 0.003);
+    background-color: #000;
+    background-image: var(--imagem);
+    background-size: var(--ajuste);
+    background-position: var(--posicao);
+    background-repeat: no-repeat;
+  }
+
+  /* reflexo leve de vidro; zere --brilho para tirar */
+  .tela::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, rgba(255, 255, 255, var(--brilho)) 0%, rgba(255, 255, 255, 0) 42%);
+    pointer-events: none;
+  }
+
+  .base {
+    position: relative;
+    height: calc(var(--l) * 0.03);
+    background: linear-gradient(to bottom, var(--base-1) 0%, var(--base-1) 35%, var(--base-2) 100%);
+    border-radius: calc(var(--l) * 0.003) calc(var(--l) * 0.003) calc(var(--l) * 0.03) calc(var(--l) * 0.03) / calc(var(--l) * 0.003) calc(var(--l) * 0.003) calc(var(--l) * 0.018) calc(var(--l) * 0.018);
+    box-shadow: 0 calc(var(--l) * 0.012) calc(var(--l) * 0.03) var(--sombra);
+  }
+
+  /* recorte central para abrir a tampa */
+  .base::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 15%;
+    height: 38%;
+    background: linear-gradient(to bottom, var(--base-2), var(--base-1));
+    border-radius: 0 0 calc(var(--l) * 0.012) calc(var(--l) * 0.012);
+    transform: translateX(-50%);
+  }
+
+  .sombra-chao {
+    position: absolute;
+    left: 6%;
+    right: 6%;
+    bottom: calc(var(--l) * -0.03);
+    height: calc(var(--l) * 0.04);
+    background: radial-gradient(50% 50% at 50% 50%, var(--sombra), transparent 70%);
+    z-index: -1;
+  }
+</style>
+</head>
+<body>
+  <div class="cena">
+    <div class="notebook">
+      <div class="tampa">
+        <span class="camera" aria-hidden="true"></span>
+        <div class="tela" role="img" aria-label="Tela do site no notebook"></div>
+      </div>
+      <div class="base"></div>
+      <div class="sombra-chao" aria-hidden="true"></div>
+    </div>
+  </div>
+</body>
+</html>

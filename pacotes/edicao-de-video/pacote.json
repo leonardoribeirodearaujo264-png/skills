@@ -1,0 +1,43 @@
+{
+  "slug": "edicao-de-video",
+  "titulo": "Edição de vídeo por skills",
+  "terceiros": [
+    {
+      "fonte": "heygen-com/hyperframes",
+      "url": "https://github.com/heygen-com/hyperframes",
+      "licenca": "Apache-2.0",
+      "skills": [
+        "hyperframes",
+        "hyperframes-cli",
+        "hyperframes-registry",
+        "media-use",
+        "slideshow",
+        "remotion-to-hyperframes"
+      ],
+      "codex": true,
+      "observacao": "Precisa de Node 22+ e FFmpeg. Transcrição e render rodam no computador. Os fluxos de trabalho (talking-head-recut, embedded-captions, faceless-explainer e outros) não vêm pelo npx skills add: instale com npx hyperframes skills update <nome-do-fluxo>."
+    },
+    {
+      "fonte": "digitalsamba/claude-code-video-toolkit",
+      "url": "https://github.com/digitalsamba/claude-code-video-toolkit",
+      "licenca": "MIT",
+      "skills": ["ffmpeg", "moviepy"],
+      "codex": true
+    },
+    {
+      "fonte": "coreyhaines31/marketingskills",
+      "url": "https://github.com/coreyhaines31/marketingskills",
+      "licenca": "MIT",
+      "skills": ["social"],
+      "codex": true
+    },
+    {
+      "fonte": "browser-use/video-use",
+      "url": "https://github.com/browser-use/video-use",
+      "licenca": "MIT",
+      "skills": ["video-use"],
+      "codex": true,
+      "observacao": "Opcional. Exige conta paga da ElevenLabs."
+    }
+  ]
+}
