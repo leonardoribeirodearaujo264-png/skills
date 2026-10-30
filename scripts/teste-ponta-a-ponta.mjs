@@ -48,7 +48,7 @@ try {
   conferir("loja responde 200 para visitante", loja.status === 200, String(loja.status));
   conferir("loja mostra R$ 37, R$ 67 e R$ 127 vindos do banco", ["37", "67", "127"].every((v) => loja.texto.includes(`<small>R$</small>${v}`)));
   conferir("loja mostra o avulso de edição de vídeo a R$ 47", loja.texto.includes("R$\u00a047,00") || loja.texto.includes("R$&nbsp;47,00"));
-  conferir("loja não mostra a oferta de cliente desativada", !loja.texto.includes("Preço de cliente"));
+  conferir("loja não mostra a oferta de cliente para visitante", !loja.texto.includes("Preço de cliente"));
   // Compra sem login: do botão do vídeo ao checkout, sem passar pela tela de entrar
   const direta = await pagina(`/loja/comprar/?oferta=avulso&produtos=${COMPRADO}`);
   conferir("compra direta leva ao checkout, não ao login", direta.status === 303 && direta.local.includes("/loja/checkout/") && !direta.local.includes("/entrar/"), direta.local);
@@ -63,7 +63,7 @@ try {
 
   // Logado sem compra
   const vazio = await pagina("/membros/", cookie);
-  conferir("logado sem compra vê o estado vazio", vazio.texto.includes("Nenhum produto ainda"));
+  conferir("logado sem compra vê a mensagem de que o e-mail não tem compra", vazio.texto.includes("ainda não tem compra aprovada"));
   const semCompra = await pagina(`/membros/${COMPRADO}/`, cookie);
   conferir("logado sem compra não vê o conteúdo", semCompra.texto.includes("Este conteúdo é de quem comprou") && !semCompra.texto.includes('id="prompts"'));
   const dlSem = await pagina(`/api/loja/download/${COMPRADO}`, cookie);

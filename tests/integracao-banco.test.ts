@@ -70,14 +70,16 @@ describe.skipIf(!ativo)("banco da loja: RLS e liberação", () => {
     for (const id of criados) await admin.auth.admin.deleteUser(id);
   }, 60_000);
 
-  it("os preços do banco são 37, 67, 97 e 127", async () => {
-    const { data, error } = await anon.from("loja_ofertas").select("codigo, preco_centavos").order("ordem");
+  it("os preços do banco são 37, 47 (vídeo), 67, 127 e 20% de desconto para cliente", async () => {
+    const { data, error } = await anon.from("loja_ofertas").select("codigo, preco_centavos, desconto_percentual").order("ordem");
     expect(error).toBeNull();
-    expect(Object.fromEntries((data ?? []).map((o) => [o.codigo, o.preco_centavos]))).toEqual({
+    const ofertas = data ?? [];
+    expect(Object.fromEntries(ofertas.filter((o) => o.desconto_percentual === null).map((o) => [o.codigo, o.preco_centavos]))).toEqual({
       avulso: 3700,
       "leve-3": 6700,
       combo: 12700,
     });
+    expect(ofertas.find((o) => o.codigo === "cliente")?.desconto_percentual).toBe(20);
     const video = await anon.from("loja_produtos").select("preco_avulso_centavos").eq("slug", "edicao-de-video").single();
     expect(video.data?.preco_avulso_centavos).toBe(4700);
   });
