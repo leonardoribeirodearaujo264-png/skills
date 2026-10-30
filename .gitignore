@@ -1,0 +1,34 @@
+# Dependências e build
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# Segredos: nunca no repositório público
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+
+# Vídeos e pacotes gerados (ficam no Supabase Storage, ver aulas/README.md)
+*.mp4
+*.mov
+*.webm
+*.mkv
+*.wav
+*.mp3
+dist-pacotes/
+aulas/**/render/
+aulas/**/tmp/
+
+# Vercel e sistema
+.vercel
+.DS_Store
+Thumbs.db
+
+# Memória local dos agentes
+.claude/agent-memory/
+.claude/settings.local.json

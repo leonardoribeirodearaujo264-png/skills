@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Minha área | Leonardo Araujo</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../public/assets/estilo.css">
+<link rel="stylesheet" href="proto.css">
+<script src="proto.js"></script>
+<script src="dados.js"></script>
+</head>
+<body>
+
+<nav class="proto-bar" data-estados="com-produtos:Com produtos,pendente:Pagamento pendente,vazio:Nenhuma compra,carregando:Carregando,erro:Erro"></nav>
+
+<header class="site-head">
+  <a class="brand" href="../../public/index.html"><span class="dot" aria-hidden="true"></span>Leonardo Araujo</a>
+  <nav class="nav" aria-label="Principal">
+    <a href="loja.html">Loja</a>
+    <a href="membros.html" aria-current="page">Minha área</a>
+    <a href="entrar.html" class="so-desk">Sair</a>
+  </nav>
+</header>
+
+<main class="wrap" id="conteudo">
+  <section class="revela" aria-labelledby="titulo">
+    <span class="eyebrow">ana.souza@gmail.com</span>
+    <h1 id="titulo">Minha área</h1>
+    <p class="lead" id="lead" aria-live="polite">Seus produtos ficam aqui. Abra um para ver a aula, instalar e copiar os prompts.</p>
+  </section>
+
+  <!-- Pagamento pendente: aviso no topo -->
+  <div data-estado="pendente" style="margin-bottom:24px">
+    <div class="alert warn" role="status">
+      <i data-i="relogio" data-t="20"></i>
+      <div>
+        <strong>Pagamento aguardando confirmação</strong>
+        <p>Pedido LJ-0042, Pix de <span data-fonte="servidor">R$ 67,00</span> gerado hoje às 14:12. Assim que o Mercado Pago confirmar, os produtos aparecem aqui sozinhos. O Pix vence em 30 minutos.</p>
+      </div>
+      <div class="acoes">
+        <a class="btn sm" href="retorno.html?estado=pendente">Ver o Pix de novo</a>
+        <button class="btn sm secondary" type="button" id="atualizar"><i data-i="atualizar" data-t="16"></i>Atualizar status</button>
+        <span class="small muted" id="status-consulta" style="align-self:center"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista -->
+  <section data-estado="com-produtos pendente" aria-labelledby="meus">
+    <div class="section-head"><h2 id="meus">Seus produtos</h2><span class="contador" id="contagem"></span></div>
+    <div class="lista-membros" id="lista"></div>
+  </section>
+
+  <section class="section" data-estado="com-produtos pendente" aria-labelledby="falta">
+    <div class="section-head">
+      <div><h2 id="falta">Complete a coleção</h2><p>Produtos que você ainda não tem.</p></div>
+      <a class="btn sm secondary" href="loja.html">Ver ofertas<span class="ico"><i data-i="direita" data-t="14"></i></span></a>
+    </div>
+    <div class="lista-membros" id="faltam"></div>
+  </section>
+
+  <!-- Vazio -->
+  <section data-estado="vazio" aria-labelledby="vazio-titulo">
+    <div class="shell"><div class="core vazio-box">
+      <span class="icone-grande" aria-hidden="true"><i data-i="pacote" data-t="26"></i></span>
+      <h2 id="vazio-titulo">Você ainda não tem produtos</h2>
+      <p>Quando um pagamento for aprovado, o produto aparece aqui. Se você comprou com outro e-mail, entre com ele para ver as suas compras.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px">
+        <a class="btn" href="loja.html">Ver a loja<span class="ico"><i data-i="direita" data-t="16"></i></span></a>
+        <a class="btn secondary" href="entrar.html">Entrar com outro e-mail</a>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- Carregando -->
+  <div data-estado="carregando" aria-busy="true">
+    <p class="sr-only" role="status">Carregando seus produtos.</p>
+    <div class="lista-membros" aria-hidden="true">
+      <span class="skel" style="height:300px;border-radius:22px"></span>
+      <span class="skel" style="height:300px;border-radius:22px"></span>
+      <span class="skel" style="height:300px;border-radius:22px"></span>
+    </div>
+  </div>
+
+  <!-- Erro -->
+  <div data-estado="erro">
+    <div class="alert danger" role="alert">
+      <i data-i="erro" data-t="20"></i>
+      <div><strong>Não conseguimos carregar seus produtos</strong><p>Suas compras continuam salvas. Tente de novo. Se a sessão expirou, entre de novo pelo link do e-mail.</p></div>
+      <div class="acoes">
+        <button class="btn sm" type="button" data-ir="com-produtos"><i data-i="atualizar" data-t="16"></i>Tentar de novo</button>
+        <a class="btn sm secondary" href="entrar.html?estado=expirado">Entrar de novo</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>© 2026 Leonardo Araujo</footer>
+<p id="aviso" class="sr-only" aria-live="polite"></p>
+
+<script>
+// Exemplo do que GET /api/membros devolveria (acessos do usuário + pedidos pendentes)
+const CENARIOS = {
+  "com-produtos": {
+    liberados: [
+      { slug: "times-de-agentes", em: "12 de outubro" },
+      { slug: "programacao-sem-codigo", em: "12 de outubro" },
+      { slug: "design-copy-anuncios", em: "28 de outubro" },
+    ],
+    pendentes: [],
+  },
+  pendente: {
+    liberados: [{ slug: "times-de-agentes", em: "12 de outubro" }],
+    pendentes: ["edicao-de-video", "motion-mockup-fontes", "design-copy-anuncios"],
+  },
+};
+
+function cardLiberado({ slug, em }) {
+  const p = produtoPorSlug(slug);
+  return `<article class="item-membro revela"><div class="shell"><div class="core">
+    <div class="capa"><span>${p.skills} skills, ${p.prompts} prompts, aula de ${p.aula}</span></div>
+    <span class="chip ok" style="align-self:flex-start">${svg("check", 12)}Liberado em ${em}</span>
+    <h3>${p.titulo}</h3>
+    <p>${p.resumo}</p>
+    <div class="rodape">
+      <a class="btn sm" href="produto.html?estado=liberado" aria-label="Abrir ${p.titulo}">Abrir<span class="ico">${svg("direita", 14)}</span></a>
+    </div>
+  </div></div></article>`;
+}
+function cardPendente(slug) {
+  const p = produtoPorSlug(slug);
+  return `<article class="item-membro revela"><div class="shell"><div class="core" style="opacity:.85">
+    <div class="capa" style="filter:grayscale(.8)"><span>Liberado após a confirmação</span></div>
+    <span class="chip warn" style="align-self:flex-start">${svg("relogio", 12)}Aguardando pagamento</span>
+    <h3>${p.titulo}</h3>
+    <p>${p.resumo}</p>
+    <div class="rodape"><button class="btn sm" type="button" aria-disabled="true">${svg("cadeado", 14)}Abre quando confirmar</button></div>
+  </div></div></article>`;
+}
+function cardFalta(slug) {
+  const p = produtoPorSlug(slug);
+  return `<article class="item-membro revela"><div class="shell"><div class="core">
+    <span class="chip" style="align-self:flex-start">${svg("cadeado", 12)}Não incluído</span>
+    <h3>${p.titulo}</h3>
+    <p>${p.resumo}</p>
+    <div class="rodape">
+      <span class="small muted">a partir de <strong data-fonte="servidor" style="color:var(--ink)">${reais(DADOS_SERVIDOR.ofertas[0].precoCentavos)}</strong></span>
+      <a class="btn sm secondary" href="produto.html?estado=bloqueado">Ver o que tem</a>
+    </div>
+  </div></div></article>`;
+}
+
+function render(estado) {
+  const c = CENARIOS[estado];
+  const lead = document.getElementById("lead");
+  if (estado === "vazio") lead.textContent = "Nenhuma compra encontrada para este e-mail.";
+  else lead.textContent = "Seus produtos ficam aqui. Abra um para ver a aula, instalar e copiar os prompts.";
+  if (!c) return;
+  const lista = c.liberados.map(cardLiberado).concat(c.pendentes.map(cardPendente));
+  document.getElementById("lista").innerHTML = lista.join("");
+  const total = c.liberados.length;
+  document.getElementById("contagem").textContent = `${total} de 5 liberados`;
+  const tem = new Set([...c.liberados.map(l => l.slug), ...c.pendentes]);
+  document.getElementById("faltam").innerHTML = DADOS_SERVIDOR.produtos.filter(p => !tem.has(p.slug)).map(p => cardFalta(p.slug)).join("");
+  montarRevela();
+}
+
+document.addEventListener("estado", e => render(e.detail));
+document.querySelectorAll("[data-ir]").forEach(b => b.addEventListener("click", () => irPara(b.dataset.ir)));
+document.getElementById("atualizar").addEventListener("click", e => {
+  const b = e.currentTarget;
+  b.setAttribute("aria-busy", "true");
+  b.innerHTML = `<span class="spinner" aria-hidden="true"></span>Consultando`;
+  setTimeout(() => {
+    b.removeAttribute("aria-busy");
+    b.innerHTML = `${svg("atualizar", 16)}Atualizar status`;
+    const msg = "Ainda aguardando. Verificamos sozinhos a cada 15 segundos.";
+    document.getElementById("status-consulta").textContent = msg;
+    avisar(msg);
+  }, 1200);
+});
+</script>
+</body>
+</html>

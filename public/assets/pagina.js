@@ -1,10 +1,10 @@
-// Edite aqui quando o produto existir. Sem checkoutUrl, o botão fica desativado como "Em breve".
+// O botão da oferta leva para a loja. Preços ficam só na loja (vêm do banco), nunca aqui.
 const CONFIG = {
   marca: "Leonardo Araujo",
-  preco: null,              // ex.: "R$ 49,90"
+  preco: null,
   precoNota: "Pagamento único. Acesso liberado logo após a compra.",
-  checkoutUrl: "",          // link do checkout (Mercado Pago, Hotmart, Kiwify...)
-  ctaTexto: "Quero o pacote",
+  checkoutUrl: "/loja/",
+  ctaTexto: "Ver os pacotes",
   itens: [
     "Os 13 agentes da empresa, já configurados",
     "Skills de design, página de vendas, anúncios e vídeo",

@@ -1,0 +1,88 @@
+{
+  "slug": "design-copy-anuncios",
+  "titulo": "Design, copy, anúncios e velocidade",
+  "terceiros": [
+    {
+      "fonte": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "url": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
+      "licenca": "MIT",
+      "skills": ["ui-ux-pro-max", "design-system", "brand", "banner-design", "ui-styling"],
+      "codex": true,
+      "observacao": "Os scripts de busca usam Python 3. O banner-design pode gerar imagem por API externa paga, que é opcional."
+    },
+    {
+      "fonte": "pbakaus/impeccable",
+      "url": "https://github.com/pbakaus/impeccable",
+      "licenca": "Apache-2.0",
+      "skills": ["impeccable"],
+      "observacao": "É uma skill única. polish, critique, audit e os outros são subcomandos usados dentro dela.",
+      "codex": true
+    },
+    {
+      "fonte": "anthropics/skills",
+      "url": "https://github.com/anthropics/skills",
+      "licenca": "Apache-2.0",
+      "skills": ["frontend-design", "theme-factory"],
+      "codex": true
+    },
+    {
+      "fonte": "leonxlnx/taste-skill",
+      "url": "https://github.com/leonxlnx/taste-skill",
+      "licenca": "MIT",
+      "skills": ["design-taste-frontend"],
+      "codex": true
+    },
+    {
+      "fonte": "emilkowalski/skills",
+      "url": "https://github.com/emilkowalski/skills",
+      "licenca": "MIT",
+      "skills": ["emil-design-eng"],
+      "codex": true
+    },
+    {
+      "fonte": "jakubkrehel/skills",
+      "url": "https://github.com/jakubkrehel/skills",
+      "licenca": "MIT",
+      "skills": ["better-ui"],
+      "codex": true
+    },
+    {
+      "fonte": "addyosmani/web-quality-skills",
+      "url": "https://github.com/addyosmani/web-quality-skills",
+      "licenca": "MIT",
+      "skills": ["accessibility", "performance", "core-web-vitals"],
+      "codex": true
+    },
+    {
+      "fonte": "shadcn-ui/ui",
+      "url": "https://github.com/shadcn-ui/ui",
+      "licenca": "MIT",
+      "skills": ["shadcn"],
+      "codex": true,
+      "observacao": "Só faz sentido em projetos React com Tailwind."
+    },
+    {
+      "fonte": "coreyhaines31/marketingskills",
+      "url": "https://github.com/coreyhaines31/marketingskills",
+      "licenca": "MIT",
+      "skills": ["copywriting", "copy-editing", "marketing-psychology", "offers", "cro", "ad-creative", "ab-testing", "emails", "seo-audit"],
+      "codex": true
+    },
+    {
+      "fonte": "agricidaniel/claude-ads",
+      "url": "https://github.com/agricidaniel/claude-ads",
+      "licenca": "MIT",
+      "skills": ["ads-meta"],
+      "codex": true,
+      "observacao": "Audita campanhas da Meta. Não cria nem publica anúncio sozinho."
+    },
+    {
+      "fonte": "vercel-labs/agent-skills",
+      "url": "https://github.com/vercel-labs/agent-skills",
+      "licenca": "Sem licença",
+      "skills": ["vercel-react-best-practices", "web-design-guidelines"],
+      "codex": true,
+      "observacao": "O repositório não tem arquivo LICENSE. A MIT aparece só no frontmatter e no README, por isso entra apenas como comando de instalação."
+    }
+  ]
+}

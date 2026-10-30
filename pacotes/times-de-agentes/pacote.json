@@ -1,0 +1,48 @@
+{
+  "slug": "times-de-agentes",
+  "titulo": "Times de agentes por área do negócio",
+  "terceiros": [
+    {
+      "fonte": "obra/superpowers",
+      "url": "https://github.com/obra/superpowers",
+      "licenca": "MIT",
+      "skills": ["subagent-driven-development", "dispatching-parallel-agents"],
+      "codex": true,
+      "observacao": "ensinam o agente principal a distribuir tarefas entre subagentes e a rodar várias em paralelo"
+    }
+  ],
+  "plugins": [
+    {
+      "fonte": "wshobson/agents",
+      "url": "https://github.com/wshobson/agents",
+      "licenca": "MIT",
+      "nome": "agent-teams, business-analytics, startup-business-analyst, customer-sales-automation, content-marketing, seo-content-creation",
+      "comandoClaude": "claude plugin marketplace add wshobson/agents",
+      "comandoCodex": "codex plugin marketplace add wshobson/agents"
+    },
+    {
+      "fonte": "VoltAgent/awesome-claude-code-subagents",
+      "url": "https://github.com/VoltAgent/awesome-claude-code-subagents",
+      "licenca": "MIT",
+      "nome": "coleção de subagentes (versão Codex em VoltAgent/awesome-codex-subagents)",
+      "comandoClaude": "",
+      "comandoCodex": ""
+    },
+    {
+      "fonte": "msitarzewski/agency-agents",
+      "url": "https://github.com/msitarzewski/agency-agents",
+      "licenca": "MIT",
+      "nome": "agentes de marketing, sales, design, testing, support e paid media (o script convert.sh do repositório gera a versão Codex)",
+      "comandoClaude": "",
+      "comandoCodex": ""
+    },
+    {
+      "fonte": "anthropics/knowledge-work-plugins",
+      "url": "https://github.com/anthropics/knowledge-work-plugins",
+      "licenca": "Apache-2.0",
+      "nome": "plugins de trabalho do conhecimento (knowledge work)",
+      "comandoClaude": "",
+      "comandoCodex": ""
+    }
+  ]
+}
