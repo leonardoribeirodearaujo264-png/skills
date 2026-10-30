@@ -80,23 +80,6 @@ describe.skipIf(!ativo)("order bump: do checkout ao acesso", () => {
     expect((itens.data ?? []).map((i) => i.produto_slug).sort()).toEqual([PRINCIPAL, BUMP].sort());
   }, 60_000);
 
-  it("com dois bumps marcados, a prévia oferece os três e o Pix soma os dois (0009)", async () => {
-    const p = await previaCompra(null, "avulso", [PRINCIPAL]);
-    if ("motivo" in p) throw new Error(p.motivo);
-    expect(p.bumps.map((b) => [b.slug, b.precoCentavos])).toEqual([
-      [BUMP, 1990],
-      ["edicao-de-video", 2700],
-      ["motion-mockup-fontes", 990],
-    ]);
-    const r = await gerarPix({ usuario: null, email: EMAIL, nome: "Teste Bump", telefone: "11987654321" }, "avulso", [PRINCIPAL], [BUMP, "motion-mockup-fontes"]);
-    if ("motivo" in r || "situacao" in r) throw new Error(JSON.stringify(r));
-    pedidosExtras.push(r.pedidoId);
-    pixExtras.push(r.pix.id);
-    expect(r.valorCentavos).toBe(3700 + 1990 + 990);
-    const itens = await admin().from("loja_pedido_itens").select("produto_slug").eq("pedido_id", r.pedidoId);
-    expect((itens.data ?? []).map((i) => i.produto_slug).sort()).toEqual([PRINCIPAL, BUMP, "motion-mockup-fontes"].sort());
-  }, 60_000);
-
   it("pagamento aprovado libera os dois pacotes e manda o e-mail de acesso uma vez", async () => {
     if (!pedidoId) throw new Error("sem pedido");
     const deps = depsPagamento();
@@ -116,5 +99,24 @@ describe.skipIf(!ativo)("order bump: do checkout ao acesso", () => {
     const pedido = await db.from("loja_pedidos").select("status, valor_centavos, email_acesso_enviado_em").eq("id", pedidoId).single();
     expect(pedido.data?.status).toBe("pago");
     expect(pedido.data?.valor_centavos).toBe(5690);
+  }, 60_000);
+  it("com dois bumps marcados, a prévia oferece os três e o Pix soma os dois (0009); quem já tem o Lançamento Pro não paga de novo", async () => {
+    const p = await previaCompra(null, "avulso", [PRINCIPAL]);
+    if ("motivo" in p) throw new Error(p.motivo);
+    expect(p.bumps.map((b) => [b.slug, b.precoCentavos])).toEqual([
+      [BUMP, 1990],
+      ["edicao-de-video", 2700],
+      ["motion-mockup-fontes", 990],
+    ]);
+    const comprador = { usuario: null, email: EMAIL, nome: "Teste Bump", telefone: "11987654321" };
+    // O comprador deste teste já recebeu o Lançamento Pro no teste anterior
+    expect(await gerarPix(comprador, "avulso", [PRINCIPAL], [BUMP])).toEqual({ motivo: "ja_possui" });
+    const r = await gerarPix(comprador, "avulso", [PRINCIPAL], ["edicao-de-video", "motion-mockup-fontes"]);
+    if ("motivo" in r || "situacao" in r) throw new Error(JSON.stringify(r));
+    pedidosExtras.push(r.pedidoId);
+    pixExtras.push(r.pix.id);
+    expect(r.valorCentavos).toBe(3700 + 2700 + 990);
+    const itens = await admin().from("loja_pedido_itens").select("produto_slug").eq("pedido_id", r.pedidoId);
+    expect((itens.data ?? []).map((i) => i.produto_slug).sort()).toEqual([PRINCIPAL, "edicao-de-video", "motion-mockup-fontes"].sort());
   }, 60_000);
 });
