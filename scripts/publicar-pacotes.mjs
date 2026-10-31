@@ -130,7 +130,7 @@ async function publicar(db, p) {
   const legenda = join(AULAS, p.slug, "aula.vtt");
   const temAula = existsSync(video);
   const duracao = temAula ? duracaoAula(video) : null;
-  if (duracao !== null && duracao > 60) throw new Error(`${p.slug}: aula com ${duracao} s, o limite é 60`);
+  if (duracao !== null && duracao > 120) throw new Error(`${p.slug}: aula com ${duracao} s, o limite é 120 (banco/0010)`);
 
   console.log(`${p.slug}: ${p.conteudos.length} conteúdos, zip ${kb} KB, aula ${temAula ? `${duracao} s` : "ausente"}`);
   if (seco) return;
