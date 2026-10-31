@@ -33,7 +33,15 @@ function listar(pasta, filtroArquivo) {
 function lerPacote(slug) {
   const pasta = join(RAIZ, slug);
   const dados = JSON.parse(readFileSync(join(pasta, "pacote.json"), "utf8"));
-  const guia = readFileSync(join(pasta, "README.md"), "utf8");
+  // O passo a passo de instalação (COMECE-AQUI.md, gerado) vem antes do guia na área de membros
+  const comece = existsSync(join(pasta, "COMECE-AQUI.md"))
+    ? readFileSync(join(pasta, "COMECE-AQUI.md"), "utf8").replace(/^<!--[\s\S]*?-->\s*/, "")
+    : "";
+  const guia = `${comece ? `${comece.trim()}
+
+---
+
+` : ""}${readFileSync(join(pasta, "README.md"), "utf8")}`;
   const roteiro = existsSync(join(pasta, "aula", "roteiro.md")) ? readFileSync(join(pasta, "aula", "roteiro.md"), "utf8") : null;
 
   const prompts = listar(join(pasta, "prompts"), (f) => f.endsWith(".md")).map((f, i) => {

@@ -1,4 +1,4 @@
-// Gera instalar-claude/instalar-codex (.ps1 e .sh) e CREDITOS.md de cada pacote a partir do pacote.json.
+// Gera instalar-claude/instalar-codex (.ps1 e .sh), CREDITOS.md e COMECE-AQUI.md de cada pacote a partir do pacote.json.
 // Uso: node scripts/gerar-instaladores.mjs [slug]
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -177,6 +177,78 @@ O guia, os prompts, as skills da pasta \`skills/\` e o time de agentes da pasta 
 `;
 }
 
+function nomesDe(slug, pasta, extensao) {
+  const dir = join(RAIZ, slug, pasta);
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir, { withFileTypes: true })
+    .filter((d) => (extensao ? d.isFile() && d.name.endsWith(extensao) : d.isDirectory()))
+    .map((d) => (extensao ? d.name.slice(0, -extensao.length) : d.name))
+    .sort();
+}
+
+// Passo a passo para quem nunca usou o Claude: instalar o app, baixar o pacote e colar um pedido que faz
+// o próprio Claude Code instalar, conferir e testar tudo
+function gerarComeceAqui(dados) {
+  const skillsAutorais = nomesDe(dados.slug, "skills");
+  const terceiras = comandos(dados, "claude").map((c) => c.skill);
+  const agentes = nomesDe(dados.slug, "agents/claude", ".md");
+  const prompts = nomesDe(dados.slug, "prompts", ".md");
+  const lista = (xs) => (xs.length ? xs.map((x) => `\`${x}\``).join(", ") : "nenhuma");
+  return `<!-- ${AVISO} -->
+# Comece aqui: como instalar o pacote "${dados.titulo}"
+
+São 4 passos. Você não precisa saber programar: no passo 4, o próprio Claude instala e testa tudo por você.
+
+## 1. Instale o app do Claude no seu computador
+
+1. Abra **claude.ai/download** no navegador do seu PC ou Mac e baixe o app **Claude** para o seu sistema.
+2. Instale e entre com a sua conta. O Claude Code (a aba **Code** do app) precisa de um plano pago do Claude, como o Pro ou o Max.
+
+## 2. Instale o Node.js
+
+O instalador do pacote usa o Node.js. Abra **nodejs.org**, baixe a versão LTS (22 ou mais nova) e instale com as opções padrão. Se já tiver, pule este passo.
+
+## 3. Baixe e extraia o pacote
+
+1. Na sua área de membros, clique em **Baixar o pacote**. Vem um arquivo \`.zip\`.
+2. Clique com o botão direito no \`.zip\` e escolha **Extrair tudo** (no Mac, basta dar dois cliques).
+3. Guarde a pasta extraída num lugar fácil, como **Documentos**.
+
+## 4. Peça ao Claude para instalar e testar
+
+1. Abra o app **Claude**, vá na aba **Code** e escolha a pasta extraída do pacote como pasta de trabalho.
+2. Copie o pedido abaixo inteiro, cole na conversa e envie.
+3. Quando o Claude pedir permissão para rodar o instalador, confira e aceite.
+
+\`\`\`text
+Instale o pacote desta pasta no meu Claude Code e confira se deu certo.
+
+1. Veja qual é o meu sistema. No Windows, rode: powershell -ExecutionPolicy Bypass -File .\\instalar-claude.ps1
+   No Mac ou no Linux, rode: bash ./instalar-claude.sh
+2. Se aparecer "Node.js não encontrado", pare e me explique como instalar o Node.js 22.
+3. Depois de instalar, confira se estas pastas existem:
+   - em ~/.claude/skills: ${[...skillsAutorais, ...terceiras].join(", ") || "(este pacote não tem skills)"}
+   - em ~/.claude/agents: ${agentes.map((a) => `${a}.md`).join(", ")}
+4. Me mostre uma lista com o que foi instalado e o que faltou. Se algo falhou, rode de novo só o que faltou.
+5. No fim, me diga para fechar e abrir o Claude de novo, e qual prompt da pasta prompts/ eu devo testar primeiro.
+Não apague, não publique e não pague nada sem me perguntar.
+\`\`\`
+
+## Depois de instalar
+
+- Feche e abra o Claude de novo para ele carregar as skills e o time.
+- Teste com o primeiro prompt da pasta \`prompts/\`${prompts.length ? ` (\`${prompts[0]}.md\`)` : ""}: abra o arquivo, copie, troque o que estiver entre colchetes e envie.
+- Usa o Codex? Na pasta do pacote, rode \`instalar-codex.ps1\` (Windows) ou \`instalar-codex.sh\` (Mac e Linux). O passo a passo completo está no \`README.md\`.
+
+## O que este pacote instala
+
+- Skills autorais: ${lista(skillsAutorais)}
+- Skills de terceiros (baixadas do autor na hora): ${lista(terceiras)}
+- Agentes: ${lista(agentes)}
+- Prompts prontos: ${prompts.length} arquivos na pasta \`prompts/\`
+`;
+}
+
 const slugs = process.argv[2]
   ? [process.argv[2]]
   : readdirSync(RAIZ, { withFileTypes: true })
@@ -191,5 +263,6 @@ for (const slug of slugs) {
     writeFileSync(join(RAIZ, slug, `instalar-${alvo}.ps1`), "﻿" + gerarPs1(dados, alvo).replace(/\n/g, "\r\n"));
   }
   writeFileSync(join(RAIZ, slug, "CREDITOS.md"), gerarCreditos(dados));
-  console.log(`${slug}: instaladores e CREDITOS.md gerados`);
+  writeFileSync(join(RAIZ, slug, "COMECE-AQUI.md"), gerarComeceAqui(dados));
+  console.log(`${slug}: instaladores, CREDITOS.md e COMECE-AQUI.md gerados`);
 }
