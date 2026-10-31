@@ -16,8 +16,10 @@ export const metadata: Metadata = {
   title: { absolute: "Leonardo Skills: pacotes de skills para Claude Code e Codex" },
   description: "Pacotes de skills, agentes e prompts para Claude Code e Codex, explicados em português, e os prompts grátis dos vídeos.",
 };
-// Preço e oferta ativa vêm do banco a cada visita, como na /loja/
-export const dynamic = "force-dynamic";
+// Preço e oferta ativa vêm do banco, renovados a cada 60 s (mesmo prazo da vitrine das páginas dos vídeos).
+// A página não lê sessão, então sai do cache da CDN em vez de rodar a função a cada visita.
+// O checkout recalcula o preço no servidor na hora de pagar.
+export const revalidate = 60;
 export const viewport: Viewport = { themeColor: "#14100D" };
 
 // Uma leitura do catálogo por requisição, dividida entre a pílula do combo e a lista.
