@@ -12,7 +12,7 @@ pacotes/<slug>/
   agents/claude/<nome>.md   time autoral no formato do Claude Code
   agents/codex/<nome>.toml  o mesmo time no formato do Codex
   prompts/NN-<nome>.md   prompts prontos, um por arquivo
-  aula/roteiro.md        roteiro da aula (até 150 palavras de fala, no máximo 60 s)
+  aula/roteiro.md        roteiro da aula (até 210 palavras, cerca de 80 s: abertura, instalação pelo app do Claude e uso)
   LICENSES/              licença do conteúdo autoral
   instalar-claude.ps1 / instalar-claude.sh   gerados por scripts/gerar-instaladores.mjs
   instalar-codex.ps1 / instalar-codex.sh     gerados
@@ -103,7 +103,7 @@ Seções, nesta ordem e com estes títulos exatos (o site depende deles):
 
 ## Aula
 
-`aula/roteiro.md`: título, até 150 palavras de fala dividida em 5 a 7 cenas curtas (cada cena com a fala e o texto que aparece na tela). Cobre: instalar no Claude Code e no Codex, como dar instrução ao time, uma skill em uso e onde estão os prompts.
+`aula/roteiro.md`: título, até 210 palavras de fala dividida em 7 ou 8 cenas curtas (cada cena com a fala e o texto que aparece na tela). Cobre: o que o pacote faz, o que instalar antes (app do Claude, plano Pro ou Max, Node.js), baixar e abrir a pasta no Claude, o pedido do `COMECE-AQUI.md` que instala e testa, como dar instrução ao time, uma skill em uso e onde estão os prompts. Narração com a ElevenLabs (voz Eric, modelo multilíngue).
 
 ## Regras de texto
 

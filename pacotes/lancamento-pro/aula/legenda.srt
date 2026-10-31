@@ -1,0 +1,99 @@
+1
+00:00:00,350 --> 00:00:04,210
+Quinze agentes e cinquenta skills
+para o seu lançamento: pesquisa,
+
+2
+00:00:04,210 --> 00:00:07,600
+oferta, página, e-mails,
+anúncios, atendimento e números.
+
+3
+00:00:07,600 --> 00:00:10,156
+Tudo sai como rascunho para você aprovar.
+
+4
+00:00:10,506 --> 00:00:14,228
+Antes de tudo, baixe o
+aplicativo do Claude no seu
+
+5
+00:00:14,228 --> 00:00:17,308
+computador, em claude.ai barra download.
+
+6
+00:00:17,308 --> 00:00:21,543
+Para usar o Claude Code, você
+precisa do plano Pro ou Max.
+
+7
+00:00:21,543 --> 00:00:23,660
+Instale também o Node.js.
+
+8
+00:00:24,010 --> 00:00:27,376
+Na sua área de membros, baixe
+o pacote e extraia a pasta.
+
+9
+00:00:27,376 --> 00:00:30,949
+Depois abra o Claude, entre na
+aba Code e escolha essa pasta.
+
+10
+00:00:31,299 --> 00:00:36,164
+Abra o arquivo COMECE-AQUI, copie
+o pedido pronto e cole no Claude.
+
+11
+00:00:36,164 --> 00:00:41,873
+Ele roda o instalador, confere cada skill
+e cada agente, e avisa se faltou algo.
+
+12
+00:00:41,873 --> 00:00:44,857
+No fim, feche e abra o Claude de novo.
+
+13
+00:00:45,207 --> 00:00:47,118
+Este pacote não tem líder.
+
+14
+00:00:47,118 --> 00:00:52,063
+Você chama os agentes na ordem da etapa,
+e cada um parte da entrega do anterior.
+
+15
+00:00:52,063 --> 00:00:55,659
+Antes de publicar, passe tudo
+pelo revisor de promessas.
+
+16
+00:00:56,009 --> 00:00:59,186
+Para uma tarefa pequena,
+chame a skill direto.
+
+17
+00:00:59,186 --> 00:01:02,893
+A calcular CPA máximo mostra
+quanto você pode pagar por
+
+18
+00:01:02,893 --> 00:01:05,953
+venda, com a conta
+aberta e os seus números.
+
+19
+00:01:06,303 --> 00:01:09,877
+Os prompts prontos estão na
+pasta prompts e na sua área
+
+20
+00:01:09,877 --> 00:01:12,884
+de membros, um para cada
+etapa do lançamento.
+
+21
+00:01:12,884 --> 00:01:16,174
+Nenhum agente publica ou
+gasta verba sem o seu OK.

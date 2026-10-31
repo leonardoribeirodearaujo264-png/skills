@@ -1,64 +1,84 @@
 1
-00:00:00,350 --> 00:00:04,426
+00:00:00,350 --> 00:00:03,838
 Neste pacote você faz mockup,
 animação e escolha de fontes
 
 2
-00:00:04,426 --> 00:00:08,563
+00:00:03,838 --> 00:00:07,379
 pedindo ao Claude Code ou ao
 Codex, sem programa de design.
 
 3
-00:00:08,913 --> 00:00:14,102
-No Claude Code, abra a pasta
-do pacote e rode o instalador.
+00:00:07,729 --> 00:00:11,285
+Antes de tudo, baixe o
+aplicativo do Claude no seu
 
 4
-00:00:14,102 --> 00:00:17,278
-No Windows é o arquivo ponto ps1.
+00:00:11,285 --> 00:00:14,229
+computador, em claude.ai barra download.
 
 5
-00:00:17,278 --> 00:00:19,369
-No Mac, o ponto sh.
+00:00:14,229 --> 00:00:18,276
+Para usar o Claude Code, você
+precisa do plano Pro ou Max.
 
 6
-00:00:19,719 --> 00:00:23,159
-No Codex é igual, com
-o instalador do Codex.
+00:00:18,276 --> 00:00:20,299
+Instale também o Node.js.
 
 7
-00:00:23,159 --> 00:00:26,467
-Ele coloca tudo nas pastas que o Codex lê.
+00:00:20,649 --> 00:00:24,505
+Na sua área de membros, baixe
+o pacote e extraia a pasta.
 
 8
-00:00:26,817 --> 00:00:31,997
+00:00:24,505 --> 00:00:28,599
+Depois abra o Claude, entre na
+aba Code e escolha essa pasta.
+
+9
+00:00:28,949 --> 00:00:33,978
+Abra o arquivo COMECE-AQUI, copie
+o pedido pronto e cole no Claude.
+
+10
+00:00:33,978 --> 00:00:39,878
+Ele roda o instalador, confere cada skill
+e cada agente, e avisa se faltou algo.
+
+11
+00:00:39,878 --> 00:00:42,962
+No fim, feche e abra o Claude de novo.
+
+12
+00:00:43,312 --> 00:00:48,303
 Peça ao líder visual o que você
 quer entregar e passe seus arquivos.
 
-9
-00:00:31,997 --> 00:00:37,382
+13
+00:00:48,303 --> 00:00:53,491
 Ele divide entre os especialistas e
 só entrega o que passou na revisão.
 
-10
-00:00:37,382 --> 00:00:40,108
+14
+00:00:53,491 --> 00:00:56,118
 No Codex, cite o nome do agente.
 
-11
-00:00:40,458 --> 00:00:44,622
+15
+00:00:56,468 --> 00:01:00,293
 Veja a skill de mockup: mando
 o print do site e recebo o
 
-12
-00:00:44,622 --> 00:00:48,200
+16
+00:01:00,293 --> 00:01:03,580
 notebook em PNG, no
 tamanho de post e de slide.
 
-13
-00:00:48,550 --> 00:00:53,336
+17
+00:01:03,930 --> 00:01:08,073
 Os prompts prontos estão na pasta
 prompts e na sua área de membros.
 
-14
-00:00:53,336 --> 00:00:56,463
+18
+00:01:08,073 --> 00:01:10,779
 Troque o que está entre colchetes e cole.

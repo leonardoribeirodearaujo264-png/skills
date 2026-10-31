@@ -1,62 +1,84 @@
 1
-00:00:00,350 --> 00:00:05,800
+00:00:00,350 --> 00:00:05,266
 Corte, legende e monte Reels,
 Shorts e aulas pedindo em português.
 
 2
-00:00:05,800 --> 00:00:08,452
+00:00:05,266 --> 00:00:07,658
 Tudo roda no seu computador.
 
 3
-00:00:08,802 --> 00:00:12,876
-Antes, instale Node 22
-ou mais novo e FFmpeg, e
+00:00:08,008 --> 00:00:11,912
+Antes de tudo, baixe o
+aplicativo do Claude no seu
 
 4
-00:00:12,876 --> 00:00:16,506
-separe um disco com espaço para o render.
+00:00:11,912 --> 00:00:15,143
+computador, em claude.ai barra download.
 
 5
-00:00:16,856 --> 00:00:20,281
-No Claude Code, rode o instalar-claude.
+00:00:15,143 --> 00:00:19,586
+Para usar o Claude Code, você
+precisa do plano Pro ou Max.
 
 6
-00:00:20,281 --> 00:00:22,832
-No Codex, o instalar-codex.
+00:00:19,586 --> 00:00:24,500
+Instale também o Node.js e o
+FFmpeg, que faz o render dos vídeos.
 
 7
-00:00:22,832 --> 00:00:25,455
-No Windows, use o ponto ps1.
+00:00:24,850 --> 00:00:28,650
+Na sua área de membros, baixe
+o pacote e extraia a pasta.
 
 8
-00:00:25,805 --> 00:00:28,681
-Peça ao agente lider-edicao.
+00:00:28,650 --> 00:00:32,683
+Depois abra o Claude, entre na
+aba Code e escolha essa pasta.
 
 9
-00:00:28,681 --> 00:00:33,555
+00:00:33,033 --> 00:00:37,776
+Abra o arquivo COMECE-AQUI, copie
+o pedido pronto e cole no Claude.
+
+10
+00:00:37,776 --> 00:00:43,340
+Ele roda o instalador, confere cada skill
+e cada agente, e avisa se faltou algo.
+
+11
+00:00:43,340 --> 00:00:46,249
+No fim, feche e abra o Claude de novo.
+
+12
+00:00:46,599 --> 00:00:48,667
+Peça ao agente lider-edicao.
+
+13
+00:00:48,667 --> 00:00:52,172
 Ele chama roteiro, cortes,
 legenda, motion e revisão.
 
-10
-00:00:33,555 --> 00:00:37,150
+14
+00:00:52,172 --> 00:00:54,758
 No Codex, cite cada agente pelo nome.
 
-11
-00:00:37,500 --> 00:00:42,704
+15
+00:00:55,108 --> 00:01:00,368
 A skill reels do bruto ao post
 transcreve, corta silêncio e erro, põe o
 
-12
-00:00:42,704 --> 00:00:47,578
+16
+00:01:00,368 --> 00:01:05,296
 gancho nos três primeiros segundos,
 legenda e exporta em vertical.
 
-13
-00:00:47,928 --> 00:00:52,425
+17
+00:01:05,646 --> 00:01:09,426
 Os prompts prontos estão na pasta
 prompts e na área de membros.
 
-14
-00:00:52,425 --> 00:00:56,415
+18
+00:01:09,426 --> 00:01:12,781
 Troque o que está entre
 colchetes e cole no seu agente.

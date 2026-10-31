@@ -1,66 +1,98 @@
 1
-00:00:00,350 --> 00:00:05,332
+00:00:00,350 --> 00:00:03,948
 Você não precisa programar para
 construir um site ou um sistema.
 
 2
-00:00:05,332 --> 00:00:08,999
+00:00:03,948 --> 00:00:06,597
 Precisa pedir do jeito
 certo e com segurança.
 
 3
-00:00:09,349 --> 00:00:14,632
-Rode o instalador do pacote: ponto
-ps1 no Windows, ponto sh no Mac.
+00:00:06,947 --> 00:00:11,278
+Antes de tudo, baixe o
+aplicativo do Claude no seu
 
 4
-00:00:14,632 --> 00:00:18,507
-Tem um para o Claude Code
-e outro para o Codex.
+00:00:11,278 --> 00:00:14,862
+computador, em claude.ai barra download.
 
 5
-00:00:18,857 --> 00:00:21,622
-Copie o modelo de instrução global.
+00:00:14,862 --> 00:00:19,791
+Para usar o Claude Code, você
+precisa do plano Pro ou Max.
 
 6
-00:00:21,622 --> 00:00:25,866
+00:00:19,791 --> 00:00:22,255
+Instale também o Node.js.
+
+7
+00:00:22,605 --> 00:00:26,151
+Na sua área de membros, baixe
+o pacote e extraia a pasta.
+
+8
+00:00:26,151 --> 00:00:29,915
+Depois abra o Claude, entre na
+aba Code e escolha essa pasta.
+
+9
+00:00:30,265 --> 00:00:35,500
+Abra o arquivo COMECE-AQUI, copie
+o pedido pronto e cole no Claude.
+
+10
+00:00:35,500 --> 00:00:41,642
+Ele roda o instalador, confere cada skill
+e cada agente, e avisa se faltou algo.
+
+11
+00:00:41,642 --> 00:00:44,853
+No fim, feche e abra o Claude de novo.
+
+12
+00:00:45,203 --> 00:00:47,914
+Copie o modelo de instrução global.
+
+13
+00:00:47,914 --> 00:00:52,074
 Ele faz o agente responder em
 português, explicar antes de
 
-7
-00:00:25,866 --> 00:00:29,596
+14
+00:00:52,074 --> 00:00:55,730
 mudar e pedir permissão
 antes de apagar ou gastar.
 
-8
-00:00:29,946 --> 00:00:33,135
+15
+00:00:56,080 --> 00:00:58,751
 Para começar, chame o líder do projeto.
 
-9
-00:00:33,135 --> 00:00:36,188
+16
+00:00:58,751 --> 00:01:01,309
 Ele entrevista você, monta o plano em
 
-10
-00:00:36,188 --> 00:00:39,648
+17
+00:01:01,309 --> 00:01:04,207
 linguagem simples e só
 segue com o seu sim.
 
-11
-00:00:39,998 --> 00:00:44,947
+18
+00:01:04,557 --> 00:01:09,468
 A skill do pedido ao ar leva a ideia
 até a publicação: versão mínima,
 
-12
-00:00:44,947 --> 00:00:49,447
+19
+00:01:09,468 --> 00:01:13,932
 teste como cliente e checklist
 de segurança antes de ir ao ar.
 
-13
-00:00:49,797 --> 00:00:54,309
+20
+00:01:14,282 --> 00:01:18,226
 Os prompts prontos estão na pasta
 prompts e na área de membros.
 
-14
-00:00:54,309 --> 00:00:58,058
+21
+00:01:18,226 --> 00:01:21,503
 Troque o que está entre
 colchetes e cole no agente.

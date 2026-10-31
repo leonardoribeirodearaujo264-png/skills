@@ -1,60 +1,84 @@
 1
-00:00:00,350 --> 00:00:04,135
+00:00:00,350 --> 00:00:02,842
 Neste pacote, você pede
 em português e o time
 
 2
-00:00:04,135 --> 00:00:07,705
+00:00:02,842 --> 00:00:05,193
 monta página, texto, anúncio e velocidade.
 
 3
-00:00:08,055 --> 00:00:10,944
-No Claude Code, abra
-o terminal na pasta do
+00:00:05,543 --> 00:00:09,358
+Antes de tudo, baixe o
+aplicativo do Claude no seu
 
 4
-00:00:10,944 --> 00:00:13,777
-pacote e rode o instalador do seu sistema.
+00:00:09,358 --> 00:00:12,515
+computador, em claude.ai barra download.
 
 5
-00:00:14,127 --> 00:00:17,095
-No Codex, rode o instalador do Codex.
+00:00:12,515 --> 00:00:16,856
+Para usar o Claude Code, você
+precisa do plano Pro ou Max.
 
 6
-00:00:17,095 --> 00:00:22,438
-Ele usa outras pastas, então rode
-mesmo que já tenha instalado no Claude.
+00:00:16,856 --> 00:00:19,027
+Instale também o Node.js.
 
 7
-00:00:22,788 --> 00:00:27,247
+00:00:19,377 --> 00:00:23,293
+Na sua área de membros, baixe
+o pacote e extraia a pasta.
+
+8
+00:00:23,293 --> 00:00:27,449
+Depois abra o Claude, entre na
+aba Code e escolha essa pasta.
+
+9
+00:00:27,799 --> 00:00:32,418
+Abra o arquivo COMECE-AQUI, copie
+o pedido pronto e cole no Claude.
+
+10
+00:00:32,418 --> 00:00:37,838
+Ele roda o instalador, confere cada skill
+e cada agente, e avisa se faltou algo.
+
+11
+00:00:37,838 --> 00:00:40,671
+No fim, feche e abra o Claude de novo.
+
+12
+00:00:41,021 --> 00:00:45,040
 Para dar instrução ao time,
 chame o líder pelo nome e conte o
 
-8
-00:00:27,247 --> 00:00:31,125
+13
+00:00:45,040 --> 00:00:48,534
 negócio, o público, a oferta
 e a ação que você quer.
 
-9
-00:00:31,475 --> 00:00:35,967
+14
+00:00:48,884 --> 00:00:52,228
 Antes de anunciar, peça a
 checklist da página que vende.
 
-10
-00:00:35,967 --> 00:00:41,020
+15
+00:00:52,228 --> 00:00:55,989
 Ela devolve o que corrigir primeiro,
 do mais grave ao mais leve.
 
-11
-00:00:41,370 --> 00:00:46,609
+16
+00:00:56,339 --> 00:01:00,286
 Os prompts prontos estão na pasta
 prompts e na sua área de membros.
 
-12
-00:00:46,609 --> 00:00:50,521
+17
+00:01:00,286 --> 00:01:03,233
 Copie, troque o que está
 entre colchetes e cole.
 
-13
-00:00:50,521 --> 00:00:53,664
+18
+00:01:03,233 --> 00:01:05,601
 Nada é publicado sem a sua aprovação.

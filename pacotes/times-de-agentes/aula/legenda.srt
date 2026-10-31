@@ -1,67 +1,100 @@
 1
-00:00:00,350 --> 00:00:04,037
+00:00:00,350 --> 00:00:03,132
 Seis times de agentes
 para a sua empresa, cada
 
 2
-00:00:04,037 --> 00:00:07,178
+00:00:03,132 --> 00:00:05,502
 um com líder, especialistas e revisor.
 
 3
-00:00:07,178 --> 00:00:10,934
+00:00:05,502 --> 00:00:08,335
 E um diretor-geral que
 escolhe o time por você.
 
 4
-00:00:11,284 --> 00:00:17,006
-Para instalar no Claude Code, abra a pasta
-do pacote e rode o instalador do Claude.
+00:00:08,685 --> 00:00:12,086
+Antes de tudo, baixe o
+aplicativo do Claude no seu
 
 5
-00:00:17,006 --> 00:00:19,836
-No Codex, rode o instalador do Codex.
+00:00:12,086 --> 00:00:14,900
+computador, em claude.ai barra download.
 
 6
-00:00:20,186 --> 00:00:23,458
+00:00:14,900 --> 00:00:18,770
+Para usar o Claude Code, você
+precisa do plano Pro ou Max.
+
+7
+00:00:18,770 --> 00:00:20,705
+Instale também o Node.js.
+
+8
+00:00:21,055 --> 00:00:25,039
+Na sua área de membros, baixe
+o pacote e extraia a pasta.
+
+9
+00:00:25,039 --> 00:00:29,268
+Depois abra o Claude, entre na
+aba Code e escolha essa pasta.
+
+10
+00:00:29,618 --> 00:00:34,769
+Abra o arquivo COMECE-AQUI, copie
+o pedido pronto e cole no Claude.
+
+11
+00:00:34,769 --> 00:00:40,812
+Ele roda o instalador, confere cada skill
+e cada agente, e avisa se faltou algo.
+
+12
+00:00:40,812 --> 00:00:43,971
+No fim, feche e abra o Claude de novo.
+
+13
+00:00:44,321 --> 00:00:47,201
 No Claude Code, peça
 ao líder: use o agente
 
-7
-00:00:23,458 --> 00:00:26,408
+14
+00:00:47,201 --> 00:00:49,799
 lider-marketing para a minha campanha.
 
-8
-00:00:26,408 --> 00:00:29,295
+15
+00:00:49,799 --> 00:00:52,340
 No Codex, cite cada agente pelo nome.
 
-9
-00:00:29,645 --> 00:00:33,210
+16
+00:00:52,690 --> 00:00:55,910
 O líder pergunta o que
 falta, divide entre os
 
-10
-00:00:33,210 --> 00:00:37,178
+17
+00:00:55,910 --> 00:00:59,496
 especialistas e só entrega
 o que o revisor aprovou.
 
-11
-00:00:37,178 --> 00:00:40,474
+18
+00:00:59,496 --> 00:01:02,473
 Nada é publicado ou enviado sem o seu OK.
 
-12
-00:00:40,824 --> 00:00:42,377
+19
+00:01:02,823 --> 00:01:04,205
 Falta uma área?
 
-13
-00:00:42,377 --> 00:00:48,591
+20
+00:01:04,205 --> 00:01:09,733
 A skill montar-time-de-agentes entrevista
 você e cria o time novo nos dois formatos.
 
-14
-00:00:48,941 --> 00:00:52,288
+21
+00:01:10,083 --> 00:01:12,597
 Os prompts prontos estão
 na pasta prompts, um
 
-15
-00:00:52,288 --> 00:00:55,382
+22
+00:01:12,597 --> 00:01:14,922
 para cada time, e na sua área de membros.
