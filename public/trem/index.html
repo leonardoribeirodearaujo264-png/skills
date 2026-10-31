@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>O trem dos vídeos: passo a passo</title>
+<meta name="description" content="Como montar a linha de produção de vídeos com o Claude Code: roteiro, voz, cenário em código, legenda e Reel pronto, sem programa de edição.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este passo a passo é grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">passo a passo grátis</span>
+  <h1>Uma ideia entra no trem, <span class="nowrap">sai um Reel</span></h1>
+  <p class="lead">Cada estação é uma etapa que o Claude Code faz por você. É o mesmo caminho dos vídeos deste perfil.</p>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Estação roteiro</h2></div>
+    <p>No Claude Code, envie a sua ideia:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-roteiro">Copiar</button></div>
+<pre id="prompt-roteiro">Escreva o roteiro de um Reel de 40 segundos sobre [IDEIA]. Comece com um gancho forte nos 3 primeiros segundos, uma fala por cena, frases curtas e um pedido de comentário no fim. Não invente números: se precisar de dado, me diga qual e onde conferir.</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Estação voz</h2></div>
+    <ul class="plain">
+      <li>Grave você mesmo lendo o roteiro, ou use uma voz de IA (aqui usamos a ElevenLabs).</li>
+      <li>Guarde o tempo de cada palavra: é ele que sincroniza a legenda e as animações.</li>
+    </ul>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Estação cenário</h2></div>
+    <p>Instale a skill que monta o vídeo em código:</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-hf">Copiar</button></div>
+<pre id="cmd-hf">npx skills add https://github.com/heygen-com/hyperframes --skill hyperframes</pre>
+    </div>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-cenas">Copiar</button></div>
+<pre id="prompt-cenas">Use a skill hyperframes para montar o vídeo vertical 1080x1920 com este roteiro e este áudio. Uma cena por fala, personagens e animações em código, legenda palavra por palavra no tempo do áudio. Me mostre prévias de cada cena antes do render.</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo4">
+    <div class="step-head"><span class="step-num">4</span><h2 id="passo4">Estação câmera e Reel pronto</h2></div>
+    <ul class="plain">
+      <li>Peça movimento de câmera, efeitos sonoros e o ajuste fino de cada cena.</li>
+      <li>Peça o render final: o MP4 vertical sai pronto para postar.</li>
+    </ul>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Quer o trem completo? O pacote de edição traz as skills prontas."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>

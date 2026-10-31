@@ -104,8 +104,8 @@ describe("página inicial de vendas", () => {
 
   it("cada card lista os agentes grátis do seu pacote; o completo lista todos", () => {
     expect(porId("pacote-completo").agentes).toHaveLength(PAGINAS_VIDEOS.length);
-    expect(porId("pacote-times-de-agentes").agentes?.map((a) => a.pasta)).toEqual(["agentes", "harvey", "conselho", "futuro", "guia"]);
-    expect(porId("pacote-edicao-de-video").agentes).toEqual([]);
+    expect(porId("pacote-times-de-agentes").agentes?.map((a) => a.pasta)).toEqual(["agentes", "harvey", "conselho", "futuro", "guia", "leis"]);
+    expect(porId("pacote-edicao-de-video").agentes?.map((a) => a.pasta)).toEqual(["editar", "trem"]);
     expect(pagina.agentes.find((a) => a.pasta === "banca")?.pacoteCurto).toBe("Programação");
   });
 });

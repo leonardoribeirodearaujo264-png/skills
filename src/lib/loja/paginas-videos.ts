@@ -119,6 +119,41 @@ export const PAGINAS_VIDEOS: readonly PaginaVideo[] = [
     tipo: "Skill grátis",
     oferta: { pacote: "design-copy-anuncios", gancho: "Gostou da find-skills? No pacote tem as melhores skills de design e copy, explicadas em português." },
   },
+  {
+    pasta: "editar",
+    titulo: "O Claude editando vídeo",
+    frase: "Cortes, legendas e animações em código com a skill HyperFrames, sem timeline.",
+    tipo: "Passo a passo",
+    oferta: { pacote: "edicao-de-video", gancho: "Gostou? No pacote de edição tem as skills prontas, do bruto ao post." },
+  },
+  {
+    pasta: "trem",
+    titulo: "O trem dos vídeos",
+    frase: "Roteiro, voz, cenário em código e Reel pronto, uma estação por vez.",
+    tipo: "Passo a passo",
+    oferta: { pacote: "edicao-de-video", gancho: "Quer o trem completo? O pacote de edição traz as skills prontas." },
+  },
+  {
+    pasta: "ringue",
+    titulo: "O ringue dos modelos",
+    frase: "Gemini 4 Carbon, Opus 5.5 e GPT-6 Astra comparados, com as fontes.",
+    tipo: "Guia grátis",
+    oferta: { pacote: "programacao-sem-codigo", gancho: "Gostou? No pacote tem o caminho completo do pedido ao projeto no ar." },
+  },
+  {
+    pasta: "viral",
+    titulo: "7 Claudes avaliam seu vídeo",
+    frase: "O prompt da equipe que reprova o roteiro antes de você gravar e devolve corrigido.",
+    tipo: "Prompt grátis",
+    oferta: { pacote: "design-copy-anuncios", gancho: "Gostou? No pacote de copy tem mais prompts prontos para conteúdo e anúncios." },
+  },
+  {
+    pasta: "leis",
+    titulo: "As leis do Brasil no Claude",
+    frase: "Mais de 1,2 milhão de normas em Markdown para o Claude responder em cima do texto.",
+    tipo: "Passo a passo",
+    oferta: { pacote: "times-de-agentes", gancho: "Gostou? No pacote tem seis times de agentes com líder e revisor." },
+  },
 ];
 
 // A chave é a pasta da página (/agentes/ -> "agentes")

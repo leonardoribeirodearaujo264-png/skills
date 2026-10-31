@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>As leis do Brasil para o seu Claude</title>
+<meta name="description" content="Passo a passo grátis para usar o acervo ctresb/leis no Claude Code: Constituição, leis federais e estaduais, órgãos reguladores e súmulas em Markdown.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este passo a passo é grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">passo a passo grátis</span>
+  <h1>As leis do Brasil <span class="nowrap">para o seu Claude ler</span></h1>
+  <p class="lead">O acervo ctresb/leis junta mais de 1,2 milhão de documentos em Markdown: a Constituição, leis federais desde 1822, leis dos 27 estados, atos de órgãos como CONTRAN, ANVISA e Receita Federal, e súmulas. Cada arquivo traz a ementa, se foi revogado e o link da fonte oficial.</p>
+
+  <a class="btn" href="https://github.com/ctresb/leis" target="_blank" rel="noopener">Abrir o repositório no GitHub</a>
+  <div class="note">Projeto de terceiros (ctresb/leis). Os textos são informativos e não substituem o Diário Oficial: confira sempre a fonte indicada no cabeçalho. Não é orientação jurídica. Esta página não tem ligação com o autor.</div>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Baixe só o que precisa</h2></div>
+    <p>O acervo inteiro é grande. Baixe só as pastas que vai usar (exemplo com a Constituição e as leis federais):</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-leis">Copiar</button></div>
+<pre id="cmd-leis">git clone --depth 1 --filter=blob:none --sparse https://github.com/ctresb/leis
+cd leis
+git sparse-checkout set federal/leis-ordinarias federal/leis-complementares
+claude</pre>
+    </div>
+    <div class="note">A Constituição (<code class="inline">constituicao.md</code>) vem junto, porque fica na raiz. Para o seu estado, acrescente <code class="inline">estaduais/SP</code> (troque pela sigla).</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Pergunte em cima do texto</h2></div>
+    <p>Com o Claude Code aberto na pasta, envie:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-leis">Copiar</button></div>
+<pre id="prompt-leis">Responda só com base nos arquivos desta pasta. Procure a norma que trata de [SUA DÚVIDA], confira no cabeçalho se ela está em vigor e não foi revogada, cite o artigo e o link da fonte. Se não achar, diga que não achou em vez de supor.</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Para que serve</h2></div>
+    <div class="cards">
+      <article class="card"><h3>Consumidor</h3><p class="when">Ex.: o art. 49 do CDC dá 7 dias para desistir de compra feita fora da loja.</p></article>
+      <article class="card"><h3>Contratos e impostos</h3><p class="when">Ache a lei exata em vez de mandar um PDF gigante para o Claude.</p></article>
+      <article class="card"><h3>Trânsito</h3><p class="when">Leis e resoluções do CONTRAN com o link oficial.</p></article>
+    </div>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou? O pacote traz times de agentes prontos para o seu negócio."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>

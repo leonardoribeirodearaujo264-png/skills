@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>O Claude editando vídeo: passo a passo</title>
+<meta name="description" content="Passo a passo grátis para o Claude Code fazer vídeos inteiros em código com a skill HyperFrames: cortes, legendas e animações sem timeline.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este passo a passo é grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">passo a passo grátis</span>
+  <h1>O Claude não sabia editar. <span class="nowrap">Agora sabe.</span></h1>
+  <p class="lead">Os vídeos do perfil são feitos assim: o Claude Code escreve cada cena, legenda e animação em código com a skill HyperFrames e entrega o MP4 pronto. Ninguém abre timeline.</p>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Instale a skill</h2></div>
+    <p>No terminal, dentro de uma pasta só para os seus vídeos:</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-hf">Copiar</button></div>
+<pre id="cmd-hf">npx skills add https://github.com/heygen-com/hyperframes --skill hyperframes</pre>
+    </div>
+    <div class="note">Precisa do Node.js. A HyperFrames é um projeto open source da HeyGen (heygen-com/hyperframes, licença Apache-2.0); esta página não tem ligação com o autor.</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Peça o vídeo</h2></div>
+    <p>Abra o Claude Code na mesma pasta (<code class="inline">claude</code>) e envie:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-video">Copiar</button></div>
+<pre id="prompt-video">Use a skill hyperframes para fazer um vídeo vertical 1080x1920 de 30 segundos sobre [TEMA]. Divida em 5 cenas curtas, com título grande em cada uma, legenda palavra por palavra e animações de entrada. Me mostre prévias das cenas antes de renderizar o MP4 final. Responda em português.</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Ajuste e renderize</h2></div>
+    <ul class="plain">
+      <li>Peça mudanças em texto: cor, fonte, tempo de cada cena, o que entra e o que sai.</li>
+      <li>Quando gostar das prévias, peça o render final. O MP4 sai na pasta do projeto.</li>
+      <li>Para narração, grave a sua voz ou use uma voz de IA e peça para ele sincronizar a legenda com o áudio.</li>
+    </ul>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Quer o pacote completo de edição? Tem as skills prontas, do bruto ao post."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>
