@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { CONTATO } from "./contato";
 
 // Segredos e configuração vêm só do ambiente do servidor. Validação preguiçosa: o build não exige segredos.
 const esquema = z.object({
@@ -14,7 +15,12 @@ const esquema = z.object({
   CRON_SECRET: z.string().min(16).optional(),
   // E-mails de acesso (código e link) saem pelo Resend, do domínio verificado
   RESEND_API_KEY: z.string().startsWith("re_"),
-  EMAIL_REMETENTE: z.string().min(3).default("Leonardo Araujo <acesso@leonardoskills.com>"),
+  // O nome que aparece na caixa de entrada é sempre o da marca do domínio; da variável só vale o endereço
+  EMAIL_REMETENTE: z
+    .string()
+    .min(3)
+    .default("acesso@leonardoskills.com")
+    .transform((v) => `${CONTATO.marca} <${(/<([^>]+)>/.exec(v)?.[1] ?? v).trim()}>`),
 });
 
 export type Env = z.infer<typeof esquema> & { chavePublicaSupabase: string };

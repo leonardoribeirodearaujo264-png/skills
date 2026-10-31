@@ -1,3 +1,4 @@
+import { CONTATO } from "../contato";
 import { env } from "../env";
 import { escaparHtml } from "../email/html";
 import { enviarEmail } from "../email/resend";
@@ -61,7 +62,7 @@ function montar(
       : `${titulo}\n\n${intro}\n\nCódigo: ${codigo}\n\nOu entre por este link: ${link}\n\n${rodape}`;
   const html = `<!doctype html><html lang="pt-BR"><body style="margin:0;background:#F6F5F1;font-family:Arial,Helvetica,sans-serif;color:#14161A">
 <div style="max-width:480px;margin:0 auto;padding:32px 20px">
-<p style="font-size:13px;color:#565B66;margin:0 0 16px">Leonardo Araujo</p>
+<p style="font-size:13px;color:#565B66;margin:0 0 16px">${CONTATO.marca}</p>
 <div style="background:#FFFFFF;border:1px solid #E3E1DA;border-radius:16px;padding:28px">
 ${capa ? `<img src="${escaparHtml(capa.url)}" width="424" height="283" alt="${escaparHtml(capa.alt)}" style="display:block;width:100%;max-width:424px;height:auto;border-radius:12px;margin:0 0 20px">` : ""}
 <h1 style="font-size:22px;margin:0 0 10px">${escaparHtml(titulo)}</h1>

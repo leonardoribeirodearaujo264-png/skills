@@ -1,3 +1,4 @@
+import { CONTATO } from "../contato";
 import { env } from "../env";
 import { escaparHtml } from "./html";
 import { enviarEmail } from "./resend";
@@ -34,7 +35,7 @@ export async function enviarEmailPix(d: EmailPix): Promise<void> {
 
   const html = `<!doctype html><html lang="pt-BR"><body style="margin:0;background:#F6F5F1;font-family:Arial,Helvetica,sans-serif;color:#14161A">
 <div style="max-width:480px;margin:0 auto;padding:32px 20px">
-<p style="font-size:13px;color:#565B66;margin:0 0 16px">Leonardo Araujo</p>
+<p style="font-size:13px;color:#565B66;margin:0 0 16px">${CONTATO.marca}</p>
 <div style="background:#FFFFFF;border:1px solid #E3E1DA;border-radius:16px;padding:28px">
 <h1 style="font-size:22px;margin:0 0 8px">Seu Pix está pronto</h1>
 <p style="font-size:15px;line-height:1.5;color:#565B66;margin:0 0 18px">Oi, ${escaparHtml(primeiroNome)}. Pague <strong style="color:#14161A">${escaparHtml(d.valorTexto)}</strong> por <strong style="color:#14161A">${escaparHtml(d.pacote)}</strong>. Este código vence em <strong style="color:#14161A">${d.minutosValidade} minutos</strong>.</p>
