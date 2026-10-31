@@ -4,14 +4,10 @@ import { PAGINAS_ANTIGAS } from "./src/lib/paginas-antigas";
 
 // As páginas dos vídeos continuam como HTML estático em public/. Cada endereço responde 200,
 // com e sem barra no fim, igual ao site estático anterior (os links da DM dependem disso).
-const reescritasAntigas = PAGINAS_ANTIGAS.flatMap((pasta) =>
-  pasta === ""
-    ? [{ source: "/", destination: "/index.html" }]
-    : [
-        { source: `/${pasta}`, destination: `/${pasta}/index.html` },
-        { source: `/${pasta}/`, destination: `/${pasta}/index.html` },
-      ],
-);
+const reescritasAntigas = PAGINAS_ANTIGAS.flatMap((pasta) => [
+  { source: `/${pasta}`, destination: `/${pasta}/index.html` },
+  { source: `/${pasta}/`, destination: `/${pasta}/index.html` },
+]);
 
 const semCache = [{ key: "Cache-Control", value: "private, no-store" }];
 
@@ -29,6 +25,10 @@ const config: NextConfig = {
       { source: "/:pasta([a-z0-9-]+)/", destination: "/:pasta/index.html" },
     ];
     return { beforeFiles: reescritasAntigas, afterFiles: [], fallback: paginasNovas };
+  },
+  // A página inicial virou rota do app; o HTML antigo em public/ não é mais a capa do site
+  async redirects() {
+    return [{ source: "/index.html", destination: "/", permanent: false }];
   },
   async headers() {
     return [

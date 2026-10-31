@@ -1,5 +1,4 @@
 import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { PAGINAS_ANTIGAS } from "@/lib/paginas-antigas";
 
@@ -13,17 +12,15 @@ const REF = process.env.REF_ORIGINAL ?? "eb532be";
 const BYPASS = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
 const cabecalhos: Record<string, string> = BYPASS ? { "x-vercel-protection-bypass": BYPASS } : {};
 
-// A página inicial mudou a pedido do dono (lista das páginas novas); ela é comparada com o arquivo atual
-// do repositório. As páginas dos vídeos continuam comparadas com o HTML que a automação divulgou.
+// As páginas dos vídeos continuam comparadas com o HTML que a automação divulgou.
+// A página inicial virou rota do app (página de vendas) e tem o próprio teste abaixo.
 function original(pasta: string): string {
-  if (pasta === "") return readFileSync(new URL("../public/index.html", import.meta.url), "utf8");
   return execFileSync("git", ["show", `${REF}:${pasta}/index.html`], { encoding: "utf8" });
 }
 
 describe.skipIf(!BASE)("páginas antigas dos vídeos", () => {
   for (const pasta of PAGINAS_ANTIGAS) {
-    const variantes = pasta === "" ? ["/", "/index.html"] : [`/${pasta}/`, `/${pasta}`, `/${pasta}/index.html`];
-    for (const caminho of variantes) {
+    for (const caminho of [`/${pasta}/`, `/${pasta}`, `/${pasta}/index.html`]) {
       it(`${caminho} responde 200 com o mesmo HTML`, async () => {
         const r = await fetch(`${BASE}${caminho}`, { redirect: "manual", headers: cabecalhos });
         expect(r.status).toBe(200);
@@ -32,6 +29,17 @@ describe.skipIf(!BASE)("páginas antigas dos vídeos", () => {
       });
     }
   }
+
+  it("/ responde 200 com a página de vendas e /index.html leva para /", async () => {
+    const r = await fetch(`${BASE}/`, { redirect: "manual", headers: cabecalhos });
+    expect(r.status).toBe(200);
+    const html = await r.text();
+    expect(html).toContain("pacote de skills");
+    expect(html).toContain('id="agentes-gratis"');
+    const antigo = await fetch(`${BASE}/index.html`, { redirect: "manual", headers: cabecalhos });
+    expect([307, 308]).toContain(antigo.status);
+    expect(new URL(antigo.headers.get("location")!, BASE).pathname).toBe("/");
+  }, 15_000);
 
   // O estilo.css só pode ter mudado de cor: toda regra do original continua lá e o destaque vem do token laranja
   it("estilo.css mantém todas as regras do original e usa o destaque laranja", async () => {

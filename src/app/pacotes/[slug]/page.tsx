@@ -157,7 +157,7 @@ export default async function PaginaPacote({ params }: Params) {
             <Link href="/">Início</Link>
           </li>
           <li>
-            <Link href="/#oferta">Pacotes</Link>
+            <Link href="/#pacotes">Pacotes</Link>
           </li>
           <li aria-current="page">{p.titulo}</li>
         </ol>
@@ -259,7 +259,7 @@ export default async function PaginaPacote({ params }: Params) {
 
             {d.combo ? (
               <p className="cat-nota">
-                Quer os {d.combo.qtd} pacotes? <Link href="/#oferta">O pacote completo sai por {d.combo.precoTexto}</Link>.
+                Quer os {d.combo.qtd} pacotes? <Link href="/#pacotes">O pacote completo sai por {d.combo.precoTexto}</Link>.
               </p>
             ) : null}
           </div>

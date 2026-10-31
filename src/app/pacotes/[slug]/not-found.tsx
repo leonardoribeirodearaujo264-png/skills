@@ -9,7 +9,7 @@ export default function PacoteInexistente() {
         <div className="section vazio-box">
           <h1>Este pacote não está à venda</h1>
           <p>Quem já comprou continua com acesso na área de membros. Veja os pacotes disponíveis.</p>
-          <Link className="btn" href="/#oferta">
+          <Link className="btn" href="/#pacotes">
             Ver os pacotes
           </Link>
         </div>

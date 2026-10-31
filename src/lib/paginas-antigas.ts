@@ -1,13 +1,6 @@
-// Pastas do site estático anterior servidas a partir de public/. "" é a página inicial.
+import { PAGINAS_VIDEOS } from "./loja/paginas-videos";
+
+// Pastas do site estático anterior servidas a partir de public/ por rewrite fixo.
 // A automação de DM do Instagram envia esses endereços; nenhum pode deixar de responder.
-export const PAGINAS_ANTIGAS = [
-  "",
-  "agentes",
-  "clonadora",
-  "harvey",
-  "banca",
-  "conselho",
-  "freellm",
-  "ranking",
-  "pagina-agentes",
-] as const;
+// A página inicial (/) agora é a rota do app (src/app/page.tsx).
+export const PAGINAS_ANTIGAS: readonly string[] = [...PAGINAS_VIDEOS.filter((p) => p.antiga).map((p) => p.pasta), "pagina-agentes"];

@@ -70,6 +70,70 @@ const APRESENTACOES: Record<string, Apresentacao> = {
   },
 };
 
+// Como cada pacote aparece na página inicial: nome de vitrine, frase curta e rótulo do botão.
+// A ordem desta lista é a ordem dos cards (pedido do dono); pacote à venda fora dela vai para o fim
+// com o título e o resumo do banco. Textos conferidos no README de cada pacote.
+export type VitrineInicial = {
+  slug: string;
+  nome: string;
+  // nome curto: filtros, painel de agentes grátis e lista do pacote completo
+  curto: string;
+  descricao: string;
+  botao: string;
+  // primeiro card, maior, com a etiqueta "Comece por aqui"
+  destaque?: boolean;
+  novo?: boolean;
+};
+
+export const VITRINE_INICIAL: readonly VitrineInicial[] = [
+  {
+    slug: "design-copy-anuncios",
+    nome: "Pacote Base de Skills para sua IA",
+    curto: "Pacote Base",
+    botao: "Ver o Pacote Base",
+    destaque: true,
+    descricao:
+      "Você pede em português e o Claude Code ou o Codex monta a página com visual profissional, escreve o texto da oferta, prepara anúncios para Facebook e Instagram e mede a velocidade do site. Um revisor confere tudo antes de você publicar.",
+  },
+  {
+    slug: "edicao-de-video",
+    nome: "Edição de Vídeo no Claude Code",
+    curto: "Edição de vídeo",
+    botao: "Ver o pacote Edição de vídeo",
+    descricao:
+      "Corte, legenda e montagem de Reels, Shorts e aulas no seu computador, pedindo em português. O time tira silêncios e erros, legenda e exporta em 1080x1920, e um revisor confere o vídeo antes da entrega.",
+  },
+  {
+    slug: "motion-mockup-fontes",
+    nome: "Motion e Mockups",
+    curto: "Motion e Mockups",
+    botao: "Ver o pacote Motion e Mockups",
+    descricao:
+      "O print do seu site num notebook, o app num celular, o post como aparece no feed, animações de entrada e pares de fontes com escala pronta. Os mockups são gerados no seu computador, sem programa de design.",
+  },
+  {
+    slug: "programacao-sem-codigo",
+    nome: "Programação no Claude Code",
+    curto: "Programação",
+    botao: "Ver o pacote Programação",
+    descricao:
+      "Do pedido em português ao projeto no ar: entrevista, plano em linguagem simples, uma etapa por vez, teste como cliente e revisão de segurança. Nada é apagado, instalado ou publicado sem o seu sim.",
+  },
+  {
+    slug: "times-de-agentes",
+    nome: "Times de Agentes",
+    curto: "Times de Agentes",
+    botao: "Ver o pacote Times de Agentes",
+    novo: true,
+    descricao:
+      "Seis times de marketing, vendas, financeiro, atendimento, operações e conteúdo, cada um com líder, dois especialistas e revisor. Um diretor-geral recebe o seu pedido, escolhe o time e cobra a entrega.",
+  },
+];
+
+export function vitrineInicial(slug: string): VitrineInicial | null {
+  return VITRINE_INICIAL.find((v) => v.slug === slug) ?? null;
+}
+
 export const CAPA_COMBO: Capa = {
   webp: "/capas/combo.webp",
   png: "/capas/combo.png",

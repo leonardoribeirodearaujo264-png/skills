@@ -39,6 +39,16 @@ export async function Cabecalho({ ativa }: { ativa?: Aba }) {
   );
 }
 
+// As políticas ficam ao alcance em todas as telas da loja, inclusive no checkout
 export function Rodape() {
-  return <footer>© {new Date().getFullYear()} Leonardo Araujo</footer>;
+  return (
+    <footer>
+      <nav className="rodape-politicas" aria-label="Políticas">
+        <Link href="/termos/">Termos de uso</Link>
+        <Link href="/privacidade/">Privacidade</Link>
+        <Link href="/reembolso/">Reembolso</Link>
+      </nav>
+      © {new Date().getFullYear()} Leonardo Araujo
+    </footer>
+  );
 }
