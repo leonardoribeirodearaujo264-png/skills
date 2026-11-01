@@ -14,8 +14,13 @@ const cabecalhos: Record<string, string> = BYPASS ? { "x-vercel-protection-bypas
 
 // As páginas dos vídeos continuam comparadas com o HTML que a automação divulgou.
 // A página inicial virou rota do app (página de vendas) e tem o próprio teste abaixo.
+// Páginas antigas que ganharam conteúdo depois da migração (31/10: prompt para copiar) comparam com o commit da mudança
+const ATUALIZADAS: Record<string, string> = { freellm: "785a4e4", ranking: "785a4e4" };
+
 function original(pasta: string): string {
-  return execFileSync("git", ["show", `${REF}:${pasta}/index.html`], { encoding: "utf8" });
+  const ref = ATUALIZADAS[pasta];
+  const alvo = ref ? `${ref}:public/${pasta}/index.html` : `${REF}:${pasta}/index.html`;
+  return execFileSync("git", ["show", alvo], { encoding: "utf8" });
 }
 
 describe.skipIf(!BASE)("páginas antigas dos vídeos", () => {

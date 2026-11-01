@@ -78,4 +78,4 @@ Tela: "Use o agente lider-edicao para transformar [CAMINHO DO VÍDEO BRUTO] em u
 
 Fala: Os prompts prontos estão na pasta prompts e na sua área de membros. Troque o que está entre colchetes, cole no Claude, e nada é publicado sem a sua aprovação.
 
-Tela: pasta prompts/ com 7 arquivos e a área de membros do site
+Tela: pasta prompts/ com 8 arquivos e a área de membros do site

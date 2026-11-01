@@ -32,7 +32,7 @@ Instale tudo o que este pacote precisa no meu computador e confira se deu certo.
    No Mac ou no Linux: bash ./instalar-claude.sh
 3. Monte o ambiente da skill video-editor-pro: rode python ~/.claude/skills/video-editor-pro/agente/instalar_ambiente.py (no Mac ou no Linux, python3).
 4. Confira se estas pastas existem:
-   - em ~/.claude/skills: reels-do-bruto-ao-post, video-editor-pro, hyperframes, hyperframes-cli, hyperframes-registry, media-use, slideshow, remotion-to-hyperframes, ffmpeg, moviepy, social, video-use
+   - em ~/.claude/skills: reels-do-bruto-ao-post, video-animado-narrado, video-editor-pro, hyperframes, hyperframes-cli, hyperframes-registry, media-use, slideshow, remotion-to-hyperframes, ffmpeg, moviepy, social, video-use
    - em ~/.claude/agents: editor-de-cortes.md, especialista-em-legendas.md, lider-edicao.md, motion-designer-de-video.md, revisor-de-video.md, roteirista-de-video.md
 5. Me mostre uma lista com o que foi instalado e o que faltou. Se algo falhou, rode de novo só o que faltou.
 6. No fim, me diga para fechar e abrir o Claude de novo, e qual prompt da pasta prompts/ eu devo testar primeiro.
@@ -49,7 +49,7 @@ Prefere instalar os programas sem o Claude? Na pasta do pacote, dê dois cliques
 
 ## O que este pacote instala
 
-- Skills autorais: `reels-do-bruto-ao-post`, `video-editor-pro`
+- Skills autorais: `reels-do-bruto-ao-post`, `video-animado-narrado`, `video-editor-pro`
 - Skills de terceiros (baixadas do autor na hora): `hyperframes`, `hyperframes-cli`, `hyperframes-registry`, `media-use`, `slideshow`, `remotion-to-hyperframes`, `ffmpeg`, `moviepy`, `social`, `video-use`
 - Agentes: `editor-de-cortes`, `especialista-em-legendas`, `lider-edicao`, `motion-designer-de-video`, `revisor-de-video`, `roteirista-de-video`
-- Prompts prontos: 7 arquivos na pasta `prompts/`
+- Prompts prontos: 8 arquivos na pasta `prompts/`

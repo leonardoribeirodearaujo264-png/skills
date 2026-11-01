@@ -52,9 +52,9 @@ function catalogoDoSeed(): Catalogo {
   };
 }
 
-// 0006 e 0008: leve 3 a R$ 47 e combo a R$ 97 (o seed do 0001 ainda tem os preços antigos)
+// 0011 e 0008: leve 3 a R$ 67 e combo a R$ 97 (o seed do 0001 ainda tem os preços antigos)
 const seed = catalogoDoSeed();
-const cat: Catalogo = { ...seed, ofertas: seed.ofertas.map((o) => (o.codigo === "leve-3" ? { ...o, precoCentavos: 4700 } : o.codigo === "combo" ? { ...o, precoCentavos: 9700 } : o)) };
+const cat: Catalogo = { ...seed, ofertas: seed.ofertas.map((o) => (o.codigo === "leve-3" ? { ...o, precoCentavos: 6700 } : o.codigo === "combo" ? { ...o, precoCentavos: 9700 } : o)) };
 const nada = new Set<string>();
 
 function motivo(fn: () => unknown): string {
@@ -90,16 +90,16 @@ describe("valores das ofertas", () => {
     expect(formatarReais(p.valorCentavos)).toBe("R$\u00a047,00");
   });
 
-  it("pague 2, leve 3 sai R$ 47,00 com três produtos", () => {
+  it("pague 2, leve 3 sai R$ 67,00 com três produtos", () => {
     const p = montarPedido(cat, "leve-3", ["times-de-agentes", "edicao-de-video", "programacao-sem-codigo"], nada);
-    expect(p.valorCentavos).toBe(4700);
+    expect(p.valorCentavos).toBe(6700);
     expect(p.itens).toHaveLength(3);
-    expect(formatarReais(p.valorCentavos)).toBe("R$\u00a047,00");
+    expect(formatarReais(p.valorCentavos)).toBe("R$\u00a067,00");
   });
 
-  it("o leve 3 com o de vídeo dentro continua R$ 47,00", () => {
+  it("o leve 3 com o de vídeo dentro continua R$ 67,00", () => {
     const p = montarPedido(cat, "leve-3", ["edicao-de-video", "design-copy-anuncios", "times-de-agentes"], nada);
-    expect(p.valorCentavos).toBe(4700);
+    expect(p.valorCentavos).toBe(6700);
   });
 
   it("o pacote de vídeo de R$ 97,00 não existe mais", () => {
@@ -361,9 +361,9 @@ describe("ofertas complementares (order bumps)", () => {
     expect(adicionarBumps(comBumps, base, [], nada)).toEqual(base);
   });
 
-  it("vale também com o leve 3 (R$ 47 + R$ 19,90)", () => {
+  it("vale também com o leve 3 (R$ 67 + R$ 19,90)", () => {
     const base = montarPedido(comBumps, "leve-3", ["times-de-agentes", "programacao-sem-codigo", "design-copy-anuncios"], nada);
-    expect(adicionarBumps(comBumps, base, ["lancamento-pro"], nada).valorCentavos).toBe(4700 + 1990);
+    expect(adicionarBumps(comBumps, base, ["lancamento-pro"], nada).valorCentavos).toBe(6700 + 1990);
   });
 
   it("recusa bump inexistente, repetido, já no pedido ou que a pessoa já tem", () => {

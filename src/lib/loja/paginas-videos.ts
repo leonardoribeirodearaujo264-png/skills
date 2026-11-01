@@ -4,7 +4,7 @@
 // Sem imports com "@/": next.config.ts lê este arquivo (via paginas-antigas.ts).
 // Preço e conteúdo do pacote vêm do banco.
 
-export type TipoPagina = "Prompt grátis" | "Passo a passo" | "Guia grátis" | "Ranking" | "Skill grátis";
+export type TipoPagina = "Prompt grátis" | "Passo a passo" | "Guia grátis" | "Ranking" | "Skill grátis" | "Pacote";
 
 // {preco} no gancho vira o preço atual do pacote no banco. descricao troca o resumo do pacote neste card.
 export type OfertaDoVideo = { pacote: string; gancho: string; descricao?: string };
@@ -118,6 +118,41 @@ export const PAGINAS_VIDEOS: readonly PaginaVideo[] = [
     frase: "A skill do time da Vercel que encontra e instala as skills certas para cada tarefa.",
     tipo: "Skill grátis",
     oferta: { pacote: "design-copy-anuncios", gancho: "Gostou da find-skills? No pacote tem as melhores skills de design e copy, explicadas em português." },
+  },
+  {
+    pasta: "editar",
+    titulo: "O Claude editando vídeo",
+    frase: "Peça o vídeo em português e receba o Reels pronto, com um time de 6 agentes de edição.",
+    tipo: "Pacote",
+    oferta: { pacote: "edicao-de-video", gancho: "Só a edição de vídeo, do bruto ao post, por {preco}" },
+  },
+  {
+    pasta: "trem",
+    titulo: "O trem dos vídeos",
+    frase: "Roteiro, voz, cenário em código e Reel pronto, uma estação por vez.",
+    tipo: "Passo a passo",
+    oferta: { pacote: "edicao-de-video", gancho: "Quer o trem completo? O pacote de edição traz as skills prontas." },
+  },
+  {
+    pasta: "ringue",
+    titulo: "O ringue dos modelos",
+    frase: "Gemini 4 Carbon, Opus 5.5 e GPT-6 Astra comparados, com as fontes.",
+    tipo: "Guia grátis",
+    oferta: { pacote: "programacao-sem-codigo", gancho: "Gostou? No pacote tem o caminho completo do pedido ao projeto no ar." },
+  },
+  {
+    pasta: "viral",
+    titulo: "7 Claudes avaliam seu vídeo",
+    frase: "O prompt da equipe que reprova o roteiro antes de você gravar e devolve corrigido.",
+    tipo: "Prompt grátis",
+    oferta: { pacote: "design-copy-anuncios", gancho: "Gostou? No pacote de copy tem mais prompts prontos para conteúdo e anúncios." },
+  },
+  {
+    pasta: "leis",
+    titulo: "As leis do Brasil no Claude",
+    frase: "Mais de 1,2 milhão de normas em Markdown para o Claude responder em cima do texto.",
+    tipo: "Passo a passo",
+    oferta: { pacote: "times-de-agentes", gancho: "Gostou? No pacote tem seis times de agentes com líder e revisor." },
   },
 ];
 

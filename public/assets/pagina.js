@@ -40,6 +40,28 @@ function cardAposPrompt(p) {
   passoDoPrompt.after(card);
 }
 
+// Páginas de venda: card pequeno do pacote logo abaixo do vídeo do topo (<div data-produto-topo>),
+// com capa, nome, resumo, preço e compra. O card completo e o combo continuam no fim da página.
+function cardTopo(p) {
+  const alvo = document.querySelector("[data-produto-topo]");
+  if (!alvo) return;
+  const card = el("div", "produto-topo oferta-pacote");
+  card.setAttribute("role", "group");
+  card.setAttribute("aria-labelledby", "produto-topo-titulo");
+  const titulo = el("h2", null, p.titulo);
+  titulo.id = "produto-topo-titulo";
+  const preco = el("p", "produto-topo-preco");
+  preco.append(el("span", "oferta-preco-rotulo", "Pagamento único"), el("span", "price", p.precoTexto));
+  const cta = el("a", "cta", "Quero este pacote");
+  cta.href = p.comprarUrl;
+  const mais = el("a", "produto-topo-mais", "Ver tudo o que vem");
+  mais.href = "#vem";
+  const filhos = [titulo, el("p", "produto-topo-desc", p.descricao), preco, cta, mais];
+  if (p.capa) filhos.unshift(capa(p.capa, true));
+  card.append(...filhos);
+  alvo.replaceChildren(card);
+}
+
 // Barra fixa no celular com preço e botão. Some quando o card do pacote ou a chamada estão na tela,
 // e o corpo ganha espaço embaixo para a barra não cobrir conteúdo nem o botão de copiar.
 function barraFixa(p) {
@@ -384,6 +406,7 @@ async function montarOferta() {
     if (v.leve) filhos.push(cardLeve(v.leve));
     secao.replaceChildren(...filhos);
     if (v.pacote) {
+      cardTopo(v.pacote);
       cardAposPrompt(v.pacote);
       barraFixa(v.pacote);
     }

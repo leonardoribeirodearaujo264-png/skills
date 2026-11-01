@@ -40,7 +40,7 @@ const CATALOGO: Catalogo = {
   ofertas: [
     oferta("avulso", "escolha", 3700),
     oferta("cliente", "escolha", 3700, { exigeCliente: true, descontoPercentual: 20 }),
-    oferta("leve-3", "escolha", 4700, { qtdEscolha: 3 }),
+    oferta("leve-3", "escolha", 6700, { qtdEscolha: 3 }),
     oferta("combo", "todos", 9700),
   ],
   bumps: [],
@@ -104,8 +104,8 @@ describe("página inicial de vendas", () => {
 
   it("cada card lista os agentes grátis do seu pacote; o completo lista todos", () => {
     expect(porId("pacote-completo").agentes).toHaveLength(PAGINAS_VIDEOS.length);
-    expect(porId("pacote-times-de-agentes").agentes?.map((a) => a.pasta)).toEqual(["agentes", "harvey", "conselho", "futuro", "guia"]);
-    expect(porId("pacote-edicao-de-video").agentes).toEqual([]);
+    expect(porId("pacote-times-de-agentes").agentes?.map((a) => a.pasta)).toEqual(["agentes", "harvey", "conselho", "futuro", "guia", "leis"]);
+    expect(porId("pacote-edicao-de-video").agentes?.map((a) => a.pasta)).toEqual(["editar", "trem"]);
     expect(pagina.agentes.find((a) => a.pasta === "banca")?.pacoteCurto).toBe("Programação");
   });
 });
