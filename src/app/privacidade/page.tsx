@@ -38,7 +38,7 @@ export default function Privacidade() {
           titulo: "Cookies",
           paragrafos: [
             "Usamos os cookies necessários para manter você conectado na área de membros.",
-            "Também usamos o Pixel da Meta (Facebook e Instagram), que registra as páginas visitadas e guarda cookies no seu navegador para medir e direcionar os nossos anúncios. A Meta trata esses dados conforme a política de privacidade dela. Você pode bloquear esses cookies nas configurações do navegador ou ajustar as preferências de anúncios na sua conta da Meta.",
+            "Também usamos o Pixel da Meta (Facebook e Instagram), que registra as páginas visitadas e guarda cookies no seu navegador para medir e direcionar os nossos anúncios. Quando você inicia o pagamento e quando a compra é aprovada, o site também avisa a Meta diretamente (API de Conversões), com o valor, os pacotes, o endereço IP, o navegador, os cookies do Pixel e o seu e-mail, nome e telefone, estes três transformados em código criptografado (hash), que não permite ler o dado original. A Meta trata esses dados conforme a política de privacidade dela. Você pode bloquear esses cookies nas configurações do navegador ou ajustar as preferências de anúncios na sua conta da Meta.",
           ],
         },
         {

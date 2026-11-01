@@ -1,11 +1,13 @@
 "use server";
 
+import { after } from "next/server";
 import { z } from "zod";
 import { usuarioAtual } from "@/lib/auth/sessao";
 import {
   gerarPix,
   MENSAGEM_FALHA_CHECKOUT,
   pagarComCartao,
+  previaCompra,
   renovarPix,
   situacaoDoPedido,
   type Falha,
@@ -15,6 +17,10 @@ import {
 import { validarComprador, type ErrosComprador } from "@/lib/loja/comprador";
 import { MENSAGEM_RECUSA } from "@/lib/loja/dominio";
 import { ipDaRequisicao, permitir } from "@/lib/loja/limites";
+import { pedidoParaMeta } from "@/lib/loja/repositorio";
+import { clienteServico } from "@/lib/supabase/clientes";
+import { ID_EVENTO_NAVEGADOR } from "@/lib/meta/pixel";
+import { contextoDoNavegador, registrarEventoMeta, urlDoSite } from "@/lib/meta/servidor";
 
 // Ações do checkout no site. O cliente manda oferta, escolha, nome, e-mail, telefone e (no cartão) o token do
 // Mercado Pago. Os dados são validados de novo aqui; preço e pacote saem sempre do servidor.
@@ -26,7 +32,8 @@ const escolhaEntrada = z.object({
   bumps: z.array(z.string().regex(/^[a-z0-9-]{1,60}$/)).max(10),
 });
 
-export type Entrada = { oferta: string; produtos: string; bumps: string; nome: string; email: string; telefone: string };
+// eventoPagamento: event_id do AddPaymentInfo que o navegador já mandou ao Pixel (o servidor repete com o mesmo id)
+export type Entrada = { oferta: string; produtos: string; bumps: string; nome: string; email: string; telefone: string; eventoPagamento?: string };
 
 function mensagem(f: Falha): string {
   return f.motivo === "falha" ? MENSAGEM_FALHA_CHECKOUT : MENSAGEM_RECUSA[f.motivo];
@@ -50,6 +57,35 @@ async function validar(e: Entrada) {
   return { usuario, escolha: escolha.data, comprador: comprador.dados };
 }
 
+type Validado = Exclude<Awaited<ReturnType<typeof validar>>, { erro: string }>;
+
+// AddPaymentInfo na API de Conversões, depois da resposta: não atrasa nem derruba o Pix ou o cartão.
+// Itens calculados no servidor (combo e ofertas fixas não trazem os pacotes na URL).
+async function avisarPagamentoMeta(e: Entrada, v: Validado): Promise<void> {
+  try {
+    if (!e.eventoPagamento || !ID_EVENTO_NAVEGADOR.test(e.eventoPagamento)) return;
+    const id = e.eventoPagamento;
+    const contexto = await contextoDoNavegador();
+    const url = urlDoSite("/loja/checkout/");
+    after(() =>
+      registrarEventoMeta(async () => {
+        const previa = await previaCompra(v.usuario, v.escolha.oferta, v.escolha.produtos);
+        const base = "motivo" in previa ? v.escolha.produtos : previa.itens.map((i) => i.slug);
+        return {
+          nome: "AddPaymentInfo",
+          id,
+          quando: new Date(),
+          url,
+          usuario: { ...contexto, email: v.comprador.email, telefone: v.comprador.telefone, nome: v.comprador.nome },
+          conteudos: [...base, ...v.escolha.bumps],
+        };
+      }),
+    );
+  } catch (erro) {
+    console.error("meta pagamento", erro instanceof Error ? erro.message : "erro desconhecido");
+  }
+}
+
 export type PixNaTela = { pedidoId: string; copiaECola: string; qrBase64: string; expiraEm: string | null; agora: string };
 
 export type RespostaPix =
@@ -64,6 +100,7 @@ function paraTela(r: PixGerado): PixNaTela {
 export async function acaoGerarPix(e: Entrada): Promise<RespostaPix> {
   const v = await validar(e);
   if ("erro" in v) return { ok: false, erro: v.erro ?? MENSAGEM_FALHA_CHECKOUT, campos: "campos" in v ? v.campos : undefined };
+  await avisarPagamentoMeta(e, v);
   const r = await gerarPix({ usuario: v.usuario, ...v.comprador }, v.escolha.oferta, v.escolha.produtos, v.escolha.bumps);
   if ("motivo" in r) return { ok: false, erro: mensagem(r) };
   // Pedido já pago ou com cartão em análise: não gera outra cobrança
@@ -120,6 +157,7 @@ export async function acaoPagarCartao(e: Entrada, dadosCartao: unknown): Promise
   if ("erro" in v) return { ok: false, erro: v.erro ?? MENSAGEM_FALHA_CHECKOUT };
   const c = cartaoEntrada.safeParse(dadosCartao);
   if (!c.success) return { ok: false, erro: "Os dados do cartão não chegaram certos. Tente de novo." };
+  await avisarPagamentoMeta(e, v);
   const doc = c.data.payer?.identification;
   const r = await pagarComCartao({ usuario: v.usuario, ...v.comprador }, v.escolha.oferta, v.escolha.produtos, {
     token: c.data.token,
@@ -144,4 +182,58 @@ export async function acaoSituacao(pedidoId: string): Promise<Situacao> {
   // A tela consulta a cada 5 s; o limite por IP só barra abuso
   if (!(await permitir(`situacao-ip:${await ipDaRequisicao()}`, 2000))) return "outro";
   return situacaoDoPedido(pedidoId);
+}
+
+const iniciarEntrada = z.object({
+  eventoId: z.string().regex(ID_EVENTO_NAVEGADOR),
+  oferta: z.string().regex(/^[a-z0-9-]{1,40}$/),
+  produtos: z.string().max(400),
+});
+
+// InitiateCheckout na API de Conversões, com o mesmo event_id que o navegador mandou ao Pixel. Valor e itens
+// saem do servidor; a pessoa ainda não digitou nada, então vão só IP, navegador e cookies do Pixel.
+// Evento de anúncio: qualquer falha aqui só fica no log.
+export async function acaoIniciarCheckout(eventoId: unknown, oferta: unknown, produtos: unknown): Promise<void> {
+  try {
+    const e = iniciarEntrada.safeParse({ eventoId, oferta, produtos });
+    if (!e.success) return;
+    const escolha = escolhaEntrada.safeParse({ oferta: e.data.oferta, produtos: e.data.produtos.split(",").filter(Boolean), bumps: [] });
+    if (!escolha.success) return;
+    if (!(await permitir(`meta-checkout-ip:${await ipDaRequisicao()}`, 60))) return;
+    const usuario = await usuarioAtual();
+    const contexto = await contextoDoNavegador();
+    const url = urlDoSite("/loja/checkout/");
+    after(() =>
+      registrarEventoMeta(async () => {
+        const previa = await previaCompra(usuario, escolha.data.oferta, escolha.data.produtos);
+        if ("motivo" in previa) return null;
+        return {
+          nome: "InitiateCheckout",
+          id: e.data.eventoId,
+          quando: new Date(),
+          url,
+          usuario: { ...contexto, email: usuario?.email ?? null },
+          valorCentavos: previa.valorCentavos,
+          conteudos: previa.itens.map((i) => i.slug),
+        };
+      }),
+    );
+  } catch (erro) {
+    console.error("meta checkout", erro instanceof Error ? erro.message : "erro desconhecido");
+  }
+}
+
+// Valor e pacotes da compra paga para o Purchase do Pixel: vêm do pedido no banco, não da tela
+// (o pedido aprovado pode ser um anterior, sem o bump que a pessoa marcou depois)
+export async function acaoCompraMeta(pedidoId: unknown): Promise<{ valorCentavos: number; conteudos: string[] } | null> {
+  try {
+    const id = uuidEntrada.safeParse(pedidoId);
+    if (!id.success) return null;
+    if (!(await permitir(`meta-compra-ip:${await ipDaRequisicao()}`, 120))) return null;
+    const p = await pedidoParaMeta(clienteServico(), id.data);
+    return p && p.status === "pago" ? { valorCentavos: p.valorCentavos, conteudos: p.slugs } : null;
+  } catch (erro) {
+    console.error("meta compra navegador", erro instanceof Error ? erro.message : "erro desconhecido");
+    return null;
+  }
 }

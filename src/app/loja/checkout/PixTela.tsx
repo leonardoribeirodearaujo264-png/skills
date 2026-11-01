@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { EventoMeta } from "@/components/EventoMeta";
 import { Alerta } from "@/components/Alerta";
 import { BlocoCodigo } from "@/components/BlocoCodigo";
 import { Icone } from "@/components/Icone";
@@ -76,6 +77,7 @@ export function PixTela({
   if (pago) {
     return (
       <div className="checkout-resultado" role="status">
+        <EventoMeta evento="Purchase" pedidoId={pix.pedidoId} />
         <span className="icone-grande ok" aria-hidden="true">
           <Icone nome="ok" tamanho={26} />
         </span>

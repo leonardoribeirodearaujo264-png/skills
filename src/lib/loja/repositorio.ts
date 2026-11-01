@@ -334,6 +334,37 @@ export async function pedidoParaRetorno(db: SupabaseClient, id: string): Promise
   return { status: r.status, valorCentavos: r.valor_centavos, email: r.comprador_email };
 }
 
+export type PedidoParaMeta = { status: string; valorCentavos: number; email: string; nome: string | null; telefone: string | null; slugs: string[] };
+
+// Dados da compra aprovada para o evento Purchase da API de Conversões da Meta
+export async function pedidoParaMeta(db: SupabaseClient, id: string): Promise<PedidoParaMeta | null> {
+  const { data, error } = await db
+    .from("loja_pedidos")
+    .select("status, valor_centavos, comprador_email, comprador_nome, comprador_telefone, loja_pedido_itens(produto_slug)")
+    .eq("id", id)
+    .maybeSingle();
+  if (error) falhar("ler pedido para a Meta", error);
+  if (!data) return null;
+  const r = z
+    .object({
+      status: z.string(),
+      valor_centavos: z.number(),
+      comprador_email: z.string(),
+      comprador_nome: z.string().nullable(),
+      comprador_telefone: z.string().nullable(),
+      loja_pedido_itens: z.array(z.object({ produto_slug: z.string() })),
+    })
+    .parse(data);
+  return {
+    status: r.status,
+    valorCentavos: r.valor_centavos,
+    email: r.comprador_email,
+    nome: r.comprador_nome,
+    telefone: r.comprador_telefone,
+    slugs: r.loja_pedido_itens.map((i) => i.produto_slug),
+  };
+}
+
 export async function salvarDadosComprador(db: SupabaseClient, pedidoId: string, nome: string, telefone: string): Promise<void> {
   const { error } = await db
     .from("loja_pedidos")

@@ -1,3 +1,4 @@
+import { EventoMeta } from "@/components/EventoMeta";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -30,6 +31,7 @@ type Dados = {
   destaque: boolean;
   capa: Capa | null;
   precoTexto: string;
+  precoCentavos: number;
   // null: só como complemento no checkout
   comprarUrl: string | null;
   combo: { precoTexto: string; qtd: number } | null;
@@ -44,11 +46,13 @@ const dadosDoPacote = cache(async (slug: string): Promise<Dados | null> => {
   if (!produto || !avulso) return null;
   const todos = cat.ofertas.find((o) => o.tipo === "todos");
   const soBump = produto.soBump && produto.precoBumpCentavos !== null;
+  const precoCentavos = soBump ? (produto.precoBumpCentavos ?? 0) : precoNaOferta(cat, avulso, produto);
   return {
     produto,
     destaque: cat.produtos[0]?.slug === slug,
     capa: capaDoPacote(produto.slug, produto.titulo),
-    precoTexto: formatarReais(soBump ? (produto.precoBumpCentavos ?? 0) : precoNaOferta(cat, avulso, produto)),
+    precoTexto: formatarReais(precoCentavos),
+    precoCentavos,
     comprarUrl: soBump ? null : urlComprar(avulso.codigo, produto.slug),
     combo: todos ? { precoTexto: formatarReais(todos.precoCentavos), qtd: cat.produtos.length } : null,
   };
@@ -151,6 +155,7 @@ export default async function PaginaPacote({ params }: Params) {
   return (
     <>
       <Cabecalho />
+      <EventoMeta evento="ViewContent" valorCentavos={d.precoCentavos} conteudos={[p.slug]} />
       <main className="pp" id="conteudo">
         <ol className="migalha" aria-label="Você está em">
           <li>

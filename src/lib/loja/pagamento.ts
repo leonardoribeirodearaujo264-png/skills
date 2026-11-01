@@ -58,6 +58,8 @@ export type DepsPagamento = {
   repo: RepoPagamento;
   // Envia o e-mail de acesso do pedido pago. Precisa ser idempotente: é chamado a cada notificação repetida.
   avisarAcesso?: (pedidoId: string) => Promise<void>;
+  // Avisa a Meta da compra (API de Conversões). Só na primeira liberação; não pode lançar erro.
+  aoPagar?: (pedidoId: string) => Promise<void>;
 };
 
 export async function processarPagamento(
@@ -70,7 +72,7 @@ export async function processarPagamento(
 }
 
 export async function aplicarPagamento(
-  deps: Pick<DepsPagamento, "repo" | "avisarAcesso">,
+  deps: Pick<DepsPagamento, "repo" | "avisarAcesso" | "aoPagar">,
   pagamento: Pagamento,
 ): Promise<{ resultado: ResultadoPagamento; pedidoId?: string }> {
   const { repo } = deps;
@@ -93,6 +95,15 @@ export async function aplicarPagamento(
       !pedido.estornados.includes(pagamento.id);
     if (!pedido.userId && vaiLiberar) await repo.garantirConta(pedido.id, pedido.email);
     const resultado = (await repo.liberar(pedido.id, pagamento.id, valor)) as ResultadoPagamento;
+    // Antes do e-mail. Repete no ja_pago (webhook reenviado, retorno): se o envio anterior à Meta falhou, este
+    // vale; se não falhou, a Meta descarta a repetição pelo event_id da compra.
+    if ((resultado === "liberado" || resultado === "ja_pago") && deps.aoPagar) {
+      try {
+        await deps.aoPagar(pedido.id);
+      } catch (e) {
+        console.error("aviso de compra à Meta", e instanceof Error ? e.message : "erro desconhecido");
+      }
+    }
     // ja_pago também tenta: o envio anterior pode ter falhado. A trava no banco garante um único e-mail.
     if ((resultado === "liberado" || resultado === "ja_pago") && deps.avisarAcesso) await deps.avisarAcesso(pedido.id);
     return { resultado, pedidoId };

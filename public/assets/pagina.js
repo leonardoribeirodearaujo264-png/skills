@@ -406,6 +406,7 @@ async function montarOferta() {
     if (v.leve) filhos.push(cardLeve(v.leve));
     secao.replaceChildren(...filhos);
     if (v.pacote) {
+      verConteudoMeta(v.pacote);
       cardTopo(v.pacote);
       cardAposPrompt(v.pacote);
       barraFixa(v.pacote);
@@ -447,6 +448,18 @@ async function copiar(botao) {
     if (aviso) aviso.textContent = "Não foi possível copiar automaticamente. O texto foi selecionado.";
   }
   setTimeout(() => { delete botao.dataset.state; botao.textContent = "Copiar"; }, 2200);
+}
+
+// ViewContent do Pixel: a pessoa viu a oferta do pacote. Espera o pixel.js carregar (até 5 s).
+function verConteudoMeta(p, tentativas = 25) {
+  if (window.fbq) {
+    const valor = Number(String(p.precoTexto || "").replace(/[^\d,]/g, "").replace(",", "."));
+    window.fbq("track", "ViewContent", {
+      currency: "BRL",
+      ...(valor > 0 ? { value: valor } : {}),
+      content_ids: [p.slug], content_type: "product", num_items: 1,
+    });
+  } else if (tentativas > 0) setTimeout(() => verConteudoMeta(p, tentativas - 1), 200);
 }
 
 // Meta Pixel: o ID e o código ficam só em /assets/pixel.js

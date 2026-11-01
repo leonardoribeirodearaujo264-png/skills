@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Alerta } from "@/components/Alerta";
 import { Cabecalho, Rodape } from "@/components/Cabecalho";
+import { EventoMeta } from "@/components/EventoMeta";
 import { Icone } from "@/components/Icone";
 import { formatarReais } from "@/lib/loja/dominio";
 import { aplicarPagamento } from "@/lib/loja/pagamento";
@@ -57,6 +58,7 @@ export default async function Retorno({ searchParams }: { searchParams: Busca })
               </>
             ) : pedido.status === "pago" ? (
               <>
+                <EventoMeta evento="Purchase" pedidoId={ref} />
                 <span className="icone-grande ok" aria-hidden="true">
                   <Icone nome="ok" tamanho={26} />
                 </span>

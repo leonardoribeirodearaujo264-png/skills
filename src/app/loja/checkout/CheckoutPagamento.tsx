@@ -14,7 +14,9 @@ import {
   type Campo,
   type ErrosComprador,
 } from "@/lib/loja/comprador";
-import { acaoGerarPix, acaoPagarCartao, acaoSituacao, type PixNaTela } from "../acoes";
+import { EventoMeta } from "@/components/EventoMeta";
+import { novoEventoId, rastrear } from "@/lib/meta/navegador";
+import { acaoGerarPix, acaoIniciarCheckout, acaoPagarCartao, acaoSituacao, type PixNaTela } from "../acoes";
 import { BlocoBump } from "./BlocoBump";
 import { PixTela } from "./PixTela";
 
@@ -24,6 +26,8 @@ import { PixTela } from "./PixTela";
 type Props = {
   oferta: string;
   produtos: string;
+  // pacotes do pedido calculados no servidor (combo e ofertas fixas não os trazem na URL)
+  itensPedido: string[];
   emailSessao: string | null;
   valorCentavos: number;
   // ofertas complementares, cada uma com a miniatura da capa (src/lib/loja/apresentacao.ts)
@@ -34,13 +38,13 @@ type Props = {
 type Etapa =
   | { tipo: "formulario" }
   | { tipo: "pix"; pix: PixNaTela }
-  | { tipo: "aprovado" }
+  | { tipo: "aprovado"; pedidoId: string }
   | { tipo: "analise"; pedidoId: string };
 
 const VALIDADORES: Record<Campo, (v: string) => string | null> = { nome: erroNome, email: erroEmail, telefone: erroTelefone };
 const INTERVALO_CONSULTA_MS = 5000;
 
-export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos: base, bumps, chavePublica }: Props) {
+export function CheckoutPagamento({ oferta, produtos, itensPedido, emailSessao, valorCentavos: base, bumps, chavePublica }: Props) {
   // Ofertas complementares: todas desmarcadas; a pessoa marca quantas quiser, o total muda na hora
   // e o servidor confere tudo de novo
   const [marcados, setMarcados] = useState<string[]>([]);
@@ -62,6 +66,26 @@ export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos
   };
   const tudoValido = !erros.nome && !erros.email && !erros.telefone;
   const entrada = { oferta, produtos, bumps: escolhidos.map((b) => b.slug).join(","), ...campos };
+  const itens = [...itensPedido, ...escolhidos.map((b) => b.slug)];
+
+  // InitiateCheckout: Pixel no navegador e API de Conversões no servidor, com o mesmo event_id
+  const iniciou = useRef(false);
+  useEffect(() => {
+    if (iniciou.current) return;
+    iniciou.current = true;
+    const id = novoEventoId("checkout");
+    // O servidor vai depois do Pixel carregar, para levar o cookie _fbp que ele grava
+    rastrear("InitiateCheckout", { valorCentavos: base, conteudos: itensPedido }, id, () =>
+      setTimeout(() => acaoIniciarCheckout(id, oferta, produtos).catch(() => {}), 1500),
+    );
+  }, [base, oferta, produtos, itensPedido]);
+
+  // AddPaymentInfo: a pessoa escolheu pagar (Pix ou cartão); o servidor repete com o mesmo id
+  function avisarPagamento(): string {
+    const id = novoEventoId("pagamento");
+    rastrear("AddPaymentInfo", { valorCentavos, conteudos: itens }, id);
+    return id;
+  }
   const erroVisivel = (c: Campo) => (tocados[c] ? erros[c] : undefined) ?? errosServidor[c];
 
   function mudar(c: Campo, valor: string) {
@@ -74,14 +98,14 @@ export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos
     setTocados({ nome: true, email: true, telefone: true });
     if (!tudoValido) return;
     setGerando(true);
-    const r = await acaoGerarPix(entrada).catch(() => ({ ok: false as const, erro: "Sem conexão. Tente de novo." }));
+    const r = await acaoGerarPix({ ...entrada, eventoPagamento: avisarPagamento() }).catch(() => ({ ok: false as const, erro: "Sem conexão. Tente de novo." }));
     setGerando(false);
     if (!r.ok) {
       setErro(r.erro);
       if ("campos" in r && r.campos) setErrosServidor(r.campos);
       return;
     }
-    if ("situacao" in r) return setEtapa(r.situacao === "aprovado" ? { tipo: "aprovado" } : { tipo: "analise", pedidoId: r.pedidoId });
+    if ("situacao" in r) return setEtapa(r.situacao === "aprovado" ? { tipo: "aprovado", pedidoId: r.pedidoId } : { tipo: "analise", pedidoId: r.pedidoId });
     setEtapa({ tipo: "pix", pix: r });
   }
 
@@ -90,18 +114,20 @@ export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos
   useEffect(() => {
     if (!analise) return;
     const id = setInterval(async () => {
-      if ((await acaoSituacao(analise).catch(() => "outro")) === "pago") setEtapa({ tipo: "aprovado" });
+      if ((await acaoSituacao(analise).catch(() => "outro")) === "pago") setEtapa({ tipo: "aprovado", pedidoId: analise });
     }, INTERVALO_CONSULTA_MS);
     return () => clearInterval(id);
   }, [analise]);
 
   const emailFinal = emailSessao ?? campos.email.trim().toLowerCase();
 
-  if (etapa.tipo === "pix") return <PixTela inicial={etapa.pix} totalTexto={totalTexto} email={emailFinal} />;
+  if (etapa.tipo === "pix")
+    return <PixTela inicial={etapa.pix} totalTexto={totalTexto} email={emailFinal} />;
 
   if (etapa.tipo === "aprovado") {
     return (
       <div className="checkout-resultado" role="status">
+        <EventoMeta evento="Purchase" pedidoId={etapa.pedidoId} />
         <span className="icone-grande ok" aria-hidden="true">
           <Icone nome="ok" tamanho={26} />
         </span>
@@ -187,7 +213,11 @@ export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos
               bump={b}
               mini={b.mini}
               marcado={marcados.includes(b.slug)}
-              aoMudar={(m) => setMarcados((atual) => (m ? [...atual, b.slug] : atual.filter((s) => s !== b.slug)))}
+              aoMudar={(m) => {
+                // Order bump marcado é o "adicionar ao carrinho" desta loja
+                if (m) rastrear("AddToCart", { valorCentavos: b.precoCentavos, conteudos: [b.slug] });
+                setMarcados((atual) => (m ? [...atual, b.slug] : atual.filter((s) => s !== b.slug)));
+              }}
               bloqueado={gerando}
             />
           ))}
@@ -250,10 +280,10 @@ export function CheckoutPagamento({ oferta, produtos, emailSessao, valorCentavos
             setErro(null);
             // O bump fica travado durante o envio: o valor do cartão é o que estava na tela
             setGerando(true);
-            const r = await acaoPagarCartao(entrada, dados).catch(() => ({ ok: false as const, erro: "Sem conexão. Tente de novo." }));
+            const r = await acaoPagarCartao({ ...entrada, eventoPagamento: avisarPagamento() }, dados).catch(() => ({ ok: false as const, erro: "Sem conexão. Tente de novo." }));
             setGerando(false);
             if (!r.ok) return setErro(r.erro);
-            setEtapa(r.situacao === "aprovado" ? { tipo: "aprovado" } : { tipo: "analise", pedidoId: r.pedidoId });
+            setEtapa(r.situacao === "aprovado" ? { tipo: "aprovado", pedidoId: r.pedidoId } : { tipo: "analise", pedidoId: r.pedidoId });
           }}
         />
       ) : (

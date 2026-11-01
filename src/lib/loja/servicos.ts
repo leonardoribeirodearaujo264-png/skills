@@ -5,7 +5,9 @@ import { clienteServico } from "../supabase/clientes";
 import { capaDoPacote } from "./apresentacao";
 import { criarAvisoAcesso } from "./emailAcesso";
 import { permitir } from "./limites";
-import { repoPagamento } from "./repositorio";
+import { pedidoParaMeta, repoPagamento } from "./repositorio";
+import { idEventoCompra } from "../meta/pixel";
+import { registrarDepois } from "../meta/servidor";
 import type { DepsPagamento } from "./pagamento";
 
 // Monta as dependências reais do processamento de pagamento (só no servidor)
@@ -27,6 +29,22 @@ export function depsPagamento(): DepsPagamento {
       });
       return { erro: r === "enviado" ? null : r };
     }, (chave) => permitir(chave, 1, 0)),
+    // Mesmo event_id do Purchase do navegador: a Meta conta a compra uma vez
+    // Roda depois da resposta (after): a Meta lenta não atrasa o "aprovado" nem o e-mail de acesso
+    aoPagar: (pedidoId) =>
+      registrarDepois(async () => {
+        const p = await pedidoParaMeta(db, pedidoId);
+        if (!p || p.status !== "pago") return null;
+        return {
+          nome: "Purchase",
+          id: idEventoCompra(pedidoId),
+          quando: new Date(),
+          url: `${e.SITE_URL}/loja/checkout/`,
+          usuario: { email: p.email, telefone: p.telefone, nome: p.nome, idExterno: pedidoId },
+          valorCentavos: p.valorCentavos,
+          conteudos: p.slugs,
+        };
+      }),
   };
 }
 

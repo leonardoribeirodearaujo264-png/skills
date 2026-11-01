@@ -278,3 +278,69 @@ describe("compra sem login", () => {
     expect(m.pedido.userId).toBeNull();
   });
 });
+
+describe("compra na API de Conversões da Meta", () => {
+  it("avisa na liberação e repete no webhook reenviado, sempre o mesmo pedido (a Meta junta pelo event_id)", async () => {
+    const m = repoEmMemoria(novoPedido(), ["a"]);
+    const avisados: string[] = [];
+    const deps = { mp: mpCom({ "111": pagamento({}) }), repo: m.repo, aoPagar: async (id: string) => void avisados.push(id) };
+    await processarPagamento(deps, "111");
+    await processarPagamento(deps, "111");
+    expect(avisados).toEqual([PEDIDO, PEDIDO]);
+    expect(m.liberacoes()).toBe(1);
+  });
+
+  it("segundo pagamento no mesmo pedido (alerta) não avisa de novo", async () => {
+    const m = repoEmMemoria(novoPedido(), ["a"]);
+    const avisados: string[] = [];
+    const deps = {
+      mp: mpCom({ "111": pagamento({}), "222": pagamento({ id: "222" }) }),
+      repo: m.repo,
+      aoPagar: async (id: string) => void avisados.push(id),
+    };
+    await processarPagamento(deps, "111");
+    await processarPagamento(deps, "222");
+    expect(avisados).toEqual([PEDIDO]);
+  });
+
+  it("avisa mesmo quando o e-mail de acesso falha", async () => {
+    const m = repoEmMemoria(novoPedido(), ["a"]);
+    const avisados: string[] = [];
+    const deps = {
+      mp: mpCom({ "111": pagamento({}) }),
+      repo: m.repo,
+      aoPagar: async (id: string) => void avisados.push(id),
+      avisarAcesso: async () => {
+        throw new Error("smtp fora");
+      },
+    };
+    await expect(processarPagamento(deps, "111")).rejects.toThrow("smtp fora");
+    expect(avisados).toEqual([PEDIDO]);
+  });
+
+  it("não avisa pagamento pendente, recusado ou com valor errado", async () => {
+    for (const p of [pagamento({ status: "pending" }), pagamento({ status: "rejected" }), pagamento({ transaction_amount: 1 })]) {
+      const m = repoEmMemoria(novoPedido(), ["a"]);
+      const avisados: string[] = [];
+      await processarPagamento({ mp: mpCom({ "111": p }), repo: m.repo, aoPagar: async (id) => void avisados.push(id) }, "111");
+      expect(avisados).toEqual([]);
+    }
+  });
+});
+
+describe("falha no aviso à Meta", () => {
+  it("não impede a liberação nem o e-mail de acesso", async () => {
+    const m = repoEmMemoria(novoPedido(), ["a"]);
+    let emails = 0;
+    const deps = {
+      mp: mpCom({ "111": pagamento({}) }),
+      repo: m.repo,
+      aoPagar: async () => {
+        throw new Error("meta fora");
+      },
+      avisarAcesso: async () => void emails++,
+    };
+    await expect(processarPagamento(deps, "111")).resolves.toMatchObject({ resultado: "liberado" });
+    expect(emails).toBe(1);
+  });
+});

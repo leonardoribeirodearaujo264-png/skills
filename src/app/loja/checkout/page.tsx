@@ -70,6 +70,7 @@ export default async function Checkout({ searchParams }: { searchParams: Busca }
                 <CheckoutPagamento
                   oferta={oferta}
                   produtos={produtos.join(",")}
+                  itensPedido={previa.itens.map((i) => i.slug)}
                   emailSessao={usuario?.email ?? null}
                   valorCentavos={previa.valorCentavos}
                   bumps={previa.bumps.map((b) => ({ ...b, mini: capaDoPacote(b.slug, b.titulo)?.mini ?? null }))}
