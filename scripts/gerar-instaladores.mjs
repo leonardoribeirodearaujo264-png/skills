@@ -186,6 +186,116 @@ function nomesDe(slug, pasta, extensao) {
     .sort();
 }
 
+// Programas que o cliente precisa antes do pacote. App do Claude e Node.js sempre; os extras vêm de
+// pacote.json (posInstalacao.programas). Instalados por um arquivo de dois cliques: winget no Windows,
+// Homebrew no Mac. Linux recebe os comandos do apt para rodar.
+const PROGRAMAS = {
+  claude: { nome: "App do Claude", winget: "Anthropic.Claude", brew: "--cask claude", apt: null, teste: null },
+  node: { nome: "Node.js LTS", winget: "OpenJS.NodeJS.LTS", brew: "node", apt: "nodejs npm", teste: "node" },
+  python: { nome: "Python 3.12", winget: "Python.Python.3.12", brew: "python", apt: "python3 python3-venv", teste: "python" },
+  ffmpeg: { nome: "FFmpeg", winget: "Gyan.FFmpeg", brew: "ffmpeg", apt: "ffmpeg", teste: "ffmpeg" },
+};
+
+function programasDo(dados) {
+  return ["claude", "node", ...(dados.posInstalacao?.programas ?? [])].map((p) => {
+    if (!PROGRAMAS[p]) throw new Error(`${dados.slug}: programa desconhecido "${p}"`);
+    return PROGRAMAS[p];
+  });
+}
+
+function gerarRequisitosPs1(dados) {
+  const itens = programasDo(dados)
+    .map((p) => `Garantir "${p.nome}" "${p.winget}" ${p.teste ? `"${p.teste}"` : "$null"}`)
+    .join("\n");
+  return `# ${AVISO}
+# Instala o que o pacote "${dados.titulo}" precisa: ${programasDo(dados).map((p) => p.nome).join(", ")}.
+# Uso: dois cliques em instalar-requisitos.bat. Para só conferir, sem instalar: -Conferir
+param([switch]$Conferir)
+$ErrorActionPreference = "Continue"
+[Console]::OutputEncoding = [Text.Encoding]::UTF8
+
+if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+  Write-Host "O winget não está neste Windows. Atualize o 'Instalador de Aplicativo' pela Microsoft Store e rode de novo."
+  exit 1
+}
+
+$Faltou = @()
+function Garantir([string]$Nome, [string]$Id, $Comando) {
+  $tem = $false
+  # O "python" de WindowsApps é só um atalho para a Microsoft Store, não conta como instalado
+  if ($Comando) { $c = Get-Command $Comando -ErrorAction SilentlyContinue; $tem = [bool]($c -and $c.Source -notmatch "WindowsApps") }
+  if (-not $tem) {
+    winget list --id $Id -e --accept-source-agreements *> $null
+    $tem = ($LASTEXITCODE -eq 0)
+  }
+  if ($tem) { Write-Host "[ok]   $Nome já está instalado"; return }
+  if ($Conferir) { Write-Host "[falta] $Nome"; $script:Faltou += $Nome; return }
+  Write-Host "Instalando $Nome..."
+  winget install --id $Id -e --silent --accept-source-agreements --accept-package-agreements
+  if ($LASTEXITCODE -ne 0) { $script:Faltou += $Nome; Write-Host "[erro] não deu para instalar $Nome" }
+  else { Write-Host "[ok]   $Nome instalado" }
+}
+
+${itens}
+
+Write-Host ""
+if ($Faltou.Count -gt 0) {
+  Write-Host "Faltou: $($Faltou -join ', ')"
+  if (-not $Conferir) { Write-Host "Rode de novo. Se continuar, instale pelo site de cada programa." }
+  exit 1
+}
+Write-Host "Pronto. Abra o app do Claude, entre com a sua conta (plano Pro ou Max) e siga o COMECE-AQUI.md."
+`;
+}
+
+function gerarRequisitosBat() {
+  return `@echo off
+rem ${AVISO}
+rem Dois cliques: instala o app do Claude e os programas que o pacote precisa.
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0instalar-requisitos.ps1"
+echo.
+pause
+`;
+}
+
+function gerarRequisitosMac(dados) {
+  const progs = programasDo(dados);
+  const brew = progs.map((p) => `garantir "${p.nome}" ${p.brew} ${p.teste ?? "-"}`).join("\n");
+  const apt = progs.filter((p) => p.apt).map((p) => p.apt).join(" ");
+  return `#!/usr/bin/env bash
+# ${AVISO}
+# Mac: dois cliques neste arquivo. Linux: bash instalar-requisitos.command
+# Instala o que o pacote "${dados.titulo}" precisa: ${progs.map((p) => p.nome).join(", ")}.
+set -u
+
+if [ "$(uname)" != "Darwin" ]; then
+  echo "Linux: rode  sudo apt install ${apt}"
+  echo "O app do Claude para Linux ainda não existe; use o Claude Code no terminal (claude.ai/download)."
+  exit 0
+fi
+
+if ! command -v brew >/dev/null 2>&1; then
+  echo "Falta o Homebrew. Abra brew.sh, copie o comando de instalação, cole no Terminal e rode este arquivo de novo."
+  exit 1
+fi
+
+faltou=()
+garantir() {
+  local nome="$1" pacote="$2" teste="\${@: -1}"
+  if [ "$teste" != "-" ] && command -v "$teste" >/dev/null 2>&1; then echo "[ok]   $nome já está instalado"; return; fi
+  echo "Instalando $nome..."
+  # shellcheck disable=SC2086
+  if brew install \${@:2:$#-2}; then echo "[ok]   $nome instalado"; else faltou+=("$nome"); fi
+}
+
+${brew}
+
+echo ""
+if [ \${#faltou[@]} -gt 0 ]; then echo "Faltou: \${faltou[*]}. Rode de novo."; exit 1; fi
+echo "Pronto. Abra o app do Claude, entre com a sua conta (plano Pro ou Max) e siga o COMECE-AQUI.md."
+`;
+}
+
 // Passo a passo para quem nunca usou o Claude: instalar o app, baixar o pacote e colar um pedido que faz
 // o próprio Claude Code instalar, conferir e testar tudo
 function gerarComeceAqui(dados) {
@@ -199,30 +309,33 @@ function gerarComeceAqui(dados) {
   return `<!-- ${AVISO} -->
 # Comece aqui: como instalar o pacote "${dados.titulo}"
 
-São 4 passos. Você não precisa saber programar: no passo 4, o próprio Claude instala e testa tudo por você.
+São 4 passos. Você não precisa saber programar: o passo 2 instala os programas com dois cliques, e no passo 4 o próprio Claude instala e testa o pacote por você.
 
-## 1. Instale o app do Claude no seu computador
-
-1. Abra **claude.ai/download** no navegador do seu PC ou Mac e baixe o app **Claude** para o seu sistema.
-2. Instale e entre com a sua conta. O Claude Code (a aba **Code** do app) precisa de um plano pago do Claude, como o Pro ou o Max.
-
-## 2. Instale o Node.js
-
-O instalador do pacote usa o Node.js. Abra **nodejs.org**, baixe a versão LTS (22 ou mais nova) e instale com as opções padrão. Se já tiver, pule este passo.${pos ? `
-
-Este pacote também precisa de: **${pos.requisito}**. O Claude confere no passo 4 e explica como instalar o que faltar.` : ""}
-
-## 3. Baixe e extraia o pacote
+## 1. Baixe e extraia o pacote
 
 1. Na sua área de membros, clique em **Baixar o pacote**. Vem um arquivo \`.zip\`.
 2. Clique com o botão direito no \`.zip\` e escolha **Extrair tudo** (no Mac, basta dar dois cliques).
 3. Guarde a pasta extraída num lugar fácil, como **Documentos**.
 
+## 2. Instale os programas com dois cliques
+
+Dentro da pasta do pacote:
+
+- **Windows:** dê dois cliques em \`instalar-requisitos.bat\`. Se o Windows perguntar se pode abrir, clique em **Mais informações** e **Executar assim mesmo**.
+- **Mac:** clique com o botão direito em \`instalar-requisitos.command\`, escolha **Abrir** e confirme. Ele usa o Homebrew (brew.sh).
+
+Ele confere e instala só o que faltar: ${programasDo(dados).map((p) => `**${p.nome}**`).join(", ")}. Quando terminar, abra o app do Claude e entre com a sua conta. O Claude Code (a aba **Code** do app) precisa de um plano pago do Claude, como o Pro ou o Max.
+
+Prefere instalar à mão? App do Claude em **claude.ai/download** e Node.js LTS em **nodejs.org**${pos ? `; este pacote também precisa de **${pos.requisito}**` : ""}.
+
+## 3. Abra a pasta no Claude
+
+Abra o app **Claude**, vá na aba **Code** e escolha a pasta extraída do pacote como pasta de trabalho.
+
 ## 4. Peça ao Claude para instalar e testar
 
-1. Abra o app **Claude**, vá na aba **Code** e escolha a pasta extraída do pacote como pasta de trabalho.
-2. Copie o pedido abaixo inteiro, cole na conversa e envie.
-3. Quando o Claude pedir permissão para rodar o instalador, confira e aceite.
+1. Copie o pedido abaixo inteiro, cole na conversa e envie.
+2. Quando o Claude pedir permissão para rodar o instalador, confira e aceite.
 
 \`\`\`text
 Instale o pacote desta pasta no meu Claude Code e confira se deu certo.
@@ -269,5 +382,8 @@ for (const slug of slugs) {
   }
   writeFileSync(join(RAIZ, slug, "CREDITOS.md"), gerarCreditos(dados));
   writeFileSync(join(RAIZ, slug, "COMECE-AQUI.md"), gerarComeceAqui(dados));
+  writeFileSync(join(RAIZ, slug, "instalar-requisitos.ps1"), "﻿" + gerarRequisitosPs1(dados).replace(/\n/g, "\r\n"));
+  writeFileSync(join(RAIZ, slug, "instalar-requisitos.bat"), gerarRequisitosBat().replace(/\n/g, "\r\n"));
+  writeFileSync(join(RAIZ, slug, "instalar-requisitos.command"), gerarRequisitosMac(dados), { mode: 0o755 });
   console.log(`${slug}: instaladores, CREDITOS.md e COMECE-AQUI.md gerados`);
 }

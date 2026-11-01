@@ -9,90 +9,97 @@ Precisa pedir do jeito
 certo e com segurança.
 
 3
-00:00:06,947 --> 00:00:11,278
-Antes de tudo, baixe o
-aplicativo do Claude no seu
-
-4
-00:00:11,278 --> 00:00:14,862
-computador, em claude.ai barra download.
-
-5
-00:00:14,862 --> 00:00:19,791
-Para usar o Claude Code, você
-precisa do plano Pro ou Max.
-
-6
-00:00:19,791 --> 00:00:22,255
-Instale também o Node.js.
-
-7
-00:00:22,605 --> 00:00:26,151
+00:00:06,947 --> 00:00:10,864
 Na sua área de membros, baixe
 o pacote e extraia a pasta.
 
+4
+00:00:10,864 --> 00:00:14,962
+Dentro dela, dê dois cliques
+no arquivo instalar-requisitos.
+
+5
+00:00:14,962 --> 00:00:18,276
+Ele instala tudo o que
+falta no seu computador.
+
+6
+00:00:18,626 --> 00:00:22,483
+Esse arquivo instala o
+aplicativo do Claude e o Node.js,
+
+7
+00:00:22,483 --> 00:00:25,678
+só o que ainda não
+estiver no seu computador.
+
 8
-00:00:26,151 --> 00:00:29,915
-Depois abra o Claude, entre na
-aba Code e escolha essa pasta.
+00:00:25,678 --> 00:00:29,053
+No Mac, use o instalar-requisitos
+ponto command.
 
 9
-00:00:30,265 --> 00:00:35,500
+00:00:29,053 --> 00:00:33,573
+Depois, abra o Claude e entre com
+a sua conta, no plano Pro ou Max.
+
+10
+00:00:33,923 --> 00:00:39,158
 Abra o arquivo COMECE-AQUI, copie
 o pedido pronto e cole no Claude.
 
-10
-00:00:35,500 --> 00:00:41,642
+11
+00:00:39,158 --> 00:00:45,300
 Ele roda o instalador, confere cada skill
 e cada agente, e avisa se faltou algo.
 
-11
-00:00:41,642 --> 00:00:44,853
+12
+00:00:45,300 --> 00:00:48,511
 No fim, feche e abra o Claude de novo.
 
-12
-00:00:45,203 --> 00:00:47,914
+13
+00:00:48,861 --> 00:00:51,572
 Copie o modelo de instrução global.
 
-13
-00:00:47,914 --> 00:00:52,074
+14
+00:00:51,572 --> 00:00:55,732
 Ele faz o agente responder em
 português, explicar antes de
 
-14
-00:00:52,074 --> 00:00:55,730
+15
+00:00:55,732 --> 00:00:59,388
 mudar e pedir permissão
 antes de apagar ou gastar.
 
-15
-00:00:56,080 --> 00:00:58,751
+16
+00:00:59,738 --> 00:01:02,409
 Para começar, chame o líder do projeto.
 
-16
-00:00:58,751 --> 00:01:01,309
+17
+00:01:02,409 --> 00:01:04,967
 Ele entrevista você, monta o plano em
 
-17
-00:01:01,309 --> 00:01:04,207
+18
+00:01:04,967 --> 00:01:07,865
 linguagem simples e só
 segue com o seu sim.
 
-18
-00:01:04,557 --> 00:01:09,468
+19
+00:01:08,215 --> 00:01:13,126
 A skill do pedido ao ar leva a ideia
 até a publicação: versão mínima,
 
-19
-00:01:09,468 --> 00:01:13,932
+20
+00:01:13,126 --> 00:01:17,590
 teste como cliente e checklist
 de segurança antes de ir ao ar.
 
-20
-00:01:14,282 --> 00:01:18,226
+21
+00:01:17,940 --> 00:01:21,884
 Os prompts prontos estão na pasta
 prompts e na área de membros.
 
-21
-00:01:18,226 --> 00:01:21,503
+22
+00:01:21,884 --> 00:01:25,161
 Troque o que está entre
 colchetes e cole no agente.

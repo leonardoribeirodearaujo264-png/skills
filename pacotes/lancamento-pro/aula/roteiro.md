@@ -1,6 +1,6 @@
 # Aula: Lançamento Pro
 
-Duração: 77 segundos, narração de 73.7 s. Fala total: 201 palavras.
+Duração: 84 segundos, narração de 80.4 s. Fala total: 216 palavras.
 
 ## Cena 1
 
@@ -10,15 +10,15 @@ Tela: Lançamento Pro. Da pesquisa do público aos números do lançamento
 
 ## Cena 2
 
-Fala: Antes de tudo, baixe o aplicativo do Claude no seu computador, em claude.ai barra download. Para usar o Claude Code, você precisa do plano Pro ou Max. Instale também o Node.js.
+Fala: Na sua área de membros, baixe o pacote e extraia a pasta. Dentro dela, dê dois cliques no arquivo instalar-requisitos. Ele instala tudo o que falta no seu computador.
 
-Tela: App do Claude, Plano Pro ou Max, Node.js 22+
+Tela: Baixe o .zip, Extraia a pasta, instalar-requisitos, Abra o Claude
 
 ## Cena 3
 
-Fala: Na sua área de membros, baixe o pacote e extraia a pasta. Depois abra o Claude, entre na aba Code e escolha essa pasta.
+Fala: Esse arquivo instala o aplicativo do Claude e o Node.js, só o que ainda não estiver no seu computador. No Mac, use o instalar-requisitos ponto command. Depois, abra o Claude e entre com a sua conta, no plano Pro ou Max.
 
-Tela: Baixe o .zip, Extraia a pasta, Abra o Claude, Escolha a pasta
+Tela: App do Claude, Node.js, Só o que faltar
 
 ## Cena 4
 

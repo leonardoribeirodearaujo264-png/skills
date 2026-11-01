@@ -1,28 +1,33 @@
 <!-- Gerado por scripts/gerar-instaladores.mjs a partir do pacote.json. Não edite à mão. -->
 # Comece aqui: como instalar o pacote "Equipe Completa de Agentes"
 
-São 4 passos. Você não precisa saber programar: no passo 4, o próprio Claude instala e testa tudo por você.
+São 4 passos. Você não precisa saber programar: o passo 2 instala os programas com dois cliques, e no passo 4 o próprio Claude instala e testa o pacote por você.
 
-## 1. Instale o app do Claude no seu computador
-
-1. Abra **claude.ai/download** no navegador do seu PC ou Mac e baixe o app **Claude** para o seu sistema.
-2. Instale e entre com a sua conta. O Claude Code (a aba **Code** do app) precisa de um plano pago do Claude, como o Pro ou o Max.
-
-## 2. Instale o Node.js
-
-O instalador do pacote usa o Node.js. Abra **nodejs.org**, baixe a versão LTS (22 ou mais nova) e instale com as opções padrão. Se já tiver, pule este passo.
-
-## 3. Baixe e extraia o pacote
+## 1. Baixe e extraia o pacote
 
 1. Na sua área de membros, clique em **Baixar o pacote**. Vem um arquivo `.zip`.
 2. Clique com o botão direito no `.zip` e escolha **Extrair tudo** (no Mac, basta dar dois cliques).
 3. Guarde a pasta extraída num lugar fácil, como **Documentos**.
 
+## 2. Instale os programas com dois cliques
+
+Dentro da pasta do pacote:
+
+- **Windows:** dê dois cliques em `instalar-requisitos.bat`. Se o Windows perguntar se pode abrir, clique em **Mais informações** e **Executar assim mesmo**.
+- **Mac:** clique com o botão direito em `instalar-requisitos.command`, escolha **Abrir** e confirme. Ele usa o Homebrew (brew.sh).
+
+Ele confere e instala só o que faltar: **App do Claude**, **Node.js LTS**. Quando terminar, abra o app do Claude e entre com a sua conta. O Claude Code (a aba **Code** do app) precisa de um plano pago do Claude, como o Pro ou o Max.
+
+Prefere instalar à mão? App do Claude em **claude.ai/download** e Node.js LTS em **nodejs.org**.
+
+## 3. Abra a pasta no Claude
+
+Abra o app **Claude**, vá na aba **Code** e escolha a pasta extraída do pacote como pasta de trabalho.
+
 ## 4. Peça ao Claude para instalar e testar
 
-1. Abra o app **Claude**, vá na aba **Code** e escolha a pasta extraída do pacote como pasta de trabalho.
-2. Copie o pedido abaixo inteiro, cole na conversa e envie.
-3. Quando o Claude pedir permissão para rodar o instalador, confira e aceite.
+1. Copie o pedido abaixo inteiro, cole na conversa e envie.
+2. Quando o Claude pedir permissão para rodar o instalador, confira e aceite.
 
 ```text
 Instale o pacote desta pasta no meu Claude Code e confira se deu certo.

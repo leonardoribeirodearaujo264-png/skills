@@ -1,6 +1,6 @@
 # Aula: Edição de vídeo com a video-editor-pro, passo a passo
 
-Duração: 152 segundos, narração de 146.3 s. Fala total: 375 palavras.
+Duração: 157 segundos, narração de 151.6 s. Fala total: 392 palavras.
 
 ## Cena 1
 
@@ -10,15 +10,15 @@ Tela: Edição de vídeo com a video-editor-pro. Do vídeo bruto ao vídeo pront
 
 ## Cena 2
 
-Fala: Antes de tudo, baixe o aplicativo do Claude no seu computador, em claude.ai barra download, com o plano Pro ou Max. Instale também o Node.js, o FFmpeg e o Python 3.10 ou mais novo.
+Fala: Na sua área de membros, baixe o pacote e extraia a pasta. Dentro dela, dê dois cliques no arquivo instalar-requisitos. Ele instala tudo o que falta no seu computador.
 
-Tela: App do Claude, Node.js e FFmpeg, Python 3.10+
+Tela: Baixe o .zip, Extraia a pasta, instalar-requisitos, Abra o Claude
 
 ## Cena 3
 
-Fala: Na sua área de membros, baixe o pacote e extraia a pasta. Depois abra o Claude, entre na aba Code e escolha essa pasta.
+Fala: Esse arquivo instala o aplicativo do Claude e o Node.js, o Python e o FFmpeg, só o que ainda não estiver no seu computador. No Mac, use o instalar-requisitos ponto command. Depois, abra o Claude e entre com a sua conta, no plano Pro ou Max.
 
-Tela: Baixe o .zip, Extraia a pasta, Abra o Claude, Escolha a pasta
+Tela: App do Claude, Node.js, Python e FFmpeg
 
 ## Cena 4
 

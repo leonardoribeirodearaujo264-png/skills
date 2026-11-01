@@ -8,77 +8,84 @@ em português e o time
 monta página, texto, anúncio e velocidade.
 
 3
-00:00:05,543 --> 00:00:09,358
-Antes de tudo, baixe o
-aplicativo do Claude no seu
-
-4
-00:00:09,358 --> 00:00:12,515
-computador, em claude.ai barra download.
-
-5
-00:00:12,515 --> 00:00:16,856
-Para usar o Claude Code, você
-precisa do plano Pro ou Max.
-
-6
-00:00:16,856 --> 00:00:19,027
-Instale também o Node.js.
-
-7
-00:00:19,377 --> 00:00:23,293
+00:00:05,543 --> 00:00:09,308
 Na sua área de membros, baixe
 o pacote e extraia a pasta.
 
+4
+00:00:09,308 --> 00:00:13,247
+Dentro dela, dê dois cliques
+no arquivo instalar-requisitos.
+
+5
+00:00:13,247 --> 00:00:16,433
+Ele instala tudo o que
+falta no seu computador.
+
+6
+00:00:16,783 --> 00:00:21,163
+Esse arquivo instala o
+aplicativo do Claude e o Node.js,
+
+7
+00:00:21,163 --> 00:00:24,790
+só o que ainda não
+estiver no seu computador.
+
 8
-00:00:23,293 --> 00:00:27,449
-Depois abra o Claude, entre na
-aba Code e escolha essa pasta.
+00:00:24,790 --> 00:00:28,622
+No Mac, use o instalar-requisitos
+ponto command.
 
 9
-00:00:27,799 --> 00:00:32,418
+00:00:28,622 --> 00:00:33,755
+Depois, abra o Claude e entre com
+a sua conta, no plano Pro ou Max.
+
+10
+00:00:34,105 --> 00:00:38,724
 Abra o arquivo COMECE-AQUI, copie
 o pedido pronto e cole no Claude.
 
-10
-00:00:32,418 --> 00:00:37,838
+11
+00:00:38,724 --> 00:00:44,144
 Ele roda o instalador, confere cada skill
 e cada agente, e avisa se faltou algo.
 
-11
-00:00:37,838 --> 00:00:40,671
+12
+00:00:44,144 --> 00:00:46,977
 No fim, feche e abra o Claude de novo.
 
-12
-00:00:41,021 --> 00:00:45,040
+13
+00:00:47,327 --> 00:00:51,346
 Para dar instrução ao time,
 chame o líder pelo nome e conte o
 
-13
-00:00:45,040 --> 00:00:48,534
+14
+00:00:51,346 --> 00:00:54,840
 negócio, o público, a oferta
 e a ação que você quer.
 
-14
-00:00:48,884 --> 00:00:52,228
+15
+00:00:55,190 --> 00:00:58,534
 Antes de anunciar, peça a
 checklist da página que vende.
 
-15
-00:00:52,228 --> 00:00:55,989
+16
+00:00:58,534 --> 00:01:02,295
 Ela devolve o que corrigir primeiro,
 do mais grave ao mais leve.
 
-16
-00:00:56,339 --> 00:01:00,286
+17
+00:01:02,645 --> 00:01:06,592
 Os prompts prontos estão na pasta
 prompts e na sua área de membros.
 
-17
-00:01:00,286 --> 00:01:03,233
+18
+00:01:06,592 --> 00:01:09,539
 Copie, troque o que está
 entre colchetes e cole.
 
-18
-00:01:03,233 --> 00:01:05,601
+19
+00:01:09,539 --> 00:01:11,907
 Nada é publicado sem a sua aprovação.

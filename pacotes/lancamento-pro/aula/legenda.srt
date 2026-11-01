@@ -13,87 +13,94 @@ anúncios, atendimento e números.
 Tudo sai como rascunho para você aprovar.
 
 4
-00:00:10,506 --> 00:00:14,228
-Antes de tudo, baixe o
-aplicativo do Claude no seu
-
-5
-00:00:14,228 --> 00:00:17,308
-computador, em claude.ai barra download.
-
-6
-00:00:17,308 --> 00:00:21,543
-Para usar o Claude Code, você
-precisa do plano Pro ou Max.
-
-7
-00:00:21,543 --> 00:00:23,660
-Instale também o Node.js.
-
-8
-00:00:24,010 --> 00:00:27,376
+00:00:10,506 --> 00:00:14,501
 Na sua área de membros, baixe
 o pacote e extraia a pasta.
 
+5
+00:00:14,501 --> 00:00:18,680
+Dentro dela, dê dois cliques
+no arquivo instalar-requisitos.
+
+6
+00:00:18,680 --> 00:00:22,060
+Ele instala tudo o que
+falta no seu computador.
+
+7
+00:00:22,410 --> 00:00:26,349
+Esse arquivo instala o
+aplicativo do Claude e o Node.js,
+
+8
+00:00:26,349 --> 00:00:29,611
+só o que ainda não
+estiver no seu computador.
+
 9
-00:00:27,376 --> 00:00:30,949
-Depois abra o Claude, entre na
-aba Code e escolha essa pasta.
+00:00:29,611 --> 00:00:33,058
+No Mac, use o instalar-requisitos
+ponto command.
 
 10
-00:00:31,299 --> 00:00:36,164
+00:00:33,058 --> 00:00:37,674
+Depois, abra o Claude e entre com
+a sua conta, no plano Pro ou Max.
+
+11
+00:00:38,024 --> 00:00:42,889
 Abra o arquivo COMECE-AQUI, copie
 o pedido pronto e cole no Claude.
 
-11
-00:00:36,164 --> 00:00:41,873
+12
+00:00:42,889 --> 00:00:48,598
 Ele roda o instalador, confere cada skill
 e cada agente, e avisa se faltou algo.
 
-12
-00:00:41,873 --> 00:00:44,857
+13
+00:00:48,598 --> 00:00:51,582
 No fim, feche e abra o Claude de novo.
 
-13
-00:00:45,207 --> 00:00:47,118
+14
+00:00:51,932 --> 00:00:53,843
 Este pacote não tem líder.
 
-14
-00:00:47,118 --> 00:00:52,063
+15
+00:00:53,843 --> 00:00:58,788
 Você chama os agentes na ordem da etapa,
 e cada um parte da entrega do anterior.
 
-15
-00:00:52,063 --> 00:00:55,659
+16
+00:00:58,788 --> 00:01:02,384
 Antes de publicar, passe tudo
 pelo revisor de promessas.
 
-16
-00:00:56,009 --> 00:00:59,186
+17
+00:01:02,734 --> 00:01:05,911
 Para uma tarefa pequena,
 chame a skill direto.
 
-17
-00:00:59,186 --> 00:01:02,893
+18
+00:01:05,911 --> 00:01:09,618
 A calcular CPA máximo mostra
 quanto você pode pagar por
 
-18
-00:01:02,893 --> 00:01:05,953
+19
+00:01:09,618 --> 00:01:12,678
 venda, com a conta
 aberta e os seus números.
 
-19
-00:01:06,303 --> 00:01:09,877
+20
+00:01:13,028 --> 00:01:16,602
 Os prompts prontos estão na
 pasta prompts e na sua área
 
-20
-00:01:09,877 --> 00:01:12,884
+21
+00:01:16,602 --> 00:01:19,609
 de membros, um para cada
 etapa do lançamento.
 
-21
-00:01:12,884 --> 00:01:16,174
+22
+00:01:19,609 --> 00:01:22,899
 Nenhum agente publica ou
 gasta verba sem o seu OK.

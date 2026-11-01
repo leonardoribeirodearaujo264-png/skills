@@ -9,76 +9,83 @@ pedindo ao Claude Code ou ao
 Codex, sem programa de design.
 
 3
-00:00:07,729 --> 00:00:11,285
-Antes de tudo, baixe o
-aplicativo do Claude no seu
-
-4
-00:00:11,285 --> 00:00:14,229
-computador, em claude.ai barra download.
-
-5
-00:00:14,229 --> 00:00:18,276
-Para usar o Claude Code, você
-precisa do plano Pro ou Max.
-
-6
-00:00:18,276 --> 00:00:20,299
-Instale também o Node.js.
-
-7
-00:00:20,649 --> 00:00:24,505
+00:00:07,729 --> 00:00:11,501
 Na sua área de membros, baixe
 o pacote e extraia a pasta.
 
+4
+00:00:11,501 --> 00:00:15,447
+Dentro dela, dê dois cliques
+no arquivo instalar-requisitos.
+
+5
+00:00:15,447 --> 00:00:18,638
+Ele instala tudo o que
+falta no seu computador.
+
+6
+00:00:18,988 --> 00:00:23,185
+Esse arquivo instala o
+aplicativo do Claude e o Node.js,
+
+7
+00:00:23,185 --> 00:00:26,660
+só o que ainda não
+estiver no seu computador.
+
 8
-00:00:24,505 --> 00:00:28,599
-Depois abra o Claude, entre na
-aba Code e escolha essa pasta.
+00:00:26,660 --> 00:00:30,333
+No Mac, use o instalar-requisitos
+ponto command.
 
 9
-00:00:28,949 --> 00:00:33,978
+00:00:30,333 --> 00:00:35,251
+Depois, abra o Claude e entre com
+a sua conta, no plano Pro ou Max.
+
+10
+00:00:35,601 --> 00:00:40,630
 Abra o arquivo COMECE-AQUI, copie
 o pedido pronto e cole no Claude.
 
-10
-00:00:33,978 --> 00:00:39,878
+11
+00:00:40,630 --> 00:00:46,530
 Ele roda o instalador, confere cada skill
 e cada agente, e avisa se faltou algo.
 
-11
-00:00:39,878 --> 00:00:42,962
+12
+00:00:46,530 --> 00:00:49,614
 No fim, feche e abra o Claude de novo.
 
-12
-00:00:43,312 --> 00:00:48,303
+13
+00:00:49,964 --> 00:00:54,955
 Peça ao líder visual o que você
 quer entregar e passe seus arquivos.
 
-13
-00:00:48,303 --> 00:00:53,491
+14
+00:00:54,955 --> 00:01:00,143
 Ele divide entre os especialistas e
 só entrega o que passou na revisão.
 
-14
-00:00:53,491 --> 00:00:56,118
+15
+00:01:00,143 --> 00:01:02,770
 No Codex, cite o nome do agente.
 
-15
-00:00:56,468 --> 00:01:00,293
+16
+00:01:03,120 --> 00:01:06,945
 Veja a skill de mockup: mando
 o print do site e recebo o
 
-16
-00:01:00,293 --> 00:01:03,580
+17
+00:01:06,945 --> 00:01:10,232
 notebook em PNG, no
 tamanho de post e de slide.
 
-17
-00:01:03,930 --> 00:01:08,073
+18
+00:01:10,582 --> 00:01:14,725
 Os prompts prontos estão na pasta
 prompts e na sua área de membros.
 
-18
-00:01:08,073 --> 00:01:10,779
+19
+00:01:14,725 --> 00:01:17,431
 Troque o que está entre colchetes e cole.
