@@ -21,6 +21,7 @@ function produto(slug: string, ordem: number, precoAvulsoCentavos: number | null
     aulaDuracaoS: null,
     precoBumpCentavos: null,
     soBump: false,
+    precoCheioCentavos: null,
   };
 }
 

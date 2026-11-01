@@ -34,9 +34,10 @@ const linhaProduto = z.object({
   aula_duracao_s: z.number().nullable(),
   preco_bump_centavos: z.number().int().nullable(),
   so_bump: z.boolean(),
+  preco_cheio_centavos: z.number().int().nullable(),
 });
 const COLUNAS_PRODUTO =
-  "slug, titulo, resumo, ordem, github_url, preco_avulso_centavos, destaques, qtd_skills, qtd_agentes, qtd_prompts, aula_duracao_s, preco_bump_centavos, so_bump";
+  "slug, titulo, resumo, ordem, github_url, preco_avulso_centavos, destaques, qtd_skills, qtd_agentes, qtd_prompts, aula_duracao_s, preco_bump_centavos, so_bump, preco_cheio_centavos";
 const linhaOferta = z.object({
   codigo: z.string(),
   titulo: z.string(),
@@ -88,6 +89,7 @@ export async function carregarCatalogo(db: SupabaseClient): Promise<Catalogo> {
       aulaDuracaoS: r.aula_duracao_s,
       precoBumpCentavos: r.preco_bump_centavos,
       soBump: r.so_bump,
+      precoCheioCentavos: r.preco_cheio_centavos,
     }));
   return {
     produtos: todos.filter((x) => !x.soBump),

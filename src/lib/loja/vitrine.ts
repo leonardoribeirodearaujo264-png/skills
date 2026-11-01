@@ -12,6 +12,8 @@ export type VitrinePacote = {
   gancho: string;
   descricao: string;
   precoTexto: string;
+  // preço cheio do banco, só quando é maior que o de venda (senão não há o que riscar)
+  precoCheioTexto: string | null;
   comprarUrl: string;
 };
 
@@ -132,15 +134,17 @@ export function montarVitrine(catalogo: Catalogo, pagina: string): Vitrine {
   const config = OFERTA_DOS_VIDEOS[pagina];
   const produto = config ? catalogo.produtos.find((p) => p.slug === config.pacote) : undefined;
 
+  const preco = produto && avulso ? precoNaOferta(catalogo, avulso, produto) : 0;
   const pacote: VitrinePacote | null =
     config && produto && avulso
       ? {
           slug: produto.slug,
           capa: capaDoPacote(produto.slug, produto.titulo),
           titulo: produto.titulo,
-          gancho: config.gancho.replace("{preco}", formatarReais(precoNaOferta(catalogo, avulso, produto))),
+          gancho: config.gancho.replace("{preco}", formatarReais(preco)),
           descricao: config.descricao ?? produto.resumo,
-          precoTexto: formatarReais(precoNaOferta(catalogo, avulso, produto)),
+          precoTexto: formatarReais(preco),
+          precoCheioTexto: produto.precoCheioCentavos !== null && produto.precoCheioCentavos > preco ? formatarReais(produto.precoCheioCentavos) : null,
           comprarUrl: urlComprar(avulso.codigo, produto.slug),
         }
       : null;

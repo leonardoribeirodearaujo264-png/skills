@@ -35,6 +35,7 @@ function catalogoDoSeed(): Catalogo {
       aulaDuracaoS: null,
       precoBumpCentavos: null,
       soBump: false,
+      precoCheioCentavos: null,
     })),
     ofertas: ofertas.map((m) => ({
       codigo: m[1]!,
@@ -225,6 +226,17 @@ describe("vitrine das páginas dos vídeos (preços do banco)", () => {
     expect(formatarReais(precoNaOferta(cat, avulso, video))).toBe("R$\u00a047,00");
   });
 
+  it("o preço cheio do banco aparece riscado só quando é maior que o de venda (banco/0012)", () => {
+    const comCheio = (centavos: number | null): Catalogo => ({
+      ...cat,
+      produtos: cat.produtos.map((p) => (p.slug === "edicao-de-video" ? { ...p, precoCheioCentavos: centavos } : p)),
+    });
+    expect(montarVitrine(comCheio(19700), "editar").pacote?.precoCheioTexto).toBe("R$ 197,00");
+    expect(montarVitrine(comCheio(19700), "editar").pacote?.precoTexto).toBe("R$ 47,00");
+    expect(montarVitrine(comCheio(null), "editar").pacote?.precoCheioTexto).toBeNull();
+    expect(montarVitrine(comCheio(4700), "editar").pacote?.precoCheioTexto).toBeNull();
+  });
+
   it("o combo mostra a soma dos avulsos (R$ 195), o preço (R$ 97) e a economia (R$ 98)", () => {
     const c = montarVitrine(cat, "agentes").combo!;
     expect(c.somaTexto).toBe("R$\u00a0195,00");
@@ -319,6 +331,7 @@ describe("ofertas complementares (order bumps)", () => {
     aulaDuracaoS: null,
     precoBumpCentavos: 1990,
     soBump: true,
+    precoCheioCentavos: null,
   };
   // 0009: Edição de vídeo por R$ 27 e Motion por R$ 9,90 como complemento (seguem à venda normalmente)
   const comPreco = (slug: string, centavos: number) => ({ ...cat.produtos.find((p) => p.slug === slug)!, precoBumpCentavos: centavos });

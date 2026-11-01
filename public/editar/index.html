@@ -2,196 +2,1931 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Edição de vídeo por skills: o Claude edita por você</title>
-<meta name="description" content="Pacote de edição de vídeo por skills: você pede em português e o Claude Code corta, legenda e monta seus Reels no seu computador, com um time de 6 agentes e revisor. Pagamento único.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Edição de vídeo por skills: peça ao Claude e receba o vídeo editado</title>
+<meta name="description" content="Você grava, pede em português e o Claude Code ou o Codex corta, legenda, anima e exporta o seu vídeo. 13 skills, time de 6 agentes e 8 prompts prontos.">
+<meta name="theme-color" content="#14100D">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Edição de vídeo por skills: peça ao Claude e receba o vídeo editado">
+<meta property="og:description" content="Você grava, pede em português e o Claude corta, legenda, anima e exporta. 13 skills, time de 6 agentes e 8 prompts prontos.">
+<meta property="og:image" content="https://www.leonardoskills.com/editar/midia/capa-pacote.jpg">
+<link rel="canonical" href="https://www.leonardoskills.com/editar/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/estilo.css">
-<!-- Já no HTML: pagina.js não precisa pedir depois (o data-estilo evita pedir duas vezes) -->
-<link rel="stylesheet" href="/assets/oferta.css" data-estilo="oferta">
 <style>
-  /* Só desta página de venda: herói com vídeo, blocos sem numeração de passo e perguntas */
-  .heroi { display: grid; grid-template-columns: 1fr 300px; gap: 40px; align-items: center; margin-bottom: 8px; }
-  .heroi .lead { margin-bottom: 28px; }
-  .heroi .acoes { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; }
-  .heroi .confia { font-size: 14px; color: var(--ink-soft); }
-  .prova { margin: 0; }
-  .prova video { display: block; width: 100%; aspect-ratio: 9 / 16; border-radius: 22px; background: var(--code-bg); box-shadow: var(--shadow); }
-  .prova figcaption { margin-top: 10px; font-size: 13px; color: var(--ink-soft); text-align: center; }
-  .prova { position: relative; }
-  .som { position: absolute; right: 12px; top: 12px; min-height: 40px; padding: 8px 14px; border: 0; border-radius: 999px; cursor: pointer;
-    background: rgba(20, 22, 26, .72); color: #fff; font: 600 13px/1 var(--font-body); backdrop-filter: blur(6px); }
-  .som[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
-  .lateral { display: grid; gap: 16px; }
-  /* Card pequeno do pacote abaixo do vídeo (preenchido por pagina.js com os dados do banco) */
-  .produto-topo { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 14px; box-shadow: var(--shadow); text-align: left; }
-  .produto-topo .capa-img { display: block; aspect-ratio: 3 / 2; border-radius: 12px; overflow: hidden; margin-bottom: 12px; }
-  .produto-topo .capa-img img { display: block; width: 100%; height: 100%; object-fit: cover; }
-  .produto-topo h2 { font-size: 18px; margin: 0 0 4px; max-width: none; }
-  .produto-topo-desc { font-size: 13.5px; color: var(--ink-soft); margin: 0 0 12px; }
-  .produto-topo-preco { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin: 0 0 12px; }
-  .produto-topo-preco .oferta-preco-rotulo { font: 500 12px/1.2 var(--font-mono); color: var(--ink-soft); text-transform: uppercase; }
-  .produto-topo-preco .price { font-size: 30px; margin: 0; }
-  .produto-topo .cta { max-width: none; padding: 14px 18px; font-size: 15px; }
-  .produto-topo-mais { display: block; text-align: center; margin-top: 10px; font-size: 13px; color: var(--accent); font-weight: 600; }
-  [data-produto-topo]:empty { min-height: 300px; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); }
-  section.bloco { margin-top: 72px; }
-  section.bloco > h2 { font-size: clamp(24px, 4vw, 32px); margin-bottom: 10px; }
-  section.bloco > p { color: var(--ink-soft); margin: 0 0 22px; max-width: 60ch; }
-  .dor { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
-  .dor li { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; color: var(--ink-soft); }
-  .dor li strong { color: var(--ink); }
-  .virada { margin-top: 18px; font: 700 20px/1.35 var(--font-display); letter-spacing: -.01em; }
-  .card .de { font: 500 12px/1.2 var(--font-mono); color: var(--accent); margin: 0 0 8px; text-transform: uppercase; letter-spacing: .04em; }
-  .inclui { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
-  .inclui li { display: flex; gap: 14px; align-items: flex-start; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
-  .inclui .qtd { flex: none; min-width: 52px; font: 800 26px/1 var(--font-display); color: var(--accent); }
-  .inclui strong { display: block; font: 700 16px/1.3 var(--font-display); }
-  .inclui span { font-size: 14px; color: var(--ink-soft); }
-  .faq details { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 0 18px; margin-bottom: 10px; }
-  .faq summary { cursor: pointer; padding: 16px 0; font: 700 16px/1.3 var(--font-display); list-style: none; display: flex; justify-content: space-between; gap: 12px; }
-  .faq summary::-webkit-details-marker { display: none; }
-  .faq summary::after { content: "+"; color: var(--accent); font-size: 20px; line-height: 1; }
-  .faq details[open] summary::after { content: "-"; }
-  .faq details p { margin: 0 0 16px; color: var(--ink-soft); }
-  .chamada { margin-top: 72px; text-align: center; }
-  .chamada h2 { font-size: clamp(26px, 4.5vw, 36px); margin-bottom: 12px; }
-  .chamada p { color: var(--ink-soft); margin: 0 auto 22px; max-width: 52ch; }
-  @media (max-width: 760px) {
-    .heroi { grid-template-columns: 1fr; gap: 28px; }
-    .lateral { max-width: 340px; width: 100%; margin: 0 auto; }
-  }
+/* =========================================================
+   Tokens (mesmos valores de src/app/vendas.css)
+   ========================================================= */
+:root {
+  --vendas-fundo: #14100D;
+  --vendas-fundo-elevado: #1E1814;
+  --vendas-fundo-cartao: #241D18;
+  --vendas-linha: rgba(255, 238, 220, .14);
+  --vendas-linha-forte: rgba(255, 238, 220, .26);
+  --vendas-creme: #FBF3E7;
+  --vendas-creme-afundado: #F1E6D5;
+  --vendas-creme-linha: #CDBBA3;
+  --vendas-texto: #FBF6EF;
+  --vendas-texto-suave: #BDB1A6;
+  --vendas-tinta: #1C1714;
+  --vendas-tinta-suave: #5E554D;
+  --vendas-laranja: #FF8A3D;
+  --vendas-laranja-tinta: #1A0F07;
+  --vendas-laranja-forte: #C03F00;
+  --vendas-laranja-suave: #FFE3CF;
+  --vendas-azul: #2F5BFF;
+  --vendas-perigo-escuro: #FF8A7E;
+
+  --fonte-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --fonte-corpo: "Inter", system-ui, sans-serif;
+  --fonte-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --ease: cubic-bezier(.32, .72, 0, 1);
+  --mola: cubic-bezier(.34, 1.4, .64, 1);
+  --largura: 1200px;
+  --gutter: 20px;
+  --secao: 96px;
+  --raio: 28px;
+  color-scheme: dark;
+}
+@media (min-width: 768px) { :root { --gutter: 32px; --secao: 136px; } }
+
+/* =========================================================
+   Base
+   ========================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 24px; overflow-x: clip; }
+.heroi, .secao { overflow-x: clip; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body {
+  margin: 0; min-height: 100dvh; overflow-x: clip;
+  background: var(--vendas-fundo); color: var(--vendas-texto);
+  font: 400 16px/1.6 var(--fonte-corpo);
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+img, video, svg { display: block; max-width: 100%; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+h1, h2, h3, h4, p, ul, ol, figure { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+:focus-visible { outline: 3px solid var(--vendas-laranja); outline-offset: 3px; border-radius: 10px; }
+[hidden] { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.pular { position: absolute; left: 16px; top: -80px; z-index: 40; padding: 12px 16px; border-radius: 12px; background: var(--vendas-laranja); color: var(--vendas-laranja-tinta); font-weight: 600; text-decoration: none; }
+.pular:focus { top: 16px; }
+.wrap { width: 100%; max-width: var(--largura); margin: 0 auto; padding: 0 var(--gutter); }
+.mono { font-family: var(--fonte-mono); }
+.num { font-variant-numeric: tabular-nums; }
+.laranja { color: var(--vendas-laranja); }
+.ico { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Brilho quente fixo atrás de tudo: não repinta na rolagem */
+.brilho {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(70% 45% at 85% 8%, rgba(255, 138, 61, .14), transparent 70%),
+    radial-gradient(50% 40% at 0% 0%, rgba(255, 138, 61, .07), transparent 70%);
+}
+/* Grão sutil fixo */
+.grao {
+  position: fixed; inset: 0; z-index: 30; pointer-events: none; opacity: .035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* =========================================================
+   Tipografia e peças comuns
+   ========================================================= */
+.olho {
+  display: inline-flex; align-items: center; gap: 8px; margin-bottom: 16px;
+  font: 500 12px/1.3 var(--fonte-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--vendas-laranja);
+}
+.pilula {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 32px; padding: 6px 14px;
+  border-radius: 999px; border: 1px solid rgba(255, 138, 61, .32); background: rgba(255, 138, 61, .08);
+  font: 500 12px/1.2 var(--fonte-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--vendas-texto);
+}
+.pilula::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--vendas-laranja); box-shadow: 0 0 10px var(--vendas-laranja); }
+.titulo {
+  font: 800 clamp(32px, 7.6vw, 60px)/1.02 var(--fonte-display); letter-spacing: -.04em; text-wrap: balance;
+}
+.titulo .laranja, .titulo em { font-style: normal; color: var(--vendas-laranja); }
+.titulo .quebra { display: block; }
+.apoio { color: var(--vendas-texto-suave); font-size: clamp(16px, 2vw, 18px); line-height: 1.6; max-width: 52ch; }
+.cabeca { display: grid; gap: 20px; margin-bottom: 48px; }
+.cabeca--centro { justify-items: center; text-align: center; }
+.cabeca--centro .apoio { margin: 0 auto; }
+@media (min-width: 900px) {
+  .cabeca--lado { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: end; gap: 48px; margin-bottom: 64px; }
+}
+.secao { padding: var(--secao) 0; position: relative; }
+
+/* Botão principal: laranja cheio, ícone em cápsula */
+.botao {
+  --h: 60px;
+  display: inline-flex; align-items: center; justify-content: space-between; gap: 16px;
+  min-height: var(--h); padding: 8px 8px 8px 24px; border: 0; border-radius: 18px;
+  background: linear-gradient(180deg, #FFA061 0%, #FF8A3D 55%, #F97C2A 100%);
+  color: var(--vendas-laranja-tinta); font: 600 16px/1.2 var(--fonte-corpo); text-decoration: none; cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 0 0 1px rgba(255, 170, 110, .5), 0 18px 44px -18px rgba(255, 138, 61, .85);
+  transition: transform .5s var(--ease), box-shadow .5s var(--ease);
+}
+.botao__ico {
+  width: 44px; height: 44px; flex: none; border-radius: 12px; display: grid; place-items: center;
+  background: rgba(26, 15, 7, .12); transition: transform .6s var(--mola);
+}
+.botao__ico .ico { width: 18px; height: 18px; stroke-width: 2; }
+@media (hover: hover) {
+  .botao:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 0 0 1px rgba(255, 170, 110, .6), 0 24px 56px -18px rgba(255, 138, 61, 1); }
+  .botao:hover .botao__ico { transform: translate(2px, -2px) scale(1.05); }
+}
+.botao:active { transform: scale(.98); }
+.botao--largo { width: 100%; }
+.botao--grande { --h: 64px; font-size: 16px; padding-left: 20px; border-radius: 20px; }
+@media (min-width: 600px) { .botao--grande { --h: 68px; font-size: 18px; padding-left: 28px; } }
+.botao-contorno {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px;
+  border: 1px solid var(--vendas-linha-forte); border-radius: 999px; background: rgba(255, 238, 220, .03);
+  color: var(--vendas-texto); font: 600 14px/1 var(--fonte-corpo); text-decoration: none; white-space: nowrap; cursor: pointer;
+  transition: background .4s var(--ease), border-color .4s var(--ease), transform .4s var(--ease);
+}
+.botao-contorno:hover { background: rgba(255, 138, 61, .1); border-color: rgba(255, 138, 61, .6); }
+.botao-contorno:active { transform: scale(.98); }
+.botao-contorno .ico { width: 16px; height: 16px; }
+.nota-botao { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 14px; color: var(--vendas-texto-suave); }
+.nota-botao .ico { width: 16px; height: 16px; color: var(--vendas-laranja); }
+.cta-bloco { display: grid; justify-items: center; text-align: center; margin-top: 56px; }
+.cta-bloco .botao { width: min(100%, 360px); }
+
+/* Casca dupla: casca fina por fora, núcleo por dentro com raio concêntrico */
+.casca {
+  padding: 6px; border-radius: var(--raio);
+  background: linear-gradient(160deg, rgba(255, 238, 220, .10), rgba(255, 238, 220, .03));
+  box-shadow: 0 0 0 1px var(--vendas-linha);
+}
+.nucleo {
+  border-radius: calc(var(--raio) - 6px); background: linear-gradient(180deg, #221B16, #1A1511);
+  box-shadow: inset 0 1px 0 rgba(255, 238, 220, .08);
+}
+
+/* Revelar na rolagem (só com JS ligado e sem redução de movimento) */
+.js .revela { opacity: 0; transform: translateY(28px); transition: opacity .9s var(--ease), transform 1s var(--ease); transition-delay: var(--atraso, 0ms); }
+.js .revela.visivel { opacity: 1; transform: none; }
+
+/* =========================================================
+   1. Topo
+   ========================================================= */
+.topo { position: relative; z-index: 2; border-bottom: 1px solid rgba(255, 238, 220, .08); }
+.topo__barra { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 72px; }
+.marca { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; text-decoration: none; }
+.marca__icone {
+  width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; flex: none;
+  background: var(--vendas-laranja); color: var(--vendas-laranja-tinta); box-shadow: 3px 3px 0 var(--vendas-azul);
+}
+.marca__icone svg { width: 18px; height: 18px; fill: currentColor; stroke: none; }
+.marca__nome { font: 700 18px/1 var(--fonte-display); letter-spacing: -.02em; white-space: nowrap; }
+.marca__nome b { color: var(--vendas-laranja); font-weight: 700; }
+@media (max-width: 399px) { .marca__nome { font-size: 16px; } .topo .botao-contorno { padding: 0 14px; font-size: 13px; } }
+
+/* =========================================================
+   2. Herói
+   ========================================================= */
+.heroi { padding: 32px 0 72px; }
+.heroi__grade { display: grid; gap: 28px; grid-template-areas: "titulo" "celular" "texto"; }
+.heroi__titulo { grid-area: titulo; }
+.heroi__celular { grid-area: celular; justify-self: center; }
+.heroi__texto { grid-area: texto; }
+@media (min-width: 960px) {
+  .heroi { padding: 72px 0 120px; }
+  .heroi__grade { grid-template-columns: minmax(0, 1fr) 300px; grid-template-areas: "titulo celular" "texto celular"; column-gap: 80px; row-gap: 28px; align-items: center; }
+  .heroi__titulo { align-self: end; }
+  .heroi__texto { align-self: start; }
+}
+.heroi h1 {
+  font: 800 clamp(34px, 9.2vw, 74px)/1.0 var(--fonte-display); letter-spacing: -.045em; text-wrap: balance;
+}
+.heroi h1 em { font-style: normal; color: var(--vendas-laranja); }
+.heroi__olho { margin-bottom: 20px; }
+.heroi__sub { font-size: clamp(16px, 2vw, 19px); line-height: 1.6; color: var(--vendas-texto-suave); max-width: 46ch; }
+.selos { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.selo {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 16px 0 12px;
+  border-radius: 14px; border: 1px solid var(--vendas-linha); background: rgba(255, 238, 220, .03);
+  font-size: 14px; color: var(--vendas-texto-suave);
+}
+.selo b { color: var(--vendas-texto); font-weight: 600; }
+.selo svg { width: 18px; height: 18px; }
+.selo .ico-claude { color: #E8875B; }
+.heroi__acoes { display: grid; gap: 4px; margin-top: 32px; justify-items: start; }
+@media (max-width: 959px) {
+  .heroi__titulo, .heroi__texto { text-align: center; }
+  .heroi__sub { margin: 0 auto; }
+  .selos { justify-content: center; }
+  .heroi__acoes { justify-items: center; }
+  .heroi__acoes .botao { width: 100%; max-width: 380px; }
+}
+
+/* Celular (casca dupla) */
+.celular { position: relative; width: var(--w, 320px); }
+.celular::before {
+  content: ""; position: absolute; inset: -30% -40%; z-index: -1; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255, 138, 61, .30), rgba(255, 138, 61, .08) 55%, transparent);
+}
+.celular__casca {
+  padding: 7px; border-radius: 46px;
+  background: linear-gradient(160deg, rgba(255, 220, 190, .28), rgba(255, 238, 220, .06) 40%, rgba(255, 138, 61, .22));
+  box-shadow: 0 0 0 1px rgba(255, 238, 220, .16), 0 40px 90px -40px rgba(0, 0, 0, .8);
+}
+.tela {
+  position: relative; overflow: hidden; aspect-ratio: 9 / 16; border-radius: 39px;
+  background: #0E0B09; box-shadow: inset 0 0 0 1px rgba(255, 238, 220, .06);
+  isolation: isolate;
+}
+.tela video { width: 100%; height: 100%; object-fit: cover; }
+.tela__progresso { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: rgba(255, 238, 220, .14); z-index: 2; }
+.tela__progresso span { display: block; height: 100%; background: var(--vendas-laranja); transform-origin: left; transform: scaleX(var(--p, 0)); }
+/* Estado carregando e erro do vídeo */
+.tela__estado {
+  position: absolute; inset: 0; z-index: 3; display: none; place-content: center; justify-items: center; gap: 12px;
+  padding: 24px; text-align: center; background: rgba(14, 11, 9, .82); font-size: 14px; color: var(--vendas-texto-suave);
+}
+.tela[data-estado="erro"] .tela__estado--erro { display: grid; }
+.tela[data-estado="carregando"] .tela__estado--carregando { display: grid; background: transparent; }
+.giro { width: 32px; height: 32px; border-radius: 50%; border: 3px solid rgba(255, 238, 220, .18); border-top-color: var(--vendas-laranja); animation: girar .9s linear infinite; }
+@keyframes girar { to { transform: rotate(360deg); } }
+
+.heroi__celular { --w: min(270px, 72vw); }
+@media (min-width: 960px) { .heroi__celular { --w: 300px; } }
+
+/* Cartão "Toque para ouvir" por cima da VSL */
+.vsl-som {
+  position: absolute; inset: 0; z-index: 4; display: grid; place-items: center; padding: 24px;
+  border: 0; background: linear-gradient(180deg, rgba(14, 11, 9, .05), rgba(14, 11, 9, .35)); cursor: pointer;
+  transition: opacity .5s var(--ease), visibility 0s linear .5s;
+}
+.vsl-som[hidden] { display: grid; opacity: 0; visibility: hidden; pointer-events: none; }
+.vsl-som__cartao {
+  display: grid; justify-items: center; gap: 12px; width: min(220px, 72%); padding: 22px 18px 24px;
+  border-radius: 26px; background: linear-gradient(165deg, #FFA466, #FF8A3D 55%, #F2732A);
+  color: var(--vendas-laranja-tinta); text-align: center;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4), 0 0 0 6px rgba(255, 138, 61, .22), 0 24px 60px -16px rgba(0, 0, 0, .7);
+  transition: transform .5s var(--mola);
+}
+.vsl-som__topo { font: 600 13px/1.3 var(--fonte-corpo); }
+.vsl-som__ico { width: 44px; height: 44px; }
+.vsl-som__ico svg { width: 44px; height: 44px; stroke-width: 1.8; }
+.vsl-som__acao { font: 800 22px/1.05 var(--fonte-display); letter-spacing: -.02em; }
+.vsl-som:hover .vsl-som__cartao { transform: scale(1.03); }
+.vsl-som:active .vsl-som__cartao { transform: scale(.97); }
+@media (prefers-reduced-motion: no-preference) {
+  .vsl-som__cartao { animation: pulso 2.4s var(--ease) infinite; }
+}
+@keyframes pulso {
+  0%, 100% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4), 0 0 0 6px rgba(255, 138, 61, .22), 0 24px 60px -16px rgba(0, 0, 0, .7); }
+  50% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4), 0 0 0 14px rgba(255, 138, 61, 0), 0 24px 60px -16px rgba(0, 0, 0, .7); }
+}
+.heroi__legenda { margin-top: 16px; text-align: center; font: 500 12px/1.4 var(--fonte-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--vendas-texto-suave); }
+
+/* =========================================================
+   3. Faixa rolando
+   ========================================================= */
+.faixa {
+  position: relative; overflow: hidden; padding: 18px 0;
+  border-block: 1px solid var(--vendas-linha); background: rgba(255, 138, 61, .04);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.faixa__trilho { display: flex; width: max-content; animation: rolar 40s linear infinite; }
+.faixa__lista { display: flex; align-items: center; flex: none; }
+.faixa__item { display: inline-flex; align-items: center; gap: 28px; padding-right: 28px; white-space: nowrap; font: 700 clamp(18px, 2.4vw, 24px)/1 var(--fonte-display); letter-spacing: -.02em; }
+.faixa__item::after { content: ""; width: 14px; height: 14px; background: var(--vendas-laranja); -webkit-mask: var(--estrela) center / contain no-repeat; mask: var(--estrela) center / contain no-repeat; }
+:root { --estrela: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 0c.6 6.4 5 11 12 12-7 1-11.4 5.6-12 12-.6-6.4-5-11-12-12 7-1 11.4-5.6 12-12z'/%3E%3C/svg%3E"); }
+@keyframes rolar { to { transform: translateX(-50%); } }
+
+/* =========================================================
+   4. Carrossel de estilos
+   ========================================================= */
+.estilos { overflow: hidden; }
+.estilos::before {
+  content: ""; position: absolute; left: 50%; top: 32%; width: 900px; height: 900px; transform: translateX(-50%); z-index: -1; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255, 138, 61, .12), transparent 70%);
+}
+.abas {
+  display: flex; gap: 8px; margin: 0 calc(var(--gutter) * -1) 40px; padding: 4px var(--gutter);
+  overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+}
+.abas::-webkit-scrollbar { display: none; }
+@media (min-width: 900px) { .abas { justify-content: center; flex-wrap: wrap; margin: 0 0 56px; padding: 4px 0; overflow: visible; } }
+.aba {
+  flex: none; scroll-snap-align: center; display: inline-flex; align-items: center; gap: 10px;
+  min-height: 48px; padding: 6px 18px 6px 6px; border-radius: 999px;
+  border: 1px solid var(--vendas-linha); background: rgba(255, 238, 220, .03); color: var(--vendas-texto-suave);
+  font: 500 15px/1 var(--fonte-corpo); cursor: pointer; white-space: nowrap;
+  transition: background .45s var(--ease), color .45s var(--ease), border-color .45s var(--ease), transform .45s var(--ease);
+}
+.aba__num { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 238, 220, .07); font: 500 12px/1 var(--fonte-mono); }
+.aba:hover { color: var(--vendas-texto); border-color: var(--vendas-linha-forte); }
+.aba[aria-selected="true"] { background: var(--vendas-laranja); border-color: var(--vendas-laranja); color: var(--vendas-laranja-tinta); font-weight: 600; box-shadow: 0 10px 30px -12px rgba(255, 138, 61, .9); }
+.aba[aria-selected="true"] .aba__num { background: rgba(26, 15, 7, .14); }
+.dica-abas { display: flex; align-items: center; justify-content: center; gap: 8px; margin: -28px 0 32px; font-size: 13px; color: var(--vendas-texto-suave); }
+@media (min-width: 900px) { .dica-abas { display: none; } }
+
+.palco { display: grid; gap: 32px; justify-items: center; }
+@media (min-width: 900px) {
+  .palco { grid-template-columns: auto minmax(0, 420px); justify-content: center; align-items: center; gap: 96px; }
+}
+.palco__coluna { display: grid; gap: 16px; width: var(--w); --w: min(320px, 82vw); }
+@media (min-width: 900px) { .palco__coluna { --w: 340px; } }
+.palco__barra { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.palco__nome {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 32px; padding: 6px 12px; border-radius: 999px;
+  background: rgba(255, 138, 61, .14); border: 1px solid rgba(255, 138, 61, .4); color: var(--vendas-texto);
+  font: 500 12px/1.2 var(--fonte-mono); letter-spacing: .1em; text-transform: uppercase; max-width: 70%;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.palco__tempo { font: 500 13px/1 var(--fonte-mono); color: var(--vendas-texto-suave); }
+.segmentos { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.segmentos span { height: 3px; border-radius: 3px; background: rgba(255, 238, 220, .14); overflow: hidden; }
+.segmentos span::after { content: ""; display: block; height: 100%; background: var(--vendas-laranja); transform-origin: left; transform: scaleX(var(--p, 0)); }
+.segmentos span.feito::after { transform: scaleX(1); }
+
+/* Moldura com cantos de câmera */
+.moldura {
+  --c: rgba(255, 138, 61, .65); padding: 12px; margin: -12px;
+  background:
+    linear-gradient(var(--c), var(--c)) left top / 20px 2px no-repeat, linear-gradient(var(--c), var(--c)) left top / 2px 20px no-repeat,
+    linear-gradient(var(--c), var(--c)) right top / 20px 2px no-repeat, linear-gradient(var(--c), var(--c)) right top / 2px 20px no-repeat,
+    linear-gradient(var(--c), var(--c)) left bottom / 20px 2px no-repeat, linear-gradient(var(--c), var(--c)) left bottom / 2px 20px no-repeat,
+    linear-gradient(var(--c), var(--c)) right bottom / 20px 2px no-repeat, linear-gradient(var(--c), var(--c)) right bottom / 2px 20px no-repeat;
+}
+.palco .celular { width: 100%; }
+.palco .tela video { transition: opacity .35s var(--ease); }
+.palco .tela.trocando video { opacity: .2; }
+
+.controles { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; }
+.controles__botoes { display: flex; align-items: center; gap: 8px; }
+.circ {
+  width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+  border: 1px solid var(--vendas-linha-forte); background: rgba(255, 238, 220, .04); color: var(--vendas-texto);
+  transition: background .4s var(--ease), border-color .4s var(--ease), transform .4s var(--ease);
+}
+.circ:hover { background: rgba(255, 138, 61, .12); border-color: rgba(255, 138, 61, .6); }
+.circ:active { transform: scale(.94); }
+.circ--cheio { width: 56px; height: 56px; border: 0; background: var(--vendas-laranja); color: var(--vendas-laranja-tinta); box-shadow: 0 12px 32px -12px rgba(255, 138, 61, .9); }
+.circ--cheio:hover { background: #FF9B57; }
+.circ .ico { width: 20px; height: 20px; }
+.circ--cheio .ico { fill: currentColor; stroke: none; }
+.chave { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 4px; border: 0; background: none; cursor: pointer; color: var(--vendas-texto-suave); font-size: 14px; }
+.chave__trilho { position: relative; width: 44px; height: 26px; border-radius: 999px; background: rgba(255, 238, 220, .16); transition: background .4s var(--ease); flex: none; }
+.chave__trilho::after { content: ""; position: absolute; left: 3px; top: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--vendas-texto); transition: transform .5s var(--mola); }
+.chave[aria-checked="true"] { color: var(--vendas-texto); }
+.chave[aria-checked="true"] .chave__trilho { background: var(--vendas-laranja); }
+.chave[aria-checked="true"] .chave__trilho::after { transform: translateX(18px); background: var(--vendas-laranja-tinta); }
+
+.palco__info { display: grid; gap: 16px; width: 100%; max-width: 420px; text-align: left; }
+@media (max-width: 899px) { .palco__info { text-align: center; justify-items: center; } }
+.palco__contador { font: 500 14px/1 var(--fonte-mono); color: var(--vendas-texto-suave); }
+.palco__contador b { color: var(--vendas-texto); font-weight: 500; }
+.palco__titulo { font: 800 clamp(30px, 6vw, 52px)/1.02 var(--fonte-display); letter-spacing: -.04em; text-wrap: balance; }
+.palco__frase { color: var(--vendas-texto-suave); font-size: 17px; line-height: 1.6; max-width: 38ch; }
+.seguinte {
+  display: flex; align-items: center; gap: 14px; width: 100%; max-width: 360px; margin-top: 8px; padding: 10px 16px 10px 10px;
+  border-radius: 18px; border: 1px solid var(--vendas-linha); background: rgba(255, 238, 220, .03); cursor: pointer; text-align: left;
+  transition: background .4s var(--ease), border-color .4s var(--ease);
+}
+.seguinte:hover { background: rgba(255, 138, 61, .08); border-color: rgba(255, 138, 61, .5); }
+.seguinte img { width: 40px; height: 56px; object-fit: cover; border-radius: 8px; flex: none; }
+.seguinte span { display: grid; gap: 2px; flex: 1; min-width: 0; }
+.seguinte small { font-size: 13px; color: var(--vendas-texto-suave); }
+.seguinte strong { font: 700 16px/1.2 var(--fonte-display); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.seguinte .ico { color: var(--vendas-laranja); transition: transform .5s var(--mola); }
+.seguinte:hover .ico { transform: translateX(3px); }
+
+/* =========================================================
+   5. O método na prática
+   ========================================================= */
+.editor { --raio: 32px; }
+.editor .nucleo { overflow: hidden; }
+.editor__topo { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--vendas-linha); }
+.editor__marca { display: inline-flex; align-items: center; gap: 12px; font: 700 15px/1 var(--fonte-display); letter-spacing: .02em; text-transform: uppercase; }
+.editor__marca i { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle at 35% 30%, #FFB27F, #FF8A3D 60%, #C55A1A); color: var(--vendas-laranja-tinta); box-shadow: 0 0 0 4px rgba(255, 138, 61, .18), 0 0 24px rgba(255, 138, 61, .5); }
+.editor__marca i svg { width: 18px; height: 18px; fill: currentColor; stroke: none; }
+.editor__marca b { color: var(--vendas-laranja); font-weight: 700; }
+.status {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 36px; padding: 0 14px 0 8px; border-radius: 999px;
+  border: 1px solid rgba(255, 138, 61, .35); background: rgba(255, 138, 61, .08); font-size: 13px; font-weight: 500; white-space: nowrap;
+}
+.status__pontos { width: 22px; height: 22px; border-radius: 50%; display: grid; grid-auto-flow: column; place-content: center; gap: 2px; background: var(--vendas-laranja); }
+.status__pontos span { width: 3px; height: 3px; border-radius: 50%; background: var(--vendas-laranja-tinta); }
+@media (prefers-reduced-motion: no-preference) { .editor[data-fase]:not([data-fase="5"]) .status__pontos span { animation: ponto 1s var(--ease) infinite; } }
+.status__pontos span:nth-child(2) { animation-delay: .15s !important; }
+.status__pontos span:nth-child(3) { animation-delay: .3s !important; }
+@keyframes ponto { 0%, 100% { opacity: .3; } 50% { opacity: 1; } }
+.editor[data-fase="5"] .status { background: var(--vendas-laranja); color: var(--vendas-laranja-tinta); }
+.editor[data-fase="5"] .status__pontos { background: var(--vendas-laranja-tinta); }
+.editor[data-fase="5"] .status__pontos span { background: var(--vendas-laranja); }
+@media (max-width: 599px) { .editor__topo { padding: 14px 16px; } .status { font-size: 12px; } }
+
+.editor__corpo { display: grid; gap: 16px; padding: 16px; }
+@media (min-width: 900px) { .editor__corpo { grid-template-columns: 220px minmax(0, 1fr); gap: 24px; padding: 24px; } }
+.previa { position: relative; overflow: hidden; border-radius: 20px; border: 1px solid var(--vendas-linha); background: #0E0B09; }
+.previa img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; filter: grayscale(1) brightness(.75); transition: filter 1.2s var(--ease); }
+.editor[data-fase="5"] .previa img { filter: none; }
+.previa__selo { position: absolute; left: 10px; top: 10px; padding: 5px 9px; border-radius: 8px; background: rgba(14, 11, 9, .78); font: 500 11px/1.2 var(--fonte-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--vendas-texto-suave); }
+.editor[data-fase="5"] .previa__selo { background: var(--vendas-laranja); color: var(--vendas-laranja-tinta); }
+.previa__legenda { position: absolute; left: 50%; bottom: 14%; transform: translate(-50%, 8px); padding: 6px 10px; border-radius: 8px; background: rgba(14, 11, 9, .85); font: 800 15px/1.1 var(--fonte-display); white-space: nowrap; opacity: 0; transition: opacity .6s var(--ease), transform .6s var(--ease); }
+.previa__legenda b { color: var(--vendas-laranja); font-weight: 800; }
+.editor[data-fase="4"] .previa__legenda, .editor[data-fase="5"] .previa__legenda { opacity: 1; transform: translate(-50%, 0); }
+@media (max-width: 899px) { .previa { display: none; } }
+@media (min-width: 900px) { .previa { aspect-ratio: auto; height: 100%; min-height: 420px; } }
+
+.editor__trabalho { display: grid; gap: 16px; min-width: 0; }
+.pedido {
+  display: flex; align-items: center; gap: 12px; padding: 10px 10px 10px 12px; border-radius: 16px;
+  border: 1px solid var(--vendas-linha); background: rgba(14, 11, 9, .55); min-height: 60px;
+}
+.pedido__quem { flex: none; padding: 6px 9px; border-radius: 8px; background: rgba(255, 238, 220, .08); font: 500 11px/1 var(--fonte-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--vendas-texto-suave); }
+.pedido__texto { flex: 1; min-width: 0; font: 500 15px/1.4 var(--fonte-mono); color: var(--vendas-texto); }
+.pedido__texto::before { content: "> "; color: var(--vendas-laranja); }
+.pedido__cursor { display: inline-block; width: 8px; height: 1.1em; margin-left: 2px; vertical-align: -3px; background: var(--vendas-laranja); }
+@media (prefers-reduced-motion: no-preference) { .pedido__cursor { animation: piscar 1s steps(1) infinite; } }
+@keyframes piscar { 50% { opacity: 0; } }
+.pedido__enviar { width: 36px; height: 36px; flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--vendas-laranja); color: var(--vendas-laranja-tinta); }
+.pedido__enviar .ico { width: 16px; height: 16px; stroke-width: 2.2; }
+
+.passos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+@media (min-width: 1100px) { .passos { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; } }
+.passo {
+  display: flex; align-items: center; gap: 10px; min-height: 64px; padding: 10px 12px; border-radius: 14px;
+  border: 1px solid var(--vendas-linha); background: rgba(255, 238, 220, .02); color: var(--vendas-texto-suave);
+  transition: border-color .5s var(--ease), background .5s var(--ease), color .5s var(--ease);
+}
+.passo__n { width: 28px; height: 28px; flex: none; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--vendas-linha-forte); font: 500 12px/1 var(--fonte-mono); transition: background .5s var(--ease), color .5s var(--ease), border-color .5s var(--ease); }
+.passo strong { display: block; font: 700 14px/1.2 var(--fonte-display); color: inherit; }
+.passo small { display: block; font-size: 12px; line-height: 1.3; margin-top: 2px; }
+@media (max-width: 599px) { .passo small { display: none; } }
+.passo.ativo { border-color: rgba(255, 138, 61, .7); background: rgba(255, 138, 61, .09); color: var(--vendas-texto); }
+.passo.ativo .passo__n { border-color: var(--vendas-laranja); color: var(--vendas-laranja); }
+.passo.feito { color: var(--vendas-texto); }
+.passo.feito .passo__n { background: var(--vendas-laranja); border-color: var(--vendas-laranja); color: var(--vendas-laranja-tinta); }
+
+.linha-tempo { padding: 16px; border-radius: 18px; border: 1px solid var(--vendas-linha); background: rgba(14, 11, 9, .5); }
+.lt__topo { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 12px; align-items: end; margin-bottom: 12px; }
+@media (max-width: 599px) { .lt__topo { grid-template-columns: 1fr; } }
+.lt__duracao small { display: block; font: 500 10px/1 var(--fonte-mono); letter-spacing: .14em; color: var(--vendas-texto-suave); }
+.lt__duracao b { display: block; margin-top: 6px; font: 700 18px/1 var(--fonte-display); font-variant-numeric: tabular-nums; }
+.regua { display: flex; justify-content: space-between; font: 400 11px/1 var(--fonte-mono); color: var(--vendas-texto-suave); padding-bottom: 6px; border-bottom: 1px dashed var(--vendas-linha); }
+@media (max-width: 599px) { .regua span:nth-child(2), .regua span:nth-child(4) { display: none; } }
+.faixas { position: relative; display: grid; gap: 10px; }
+.faixa-lt { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 12px; align-items: center; }
+@media (max-width: 599px) { .faixa-lt { grid-template-columns: 1fr; gap: 6px; } }
+.faixa-lt__rotulo { display: inline-flex; align-items: center; gap: 8px; font: 500 11px/1 var(--fonte-mono); letter-spacing: .12em; color: var(--vendas-texto-suave); }
+.faixa-lt__rotulo .ico { width: 16px; height: 16px; color: var(--vendas-laranja); }
+.trilha { position: relative; height: 44px; border-radius: 10px; background: rgba(255, 238, 220, .03); overflow: hidden; }
+.trilha--fina { height: 30px; }
+/* Cada peça mora numa camada do tamanho da trilha: deslocar a camada em % move a peça em % da trilha */
+.camada { position: absolute; inset: 0; transition: transform 1.1s var(--ease); }
+.peca { position: absolute; top: 0; bottom: 0; left: var(--de); width: var(--tam); border-radius: 8px; }
+.trilha.cortada .camada { transform: translateX(var(--desloc, 0%)); }
+.peca--video {
+  border: 1px solid rgba(255, 170, 110, .6);
+  background-image: linear-gradient(rgba(255, 138, 61, .28), rgba(255, 138, 61, .28)), var(--img);
+  background-size: auto, auto 100%; background-repeat: no-repeat, repeat-x;
+}
+.peca--audio { border: 1px solid rgba(255, 196, 140, .5); background: rgba(255, 170, 90, .1); display: flex; align-items: center; padding: 0 4px; overflow: hidden; }
+.peca--audio svg { width: 100%; height: 70%; color: #FFC48C; }
+.pausa {
+  border: 1px dashed var(--vendas-perigo-escuro); border-radius: 8px;
+  background: repeating-linear-gradient(135deg, rgba(255, 138, 126, .28) 0 5px, transparent 5px 10px);
+  transform-origin: left center; transition: transform 1s var(--ease), opacity .8s var(--ease), box-shadow .6s var(--ease);
+  opacity: .35;
+}
+.trilha.achou .pausa { opacity: 1; box-shadow: 0 0 22px rgba(255, 138, 126, .35); }
+.trilha.cortada .pausa { transform: scaleX(0); opacity: 0; }
+@media (max-width: 599px) { .pausa__rotulo--curta { display: none; } }
+.pausa__rotulo { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 3px 6px; border-radius: 6px; background: rgba(14, 11, 9, .9); font: 500 10px/1 var(--fonte-mono); color: var(--vendas-perigo-escuro); white-space: nowrap; }
+.legenda-chip {
+  position: absolute; top: 4px; bottom: 4px; left: var(--de); width: var(--tam); display: flex; align-items: center; padding: 0 8px; border-radius: 6px;
+  background: rgba(255, 238, 220, .1); border: 1px solid rgba(255, 238, 220, .25); font: 600 11px/1 var(--fonte-corpo); white-space: nowrap; overflow: hidden;
+  opacity: 0; transform: translateY(6px); transition: opacity .5s var(--ease), transform .5s var(--ease); transition-delay: var(--atraso, 0ms);
+}
+.legenda-chip .curto { display: none; }
+@media (max-width: 599px) { .legenda-chip { padding: 0 5px; font-size: 10px; } .legenda-chip .longo { display: none; } .legenda-chip .curto { display: inline; } }
+.trilha.legendada .legenda-chip { opacity: 1; transform: none; }
+.fim-marca { position: absolute; top: 0; bottom: 0; left: 80%; width: 0; border-left: 1px dashed var(--vendas-laranja); opacity: 0; transition: opacity .6s var(--ease); }
+.editor[data-fase="5"] .fim-marca { opacity: 1; }
+.cabecote { position: absolute; top: -8px; bottom: -4px; left: 100px; right: 0; pointer-events: none; }
+@media (max-width: 599px) { .cabecote { left: 0; } }
+.cabecote__camada { position: absolute; inset: 0; transform: translateX(var(--pos, 0%)); transition: transform var(--dur, 0s) linear; }
+.cabecote__linha { position: absolute; left: 0; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--vendas-laranja); box-shadow: 0 0 12px var(--vendas-laranja); opacity: 0; transition: opacity .4s var(--ease); }
+.editor[data-fase="2"] .cabecote__linha { opacity: 1; }
+
+.dia { display: grid; gap: 12px; margin-top: 24px; }
+@media (min-width: 700px) { .dia { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; } }
+.dia__cartao { position: relative; display: grid; grid-template-columns: auto 1fr; gap: 4px 16px; align-items: center; padding: 20px; border-radius: 22px; border: 1px solid var(--vendas-linha); background: rgba(255, 238, 220, .02); }
+@media (min-width: 700px) { .dia__cartao { grid-template-columns: 1fr; gap: 16px; padding: 24px; } }
+.dia__ico { grid-row: span 2; width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; background: rgba(255, 138, 61, .1); color: var(--vendas-laranja); border: 1px solid rgba(255, 138, 61, .25); }
+@media (min-width: 700px) { .dia__ico { grid-row: auto; } }
+.dia__ico .ico { width: 26px; height: 26px; stroke-width: 1.4; }
+.dia__n { position: absolute; right: 20px; top: 20px; font: 500 12px/1 var(--fonte-mono); color: var(--vendas-texto-suave); }
+.dia__cartao h3 { font: 700 20px/1.1 var(--fonte-display); letter-spacing: -.02em; }
+.dia__cartao p { font-size: 14px; line-height: 1.5; color: var(--vendas-texto-suave); }
+
+/* =========================================================
+   6. O seu próximo editor
+   ========================================================= */
+.direcao { display: grid; gap: 48px; align-items: center; }
+@media (min-width: 900px) { .direcao { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 96px; } }
+.cena-dir { --raio: 32px; }
+.cena-dir .nucleo { position: relative; overflow: hidden; aspect-ratio: 4 / 5; }
+.cena-dir img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%; }
+.cena-dir .nucleo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20, 16, 13, 0) 35%, rgba(20, 16, 13, .92)); }
+.conversa { position: absolute; left: 16px; right: 16px; bottom: 16px; z-index: 1; display: grid; gap: 10px; }
+@media (min-width: 600px) { .conversa { left: 24px; right: 24px; bottom: 24px; } }
+.balao { max-width: 88%; padding: 12px 14px; border-radius: 18px; font-size: 14px; line-height: 1.45; }
+.balao small { display: block; margin-bottom: 4px; font: 500 10px/1 var(--fonte-mono); letter-spacing: .14em; text-transform: uppercase; opacity: .8; }
+.balao--voce { justify-self: end; background: rgba(251, 246, 239, .95); color: var(--vendas-tinta); border-bottom-right-radius: 6px; }
+.balao--claude { justify-self: start; background: rgba(36, 29, 24, .94); border: 1px solid rgba(255, 138, 61, .45); border-bottom-left-radius: 6px; }
+.balao--claude small { color: var(--vendas-laranja); opacity: 1; }
+.js .conversa .balao { opacity: 0; transform: translateY(12px); transition: opacity .7s var(--ease), transform .7s var(--mola); }
+.js .conversa.visivel .balao { opacity: 1; transform: none; }
+.js .conversa.visivel .balao:nth-child(2) { transition-delay: .9s; }
+.js .conversa.visivel .balao:nth-child(3) { transition-delay: 1.8s; }
+.direcao__titulo { font: 800 clamp(40px, 9vw, 72px)/1 var(--fonte-display); letter-spacing: -.045em; margin: 4px 0 28px; }
+.direcao__titulo span { display: block; }
+.direcao p { color: var(--vendas-texto-suave); font-size: 17px; line-height: 1.65; max-width: 44ch; }
+.direcao p strong { color: var(--vendas-texto); font-weight: 600; }
+.traco { width: 72px; height: 2px; margin: 28px 0; background: linear-gradient(90deg, var(--vendas-laranja), transparent); border: 0; }
+.direcao__frase { font: 700 clamp(20px, 3vw, 26px)/1.3 var(--fonte-display); letter-spacing: -.02em; }
+.direcao__frase em { font-style: normal; color: var(--vendas-laranja); }
+.link-seta { display: inline-flex; align-items: center; gap: 14px; margin-top: 32px; min-height: 44px; font-weight: 600; text-decoration: none; }
+.link-seta span { border-bottom: 1px solid var(--vendas-linha-forte); padding-bottom: 2px; transition: border-color .4s var(--ease); }
+.link-seta i { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--vendas-linha-forte); transition: transform .5s var(--mola), border-color .4s var(--ease); }
+.link-seta:hover span { border-color: var(--vendas-laranja); }
+.link-seta:hover i { transform: translateY(3px); border-color: var(--vendas-laranja); }
+
+/* =========================================================
+   7. Para quem é (fundo creme)
+   ========================================================= */
+.creme { background: var(--vendas-creme); color: var(--vendas-tinta); }
+.creme .olho { color: var(--vendas-laranja-forte); }
+.creme .titulo .laranja { color: var(--vendas-laranja-forte); }
+.creme .apoio { color: var(--vendas-tinta-suave); }
+.creme :focus-visible { outline-color: var(--vendas-laranja-forte); }
+.cenas { display: grid; gap: 48px; }
+@media (min-width: 900px) { .cenas { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; } }
+.cena__tela {
+  position: relative; overflow: hidden; height: 260px; border-radius: 26px; background: #1E1814; color: var(--vendas-texto);
+  background-image: radial-gradient(rgba(255, 238, 220, .09) 1px, transparent 1px); background-size: 16px 16px;
+  box-shadow: 0 0 0 1px rgba(28, 23, 20, .1), 0 30px 60px -30px rgba(90, 40, 0, .45);
+}
+.cena__tela::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(255, 138, 61, .35); pointer-events: none; }
+.cena__rotulo { display: flex; align-items: center; gap: 10px; margin: 24px 0 10px; }
+.cena__n { padding: 5px 9px; border-radius: 999px; background: var(--vendas-tinta); color: var(--vendas-creme); font: 500 12px/1 var(--fonte-mono); }
+.cena__tag { font: 500 12px/1 var(--fonte-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--vendas-laranja-forte); }
+.cena h3 { font: 800 22px/1.15 var(--fonte-display); letter-spacing: -.025em; max-width: 22ch; }
+.cena p { margin-top: 8px; color: var(--vendas-tinta-suave); font-size: 16px; line-height: 1.55; max-width: 34ch; }
+.anima { animation-play-state: paused !important; }
+.em-vista .anima { animation-play-state: running !important; }
+
+/* Cena ADS */
+.ads { position: absolute; inset: 24px; display: grid; grid-template-columns: 112px 1fr; gap: 16px; }
+.ads__celular { border-radius: 18px; border: 1px solid rgba(255, 238, 220, .18); background: #2A221C; padding: 10px; display: grid; gap: 8px; align-content: start; }
+.ads__foto { height: 92px; border-radius: 10px; background: linear-gradient(160deg, #FF9B57, #C2551A); display: grid; place-items: end center; overflow: hidden; }
+.ads__foto::before { content: ""; width: 40px; height: 40px; margin-bottom: -6px; border-radius: 50% 50% 0 0; background: rgba(26, 15, 7, .4); box-shadow: 0 -34px 0 -8px rgba(26, 15, 7, .4); }
+.barra-cinza { height: 6px; border-radius: 4px; background: rgba(255, 238, 220, .2); }
+.barra-cinza--curta { width: 60%; }
+.ads__cta { height: 20px; border-radius: 8px; background: var(--vendas-laranja); width: 70%; }
+.ads__queda { position: absolute; left: 92px; top: -8px; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--vendas-laranja); color: var(--vendas-laranja-tinta); }
+.ads__queda .ico { width: 16px; height: 16px; stroke-width: 2.2; }
+.ads__versoes { display: grid; gap: 8px; align-content: center; }
+.versao {
+  display: flex; align-items: center; gap: 8px; height: 50px; padding: 0 10px; border-radius: 12px;
+  border: 1px dashed rgba(255, 238, 220, .25); font: 600 13px/1 var(--fonte-corpo); color: var(--vendas-texto-suave);
+  animation: versao 6s var(--ease) infinite both; animation-delay: calc(var(--i) * .7s);
+}
+.versao__thumb { width: 26px; height: 32px; border-radius: 6px; background: linear-gradient(160deg, #FFB27F, #C2551A); flex: none; }
+.versao__ok { margin-left: auto; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; background: var(--vendas-laranja); color: var(--vendas-laranja-tinta); }
+.versao__ok .ico { width: 12px; height: 12px; stroke-width: 3; }
+@keyframes versao {
+  0%, 8% { opacity: .25; border-style: dashed; background: transparent; }
+  18%, 85% { opacity: 1; border-style: solid; border-color: rgba(255, 138, 61, .55); background: rgba(255, 138, 61, .08); color: var(--vendas-texto); }
+  100% { opacity: .25; }
+}
+
+/* Cena CONTEÚDO */
+.pasta { position: absolute; inset: 20px; border-radius: 18px; border: 1px solid rgba(255, 238, 220, .16); background: #2A221C; overflow: hidden; }
+.pasta__topo { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 14px; border-bottom: 1px solid rgba(255, 238, 220, .1); font: 700 15px/1 var(--fonte-display); }
+.pasta__topo > span { display: inline-flex; align-items: center; gap: 8px; }
+.pasta__topo .ico { color: var(--vendas-laranja); }
+.dias { position: relative; width: 92px; height: 28px; border-radius: 999px; border: 1px solid rgba(255, 138, 61, .5); background: rgba(255, 138, 61, .1); overflow: hidden; font: 500 12px/28px var(--fonte-mono); color: #FFB27F; text-align: center; }
+.dias span { position: absolute; inset: 0; opacity: 0; animation: dia 10s var(--ease) infinite; animation-delay: calc(var(--i) * 2s); }
+@keyframes dia { 0% { opacity: 0; transform: translateY(8px); } 3%, 18% { opacity: 1; transform: none; } 21%, 100% { opacity: 0; transform: translateY(-8px); } }
+.arquivos { position: relative; height: calc(100% - 53px); overflow: hidden; }
+.arquivos__lista { display: grid; animation: empilha 10s var(--ease) infinite; }
+@keyframes empilha { 0% { transform: translateY(-176px); } 20% { transform: translateY(-132px); } 40% { transform: translateY(-88px); } 60% { transform: translateY(-44px); } 80%, 100% { transform: translateY(0); } }
+.arquivo { display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 14px; border-bottom: 1px solid rgba(255, 238, 220, .07); font: 500 13px/1 var(--fonte-mono); }
+.arquivo .ico { width: 16px; height: 16px; }
+.arquivo .ico:first-child { color: var(--vendas-texto-suave); }
+.arquivo .ico:last-child { margin-left: auto; color: #FFB27F; }
+.carimbo {
+  position: absolute; right: 18px; bottom: 22px; z-index: 1; padding: 8px 12px; border: 2px solid var(--vendas-laranja); border-radius: 8px;
+  background: rgba(30, 24, 20, .9); color: var(--vendas-laranja); font: 500 11px/1 var(--fonte-mono); letter-spacing: .14em; transform: rotate(-5deg);
+}
+
+/* Cena NEGÓCIO */
+.oferta-cel { position: absolute; left: 50%; top: 22px; width: 150px; height: 300px; transform: translateX(-50%); border-radius: 26px; border: 1px solid rgba(255, 238, 220, .2); background: #2A221C; padding: 12px 10px; overflow: hidden; }
+.oferta-cel h4 { font: 700 13px/1 var(--fonte-display); margin: 4px 2px 10px; }
+.paredao { display: grid; gap: 6px; animation: paredao 5s cubic-bezier(.5, 0, .2, 1) infinite; }
+.paredao span { height: 5px; border-radius: 3px; background: rgba(255, 238, 220, .2); }
+.paredao span:nth-child(3n) { width: 70%; }
+.paredao span:nth-child(4n+1) { width: 92%; }
+@keyframes paredao { 0%, 10% { transform: translateY(0); } 70%, 100% { transform: translateY(-150px); } }
+.rolagem { position: absolute; left: calc(50% - 110px); top: 40px; width: 6px; height: 170px; border-radius: 4px; background: rgba(255, 238, 220, .12); }
+.rolagem::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 40px; border-radius: 4px; background: var(--vendas-laranja); animation: barra-rola 5s cubic-bezier(.5, 0, .2, 1) infinite; }
+@keyframes barra-rola { 0%, 10% { transform: translateY(0); } 70%, 100% { transform: translateY(130px); } }
+.duvida { position: absolute; right: calc(50% - 112px); top: 46px; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--vendas-laranja); color: var(--vendas-laranja-tinta); font: 800 22px/1 var(--fonte-display); animation: duvida 5s var(--mola) infinite; }
+@keyframes duvida { 0%, 55% { transform: scale(0); } 65%, 92% { transform: scale(1); } 100% { transform: scale(0); } }
+
+.virada {
+  display: grid; gap: 24px; margin-top: 64px; padding: 32px 24px; border-radius: 28px; background: var(--vendas-fundo); color: var(--vendas-texto);
+  box-shadow: 10px 10px 0 var(--vendas-laranja);
+}
+@media (min-width: 900px) { .virada { grid-template-columns: minmax(0, 1fr) auto; align-items: center; padding: 40px 48px; gap: 48px; } }
+.virada h3 { font: 800 clamp(24px, 3.4vw, 32px)/1.15 var(--fonte-display); letter-spacing: -.03em; }
+.virada h3 em { font-style: normal; color: var(--vendas-laranja); }
+.virada p { margin-top: 10px; color: var(--vendas-texto-suave); }
+.virada :focus-visible { outline-color: var(--vendas-laranja); }
+
+/* =========================================================
+   8. O que vem no pacote
+   ========================================================= */
+.bento { display: grid; gap: 16px; }
+@media (min-width: 900px) { .bento { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 20px; } }
+.bloco { --raio: 28px; }
+.bloco .nucleo { height: 100%; padding: 24px; display: grid; gap: 16px; align-content: start; }
+@media (min-width: 900px) { .bloco .nucleo { padding: 32px; } }
+.b-skills { grid-column: span 7; grid-row: span 2; }
+.b-time { grid-column: span 5; grid-row: span 2; }
+.b-prompts, .b-modos, .b-comece { grid-column: span 4; }
+.b-legendas { grid-column: 1 / -1; }
+.b-aula { grid-column: span 6; }
+@media (max-width: 899px) { .bento > * { grid-column: auto !important; grid-row: auto !important; } }
+.bloco__qtd { display: flex; align-items: baseline; gap: 12px; }
+.bloco__qtd b { font: 800 clamp(48px, 8vw, 72px)/.9 var(--fonte-display); letter-spacing: -.05em; color: var(--vendas-laranja); font-variant-numeric: tabular-nums; }
+.bloco__qtd span { font: 700 20px/1.2 var(--fonte-display); letter-spacing: -.02em; }
+.bloco h3 { font: 700 20px/1.2 var(--fonte-display); letter-spacing: -.02em; }
+.bloco p { color: var(--vendas-texto-suave); font-size: 15px; line-height: 1.6; }
+.sub-rotulo { margin-top: 8px; font: 500 11px/1.4 var(--fonte-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--vendas-texto-suave); }
+.autorais { display: grid; gap: 10px; }
+.autoral { display: grid; gap: 4px; padding: 14px 16px; border-radius: 16px; background: rgba(255, 138, 61, .07); border: 1px solid rgba(255, 138, 61, .28); }
+.autoral code { font: 500 14px/1.3 var(--fonte-mono); color: var(--vendas-laranja); }
+.autoral span { font-size: 14px; color: var(--vendas-texto-suave); line-height: 1.5; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; align-items: center; min-height: 32px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--vendas-linha); background: rgba(255, 238, 220, .03); font: 500 13px/1.2 var(--fonte-mono); color: var(--vendas-texto); }
+.chip--corpo { font-family: var(--fonte-corpo); font-size: 14px; }
+.agentes { display: grid; gap: 8px; }
+.agente { display: grid; grid-template-columns: 40px 1fr; gap: 12px; align-items: center; padding: 10px 12px; border-radius: 14px; border: 1px solid var(--vendas-linha); background: rgba(255, 238, 220, .02); }
+.agente i { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: rgba(255, 138, 61, .1); color: var(--vendas-laranja); font: 500 13px/1 var(--fonte-mono); font-style: normal; }
+.agente strong { display: block; font: 700 15px/1.2 var(--fonte-display); }
+.agente small { display: block; font-size: 13px; color: var(--vendas-texto-suave); line-height: 1.35; }
+.agente--lider { border-color: rgba(255, 138, 61, .45); background: rgba(255, 138, 61, .07); }
+.agente--lider i { background: var(--vendas-laranja); color: var(--vendas-laranja-tinta); }
+/* Celular: time em 2 colunas e skills mais enxutas, para os blocos não ocuparem várias telas */
+@media (max-width: 699px) {
+  .agentes { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .agente { grid-template-columns: 1fr; gap: 6px; align-items: start; padding: 10px; border-radius: 12px; }
+  .agente i { width: 26px; height: 26px; border-radius: 8px; font-size: 11px; }
+  .agente strong { font-size: 14px; }
+  .agente small { font-size: 12px; line-height: 1.3; }
+  .autorais { gap: 6px; }
+  .autoral { gap: 2px; padding: 10px 12px; border-radius: 12px; }
+  .autoral code { font-size: 13px; }
+  .autoral span { font-size: 12.5px; line-height: 1.4; }
+  .chips { gap: 6px; }
+  .chip { min-height: 26px; padding: 4px 9px; font-size: 11.5px; }
+}
+.prompts { display: grid; gap: 6px; counter-reset: p; }
+.prompts li { counter-increment: p; display: flex; gap: 10px; font-size: 14px; color: var(--vendas-texto-suave); line-height: 1.4; }
+.prompts li::before { content: counter(p, decimal-leading-zero); font: 500 12px/1.6 var(--fonte-mono); color: var(--vendas-laranja); }
+.estilos-leg { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 2px 2px 10px; margin: 0 -2px; scrollbar-width: thin; }
+.leg { position: relative; flex: 0 0 148px; scroll-snap-align: start; margin: 0; border-radius: 16px; overflow: hidden; background: #0E0B09; border: 1px solid var(--vendas-linha); }
+.leg img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
+.leg figcaption { padding: 8px 10px 10px; font: 600 12px/1.2 var(--fonte-corpo); color: var(--vendas-texto); }
+.leg figcaption small { display: block; font: 500 10px/1 var(--fonte-mono); color: var(--vendas-laranja); letter-spacing: .08em; margin-bottom: 4px; position: static; background: none; padding: 0; }
+@media (min-width: 900px) { .leg { flex-basis: 160px; } }
+.leg span { position: absolute; left: 50%; bottom: 14%; transform: translateX(-50%); white-space: nowrap; font: 800 13px/1 var(--fonte-display); }
+.leg--1 span { padding: 4px 6px; border-radius: 6px; background: var(--vendas-laranja); color: var(--vendas-laranja-tinta); }
+.leg--2 span { color: #fff; text-shadow: 0 2px 0 #000, 0 0 8px #000; font-size: 15px; text-transform: uppercase; }
+.leg--2 span b { color: #FFB27F; }
+.leg--3 span { padding: 4px 8px; border-radius: 6px; background: rgba(14, 11, 9, .85); color: #fff; font-family: var(--fonte-corpo); font-weight: 600; }
+.leg small { position: absolute; left: 8px; top: 8px; font: 500 10px/1 var(--fonte-mono); color: var(--vendas-texto); background: rgba(14, 11, 9, .7); padding: 3px 5px; border-radius: 5px; }
+.instala { display: grid; gap: 8px; padding: 14px; border-radius: 16px; background: #0E0B09; border: 1px solid var(--vendas-linha); font: 400 13px/1.4 var(--fonte-mono); }
+.instala__arq { display: flex; align-items: center; gap: 8px; color: var(--vendas-texto); padding-bottom: 8px; border-bottom: 1px dashed var(--vendas-linha); }
+.instala__arq .ico { color: var(--vendas-laranja); width: 16px; height: 16px; }
+.instala li { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: var(--vendas-texto-suave); }
+.instala li b { font-weight: 500; color: var(--vendas-laranja); }
+.aula { display: grid; grid-template-columns: 120px 1fr; gap: 16px; align-items: center; }
+@media (min-width: 900px) { .b-aula .nucleo { align-content: center; } .aula { grid-template-columns: 170px 1fr; gap: 24px; } .aula h3 { font-size: 24px; } }
+.aula__thumb { position: relative; aspect-ratio: 9 / 13; border-radius: 14px; overflow: hidden; }
+.aula__thumb img { width: 100%; height: 100%; object-fit: cover; }
+.capa3d img { height: auto; }
+.aula__thumb i { display: none; }
+.aula__thumb i span { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--vendas-laranja); color: var(--vendas-laranja-tinta); }
+.aula__thumb i svg { width: 14px; height: 14px; fill: currentColor; stroke: none; margin-left: 2px; }
+
+/* Bloco interativo: com e sem skills */
+.compara { display: grid; gap: 40px; margin-top: 96px; align-items: center; }
+@media (min-width: 1000px) { .compara { grid-template-columns: minmax(0, 1fr) 300px minmax(0, 1fr); gap: 48px; margin-top: 136px; } }
+.compara__texto { order: -1; }
+@media (min-width: 1000px) { .compara__texto { order: 3; } }
+.compara__texto h3 { font: 800 clamp(30px, 5vw, 44px)/1.05 var(--fonte-display); letter-spacing: -.04em; margin: 16px 0; }
+.compara__texto h3 em { font-style: normal; color: var(--vendas-laranja); }
+.compara__texto p { color: var(--vendas-texto-suave); max-width: 42ch; }
+.compara__texto .botao { margin-top: 28px; }
+.interruptor {
+  display: flex; align-items: center; gap: 14px; width: 100%; min-height: 64px; padding: 10px 16px 10px 10px; border-radius: 22px; cursor: pointer;
+  border: 1px solid var(--vendas-linha-forte); background: rgba(255, 238, 220, .03); text-align: left;
+  transition: border-color .5s var(--ease), background .5s var(--ease);
+}
+.interruptor__trilho { position: relative; width: 64px; height: 40px; flex: none; border-radius: 999px; background: rgba(255, 238, 220, .14); transition: background .5s var(--ease); }
+.interruptor__trilho::after { content: ""; position: absolute; left: 4px; top: 4px; width: 32px; height: 32px; border-radius: 50%; background: var(--vendas-texto); transition: transform .6s var(--mola), background .4s var(--ease); }
+.interruptor[aria-checked="true"] { border-color: rgba(255, 138, 61, .6); background: rgba(255, 138, 61, .08); }
+.interruptor[aria-checked="true"] .interruptor__trilho { background: var(--vendas-laranja); }
+.interruptor[aria-checked="true"] .interruptor__trilho::after { transform: translateX(24px); background: var(--vendas-laranja-tinta); }
+.interruptor strong { font: 700 17px/1 var(--fonte-display); }
+.interruptor small { display: block; margin-top: 4px; font-size: 13px; color: var(--vendas-texto-suave); }
+.interruptor__conta { margin-left: auto; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--vendas-linha); font: 500 13px/1 var(--fonte-mono); }
+.seu-pedido { margin-top: 12px; padding: 18px; border-radius: 20px; border: 1px solid var(--vendas-linha); background: rgba(255, 238, 220, .02); }
+.seu-pedido small { font: 500 11px/1 var(--fonte-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--vendas-texto-suave); }
+.seu-pedido p { margin-top: 8px; font: 700 18px/1.3 var(--fonte-display); }
+.criterios { display: grid; gap: 6px; margin-top: 12px; }
+.criterio {
+  display: grid; grid-template-columns: 36px 1fr; gap: 12px; align-items: center; padding: 8px 12px 8px 8px; border-radius: 14px;
+  border: 1px solid var(--vendas-linha); color: var(--vendas-texto-suave); opacity: .55;
+  transition: opacity .5s var(--ease), border-color .5s var(--ease), background .5s var(--ease), color .5s var(--ease);
+  transition-delay: calc(var(--i) * 140ms);
+}
+.criterio i { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: rgba(255, 238, 220, .06); transition: background .5s var(--ease), color .5s var(--ease); transition-delay: inherit; }
+.criterio i .ico { width: 18px; height: 18px; }
+.criterio strong { display: block; font: 700 15px/1.2 var(--fonte-display); color: var(--vendas-texto); }
+.criterio small { display: block; font-size: 13px; line-height: 1.35; }
+.ligado .criterio { opacity: 1; border-color: rgba(255, 138, 61, .4); background: rgba(255, 138, 61, .06); }
+.ligado .criterio i { background: var(--vendas-laranja); color: var(--vendas-laranja-tinta); }
+.compara__celular { justify-self: center; --w: min(280px, 76vw); }
+@media (min-width: 1000px) { .compara__celular { --w: 300px; } }
+.compara__selo { position: absolute; left: 50%; top: -14px; z-index: 5; transform: translateX(-50%); padding: 7px 12px; border-radius: 999px; background: var(--vendas-fundo-elevado); border: 1px solid var(--vendas-linha-forte); font: 500 11px/1 var(--fonte-mono); letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; transition: background .4s var(--ease), color .4s var(--ease); }
+.ligado .compara__selo { background: var(--vendas-laranja); color: var(--vendas-laranja-tinta); border-color: var(--vendas-laranja); }
+.compara__celular video { transition: filter .8s var(--ease); }
+.compara:not(.ligado) .compara__celular video { filter: grayscale(.85) brightness(.8); }
+.adivinha { position: absolute; inset: auto 16px 20px; z-index: 3; padding: 12px; border-radius: 14px; border: 1px dashed rgba(255, 238, 220, .35); background: rgba(14, 11, 9, .8); text-align: center; font-size: 13px; color: var(--vendas-texto-suave); transition: opacity .5s var(--ease); }
+.ligado .adivinha { opacity: 0; }
+/* Com skills: leque 3D de vídeos editados no alto e o vídeo principal emoldurado embaixo */
+.compara .tela { transition: background .8s var(--ease); }
+.compara.ligado .tela { background: radial-gradient(ellipse 90% 50% at 50% 35%, rgba(255, 138, 61, .28), transparent 70%), linear-gradient(180deg, #24180F, #120D0A); }
+.compara #compara-video { position: absolute; left: 0; top: 0; width: 100%; height: 100%; transition: filter .8s var(--ease), left .8s var(--ease), top .8s var(--ease), width .8s var(--ease), height .8s var(--ease), border-radius .8s var(--ease), box-shadow .8s var(--ease); }
+.compara.ligado #compara-video { left: 7%; top: 41%; width: 86%; height: 52%; border-radius: 16px; box-shadow: 0 0 0 2px var(--vendas-laranja), 0 18px 40px rgba(0, 0, 0, .55), 0 0 40px rgba(255, 138, 61, .35); }
+.cantos-com { position: absolute; left: 4%; top: 39%; width: 92%; height: 56%; z-index: 2; opacity: 0; transition: opacity .6s var(--ease) .5s; pointer-events: none;
+  background:
+    linear-gradient(var(--vendas-laranja), var(--vendas-laranja)) left top / 16px 2px no-repeat, linear-gradient(var(--vendas-laranja), var(--vendas-laranja)) left top / 2px 16px no-repeat,
+    linear-gradient(var(--vendas-laranja), var(--vendas-laranja)) right top / 16px 2px no-repeat, linear-gradient(var(--vendas-laranja), var(--vendas-laranja)) right top / 2px 16px no-repeat,
+    linear-gradient(var(--vendas-laranja), var(--vendas-laranja)) left bottom / 16px 2px no-repeat, linear-gradient(var(--vendas-laranja), var(--vendas-laranja)) left bottom / 2px 16px no-repeat,
+    linear-gradient(var(--vendas-laranja), var(--vendas-laranja)) right bottom / 16px 2px no-repeat, linear-gradient(var(--vendas-laranja), var(--vendas-laranja)) right bottom / 2px 16px no-repeat; }
+.ligado .cantos-com { opacity: 1; }
+.leque3d { position: absolute; left: 0; right: 0; top: 6%; height: 31%; z-index: 2; perspective: 600px; opacity: 0; transform: translateY(-12px); transition: opacity .7s var(--ease) .3s, transform .7s var(--ease) .3s; pointer-events: none; }
+.ligado .leque3d { opacity: 1; transform: none; }
+.leque3d__trilho { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; transform-style: preserve-3d; transform: rotateX(6deg) rotateY(-22deg); }
+.ligado .leque3d__trilho { animation: leque 7s ease-in-out infinite alternate; }
+@keyframes leque { from { transform: rotateX(6deg) rotateY(-24deg); } to { transform: rotateX(4deg) rotateY(-8deg); } }
+.leque3d img { width: 23%; height: auto; aspect-ratio: 9 / 16; object-fit: cover; margin: 0 -1%; border-radius: 9px; border: 1px solid rgba(255, 238, 220, .35); box-shadow: 0 14px 26px rgba(0, 0, 0, .6); }
+.leque3d img:nth-child(1) { transform: translateZ(-40px) rotateY(14deg); }
+.leque3d img:nth-child(2) { transform: translateZ(-10px) rotateY(8deg); }
+.leque3d img:nth-child(3) { transform: translateZ(20px); border-color: var(--vendas-laranja); }
+.leque3d img:nth-child(4) { transform: translateZ(40px) rotateY(-6deg); }
+@media (prefers-reduced-motion: reduce) { .ligado .leque3d__trilho { animation: none; } .compara #compara-video { transition: none; } }
+
+/* =========================================================
+   9. Sobre
+   ========================================================= */
+.sobre { display: grid; gap: 40px; align-items: center; }
+@media (min-width: 900px) { .sobre { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 96px; } }
+.sobre__foto { --raio: 36px; max-width: 420px; width: 100%; justify-self: center; }
+@media (min-width: 900px) { .sobre__foto { transform: rotate(-2deg); } }
+.sobre__foto .nucleo { overflow: hidden; aspect-ratio: 4 / 5; }
+.sobre__foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; }
+.sobre h2 { font: 800 clamp(36px, 6vw, 56px)/1 var(--fonte-display); letter-spacing: -.045em; }
+.sobre__papel { margin: 12px 0 24px; color: var(--vendas-laranja); font-weight: 500; }
+.sobre p:not(.sobre__papel):not(.olho) { color: var(--vendas-texto-suave); font-size: 17px; line-height: 1.7; max-width: 52ch; }
+.sobre p + p { margin-top: 16px; }
+.sobre .botao-contorno { margin-top: 28px; }
+
+/* =========================================================
+   10. Preço
+   ========================================================= */
+.preco-secao::before {
+  content: ""; position: absolute; left: 50%; top: 10%; width: 1100px; height: 1100px; transform: translateX(-50%); z-index: -1; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255, 138, 61, .16), transparent 70%);
+}
+.cartao-preco { --raio: 30px; max-width: 640px; margin: 0 auto; }
+.cartao-preco .nucleo { padding: 28px 18px 26px; text-align: center; background: linear-gradient(180deg, #2A2019 0%, #1C1612 60%, #191410 100%); }
+@media (min-width: 700px) { .cartao-preco .nucleo { padding: 40px 48px 36px; } }
+.capa3d { perspective: 1200px; margin: 18px auto 6px; max-width: 420px; }
+.capa3d img { display: block; width: 100%; height: auto; border-radius: 18px; border: 1px solid rgba(255, 138, 61, .45);
+  transform: rotateX(10deg) rotateY(-12deg) rotateZ(1deg); transform-origin: 50% 60%;
+  box-shadow: 18px 28px 50px rgba(0, 0, 0, .55), 0 0 60px rgba(255, 138, 61, .22); transition: transform .8s var(--ease); }
+.capa3d:hover img { transform: rotateX(4deg) rotateY(-4deg); }
+@media (prefers-reduced-motion: reduce) { .capa3d img { transition: none; } }
+.cartao-preco__marca { display: inline-flex; align-items: center; gap: 14px; margin: 24px 0 16px; text-align: left; }
+.cartao-preco__marca .marca__icone { width: 56px; height: 56px; border-radius: 16px; box-shadow: 4px 4px 0 var(--vendas-azul); }
+.cartao-preco__marca .marca__icone svg { width: 28px; height: 28px; }
+.cartao-preco__marca strong { display: block; font: 800 clamp(24px, 5vw, 36px)/1 var(--fonte-display); letter-spacing: -.04em; }
+.cartao-preco__marca small { display: block; margin-top: 6px; font: 500 12px/1 var(--fonte-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--vendas-texto-suave); }
+.cartao-preco__desc { max-width: 48ch; margin: 0 auto; color: var(--vendas-texto-suave); }
+@media (max-width: 699px) { .cartao-preco__desc { display: none; } .recebe__destaque { display: none !important; } .cartao-preco__marca { margin: 14px 0 0; } .capa3d { max-width: 300px; } }
+.divisor-rotulo--depois { margin-top: 28px; }
+.divisor-rotulo { display: flex; align-items: center; gap: 16px; margin: 22px 0 10px; font: 500 12px/1 var(--fonte-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--vendas-laranja); }
+.divisor-rotulo::before, .divisor-rotulo::after { content: ""; flex: 1; height: 1px; background: var(--vendas-linha); }
+.recebe { display: grid; gap: 0; text-align: left; }
+@media (min-width: 700px) { .recebe { grid-template-columns: 1fr 1fr; column-gap: 32px; } }
+.recebe li { display: flex; align-items: flex-start; gap: 8px; padding: 8px 0; font-size: 14px; border-bottom: 1px solid rgba(255, 238, 220, .08); font-size: 15px; line-height: 1.45; }
+.recebe li b { font-weight: 600; }
+.check { width: 24px; height: 24px; flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--vendas-laranja); color: var(--vendas-laranja-tinta); box-shadow: 0 0 14px rgba(255, 138, 61, .45); }
+.check .ico { width: 14px; height: 14px; stroke-width: 2.6; }
+.recebe__destaque { grid-column: 1 / -1; justify-self: stretch; display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 8px; padding: 12px 16px; border-radius: 16px; border: 1px solid rgba(255, 138, 61, .45); background: rgba(255, 138, 61, .08); font: 600 15px/1.3 var(--fonte-corpo); }
+.valor { margin-top: 14px; padding-top: 18px; border-top: 1px solid var(--vendas-linha); }
+.valor__de { font-size: 16px; color: var(--vendas-texto-suave); }
+.valor__de s { color: var(--vendas-texto); text-decoration-thickness: 2px; text-decoration-color: var(--vendas-perigo-escuro); }
+.valor__por { display: flex; justify-content: center; align-items: flex-start; gap: 8px; margin: 4px 0 4px; line-height: .82; }
+.valor__rs { margin-top: .7em; font: 800 clamp(26px, 5vw, 40px)/1 var(--fonte-display); color: var(--vendas-laranja); }
+.valor__num {
+  font: 800 clamp(96px, 26vw, 150px)/.82 var(--fonte-display); letter-spacing: -.06em; font-variant-numeric: tabular-nums;
+  background: linear-gradient(180deg, #FFF6EC 20%, #FFB27F 100%); -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 10px 40px rgba(255, 138, 61, .35));
+}
+.valor__cent { margin-top: .5em; font: 800 clamp(26px, 5vw, 40px)/1 var(--fonte-display); color: var(--vendas-laranja); }
+.valor__tipo { display: inline-flex; align-items: center; gap: 10px; margin-top: 16px; font-size: 15px; color: var(--vendas-texto-suave); }
+.valor__tipo b { color: var(--vendas-texto); font-weight: 600; }
+.valor__tipo i { width: 4px; height: 4px; border-radius: 50%; background: var(--vendas-laranja); }
+.cartao-preco .botao { margin-top: 28px; max-width: 520px; }
+.garantia-linha { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 16px; margin-top: 16px; font-size: 14px; color: var(--vendas-texto-suave); }
+.garantia-linha span { display: inline-flex; align-items: center; gap: 6px; }
+.garantia-linha b { color: var(--vendas-texto); font-weight: 600; }
+.garantia-linha .ico { width: 16px; height: 16px; color: var(--vendas-laranja); }
+/* Estados do preço (vindo do banco) */
+.esqueleto { display: none; }
+.cartao-preco[data-estado="carregando"] .valor__real { display: none; }
+.cartao-preco[data-estado="carregando"] .esqueleto { display: grid; justify-items: center; gap: 12px; }
+.esqueleto span { width: 120px; height: 16px; border-radius: 8px; background: linear-gradient(90deg, rgba(255, 238, 220, .06), rgba(255, 238, 220, .14), rgba(255, 238, 220, .06)); background-size: 200% 100%; animation: brilhar 1.4s linear infinite; }
+.esqueleto span:nth-child(2) { width: 220px; height: 120px; border-radius: 20px; }
+.esqueleto span:nth-child(3) { width: min(100%, 520px); height: 64px; border-radius: 18px; }
+@keyframes brilhar { to { background-position: -200% 0; } }
+.erro-preco { display: none; padding: 20px; border-radius: 18px; border: 1px solid rgba(255, 138, 126, .45); background: rgba(255, 138, 126, .08); text-align: center; }
+.erro-preco p { color: var(--vendas-texto); }
+.erro-preco a { display: inline-flex; margin-top: 12px; }
+.cartao-preco[data-estado="erro"] .valor__real { display: none; }
+.cartao-preco[data-estado="erro"] .erro-preco { display: block; }
+
+.ofertas { display: grid; gap: 16px; max-width: 820px; margin: 32px auto 0; }
+@media (min-width: 700px) { .ofertas { grid-template-columns: 1fr 1fr; } }
+.oferta {
+  display: grid; gap: 4px; padding: 22px 20px; border-radius: 24px; text-decoration: none;
+  border: 1px solid var(--vendas-linha); background: rgba(255, 238, 220, .025);
+  transition: border-color .4s var(--ease), background .4s var(--ease), transform .4s var(--ease);
+}
+.oferta:hover { border-color: rgba(255, 138, 61, .55); background: rgba(255, 138, 61, .06); transform: translateY(-2px); }
+.oferta__tag { font: 500 11px/1 var(--fonte-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--vendas-laranja); }
+.oferta strong { margin-top: 6px; font: 700 20px/1.2 var(--fonte-display); letter-spacing: -.02em; }
+.oferta__preco { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; margin-top: 8px; font-size: 15px; color: var(--vendas-texto-suave); }
+.oferta__preco s { text-decoration-color: var(--vendas-perigo-escuro); }
+.oferta__preco b { font: 800 28px/1 var(--fonte-display); color: var(--vendas-texto); letter-spacing: -.03em; }
+.oferta__ir { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 14px; font-weight: 600; color: var(--vendas-laranja); }
+.oferta__ir .ico { width: 16px; height: 16px; transition: transform .5s var(--mola); }
+.oferta:hover .oferta__ir .ico { transform: translateX(3px); }
+
+/* =========================================================
+   11. Garantia
+   ========================================================= */
+.garantia { padding-top: 0; }
+.faixa--garantia { background: var(--vendas-laranja); color: var(--vendas-laranja-tinta); border: 0; -webkit-mask-image: none; mask-image: none; transform: none; }
+.faixa--garantia .faixa__item { font: 500 14px/1 var(--fonte-mono); letter-spacing: .16em; }
+.faixa--garantia .faixa__item::after { background: var(--vendas-laranja-tinta); width: 12px; height: 12px; }
+.faixa--garantia .faixa__trilho { animation-duration: 30s; }
+.garantia__corpo { display: grid; gap: 32px; justify-items: center; text-align: center; max-width: 820px; margin: 0 auto; padding-top: 72px; }
+@media (min-width: 700px) { .garantia__corpo { grid-template-columns: auto 1fr; text-align: left; justify-items: start; gap: 48px; align-items: center; padding-top: 96px; } }
+.selo-garantia { position: relative; width: 184px; height: 184px; flex: none; }
+.selo-garantia svg.anel { position: absolute; inset: 0; width: 100%; height: 100%; }
+@media (prefers-reduced-motion: no-preference) { .selo-garantia svg.anel { animation: girar 24s linear infinite; } }
+.selo-garantia__centro {
+  position: absolute; inset: 36px; border-radius: 50%; display: grid; place-content: center; text-align: center;
+  background: radial-gradient(circle at 35% 30%, #FFB27F, #FF8A3D 55%, #D9661F); color: var(--vendas-laranja-tinta);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .35), 0 0 0 6px rgba(255, 138, 61, .15), 0 20px 50px -14px rgba(255, 138, 61, .8);
+}
+.selo-garantia__centro b { font: 800 60px/.8 var(--fonte-display); letter-spacing: -.05em; }
+.selo-garantia__centro small { font: 500 11px/1 var(--fonte-mono); letter-spacing: .2em; margin-top: 6px; }
+.garantia h2 { font: 800 clamp(28px, 4.4vw, 40px)/1.05 var(--fonte-display); letter-spacing: -.035em; }
+.garantia p { margin-top: 12px; color: var(--vendas-texto-suave); max-width: 46ch; }
+.garantia p a { color: var(--vendas-laranja); }
+.garantia .botao { margin-top: 24px; }
+
+/* =========================================================
+   12. FAQ
+   ========================================================= */
+.faq { display: grid; gap: 40px; }
+@media (min-width: 900px) { .faq { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 80px; } .faq__cabeca { position: sticky; top: 40px; align-self: start; } }
+.pergunta { border-bottom: 1px solid var(--vendas-linha); }
+.pergunta:first-child { border-top: 1px solid var(--vendas-linha); }
+.pergunta summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; padding: 16px 0; cursor: pointer; list-style: none;
+  font: 600 17px/1.35 var(--fonte-corpo);
+}
+.pergunta summary::-webkit-details-marker { display: none; }
+.pergunta summary i { width: 32px; height: 32px; flex: none; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--vendas-linha-forte); color: var(--vendas-laranja); transition: transform .5s var(--ease), background .4s var(--ease); }
+.pergunta summary i .ico { width: 16px; height: 16px; }
+.pergunta[open] summary i { transform: rotate(45deg); background: rgba(255, 138, 61, .12); }
+.pergunta summary:hover i { border-color: var(--vendas-laranja); }
+.pergunta p { padding: 0 48px 20px 0; color: var(--vendas-texto-suave); line-height: 1.7; }
+.pergunta p a { color: var(--vendas-laranja); }
+
+/* =========================================================
+   13. CTA final e rodapé
+   ========================================================= */
+.final { text-align: center; }
+.final::before { content: ""; position: absolute; left: 50%; top: 50%; width: 900px; height: 600px; transform: translate(-50%, -50%); z-index: -1; pointer-events: none; background: radial-gradient(closest-side, rgba(255, 138, 61, .16), transparent 70%); }
+.final small { display: block; color: var(--vendas-texto-suave); margin-bottom: 16px; }
+.final h2 { font: 800 clamp(36px, 7vw, 68px)/1.02 var(--fonte-display); letter-spacing: -.045em; max-width: 18ch; margin: 0 auto; text-wrap: balance; }
+.final h2 em { font-style: normal; color: var(--vendas-laranja); }
+.final .botao { margin-top: 40px; width: min(100%, 380px); }
+.rodape { padding: 40px 0 48px; border-top: 1px solid var(--vendas-linha); }
+.rodape__linha { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; }
+.rodape nav { display: flex; flex-wrap: wrap; gap: 4px 8px; }
+.rodape nav a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 10px; color: var(--vendas-texto-suave); text-decoration: none; font-size: 14px; }
+.rodape nav a:hover { color: var(--vendas-texto); background: rgba(255, 238, 220, .05); }
+.rodape__nota { margin-top: 20px; font-size: 13px; line-height: 1.6; color: var(--vendas-texto-suave); max-width: 80ch; }
+
+/* =========================================================
+   Movimento reduzido
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; transition-delay: 0ms !important; }
+  .faixa__trilho { animation: none; flex-wrap: wrap; width: auto; justify-content: center; }
+  .faixa__lista[aria-hidden="true"] { display: none; }
+  .faixa__lista { flex-wrap: wrap; justify-content: center; row-gap: 12px; }
+  .versao { opacity: 1; border-style: solid; }
+  .dias span:first-child { opacity: 1; }
+}
 </style>
 </head>
 <body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<div class="brilho" aria-hidden="true"></div>
+<div class="grao" aria-hidden="true"></div>
 
-<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+<!-- Ícones (traço fino) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-estrela" viewBox="0 0 24 24"><path d="M12 1.5c.6 5.6 4.9 9.9 10.5 10.5-5.6.6-9.9 4.9-10.5 10.5-.6-5.6-4.9-9.9-10.5-10.5C7.1 11.4 11.4 7.1 12 1.5z"/></symbol>
+  <symbol id="i-seta" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+  <symbol id="i-dir" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-esq" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+  <symbol id="i-baixo" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
+  <symbol id="i-cima" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></symbol>
+  <symbol id="i-pausa" viewBox="0 0 24 24"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></symbol>
+  <symbol id="i-mudo" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4zM16 9.5l5 5M21 9.5l-5 5"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-mais" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-escudo" viewBox="0 0 24 24"><path d="M12 3 5 6v5.5c0 4.3 3 8 7 9.5 4-1.5 7-5.2 7-9.5V6z"/><path d="m9 12 2.2 2.2L15.5 10"/></symbol>
+  <symbol id="i-pasta" viewBox="0 0 24 24"><path d="M3.5 7.5a2 2 0 0 1 2-2h4l2 2.5h7a2 2 0 0 1 2 2v7.5a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-relogio" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="5.5" width="13" height="13" rx="2.5"/><path d="m16 10 5-3v10l-5-3"/></symbol>
+  <symbol id="i-legenda" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M7 12.5h4M13 12.5h4M7 15.5h7"/></symbol>
+  <symbol id="i-audio" viewBox="0 0 24 24"><path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 10.5v3"/></symbol>
+  <symbol id="i-arquivo" viewBox="0 0 24 24"><path d="M6.5 3h7l4 4v14h-11z"/><path d="M13.5 3v4h4M9 12h6M9 15.5h6"/></symbol>
+  <symbol id="i-tesoura" viewBox="0 0 24 24"><circle cx="6.5" cy="7" r="2.5"/><circle cx="6.5" cy="17" r="2.5"/><path d="M8.5 8.5 20 17M8.5 15.5 20 7"/></symbol>
+  <symbol id="i-raio" viewBox="0 0 24 24"><path d="M13 3 5 13.5h6L10 21l8-10.5h-6z"/></symbol>
+  <symbol id="i-formato" viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M10.5 18h3"/></symbol>
+  <symbol id="i-olho" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 10.5l5 5 5-5M5 19.5h14"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="m16 10.5 5-2.5v8l-5-2.5"/><circle cx="9.5" cy="12" r="2.5"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5.5h16v10H9.5L5 19.5v-4H4z"/><path d="M8 10.5h8"/></symbol>
+  <symbol id="i-queda" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8M15 17h6v-6"/></symbol>
+  <symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="m7 9.5 3 2.5-3 2.5M12.5 15h4.5"/></symbol>
+</svg>
 
-<div class="strip">Pacote de edição de vídeo por skills. Veja <a href="#oferta">o preço e o combo</a> no fim da página.</div>
+<!-- =================== 1. TOPO =================== -->
+<header class="topo">
+  <div class="wrap topo__barra">
+    <a class="marca" href="/" aria-label="Leonardo Skills, página inicial">
+      <span class="marca__icone" aria-hidden="true"><svg><use href="#i-estrela"/></svg></span>
+      <span class="marca__nome">Leonardo <b>Skills</b></span>
+    </a>
+    <a class="botao-contorno" href="#preco">Quero editar assim <svg class="ico" aria-hidden="true"><use href="#i-baixo"/></svg></a>
+  </div>
+</header>
 
-<main>
-  <div class="heroi">
-    <div>
-      <span class="badge">edição de vídeo por skills</span>
-      <h1>Pare de perder horas na timeline. <span class="nowrap">Peça o vídeo</span> e receba pronto.</h1>
-      <p class="lead">Você grava e pede em português. O Claude Code tira os silêncios e os erros, traz a frase mais forte para os 3 primeiros segundos, coloca legenda e exporta o Reels em 1080x1920. No seu computador, sem abrir programa de edição.</p>
-      <div class="acoes">
-        <a class="btn" href="#oferta">Quero editar assim</a>
-        <span class="confia">Pagamento único. Acesso na hora.</span>
+<main id="conteudo">
+
+<!-- =================== 2. HERÓI =================== -->
+<section class="heroi" aria-labelledby="heroi-titulo">
+  <div class="wrap heroi__grade">
+    <div class="heroi__titulo">
+      <p class="pilula heroi__olho">Pacote de edição de vídeo</p>
+      <h1 id="heroi-titulo">Agora você pode <em>editar vídeos como profissional</em> só pedindo ao Claude.</h1>
+    </div>
+
+    <div class="heroi__celular">
+      <div class="celular">
+        <div class="celular__casca">
+          <!-- VSL com áudio: voz Eric (ElevenLabs) e efeitos sonoros -->
+          <div class="tela" id="vsl-tela" data-estado="carregando">
+            <video id="vsl" src="midia/vsl.mp4" poster="midia/vsl.jpg" muted loop playsinline preload="metadata" aria-label="Vídeo de apresentação do pacote de edição"><track kind="captions" src="midia/vsl.vtt" srclang="pt-BR" label="Português"></video>
+            <button class="vsl-som" id="vsl-som" type="button" aria-label="Seu vídeo está pronto. Toque para ouvir com som, do começo">
+              <span class="vsl-som__cartao">
+                <span class="vsl-som__topo">Seu vídeo está pronto</span>
+                <span class="vsl-som__ico" aria-hidden="true"><svg class="ico"><use href="#i-mudo"/></svg></span>
+                <span class="vsl-som__acao">Toque para ouvir</span>
+              </span>
+            </button>
+            <div class="tela__estado tela__estado--carregando" aria-hidden="true"><span class="giro"></span></div>
+            <div class="tela__estado tela__estado--erro" role="alert">
+              <p>Não deu para carregar o vídeo.</p>
+              <button class="botao-contorno" type="button" data-recarregar="vsl">Tentar de novo</button>
+            </div>
+            <div class="tela__progresso" aria-hidden="true"><span id="vsl-progresso"></span></div>
+          </div>
+        </div>
+      </div>
+      <p class="heroi__legenda">Editado pelo Claude Code</p>
+    </div>
+
+    <div class="heroi__texto">
+      <p class="heroi__sub">Você grava e diz em português o que quer. O Claude Code ou o Codex corta as pausas, coloca legenda, anima e exporta pronto para postar. Sem abrir programa de edição, mesmo que você nunca tenha editado um vídeo.</p>
+      <div class="selos" aria-label="Funciona com">
+        <span class="selo"><svg class="ico-claude" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.5l1.4 6.4 5.3-3.9-3.4 5.6 6.2.9-6.2 1.4 3.9 5.2-5.6-3.4-.9 6.3-1.4-6.3-5.2 3.9 3.4-5.6-6.4-1.3 6.4-1-3.9-5.2 5.5 3.4z"/></svg><b>Claude Code</b></span>
+        <span class="selo"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-terminal"/></svg><b>Codex</b></span>
+      </div>
+      <div class="heroi__acoes">
+        <a class="botao" href="#preco">Quero editar com o Claude <span class="botao__ico" aria-hidden="true"><svg class="ico"><use href="#i-seta"/></svg></span></a>
+        <p class="nota-botao"><svg class="ico" aria-hidden="true"><use href="#i-escudo"/></svg> Pagamento único e garantia de 7 dias</p>
       </div>
     </div>
-    <div class="lateral">
-      <figure class="prova">
-        <video id="video-venda" src="demo.mp4" poster="demo.jpg" autoplay muted loop playsinline preload="auto" aria-label="Vídeo de apresentação do pacote de edição"></video>
-        <button class="som" type="button" id="botao-som" aria-pressed="false">Ativar som</button>
-        <figcaption>Feito pelo Claude Code, escrito em código.</figcaption>
-      </figure>
-      <div data-produto-topo></div>
+  </div>
+</section>
+
+<!-- =================== 3. FAIXA =================== -->
+<div class="faixa" role="region" aria-label="Estilos de edição">
+  <div class="faixa__trilho">
+    <ul class="faixa__lista">
+      <li class="faixa__item">Você pede a edição</li><li class="faixa__item">Bruto para editado</li><li class="faixa__item">Legenda em destaque</li><li class="faixa__item">Elementos na tela</li><li class="faixa__item">Motion explicativo</li><li class="faixa__item">Cortes de live</li><li class="faixa__item">Aula sem câmera</li><li class="faixa__item">Vídeo animado narrado</li>
+    </ul>
+    <ul class="faixa__lista" aria-hidden="true">
+      <li class="faixa__item">Você pede a edição</li><li class="faixa__item">Bruto para editado</li><li class="faixa__item">Legenda em destaque</li><li class="faixa__item">Elementos na tela</li><li class="faixa__item">Motion explicativo</li><li class="faixa__item">Cortes de live</li><li class="faixa__item">Aula sem câmera</li><li class="faixa__item">Vídeo animado narrado</li>
+    </ul>
+  </div>
+</div>
+
+<!-- =================== 4. CARROSSEL DE ESTILOS =================== -->
+<section class="secao estilos" id="estilos" aria-labelledby="estilos-titulo">
+  <div class="wrap">
+    <div class="cabeca cabeca--centro revela">
+      <p class="pilula">5 estilos, um pedido cada</p>
+      <h2 class="titulo" id="estilos-titulo">Do pedido para <span class="laranja">a tela.</span></h2>
+      <p class="apoio">Você não precisa saber editar. Só precisa dizer o que quer ver.</p>
+    </div>
+
+    <!-- Vídeos: trechos mudos da VSL (D:leo-videossl-editar), 720x1280 -->
+    <div class="abas" role="tablist" aria-label="Estilos de edição" id="abas">
+      <button class="aba" role="tab" id="aba-1" aria-controls="palco" aria-selected="true" tabindex="0"
+        data-src="midia/estilo-01.mp4" data-poster="midia/estilo-01.jpg"
+        data-frase="Os primeiros segundos mostram o problema com texto grande e elementos entrando, para segurar quem está rolando o feed."><span class="aba__num">01</span>Abertura que prende</button>
+      <button class="aba" role="tab" id="aba-2" aria-controls="palco" aria-selected="false" tabindex="-1"
+        data-src="midia/estilo-02.mp4" data-poster="midia/estilo-02.jpg"
+        data-frase="Você escreve o que quer em português e o Claude monta o vídeo a partir do seu pedido."><span class="aba__num">02</span>Você pede a edição</button>
+      <button class="aba" role="tab" id="aba-3" aria-controls="palco" aria-selected="false" tabindex="-1"
+        data-src="midia/estilo-03.mp4" data-poster="midia/estilo-03.jpg"
+        data-frase="Silêncios fora, enquadramento fechado, cor tratada e legenda no tempo da fala."><span class="aba__num">03</span>Bruto para editado</button>
+      <button class="aba" role="tab" id="aba-4" aria-controls="palco" aria-selected="false" tabindex="-1"
+        data-src="midia/estilo-04.mp4" data-poster="midia/estilo-04.jpg"
+        data-frase="Títulos, ícones e cartões entram na tela na hora em que a fala chega neles."><span class="aba__num">04</span>Elementos na tela</button>
+      <button class="aba" role="tab" id="aba-5" aria-controls="palco" aria-selected="false" tabindex="-1"
+        data-src="midia/estilo-05.mp4" data-poster="midia/estilo-05.jpg"
+        data-frase="A explicação vira animação: cartões, destaques e selos que mostram o que está sendo dito."><span class="aba__num">05</span>Motion explicativo</button>
+    </div>
+    <p class="dica-abas"><svg class="ico" aria-hidden="true" style="width:16px;height:16px"><use href="#i-dir"/></svg>Toque num estilo ou deslize o vídeo para o lado</p>
+
+    <div class="palco" id="palco" role="tabpanel" aria-labelledby="aba-1">
+      <div class="palco__coluna">
+        <div class="palco__barra">
+          <span class="palco__nome" id="palco-pilula">Abertura que prende</span>
+          <span class="palco__tempo num" id="palco-tempo">0:00 / 0:08</span>
+        </div>
+        <div class="segmentos" id="segmentos" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="moldura">
+          <div class="celular">
+            <div class="celular__casca">
+              <div class="tela" id="palco-tela" data-estado="carregando">
+                <video id="palco-video" src="midia/estilo-01.mp4" poster="midia/estilo-01.jpg" muted playsinline preload="metadata" aria-label="Exemplo do estilo selecionado, sem som"></video>
+                <div class="tela__estado tela__estado--carregando" aria-hidden="true"><span class="giro"></span></div>
+                <div class="tela__estado tela__estado--erro" role="alert">
+                  <p>Não deu para carregar este exemplo.</p>
+                  <button class="botao-contorno" type="button" data-recarregar="palco-video">Tentar de novo</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="controles">
+          <div class="controles__botoes">
+            <button class="circ" type="button" id="ant" aria-label="Estilo anterior"><svg class="ico" aria-hidden="true"><use href="#i-esq"/></svg></button>
+            <button class="circ circ--cheio" type="button" id="tocar" aria-label="Pausar"><svg class="ico" aria-hidden="true"><use href="#i-pausa"/></svg></button>
+            <button class="circ" type="button" id="prox" aria-label="Próximo estilo"><svg class="ico" aria-hidden="true"><use href="#i-dir"/></svg></button>
+          </div>
+          <button class="chave" type="button" role="switch" aria-checked="true" id="automatico"><span class="chave__trilho" aria-hidden="true"></span>Automático</button>
+        </div>
+      </div>
+
+      <div class="palco__info" aria-live="polite">
+        <p class="palco__contador num"><b id="palco-n">01</b> / 05</p>
+        <h3 class="palco__titulo" id="palco-titulo">Abertura que prende</h3>
+        <p class="palco__frase" id="palco-frase">Os primeiros segundos mostram o problema com texto grande e elementos entrando, para segurar quem está rolando o feed.</p>
+        <button class="seguinte" type="button" id="seguinte">
+          <img id="seguinte-img" src="midia/bruto.jpg" alt="" width="40" height="56">
+          <span><small id="seguinte-quando" aria-live="off">A seguir</small><strong id="seguinte-nome">Bruto para editado</strong></span>
+          <svg class="ico" aria-hidden="true"><use href="#i-dir"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="cta-bloco revela">
+      <a class="botao" href="#preco">Quero editar com o Claude <span class="botao__ico" aria-hidden="true"><svg class="ico"><use href="#i-seta"/></svg></span></a>
+      <p class="nota-botao"><svg class="ico" aria-hidden="true"><use href="#i-escudo"/></svg> Garantia de 7 dias</p>
     </div>
   </div>
+</section>
 
-  <section class="bloco" aria-labelledby="dor">
-    <h2 id="dor">Editar do jeito antigo custa caro</h2>
-    <ul class="dor">
-      <li><strong>Horas cortando silêncio</strong> e respiração, um pedaço de cada vez.</li>
-      <li><strong>Legenda palavra por palavra na mão</strong>, conferindo o tempo de cada uma.</li>
-      <li><strong>Refazer tudo</strong> para cada formato: Reels, Shorts, aula, corte de live.</li>
-      <li><strong>Pagar editor por vídeo</strong>, ou deixar de postar porque não deu tempo.</li>
-    </ul>
-    <p class="virada">E se você só dissesse o que quer, e o vídeo chegasse pronto?</p>
-  </section>
-
-  <section class="bloco" aria-labelledby="pede">
-    <h2 id="pede">Você pede. Ele entrega.</h2>
-    <p>Cada pedido vira um vídeo pronto para postar, em português, sem você mexer em timeline.</p>
-    <div class="cards two">
-      <article class="card"><p class="de">Gravou falando para a câmera</p><h3>Reels com cortes, gancho e legenda</h3><p class="when">Silêncios e erros fora, a melhor frase no começo e legenda dentro da área segura.</p></article>
-      <article class="card"><p class="de">Não quer aparecer</p><h3>Aula ou explicação sem câmera</h3><p class="when">Ele monta o vídeo a partir das suas anotações, com títulos e animações.</p></article>
-      <article class="card"><p class="de">Tem uma live ou podcast longo</p><h3>Vários Shorts de uma vez</h3><p class="when">Ele acha os melhores trechos e corta cada um no formato vertical.</p></article>
-      <article class="card"><p class="de">Já tem o vídeo editado</p><h3>Só a legenda em português</h3><p class="when">Transcreve no seu computador e legenda no tempo da fala.</p></article>
-      <article class="card"><p class="de">Tem só a ideia</p><h3>Vídeo animado com narração</h3><p class="when">Do roteiro ao vídeo pronto: narração, cenas animadas, legenda e efeitos sonoros, o mesmo fluxo dos vídeos deste perfil.</p></article>
+<!-- =================== 5. O MÉTODO NA PRÁTICA =================== -->
+<section class="secao" id="metodo" aria-labelledby="metodo-titulo">
+  <div class="wrap">
+    <div class="cabeca cabeca--lado revela">
+      <div>
+        <p class="olho">O método, na prática</p>
+        <h2 class="titulo" id="metodo-titulo">Nunca mais abra um programa de edição. <span class="laranja quebra">O Claude edita por você.</span></h2>
+      </div>
+      <p class="apoio">Você abre o Claude Code ou o Codex na pasta do vídeo e pede em português. As skills dizem a ele como cortar, legendar e exportar, e um revisor confere tudo antes de entregar.</p>
     </div>
-  </section>
 
-  <section class="bloco" aria-labelledby="time">
-    <h2 id="time">Um time de edição inteiro trabalhando para você</h2>
-    <p>São 6 agentes, cada um com a sua função. Você fala com o líder, e só recebe o vídeo depois que o revisor aprova.</p>
-    <div class="cards">
-      <article class="card"><h3>Líder</h3><p class="when">Combina formato e duração e distribui o trabalho.</p></article>
-      <article class="card"><h3>Roteirista</h3><p class="when">Escolhe o gancho dos 3 primeiros segundos e o texto de tela.</p></article>
-      <article class="card"><h3>Editor de cortes</h3><p class="when">Corta silêncio, erros e repetições e reenquadra para 9:16.</p></article>
-      <article class="card"><h3>Legendas</h3><p class="when">Legenda em português, dentro da área segura.</p></article>
-      <article class="card"><h3>Motion</h3><p class="when">Títulos, cartões e sobreposições.</p></article>
-      <article class="card"><h3>Revisor</h3><p class="when">Confere duração, áudio, legenda e enquadramento antes de entregar.</p></article>
+    <div class="editor casca revela" id="editor" data-fase="0" role="img" aria-label="Demonstração: o pedido 'Corta as pausas, coloca legenda e exporta pro Reels' vira edição. O Claude encontra duas pausas, corta, junta os trechos, coloca a legenda e exporta em 1080x1920. O vídeo cai de 12 para 9,6 segundos.">
+      <div class="nucleo">
+        <div class="editor__topo">
+          <span class="editor__marca"><i aria-hidden="true"><svg><use href="#i-estrela"/></svg></i>Claude <b>Code</b></span>
+          <span class="status"><span class="status__pontos" aria-hidden="true"><span></span><span></span><span></span></span><span id="status-texto">Esperando o seu pedido</span></span>
+        </div>
+        <div class="editor__corpo">
+          <figure class="previa" aria-hidden="true">
+            <img src="midia/estilo-03.jpg" alt="" loading="lazy">
+            <span class="previa__selo" id="previa-selo">Vídeo bruto</span>
+            <span class="previa__legenda">pede <b>em português</b></span>
+          </figure>
+          <div class="editor__trabalho">
+            <div class="pedido" aria-hidden="true">
+              <span class="pedido__quem">Você</span>
+              <span class="pedido__texto"><span id="pedido-texto"></span><span class="pedido__cursor"></span></span>
+              <span class="pedido__enviar"><svg class="ico"><use href="#i-cima"/></svg></span>
+            </div>
+            <ol class="passos" aria-hidden="true">
+              <li class="passo" data-passo="1"><span class="passo__n">1</span><span><strong>Acha as pausas</strong><small>Silêncio e erro marcados</small></span></li>
+              <li class="passo" data-passo="2"><span class="passo__n">2</span><span><strong>Junta os trechos</strong><small>Sem buracos na fala</small></span></li>
+              <li class="passo" data-passo="3"><span class="passo__n">3</span><span><strong>Põe a legenda</strong><small>No tempo de cada fala</small></span></li>
+              <li class="passo" data-passo="4"><span class="passo__n">4</span><span><strong>Exporta</strong><small>1080x1920 para o Reels</small></span></li>
+            </ol>
+            <div class="linha-tempo" aria-hidden="true">
+              <div class="lt__topo">
+                <div class="lt__duracao"><small>DURAÇÃO</small><b id="duracao">12,0 s</b></div>
+                <div class="regua"><span>00:00</span><span>00:03</span><span>00:06</span><span>00:09</span><span>00:12</span></div>
+              </div>
+              <div class="faixas">
+                <div class="faixa-lt">
+                  <span class="faixa-lt__rotulo"><svg class="ico"><use href="#i-video"/></svg>VÍDEO</span>
+                  <div class="trilha" data-trilha>
+                    <div class="camada"><span class="peca peca--video" style="--de:0%;--tam:36.67%;--img:url(midia/quadro-1.jpg), url(midia/quadro-5.jpg)"></span></div>
+                    <div class="camada" style="--desloc:0%"><span class="peca pausa" style="--de:36.67%;--tam:13.33%"><span class="pausa__rotulo">1,6 s</span></span></div>
+                    <div class="camada" style="--desloc:-13.33%"><span class="peca peca--video" style="--de:50%;--tam:26.67%;--img:url(midia/quadro-9.jpg)"></span></div>
+                    <div class="camada" style="--desloc:-13.33%"><span class="peca pausa" style="--de:76.67%;--tam:6.67%"><span class="pausa__rotulo pausa__rotulo--curta">0,8 s</span></span></div>
+                    <div class="camada" style="--desloc:-20%"><span class="peca peca--video" style="--de:83.33%;--tam:16.67%;--img:url(midia/quadro-17.jpg)"></span></div>
+                    <span class="fim-marca"></span>
+                  </div>
+                </div>
+                <div class="faixa-lt">
+                  <span class="faixa-lt__rotulo"><svg class="ico"><use href="#i-legenda"/></svg>LEGENDAS</span>
+                  <div class="trilha trilha--fina" data-trilha>
+                    <span class="legenda-chip" style="--de:0%;--tam:19%;--atraso:0ms"><span class="longo">Você grava,</span><span class="curto">Grava,</span></span>
+                    <span class="legenda-chip" style="--de:20%;--tam:24%;--atraso:250ms"><span class="longo">pede em português</span><span class="curto">pede</span></span>
+                    <span class="legenda-chip" style="--de:45%;--tam:16%;--atraso:500ms"><span class="longo">e o Claude</span><span class="curto">Claude</span></span>
+                    <span class="legenda-chip" style="--de:62%;--tam:18%;--atraso:750ms"><span class="longo">entrega pronto.</span><span class="curto">entrega.</span></span>
+                  </div>
+                </div>
+                <div class="faixa-lt">
+                  <span class="faixa-lt__rotulo"><svg class="ico"><use href="#i-audio"/></svg>ÁUDIO</span>
+                  <div class="trilha" data-trilha>
+                    <div class="camada"><span class="peca peca--audio" style="--de:0%;--tam:36.67%" data-onda="34"></span></div>
+                    <div class="camada" style="--desloc:0%"><span class="peca pausa" style="--de:36.67%;--tam:13.33%"></span></div>
+                    <div class="camada" style="--desloc:-13.33%"><span class="peca peca--audio" style="--de:50%;--tam:26.67%" data-onda="24"></span></div>
+                    <div class="camada" style="--desloc:-13.33%"><span class="peca pausa" style="--de:76.67%;--tam:6.67%"></span></div>
+                    <div class="camada" style="--desloc:-20%"><span class="peca peca--audio" style="--de:83.33%;--tam:16.67%" data-onda="16"></span></div>
+                  </div>
+                </div>
+                <div class="cabecote"><div class="cabecote__camada" id="cabecote"><span class="cabecote__linha"></span></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </section>
 
-  <section class="bloco" aria-labelledby="vem">
-    <h2 id="vem">O que vem no pacote</h2>
-    <ul class="inclui">
-      <li><span class="qtd">12</span><div><strong>Skills de edição</strong><span>Duas autorais, do vídeo bruto ao Reels pronto e do roteiro ao vídeo animado com narração, e 10 de código aberto, como HyperFrames, FFmpeg e MoviePy, instaladas direto do autor.</span></div></li>
-      <li><span class="qtd">6</span><div><strong>Agentes no time</strong><span>Para Claude Code e para Codex, com líder e revisor.</span></div></li>
-      <li><span class="qtd">7</span><div><strong>Prompts prontos</strong><span>Talking head, legenda, aula sem câmera, cortes de vídeo longo, vídeo animado narrado e o time inteiro trabalhando.</span></div></li>
-      <li><span class="qtd">1</span><div><strong>Instalador e aula curta</strong><span>O instalador baixa e coloca tudo no lugar, e a aula mostra a instalação e o primeiro vídeo.</span></div></li>
-    </ul>
-  </section>
-
-  <section class="bloco faq" aria-labelledby="duvidas">
-    <h2 id="duvidas">Antes de comprar</h2>
-    <details><summary>Preciso saber editar vídeo?</summary><p>Não. Você descreve o vídeo em português e o time faz os cortes, a legenda e a montagem.</p></details>
-    <details><summary>Preciso saber programar?</summary><p>Não. Você roda o instalador e um comando de atualização, e a aula mostra os dois. Depois é só pedir.</p></details>
-    <details><summary>O que eu preciso ter?</summary><p>O Claude Code (com a sua assinatura do Claude, que não vem no pacote) ou o Codex, o Node.js 22 ou mais novo, o FFmpeg, o Python (para o vídeo animado narrado) e espaço livre em disco para os vídeos. Funciona no Windows, no Mac e no Linux.</p></details>
-    <details><summary>Tem algum custo além do pacote?</summary><p>O essencial roda no seu computador. Algumas ferramentas opcionais, como a voz de IA da ElevenLabs, são pagas à parte, e os agentes sempre pedem a sua aprovação antes de qualquer gasto.</p></details>
-    <details><summary>É mensalidade?</summary><p>Não. É pagamento único, e o acesso sai logo depois da compra.</p></details>
-    <details><summary>E se eu não gostar?</summary><p>Você tem 7 dias depois da compra para pedir o reembolso, como prevê o Código de Defesa do Consumidor. Veja a <a href="/reembolso">política de reembolso</a>.</p></details>
-  </section>
-
-  <div class="chamada">
-    <h2>Grave hoje. Poste hoje.</h2>
-    <p>Leve só o pacote de edição ou pegue o combo completo, com os 5 pacotes de skills e agentes de uma vez.</p>
+    <ol class="dia">
+      <li class="dia__cartao revela" style="--atraso:0ms"><span class="dia__n">01</span><span class="dia__ico" aria-hidden="true"><svg class="ico"><use href="#i-download"/></svg></span><h3>Instale</h3><p>Entregue o arquivo COMECE-AQUI ao Claude e ele instala tudo.</p></li>
+      <li class="dia__cartao revela" style="--atraso:100ms"><span class="dia__n">02</span><span class="dia__ico" aria-hidden="true"><svg class="ico"><use href="#i-camera"/></svg></span><h3>Grave</h3><p>Fale para a câmera do celular, do seu jeito, sem roteiro perfeito.</p></li>
+      <li class="dia__cartao revela" style="--atraso:200ms"><span class="dia__n">03</span><span class="dia__ico" aria-hidden="true"><svg class="ico"><use href="#i-chat"/></svg></span><h3>Peça</h3><p>Diga em português o que quer ver. Os 8 prompts prontos ajudam.</p></li>
+      <li class="dia__cartao revela" style="--atraso:300ms"><span class="dia__n">04</span><span class="dia__ico" aria-hidden="true"><svg class="ico"><use href="#i-olho"/></svg></span><h3>Revise</h3><p>Aprove o plano, confira o resultado e peça ajustes se quiser.</p></li>
+    </ol>
   </div>
+</section>
 
-  <section id="oferta" data-oferta></section>
+<!-- =================== 6. O SEU PRÓXIMO EDITOR =================== -->
+<section class="secao" aria-labelledby="direcao-titulo">
+  <div class="wrap direcao">
+    <div class="cena-dir casca revela">
+      <div class="nucleo">
+        <img src="midia/estilo-04.jpg" alt="Vídeo do Leonardo editado pelo Claude, com título, ícones e cartão na tela" loading="lazy" width="540" height="960">
+        <div class="conversa" id="conversa" aria-hidden="true">
+          <p class="balao balao--voce"><small>Você</small>Começa pela frase mais forte e coloca legenda grande.</p>
+          <p class="balao balao--claude"><small>Claude</small>Movi a frase para os 3 primeiros segundos e legendei palavra por palavra.</p>
+          <p class="balao balao--voce"><small>Você</small>Perfeito. Exporta pro Reels.</p>
+        </div>
+      </div>
+    </div>
+    <div class="revela">
+      <p class="olho">O seu próximo editor pode ser o Claude</p>
+      <h2 class="direcao__titulo" id="direcao-titulo"><span>Você imagina.</span><span>Você dirige.</span><span>O Claude <em class="laranja" style="font-style:normal">edita.</em></span></h2>
+      <p><strong>Seu papel muda.</strong> Nada de montar efeito por efeito na linha do tempo: você diz o que quer ver na tela e o Claude monta a edição.</p>
+      <hr class="traco">
+      <p class="direcao__frase">Quanto mais clara a direção, melhor a edição. <em>E a direção já vem pronta no pacote.</em></p>
+      <a class="link-seta" href="#pacote"><span>Ver o que vem no pacote</span><i aria-hidden="true"><svg class="ico"><use href="#i-baixo"/></svg></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- =================== 7. PARA QUEM É =================== -->
+<section class="secao creme" aria-labelledby="quem-titulo">
+  <div class="wrap">
+    <div class="cabeca cabeca--lado revela">
+      <div>
+        <p class="olho">Para quem é</p>
+        <h2 class="titulo" id="quem-titulo">A ideia você já tem. <span class="laranja quebra">O que trava é a edição.</span></h2>
+      </div>
+      <p class="apoio">Se uma destas cenas parece a sua semana, este pacote foi feito para você.</p>
+    </div>
+
+    <div class="cenas">
+      <article class="cena revela" style="--atraso:0ms">
+        <div class="cena__tela" aria-hidden="true">
+          <div class="ads">
+            <div class="ads__celular">
+              <div class="ads__foto"></div>
+              <span class="barra-cinza"></span><span class="barra-cinza barra-cinza--curta"></span>
+              <span class="ads__cta"></span>
+            </div>
+            <span class="ads__queda"><svg class="ico"><use href="#i-queda"/></svg></span>
+            <div class="ads__versoes">
+              <div class="versao anima" style="--i:0"><span class="versao__thumb"></span>Versão B<span class="versao__ok"><svg class="ico"><use href="#i-check"/></svg></span></div>
+              <div class="versao anima" style="--i:1"><span class="versao__thumb"></span>Versão C<span class="versao__ok"><svg class="ico"><use href="#i-check"/></svg></span></div>
+              <div class="versao anima" style="--i:2"><span class="versao__thumb"></span>Versão D<span class="versao__ok"><svg class="ico"><use href="#i-check"/></svg></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="cena__rotulo"><span class="cena__n">01</span><span class="cena__tag">Ads</span></div>
+        <h3>Você precisa testar mais criativos.</h3>
+        <p>O anúncio cansa e a próxima versão nunca fica pronta a tempo.</p>
+      </article>
+
+      <article class="cena revela" style="--atraso:120ms">
+        <div class="cena__tela" aria-hidden="true">
+          <div class="pasta">
+            <div class="pasta__topo">
+              <span><svg class="ico"><use href="#i-pasta"/></svg>Gravações</span>
+              <span class="dias"><span class="anima" style="--i:0">segunda</span><span class="anima" style="--i:1">terça</span><span class="anima" style="--i:2">quarta</span><span class="anima" style="--i:3">quinta</span><span class="anima" style="--i:4">sexta</span></span>
+            </div>
+            <div class="arquivos">
+              <div class="arquivos__lista anima">
+                <div class="arquivo"><svg class="ico"><use href="#i-play"/></svg>gravacao_08.mp4<svg class="ico"><use href="#i-relogio"/></svg></div>
+                <div class="arquivo"><svg class="ico"><use href="#i-play"/></svg>gravacao_07.mp4<svg class="ico"><use href="#i-relogio"/></svg></div>
+                <div class="arquivo"><svg class="ico"><use href="#i-play"/></svg>gravacao_06.mp4<svg class="ico"><use href="#i-relogio"/></svg></div>
+                <div class="arquivo"><svg class="ico"><use href="#i-play"/></svg>gravacao_05.mp4<svg class="ico"><use href="#i-relogio"/></svg></div>
+                <div class="arquivo"><svg class="ico"><use href="#i-play"/></svg>gravacao_04.mp4<svg class="ico"><use href="#i-relogio"/></svg></div>
+                <div class="arquivo"><svg class="ico"><use href="#i-play"/></svg>gravacao_03.mp4<svg class="ico"><use href="#i-relogio"/></svg></div>
+                <div class="arquivo"><svg class="ico"><use href="#i-play"/></svg>gravacao_02.mp4<svg class="ico"><use href="#i-relogio"/></svg></div>
+                <div class="arquivo"><svg class="ico"><use href="#i-play"/></svg>gravacao_01.mp4<svg class="ico"><use href="#i-relogio"/></svg></div>
+              </div>
+            </div>
+            <span class="carimbo">AGUARDANDO EDIÇÃO</span>
+          </div>
+        </div>
+        <div class="cena__rotulo"><span class="cena__n">02</span><span class="cena__tag">Conteúdo</span></div>
+        <h3>Você grava, mas a edição fica para depois.</h3>
+        <p>A pasta enche de arquivos, a semana passa e nada vai ao ar.</p>
+      </article>
+
+      <article class="cena revela" style="--atraso:240ms">
+        <div class="cena__tela" aria-hidden="true">
+          <span class="rolagem anima"></span>
+          <div class="oferta-cel">
+            <h4>Minha oferta</h4>
+            <div class="paredao anima"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          </div>
+          <span class="duvida anima">?</span>
+        </div>
+        <div class="cena__rotulo"><span class="cena__n">03</span><span class="cena__tag">Negócio</span></div>
+        <h3>Você precisa explicar o que vende.</h3>
+        <p>Num texto longo, o cliente rola a tela antes de entender a oferta.</p>
+      </article>
+    </div>
+
+    <div class="virada revela">
+      <div>
+        <h3>Nos três casos, a saída é a mesma: <em>você pede, o Claude edita.</em></h3>
+        <p>O pacote traz as skills, o time de agentes e os prompts para ele acertar já no primeiro pedido.</p>
+      </div>
+      <a class="botao" href="#pacote">Ver o que vem no pacote <span class="botao__ico" aria-hidden="true"><svg class="ico"><use href="#i-seta"/></svg></span></a>
+    </div>
+  </div>
+</section>
+
+<!-- =================== 8. O QUE VEM NO PACOTE =================== -->
+<section class="secao" id="pacote" aria-labelledby="pacote-titulo">
+  <div class="wrap">
+    <div class="cabeca cabeca--lado revela">
+      <div>
+        <p class="olho">O que vem no pacote</p>
+        <h2 class="titulo" id="pacote-titulo">Tudo o que o Claude precisa <span class="laranja quebra">para editar do seu jeito.</span></h2>
+      </div>
+      <p class="apoio">Skills, agentes e prompts para o Claude Code e o Codex, com instalação guiada e aula. Você instala uma vez e usa em todos os vídeos.</p>
+    </div>
+
+    <div class="bento">
+      <article class="bloco casca b-skills revela">
+        <div class="nucleo">
+          <div class="bloco__qtd"><b>13</b><span>skills de edição</span></div>
+          <p>O conhecimento que o Claude consulta antes de mexer no seu vídeo: como cortar, legendar, animar e exportar.</p>
+          <p class="sub-rotulo">3 autorais</p>
+          <div class="autorais">
+            <div class="autoral"><code>video-editor-pro</code><span>Analisa o vídeo, transcreve no seu computador, propõe o plano e só corta depois do seu OK.</span></div>
+            <div class="autoral"><code>video-animado-narrado</code><span>Vídeo 100% animado, com narração, mascote, legenda palavra por palavra e efeitos sonoros.</span></div>
+            <div class="autoral"><code>reels-do-bruto-ao-post</code><span>O caminho do vídeo bruto até o Reels pronto para postar.</span></div>
+          </div>
+          <p class="sub-rotulo">10 de código aberto</p>
+          <ul class="chips">
+            <li class="chip">hyperframes</li><li class="chip">hyperframes-cli</li><li class="chip">hyperframes-registry</li><li class="chip">media-use</li><li class="chip">slideshow</li><li class="chip">remotion-to-hyperframes</li><li class="chip">ffmpeg</li><li class="chip">moviepy</li><li class="chip">social</li><li class="chip">video-use</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="bloco casca b-time revela" style="--atraso:100ms">
+        <div class="nucleo">
+          <div class="bloco__qtd"><b>6</b><span>agentes no time</span></div>
+          <p>Você fala com o líder e só recebe o vídeo depois que o revisor aprova. Para Claude Code e para Codex.</p>
+          <ul class="agentes">
+            <li class="agente agente--lider"><i>01</i><span><strong>Líder</strong><small>Combina formato e duração e distribui o trabalho</small></span></li>
+            <li class="agente"><i>02</i><span><strong>Roteirista</strong><small>Escolhe o gancho dos 3 primeiros segundos</small></span></li>
+            <li class="agente"><i>03</i><span><strong>Editor de cortes</strong><small>Tira silêncio, erros e repetições</small></span></li>
+            <li class="agente"><i>04</i><span><strong>Legendas</strong><small>Em português, dentro da área segura</small></span></li>
+            <li class="agente"><i>05</i><span><strong>Motion</strong><small>Títulos, cartões e sobreposições</small></span></li>
+            <li class="agente"><i>06</i><span><strong>Revisor</strong><small>Confere duração, áudio, legenda e enquadramento</small></span></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="bloco casca b-prompts revela">
+        <div class="nucleo">
+          <div class="bloco__qtd"><b>8</b><span>prompts prontos</span></div>
+          <ol class="prompts">
+            <li>Editar vídeo falando para a câmera</li><li>Legendar um vídeo já pronto</li><li>Aula sem câmera</li><li>Cortes de um vídeo longo</li><li>Time pelo líder no Claude Code</li><li>Time pelo líder no Codex</li><li>Vídeo animado narrado</li><li>Editor pro, modo por modo</li>
+          </ol>
+        </div>
+      </article>
+
+      <article class="bloco casca b-modos revela" style="--atraso:100ms">
+        <div class="nucleo">
+          <div class="bloco__qtd"><b>6</b><span>modos de edição</span></div>
+          <p>Cada modo muda ritmo, corte e legenda para o lugar onde o vídeo vai passar.</p>
+          <ul class="chips">
+            <li class="chip chip--corpo">Reels</li><li class="chip chip--corpo">YouTube</li><li class="chip chip--corpo">Anúncio</li><li class="chip chip--corpo">Jurídico</li><li class="chip chip--corpo">Podcast</li><li class="chip chip--corpo">Institucional</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="bloco casca b-comece revela" style="--atraso:200ms">
+        <div class="nucleo">
+          <h3>O Claude instala tudo para você</h3>
+          <p>Você entrega um arquivo e ele instala os programas, o pacote, e testa no fim.</p>
+          <ul class="instala">
+            <li class="instala__arq"><svg class="ico" aria-hidden="true"><use href="#i-arquivo"/></svg>COMECE-AQUI.md</li>
+            <li>Node.js <b>instalado</b></li>
+            <li>Python <b>instalado</b></li>
+            <li>FFmpeg <b>instalado</b></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="bloco casca b-legendas revela">
+        <div class="nucleo">
+          <div class="bloco__qtd"><b>26</b><span>estilos de legenda com prévia</span></div>
+          <p>Prévia real, gerada pelo pacote no seu próprio vídeo, antes de escolher. Deslize para ver alguns:</p>
+          <div class="estilos-leg" tabindex="0" aria-label="Exemplos de estilos de legenda">
+            <figure class="leg"><img src="midia/leg-10-mrbeast.jpg" alt="Estilo de legenda MrBeast aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 10</small>MrBeast</figcaption></figure>
+            <figure class="leg"><img src="midia/leg-16-box-destaque.jpg" alt="Estilo de legenda Box destaque aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 16</small>Box destaque</figcaption></figure>
+            <figure class="leg"><img src="midia/leg-14-hormozi-pro.jpg" alt="Estilo de legenda Hormozi Pro aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 14</small>Hormozi Pro</figcaption></figure>
+            <figure class="leg"><img src="midia/leg-23-palavra-gigante.jpg" alt="Estilo de legenda Palavra gigante aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 23</small>Palavra gigante</figcaption></figure>
+            <figure class="leg"><img src="midia/leg-09-hormozi.jpg" alt="Estilo de legenda Hormozi aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 09</small>Hormozi</figcaption></figure>
+            <figure class="leg"><img src="midia/leg-21-neon.jpg" alt="Estilo de legenda Neon aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 21</small>Neon</figcaption></figure>
+            <figure class="leg"><img src="midia/leg-24-duas-cores.jpg" alt="Estilo de legenda Duas cores aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 24</small>Duas cores</figcaption></figure>
+            <figure class="leg"><img src="midia/leg-01-reels-impacto.jpg" alt="Estilo de legenda Reels impacto aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 01</small>Reels impacto</figcaption></figure>
+          </div>
+        </div>
+      </article>
+
+      <article class="bloco casca b-aula revela" style="--atraso:100ms">
+        <div class="nucleo">
+          <div class="aula">
+            <div class="aula__thumb"><img src="midia/capa-aula.jpg" alt="Capa da aula passo a passo" loading="lazy" width="720" height="1040"><i aria-hidden="true"><span><svg><use href="#i-play"/></svg></span></i></div>
+            <div>
+              <p class="sub-rotulo" style="margin:0 0 8px">Aula passo a passo</p>
+              <h3>Da instalação ao primeiro vídeo editado</h3>
+              <p style="margin-top:8px">A aula mostra a instalação e cada etapa da edição, na tela, do jeito que você vai fazer.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- Bloco interativo: o mesmo pedido sem skills e com skills -->
+    <div class="compara" id="compara">
+      <div class="compara__controle revela">
+        <button class="interruptor" type="button" role="switch" aria-checked="false" id="interruptor">
+          <span class="interruptor__trilho" aria-hidden="true"></span>
+          <span><strong id="interruptor-rotulo">Skills desligadas</strong><small>Toque para ligar</small></span>
+          <span class="interruptor__conta num" id="interruptor-conta">0/5</span>
+        </button>
+        <div class="seu-pedido">
+          <small>Seu pedido</small>
+          <p>“Edita esse vídeo e deixa bom pra postar.”</p>
+        </div>
+        <ul class="criterios" aria-label="O que o Claude consulta com as skills ligadas">
+          <li class="criterio" style="--i:0"><i aria-hidden="true"><svg class="ico"><use href="#i-tesoura"/></svg></i><span><strong>Cortes</strong><small>Pausas, erros e repetições fora</small></span></li>
+          <li class="criterio" style="--i:1"><i aria-hidden="true"><svg class="ico"><use href="#i-raio"/></svg></i><span><strong>Gancho</strong><small>A frase mais forte nos 3 primeiros segundos</small></span></li>
+          <li class="criterio" style="--i:2"><i aria-hidden="true"><svg class="ico"><use href="#i-legenda"/></svg></i><span><strong>Legenda</strong><small>Palavra por palavra, dentro da área segura</small></span></li>
+          <li class="criterio" style="--i:3"><i aria-hidden="true"><svg class="ico"><use href="#i-formato"/></svg></i><span><strong>Formato</strong><small>1080x1920, pronto para o Reels</small></span></li>
+          <li class="criterio" style="--i:4"><i aria-hidden="true"><svg class="ico"><use href="#i-olho"/></svg></i><span><strong>Revisão</strong><small>O revisor confere antes de entregar</small></span></li>
+        </ul>
+      </div>
+
+      <div class="compara__celular celular revela">
+        <span class="compara__selo" id="compara-selo">Sem skills</span>
+        <div class="celular__casca">
+          <div class="tela">
+            <video id="compara-video" src="midia/bruto.mp4" poster="midia/bruto.jpg" muted loop playsinline preload="metadata" aria-label="Exemplo do vídeo sem skills e com skills, sem som"></video>
+            <div class="leque3d" aria-hidden="true"><div class="leque3d__trilho">
+              <img src="midia/estilo-01.jpg" alt="" loading="lazy" width="720" height="1280"><img src="midia/estilo-02.jpg" alt="" loading="lazy" width="720" height="1280"><img src="midia/estilo-03.jpg" alt="" loading="lazy" width="720" height="1280"><img src="midia/estilo-05.jpg" alt="" loading="lazy" width="720" height="1280">
+            </div></div>
+            <span class="cantos-com" aria-hidden="true"></span>
+            <p class="adivinha">Sem skills, o Claude adivinha o resto.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="compara__texto revela">
+        <p class="pilula">O que faz a diferença</p>
+        <h3>O mesmo pedido. <em>Outro resultado.</em></h3>
+        <p>Com as skills ligadas, o Claude consulta cortes, gancho, legenda, formato e revisão antes de editar. O primeiro resultado já chega perto do que você imaginou.</p>
+        <a class="botao" href="#preco">Quero as skills de edição <span class="botao__ico" aria-hidden="true"><svg class="ico"><use href="#i-seta"/></svg></span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== 9. SOBRE =================== -->
+<section class="secao" aria-labelledby="sobre-titulo">
+  <div class="wrap sobre">
+    <div class="sobre__foto casca revela">
+      <div class="nucleo"><img src="midia/quem-criou.jpg" alt="Leonardo Araujo, criador da Leonardo Skills" loading="lazy" width="720" height="900"></div>
+    </div>
+    <div class="revela">
+      <p class="olho">Quem criou</p>
+      <h2 id="sobre-titulo">Leonardo Araujo.</h2>
+      <p class="sobre__papel">Criador da Leonardo Skills.</p>
+      <p>Eu crio skills e agentes para o Claude Code e o Codex. Os vídeos do meu perfil passam por este mesmo processo: gravo, peço em português, reviso o que o Claude entregou e posto.</p>
+      <p>O pacote é esse fluxo organizado para você instalar e editar o seu primeiro vídeo no mesmo dia.</p>
+      <a class="botao-contorno" href="https://www.instagram.com/leonardo_araujo670/" target="_blank" rel="noopener">@leonardo_araujo670 <svg class="ico" aria-hidden="true"><use href="#i-seta"/></svg><span class="sr-only">(abre em nova aba)</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- =================== 10. PREÇO =================== -->
+<!-- Preço, preço cheio, link de compra, leve 3 e combo vêm do banco (GET /api/loja/vitrine?pagina=editar) -->
+<section class="secao preco-secao" id="preco" aria-labelledby="preco-titulo">
+  <div class="wrap">
+    <div class="cartao-preco casca revela" id="cartao-preco" data-estado="carregando">
+      <div class="nucleo">
+        <p class="pilula">Sua próxima edição</p>
+        <div class="capa3d"><img src="midia/capa-pacote.jpg" alt="Capa do pacote Edição de vídeo por skills" width="1200" height="900" loading="lazy"></div>
+        <div class="cartao-preco__marca">
+          <span><strong id="preco-titulo">Edição de vídeo por skills</strong><small>Pacote Leonardo Skills</small></span>
+        </div>
+        <p class="cartao-preco__desc">Peça em português e receba o vídeo cortado, legendado e pronto para postar, no Claude Code ou no Codex.</p>
+
+
+
+        <div class="valor">
+          <div class="valor__real">
+            <p class="valor__de" hidden>de <s></s> por</p>
+            <p class="valor__por"><span class="sr-only" id="valor-falado"></span><span class="valor__rs" aria-hidden="true">R$</span><span class="valor__num" aria-hidden="true"></span><span class="valor__cent" aria-hidden="true"></span></p>
+            <p class="valor__tipo"><b>pagamento único</b><i aria-hidden="true"></i>acesso na hora</p>
+            <a class="botao botao--grande botao--largo" href="/loja/" data-comprar>Quero editar com o Claude <span class="botao__ico" aria-hidden="true"><svg class="ico"><use href="#i-seta"/></svg></span></a>
+            <p class="garantia-linha"><span><svg class="ico" aria-hidden="true"><use href="#i-escudo"/></svg><b>Garantia de 7 dias</b></span><span>Assinatura do Claude à parte</span></p>
+          </div>
+          <noscript><p><a class="botao botao--grande" href="/loja/checkout/?oferta=avulso&amp;produtos=edicao-de-video">Ver o preço e comprar</a></p></noscript>
+          <div class="esqueleto" role="status" aria-label="Carregando o preço"><span></span><span></span><span></span></div>
+          <div class="erro-preco" role="alert">
+            <p>Não conseguimos carregar o preço agora.</p>
+            <a class="botao-contorno" href="/loja/">Ver o pacote na loja <svg class="ico" aria-hidden="true"><use href="#i-dir"/></svg></a>
+          </div>
+        </div>
+        <p class="divisor-rotulo divisor-rotulo--depois">O que você recebe</p>
+        <ul class="recebe">
+          <li class="recebe__destaque"><span class="check" aria-hidden="true"><svg class="ico"><use href="#i-check"/></svg></span>Pacote Edição de vídeo por skills</li>
+          <li><span class="check" aria-hidden="true"><svg class="ico"><use href="#i-check"/></svg></span><span><b>13 skills</b>, 3 autorais e 10 de código aberto</span></li>
+          <li><span class="check" aria-hidden="true"><svg class="ico"><use href="#i-check"/></svg></span><span><b>Time de 6 agentes</b> para Claude Code e Codex</span></li>
+          <li><span class="check" aria-hidden="true"><svg class="ico"><use href="#i-check"/></svg></span><span><b>8 prompts</b> prontos para copiar e colar</span></li>
+          <li><span class="check" aria-hidden="true"><svg class="ico"><use href="#i-check"/></svg></span><span><b>6 modos de edição</b>, do Reels ao institucional</span></li>
+          <li><span class="check" aria-hidden="true"><svg class="ico"><use href="#i-check"/></svg></span><span><b>26 estilos de legenda</b> com prévia</span></li>
+          <li><span class="check" aria-hidden="true"><svg class="ico"><use href="#i-check"/></svg></span><span><b>COMECE-AQUI</b>: o Claude instala Node.js, Python e FFmpeg</span></li>
+          <li><span class="check" aria-hidden="true"><svg class="ico"><use href="#i-check"/></svg></span><span><b>Aula passo a passo</b>, da instalação ao primeiro vídeo</span></li>
+          <li><span class="check" aria-hidden="true"><svg class="ico"><use href="#i-check"/></svg></span><span><b>Windows, Mac e Linux</b></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Ofertas maiores: valores e composição vêm de loja_ofertas (leve3 e combo) -->
+    <div class="ofertas">
+      <a class="oferta revela" href="/loja/" data-leve hidden>
+        <span class="oferta__tag" data-leve-titulo>Leve 3 pacotes</span>
+        <strong data-leve-mais>Este e mais 2 à sua escolha</strong>
+        <span class="oferta__preco"><span data-de>de <s></s> por </span><b></b></span>
+        <span class="oferta__ir">Escolher os pacotes <svg class="ico" aria-hidden="true"><use href="#i-dir"/></svg></span>
+      </a>
+      <a class="oferta revela" href="/loja/" style="--atraso:100ms" data-combo hidden>
+        <span class="oferta__tag">Combo completo</span>
+        <strong data-combo-titulo>Todos os pacotes de skills e agentes</strong>
+        <span class="oferta__preco"><span data-de>de <s></s> por </span><b></b></span>
+        <span class="oferta__ir">Ver o combo <svg class="ico" aria-hidden="true"><use href="#i-dir"/></svg></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- =================== 11. GARANTIA =================== -->
+<section class="secao garantia" aria-labelledby="garantia-titulo">
+  <div class="faixa faixa--garantia" aria-hidden="true">
+    <div class="faixa__trilho">
+      <ul class="faixa__lista"><li class="faixa__item">7 DIAS DE GARANTIA</li><li class="faixa__item">SATISFAÇÃO OU REEMBOLSO</li><li class="faixa__item">7 DIAS DE GARANTIA</li><li class="faixa__item">SATISFAÇÃO OU REEMBOLSO</li><li class="faixa__item">7 DIAS DE GARANTIA</li><li class="faixa__item">SATISFAÇÃO OU REEMBOLSO</li></ul>
+      <ul class="faixa__lista"><li class="faixa__item">7 DIAS DE GARANTIA</li><li class="faixa__item">SATISFAÇÃO OU REEMBOLSO</li><li class="faixa__item">7 DIAS DE GARANTIA</li><li class="faixa__item">SATISFAÇÃO OU REEMBOLSO</li><li class="faixa__item">7 DIAS DE GARANTIA</li><li class="faixa__item">SATISFAÇÃO OU REEMBOLSO</li></ul>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="garantia__corpo revela">
+      <div class="selo-garantia" aria-hidden="true">
+        <svg class="anel" viewBox="0 0 200 200">
+          <defs><path id="circulo" d="M100,100 m-82,0 a82,82 0 1,1 164,0 a82,82 0 1,1 -164,0"/></defs>
+          <circle cx="100" cy="100" r="96" fill="none" stroke="rgba(255,138,61,.35)" stroke-dasharray="2 6"/>
+          <text fill="#FFB27F" style="font: 500 13px 'JetBrains Mono', monospace; letter-spacing: 3.2px"><textPath href="#circulo">SATISFAÇÃO OU REEMBOLSO ✦ 7 DIAS DE GARANTIA ✦</textPath></text>
+        </svg>
+        <div class="selo-garantia__centro"><b>7</b><small>DIAS</small></div>
+      </div>
+      <div>
+        <h2 id="garantia-titulo">7 dias de garantia</h2>
+        <p>Instale, edite seus vídeos e veja se é para você. Se não for, peça o reembolso em até 7 dias depois da compra. Veja a <a href="/reembolso">política de reembolso</a>.</p>
+        <a class="botao" href="#preco">Quero editar com o Claude <span class="botao__ico" aria-hidden="true"><svg class="ico"><use href="#i-seta"/></svg></span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== 12. FAQ =================== -->
+<section class="secao" aria-labelledby="faq-titulo" style="padding-top:0">
+  <div class="wrap faq">
+    <div class="faq__cabeca revela">
+      <p class="olho">Antes de comprar</p>
+      <h2 class="titulo" id="faq-titulo">Dúvidas? <span class="laranja quebra">Vamos direto ao ponto.</span></h2>
+    </div>
+    <div class="revela">
+      <details class="pergunta"><summary>Preciso saber editar vídeo?<i aria-hidden="true"><svg class="ico"><use href="#i-mais"/></svg></i></summary><p>Não. Você descreve o vídeo em português e o time faz os cortes, a legenda e a montagem. Você só aprova o plano e confere o resultado.</p></details>
+      <details class="pergunta"><summary>Preciso saber programar?<i aria-hidden="true"><svg class="ico"><use href="#i-mais"/></svg></i></summary><p>Não. Você entrega o arquivo COMECE-AQUI ao Claude e ele instala o que falta e testa tudo. A aula mostra esse caminho na tela.</p></details>
+      <details class="pergunta"><summary>O que eu preciso ter?<i aria-hidden="true"><svg class="ico"><use href="#i-mais"/></svg></i></summary><p>Um computador com Windows, Mac ou Linux e o Claude Code, que usa a sua assinatura do Claude (à parte, não vem no pacote), ou o Codex. O Node.js, o Python e o FFmpeg o próprio Claude instala pelo COMECE-AQUI. Reserve espaço livre em disco para os vídeos.</p></details>
+      <details class="pergunta"><summary>Tem algum custo além do pacote?<i aria-hidden="true"><svg class="ico"><use href="#i-mais"/></svg></i></summary><p>O essencial roda no seu computador. Algumas ferramentas opcionais, como a voz de IA da ElevenLabs, são pagas à parte, e os agentes sempre pedem a sua aprovação antes de qualquer gasto.</p></details>
+      <details class="pergunta"><summary>É mensalidade?<i aria-hidden="true"><svg class="ico"><use href="#i-mais"/></svg></i></summary><p>Não. É pagamento único, e o acesso sai logo depois da compra.</p></details>
+      <details class="pergunta"><summary>Funciona no Codex também?<i aria-hidden="true"><svg class="ico"><use href="#i-mais"/></svg></i></summary><p>Sim. O pacote tem instalador próprio para o Codex, e o time de 6 agentes vem nos dois formatos.</p></details>
+      <details class="pergunta"><summary>E se eu não gostar?<i aria-hidden="true"><svg class="ico"><use href="#i-mais"/></svg></i></summary><p>Você tem 7 dias depois da compra para pedir o reembolso, como prevê o Código de Defesa do Consumidor. Veja a <a href="/reembolso">política de reembolso</a>.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- =================== 13. CTA FINAL =================== -->
+<section class="secao final" aria-labelledby="final-titulo">
+  <div class="wrap revela">
+    <small>Seu próximo vídeo já está gravado.</small>
+    <h2 id="final-titulo">Peça a edição hoje. <em>Poste hoje.</em></h2>
+    <a class="botao botao--grande" href="#preco">Quero editar com o Claude <span class="botao__ico" aria-hidden="true"><svg class="ico"><use href="#i-seta"/></svg></span></a>
+  </div>
+</section>
 </main>
 
-<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
-<div class="sr-only" aria-live="polite" id="aviso"></div>
-<script src="../assets/pagina.js"></script>
+<footer class="rodape">
+  <div class="wrap">
+    <div class="rodape__linha">
+      <a class="marca" href="/" aria-label="Leonardo Skills, página inicial">
+        <span class="marca__icone" aria-hidden="true"><svg><use href="#i-estrela"/></svg></span>
+        <span class="marca__nome">Leonardo <b>Skills</b></span>
+      </a>
+      <nav aria-label="Políticas">
+        <a href="/termos">Termos de uso</a><a href="/privacidade">Privacidade</a><a href="/reembolso">Reembolso</a>
+      </nav>
+    </div>
+    <p class="rodape__nota">© <span id="ano">2026</span> Leonardo Skills. Claude e Claude Code são marcas da Anthropic. Codex é marca da OpenAI. Este pacote não tem vínculo com essas empresas. A assinatura do Claude e serviços opcionais são contratados à parte.</p>
+  </div>
+</footer>
+
+<script src="/assets/pagina.js"></script>
 <script>
-  // Tenta tocar com som. Onde o navegador bloqueia som sem toque, toca mudo e liga o som no primeiro
-  // toque, clique ou tecla em qualquer lugar da página. O botão continua para desligar ou religar.
-  (() => {
-    const v = document.getElementById("video-venda"), b = document.getElementById("botao-som");
-    if (!v || !b) return;
-    const marcar = () => {
-      b.setAttribute("aria-pressed", String(!v.muted));
-      b.textContent = v.muted ? "Ativar som" : "Desativar som";
-    };
-    const ligarSom = (doInicio) => {
-      v.muted = false;
-      if (doInicio) v.currentTime = 0;
-      return v.play().then(marcar).catch(() => { v.muted = true; marcar(); });
-    };
-    const eventos = ["pointerdown", "touchstart", "keydown"];
-    const noPrimeiroToque = (e) => {
-      eventos.forEach((n) => document.removeEventListener(n, noPrimeiroToque, true));
-      if (e.target === b || b.contains(e.target)) return; // o próprio botão cuida do clique
-      if (v.muted) ligarSom(true);
-    };
-    v.muted = false;
-    v.play().then(marcar).catch(() => {
-      v.muted = true;
-      v.play().catch(() => { v.controls = true; });
-      marcar();
-      eventos.forEach((n) => document.addEventListener(n, noPrimeiroToque, { capture: true, passive: true }));
+(() => {
+  "use strict";
+  const doc = document.documentElement;
+  const reduzido = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduzido) doc.classList.add("js");
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const fmt = s => { s = Math.max(0, Math.floor(s || 0)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
+  $("#ano").textContent = String(new Date().getFullYear());
+
+  /* Estado de vídeo: carregando, erro e pronto */
+  function vigiarVideo(v, tela) {
+    const pronto = () => tela.dataset.estado = "pronto";
+    v.addEventListener("loadeddata", pronto);
+    v.addEventListener("playing", pronto);
+    v.addEventListener("waiting", () => tela.dataset.estado = "carregando");
+    v.addEventListener("error", () => tela.dataset.estado = "erro");
+    if (v.readyState >= 2) pronto();
+  }
+  $$("[data-recarregar]").forEach(b => b.addEventListener("click", () => {
+    const v = document.getElementById(b.dataset.recarregar);
+    v.closest(".tela").dataset.estado = "carregando";
+    v.load(); v.play().catch(() => {});
+  }));
+
+  /* Revelar na rolagem */
+  if (!reduzido && "IntersectionObserver" in window) {
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visivel"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -10% 0px" });
+    $$(".revela, .conversa").forEach(el => io.observe(el));
+  }
+  /* Animações de cena só rodam quando estão na tela */
+  const ioCena = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle("em-vista", e.isIntersecting)), { threshold: .2 });
+  $$(".cena__tela").forEach(el => ioCena.observe(el));
+
+  /* 2. VSL: abre falando. Onde o navegador bloqueia som automático, toca muda com o cartão
+     "Toque para ouvir" e o som liga do início no primeiro toque, clique ou tecla em qualquer lugar. */
+  const vsl = $("#vsl"), som = $("#vsl-som"), barra = $("#vsl-progresso");
+  vigiarVideo(vsl, $("#vsl-tela"));
+  vsl.addEventListener("timeupdate", () => barra.style.setProperty("--p", vsl.duration ? vsl.currentTime / vsl.duration : 0));
+  const comSom = () => { vsl.loop = false; vsl.controls = true; som.hidden = true; };
+  // Eventos que o navegador aceita como gesto para liberar som (no toque, só quando o dedo sai da tela)
+  const eventos = ["pointerup", "touchend", "keydown", "click"];
+  const pararDeOuvir = () => eventos.forEach(n => document.removeEventListener(n, noPrimeiroToque, true));
+  const ligarSom = () => {
+    vsl.currentTime = 0; vsl.muted = false;
+    return vsl.play().then(() => { comSom(); pararDeOuvir(); })
+      .catch(() => { vsl.muted = true; vsl.play().catch(() => {}); }); // segue esperando o próximo gesto
+  };
+  const noPrimeiroToque = (e) => {
+    if (som.contains(e.target) || e.target === vsl) return; // o cartão e os controles cuidam do próprio toque
+    if (vsl.muted) ligarSom(); else pararDeOuvir();
+  };
+  if (reduzido) {
+    $("#vsl-tela").dataset.estado = "pronto";
+    vsl.removeAttribute("loop");
+  } else {
+    vsl.muted = false;
+    vsl.play().then(comSom).catch(() => {
+      vsl.muted = true;
+      vsl.play().catch(() => { $("#vsl-tela").dataset.estado = "pronto"; });
+      eventos.forEach(n => document.addEventListener(n, noPrimeiroToque, { capture: true, passive: true }));
     });
-    b.addEventListener("click", () => {
-      if (v.muted) ligarSom(true);
-      else { v.muted = true; marcar(); }
+  }
+  som.addEventListener("click", () => { ligarSom(); vsl.focus({ preventScroll: true }); });
+
+  /* 4. Carrossel de estilos */
+  const abas = $$("#abas .aba"), video = $("#palco-video"), telaPalco = $("#palco-tela");
+  const segs = $$("#segmentos span"), btnTocar = $("#tocar"), chave = $("#automatico");
+  let atual = 0, auto = !reduzido;
+  vigiarVideo(video, telaPalco);
+  const nome = a => a.textContent.replace(/^\d+/, "").trim();
+  function iconeTocar(tocando) {
+    btnTocar.innerHTML = `<svg class="ico" aria-hidden="true"><use href="#i-${tocando ? "pausa" : "play"}"/></svg>`;
+    btnTocar.setAttribute("aria-label", tocando ? "Pausar" : "Tocar");
+  }
+  function mostrar(i, focar = false, tocar = true) {
+    atual = (i + abas.length) % abas.length;
+    const a = abas[atual], prox = abas[(atual + 1) % abas.length];
+    abas.forEach((b, k) => { b.setAttribute("aria-selected", String(k === atual)); b.tabIndex = k === atual ? 0 : -1; });
+    $("#palco").setAttribute("aria-labelledby", a.id);
+    if (focar) a.focus();
+    a.scrollIntoView({ block: "nearest", inline: "center", behavior: reduzido ? "auto" : "smooth" });
+    segs.forEach((s, k) => { s.classList.toggle("feito", k < atual); s.style.setProperty("--p", 0); });
+    $("#palco-pilula").textContent = nome(a);
+    $("#palco-titulo").textContent = nome(a);
+    $("#palco-frase").textContent = a.dataset.frase;
+    $("#palco-n").textContent = String(atual + 1).padStart(2, "0");
+    $("#seguinte-nome").textContent = nome(prox);
+    $("#seguinte-img").src = prox.dataset.poster;
+    telaPalco.classList.add("trocando");
+    video.poster = a.dataset.poster;
+    video.src = a.dataset.src;
+    video.loop = !auto;
+    if (tocar) video.play().catch(() => {});
+    setTimeout(() => telaPalco.classList.remove("trocando"), 250);
+  }
+  abas.forEach((a, k) => {
+    a.addEventListener("click", () => mostrar(k));
+    a.addEventListener("keydown", e => {
+      const mapa = { ArrowRight: 1, ArrowLeft: -1 };
+      if (e.key in mapa) { e.preventDefault(); mostrar(atual + mapa[e.key], true); }
+      if (e.key === "Home") { e.preventDefault(); mostrar(0, true); }
+      if (e.key === "End") { e.preventDefault(); mostrar(abas.length - 1, true); }
     });
-  })();
+  });
+  $("#ant").addEventListener("click", () => mostrar(atual - 1));
+  $("#prox").addEventListener("click", () => mostrar(atual + 1));
+  $("#seguinte").addEventListener("click", () => mostrar(atual + 1));
+  btnTocar.addEventListener("click", () => video.paused ? video.play().catch(() => {}) : video.pause());
+  video.addEventListener("play", () => iconeTocar(true));
+  video.addEventListener("pause", () => iconeTocar(false));
+  video.addEventListener("ended", () => { if (auto) mostrar(atual + 1); });
+  video.addEventListener("timeupdate", () => {
+    const d = video.duration || 0;
+    $("#palco-tempo").textContent = `${fmt(video.currentTime)} / ${fmt(d)}`;
+    segs[atual].style.setProperty("--p", d ? video.currentTime / d : 0);
+    const falta = Math.ceil(d - video.currentTime);
+    $("#seguinte-quando").textContent = auto && d ? `A seguir em ${falta} s` : "A seguir";
+  });
+  chave.setAttribute("aria-checked", String(auto));
+  chave.addEventListener("click", () => {
+    auto = !auto; chave.setAttribute("aria-checked", String(auto)); video.loop = !auto;
+    if (auto && video.paused) video.play().catch(() => {});
+  });
+  /* Deslizar o vídeo para o lado no celular */
+  let x0 = null;
+  telaPalco.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; }, { passive: true });
+  telaPalco.addEventListener("touchend", e => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0; x0 = null;
+    if (Math.abs(dx) > 40) mostrar(atual + (dx < 0 ? 1 : -1));
+  });
+  /* Só toca quando o palco está na tela */
+  const ioPalco = new IntersectionObserver(([e]) => {
+    if (e.isIntersecting && auto) video.play().catch(() => {});
+    else if (!e.isIntersecting) video.pause();
+  }, { threshold: .3 });
+  ioPalco.observe(telaPalco);
+  mostrar(0, false, false);
+  if (reduzido) iconeTocar(false);
+
+  /* 5. Demonstração: pedido vira edição */
+  $$("[data-onda]").forEach(p => {
+    const n = +p.dataset.onda, larg = 4;
+    let barras = "";
+    for (let i = 0; i < n; i++) {
+      const h = 18 + Math.abs(Math.sin(i * 1.7) * 52 + Math.sin(i * .6) * 26);
+      barras += `<rect x="${i * larg + 1}" y="${50 - h / 2}" width="2" height="${h}" rx="1"/>`;
+    }
+    p.innerHTML = `<svg viewBox="0 0 ${n * larg} 100" preserveAspectRatio="none" fill="currentColor">${barras}</svg>`;
+  });
+  const editor = $("#editor"), trilhas = $$("[data-trilha]", editor), passos = $$(".passo", editor);
+  const cab = $("#cabecote"), status = $("#status-texto"), dur = $("#duracao"), pedido = $("#pedido-texto"), selo = $("#previa-selo");
+  const PEDIDO = "Corta as pausas, coloca legenda e exporta pro Reels";
+  const espera = ms => new Promise(r => setTimeout(r, ms));
+  let rodando = false, visivel = false, geracao = 0;
+  function zerar() {
+    editor.dataset.fase = "0"; pedido.textContent = ""; status.textContent = "Esperando o seu pedido"; dur.textContent = "12,0 s"; selo.textContent = "Vídeo bruto";
+    trilhas.forEach(t => t.classList.remove("achou", "cortada", "legendada"));
+    passos.forEach(p => p.classList.remove("ativo", "feito"));
+    cab.style.setProperty("--dur", "0s"); cab.style.setProperty("--pos", "0%");
+  }
+  function passo(n) { passos.forEach((p, k) => { p.classList.toggle("feito", k < n - 1); p.classList.toggle("ativo", k === n - 1); }); }
+  function finalEstatico() {
+    editor.dataset.fase = "5"; pedido.textContent = PEDIDO; status.textContent = "Pronto para postar"; dur.textContent = "9,6 s"; selo.textContent = "Pronto";
+    trilhas.forEach(t => t.classList.add("cortada", "legendada"));
+    passos.forEach(p => { p.classList.remove("ativo"); p.classList.add("feito"); });
+  }
+  async function ciclo() {
+    if (rodando) return; rodando = true;
+    const g = ++geracao;
+    const vivo = () => g === geracao && visivel;
+    while (vivo()) {
+      zerar(); await espera(700); if (!vivo()) break;
+      editor.dataset.fase = "1"; status.textContent = "Lendo o seu pedido";
+      for (let i = 1; i <= PEDIDO.length && vivo(); i++) { pedido.textContent = PEDIDO.slice(0, i); await espera(38); }
+      if (!vivo()) break; await espera(500);
+      editor.dataset.fase = "2"; passo(1); status.textContent = "Procurando as pausas";
+      cab.style.setProperty("--dur", "2.4s"); cab.style.setProperty("--pos", "100%");
+      await espera(1100); trilhas.forEach(t => t.classList.add("achou"));
+      await espera(1700); if (!vivo()) break;
+      editor.dataset.fase = "3"; passo(2); status.textContent = "Juntando os trechos";
+      trilhas.forEach(t => t.classList.add("cortada"));
+      for (let v = 120; v >= 96 && vivo(); v -= 2) { dur.textContent = (v / 10).toFixed(1).replace(".", ",") + " s"; await espera(60); }
+      await espera(700); if (!vivo()) break;
+      editor.dataset.fase = "4"; passo(3); status.textContent = "Colocando a legenda";
+      trilhas.forEach(t => t.classList.add("legendada"));
+      await espera(1900); if (!vivo()) break;
+      passo(4); status.textContent = "Exportando em 1080x1920";
+      await espera(1300); if (!vivo()) break;
+      editor.dataset.fase = "5"; passos.forEach(p => { p.classList.remove("ativo"); p.classList.add("feito"); });
+      status.textContent = "Pronto para postar"; selo.textContent = "Pronto";
+      await espera(4200);
+    }
+    rodando = false;
+  }
+  if (reduzido) finalEstatico();
+  else new IntersectionObserver(([e]) => { visivel = e.isIntersecting; if (visivel) ciclo(); }, { threshold: .35 }).observe(editor);
+
+  /* 8. Com e sem skills */
+  const compara = $("#compara"), inter = $("#interruptor"), cv = $("#compara-video");
+  let mexeu = false;
+  function ligar(on) {
+    inter.setAttribute("aria-checked", String(on));
+    compara.classList.toggle("ligado", on);
+    $("#interruptor-rotulo").textContent = on ? "Skills ligadas" : "Skills desligadas";
+    inter.querySelector("small").textContent = on ? "Toque para desligar" : "Toque para ligar";
+    $("#compara-selo").textContent = on ? "Com skills" : "Sem skills";
+    cv.poster = on ? "midia/estilo-04.jpg" : "midia/bruto.jpg";
+    cv.src = on ? "midia/estilo-04.mp4" : "midia/bruto.mp4";
+    if (!reduzido) cv.play().catch(() => {});
+    if (reduzido) { $("#interruptor-conta").textContent = on ? "5/5" : "0/5"; return; }
+    let n = on ? 0 : 5; const fim = on ? 5 : 0;
+    const t = setInterval(() => { n += on ? 1 : -1; $("#interruptor-conta").textContent = n + "/5"; if (n === fim) clearInterval(t); }, 140);
+  }
+  inter.addEventListener("click", () => { mexeu = true; ligar(inter.getAttribute("aria-checked") !== "true"); });
+  new IntersectionObserver(([e]) => {
+    if (e.isIntersecting) { if (!reduzido) cv.play().catch(() => {}); if (!mexeu && !reduzido) { mexeu = true; setTimeout(() => ligar(true), 1800); } }
+    else cv.pause();
+  }, { threshold: .4 }).observe(compara);
+
+  /* 10. Preço, preço cheio, link de compra, leve 3 e combo: do banco, pela mesma vitrine das outras páginas */
+  const cartao = $("#cartao-preco");
+  const precoDe = (alvo, de, por) => {
+    const s = alvo.querySelector("[data-de]");
+    if (s) { s.hidden = !de; if (de) s.querySelector("s").textContent = de; }
+    alvo.querySelector("b").textContent = por;
+  };
+  fetch("/api/loja/vitrine?pagina=editar", { headers: { accept: "application/json" }, signal: AbortSignal.timeout(8000) })
+    .then(r => r.ok ? r.json() : Promise.reject(new Error("vitrine")))
+    .then(v => {
+      if (!v.ok || !v.pacote) throw new Error("sem pacote");
+      const p = v.pacote;
+      const [reais, cent] = p.precoTexto.replace("R$", "").trim().split(",");
+      $(".valor__num").textContent = reais;
+      $(".valor__cent").textContent = "," + (cent || "00");
+      $("#valor-falado").textContent = p.precoCheioTexto ? `por ${p.precoTexto}` : p.precoTexto;
+      const de = $(".valor__de");
+      de.hidden = !p.precoCheioTexto;
+      if (p.precoCheioTexto) de.querySelector("s").textContent = p.precoCheioTexto;
+      $$("[data-comprar]").forEach(a => { a.href = p.comprarUrl; });
+      const leve = $("[data-leve]");
+      if (v.leve) {
+        leve.href = v.leve.escolherUrl;
+        leve.querySelector("[data-leve-titulo]").textContent = `Leve ${v.leve.qtd} pacotes`;
+        leve.querySelector("[data-leve-mais]").textContent = `Este e mais ${v.leve.qtd - 1} à sua escolha`;
+        precoDe(leve, v.leve.referenciaTexto, v.leve.precoTexto);
+        leve.hidden = false;
+      }
+      const combo = $("[data-combo]");
+      if (v.combo) {
+        combo.href = v.combo.comprarUrl;
+        combo.querySelector("[data-combo-titulo]").textContent = `Os ${v.combo.itens.length} pacotes de skills e agentes`;
+        precoDe(combo, v.combo.somaTexto, v.combo.precoTexto);
+        combo.hidden = false;
+      }
+      cartao.dataset.estado = "pronto";
+      // ViewContent do Pixel (função do pagina.js)
+      if (typeof verConteudoMeta === "function") verConteudoMeta(p);
+    })
+    .catch(() => { cartao.dataset.estado = "erro"; });
+})();
 </script>
 </body>
 </html>

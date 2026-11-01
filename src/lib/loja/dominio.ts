@@ -19,6 +19,8 @@ export type Produto = {
   precoBumpCentavos: number | null;
   // vendido só como complemento: fica fora da vitrine, da loja e do combo
   soBump: boolean;
+  // preço cheio, mostrado riscado ("de ... por ...") na página de venda; null = sem preço riscado (banco/0012)
+  precoCheioCentavos: number | null;
 };
 
 export type Oferta = {
