@@ -4,7 +4,7 @@
 // Sem imports com "@/": next.config.ts lê este arquivo (via paginas-antigas.ts).
 // Preço e conteúdo do pacote vêm do banco.
 
-export type TipoPagina = "Prompt grátis" | "Passo a passo" | "Guia grátis" | "Ranking" | "Skill grátis";
+export type TipoPagina = "Prompt grátis" | "Passo a passo" | "Guia grátis" | "Ranking" | "Skill grátis" | "Pacote";
 
 // {preco} no gancho vira o preço atual do pacote no banco. descricao troca o resumo do pacote neste card.
 export type OfertaDoVideo = { pacote: string; gancho: string; descricao?: string };
@@ -122,8 +122,8 @@ export const PAGINAS_VIDEOS: readonly PaginaVideo[] = [
   {
     pasta: "editar",
     titulo: "O Claude editando vídeo",
-    frase: "Cortes, legendas e animações em código com a skill HyperFrames, sem timeline.",
-    tipo: "Passo a passo",
+    frase: "Peça o vídeo em português e receba o Reels pronto, com um time de 6 agentes de edição.",
+    tipo: "Pacote",
     oferta: { pacote: "edicao-de-video", gancho: "Gostou? No pacote de edição tem as skills prontas, do bruto ao post." },
   },
   {

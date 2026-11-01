@@ -3,53 +3,133 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>O Claude editando vídeo: passo a passo</title>
-<meta name="description" content="Passo a passo grátis para o Claude Code fazer vídeos inteiros em código com a skill HyperFrames: cortes, legendas e animações sem timeline.">
+<title>Edição de vídeo por skills: o Claude edita por você</title>
+<meta name="description" content="Pacote de edição de vídeo por skills: você pede em português e o Claude Code corta, legenda e monta seus Reels no seu computador, com um time de 6 agentes e revisor. Pagamento único.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/estilo.css">
+<style>
+  /* Só desta página de venda: herói com vídeo, blocos sem numeração de passo e perguntas */
+  .heroi { display: grid; grid-template-columns: 1fr 300px; gap: 40px; align-items: center; margin-bottom: 8px; }
+  .heroi .lead { margin-bottom: 28px; }
+  .heroi .acoes { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; }
+  .heroi .confia { font-size: 14px; color: var(--ink-soft); }
+  .prova { margin: 0; }
+  .prova video { display: block; width: 100%; aspect-ratio: 9 / 16; border-radius: 22px; background: var(--code-bg); box-shadow: var(--shadow); }
+  .prova figcaption { margin-top: 10px; font-size: 13px; color: var(--ink-soft); text-align: center; }
+  section.bloco { margin-top: 72px; }
+  section.bloco > h2 { font-size: clamp(24px, 4vw, 32px); margin-bottom: 10px; }
+  section.bloco > p { color: var(--ink-soft); margin: 0 0 22px; max-width: 60ch; }
+  .dor { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .dor li { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; color: var(--ink-soft); }
+  .dor li strong { color: var(--ink); }
+  .virada { margin-top: 18px; font: 700 20px/1.35 var(--font-display); letter-spacing: -.01em; }
+  .card .de { font: 500 12px/1.2 var(--font-mono); color: var(--accent); margin: 0 0 8px; text-transform: uppercase; letter-spacing: .04em; }
+  .inclui { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+  .inclui li { display: flex; gap: 14px; align-items: flex-start; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
+  .inclui .qtd { flex: none; min-width: 52px; font: 800 26px/1 var(--font-display); color: var(--accent); }
+  .inclui strong { display: block; font: 700 16px/1.3 var(--font-display); }
+  .inclui span { font-size: 14px; color: var(--ink-soft); }
+  .faq details { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 0 18px; margin-bottom: 10px; }
+  .faq summary { cursor: pointer; padding: 16px 0; font: 700 16px/1.3 var(--font-display); list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; color: var(--accent); font-size: 20px; line-height: 1; }
+  .faq details[open] summary::after { content: "-"; }
+  .faq details p { margin: 0 0 16px; color: var(--ink-soft); }
+  .chamada { margin-top: 72px; text-align: center; }
+  .chamada h2 { font-size: clamp(26px, 4.5vw, 36px); margin-bottom: 12px; }
+  .chamada p { color: var(--ink-soft); margin: 0 auto 22px; max-width: 52ch; }
+  @media (max-width: 760px) {
+    .heroi { grid-template-columns: 1fr; gap: 28px; }
+    .prova { max-width: 300px; margin: 0 auto; }
+  }
+</style>
 </head>
 <body>
 
 <a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
 
-<div class="strip">Este passo a passo é grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+<div class="strip">Pacote de edição de vídeo por skills. Veja <a href="#oferta">o preço e o combo</a> no fim da página.</div>
 
 <main>
-  <span class="badge">passo a passo grátis</span>
-  <h1>O Claude não sabia editar. <span class="nowrap">Agora sabe.</span></h1>
-  <p class="lead">Os vídeos do perfil são feitos assim: o Claude Code escreve cada cena, legenda e animação em código com a skill HyperFrames e entrega o MP4 pronto. Ninguém abre timeline.</p>
-
-  <section class="step" aria-labelledby="passo1">
-    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Instale a skill</h2></div>
-    <p>No terminal, dentro de uma pasta só para os seus vídeos:</p>
-    <div class="code">
-      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-hf">Copiar</button></div>
-<pre id="cmd-hf">npx skills add https://github.com/heygen-com/hyperframes --skill hyperframes</pre>
+  <div class="heroi">
+    <div>
+      <span class="badge">edição de vídeo por skills</span>
+      <h1>Pare de perder horas na timeline. <span class="nowrap">Peça o vídeo</span> e receba pronto.</h1>
+      <p class="lead">Você grava e pede em português. O Claude Code tira os silêncios e os erros, traz a frase mais forte para os 3 primeiros segundos, coloca legenda e exporta o Reels em 1080x1920. No seu computador, sem abrir programa de edição.</p>
+      <div class="acoes">
+        <a class="btn" href="#oferta">Quero editar assim</a>
+        <span class="confia">Pagamento único. Acesso na hora.</span>
+      </div>
     </div>
-    <div class="note">Precisa do Node.js. A HyperFrames é um projeto open source da HeyGen (heygen-com/hyperframes, licença Apache-2.0); esta página não tem ligação com o autor.</div>
+    <figure class="prova">
+      <video src="demo.mp4" poster="demo.jpg" controls playsinline preload="none" aria-label="Vídeo feito pelo Claude Code com as skills do pacote"></video>
+      <figcaption>Este vídeo saiu do Claude Code, escrito em código. Ninguém arrastou um keyframe.</figcaption>
+    </figure>
+  </div>
+
+  <section class="bloco" aria-labelledby="dor">
+    <h2 id="dor">Editar do jeito antigo custa caro</h2>
+    <ul class="dor">
+      <li><strong>Horas cortando silêncio</strong> e respiração, um pedaço de cada vez.</li>
+      <li><strong>Legenda palavra por palavra na mão</strong>, conferindo o tempo de cada uma.</li>
+      <li><strong>Refazer tudo</strong> para cada formato: Reels, Shorts, aula, corte de live.</li>
+      <li><strong>Pagar editor por vídeo</strong>, ou deixar de postar porque não deu tempo.</li>
+    </ul>
+    <p class="virada">E se você só dissesse o que quer, e o vídeo chegasse pronto?</p>
   </section>
 
-  <section class="step" aria-labelledby="passo2">
-    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Peça o vídeo</h2></div>
-    <p>Abra o Claude Code na mesma pasta (<code class="inline">claude</code>) e envie:</p>
-    <div class="code">
-      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-video">Copiar</button></div>
-<pre id="prompt-video">Use a skill hyperframes para fazer um vídeo vertical 1080x1920 de 30 segundos sobre [TEMA]. Divida em 5 cenas curtas, com título grande em cada uma, legenda palavra por palavra e animações de entrada. Me mostre prévias das cenas antes de renderizar o MP4 final. Responda em português.</pre>
+  <section class="bloco" aria-labelledby="pede">
+    <h2 id="pede">Você pede. Ele entrega.</h2>
+    <p>Cada pedido vira um vídeo pronto para postar, em português, sem você mexer em timeline.</p>
+    <div class="cards two">
+      <article class="card"><p class="de">Gravou falando para a câmera</p><h3>Reels com cortes, gancho e legenda</h3><p class="when">Silêncios e erros fora, a melhor frase no começo e legenda dentro da área segura.</p></article>
+      <article class="card"><p class="de">Não quer aparecer</p><h3>Aula ou explicação sem câmera</h3><p class="when">Ele monta o vídeo a partir das suas anotações, com títulos e animações.</p></article>
+      <article class="card"><p class="de">Tem uma live ou podcast longo</p><h3>Vários Shorts de uma vez</h3><p class="when">Ele acha os melhores trechos e corta cada um no formato vertical.</p></article>
+      <article class="card"><p class="de">Já tem o vídeo editado</p><h3>Só a legenda em português</h3><p class="when">Transcreve no seu computador e legenda no tempo da fala.</p></article>
     </div>
   </section>
 
-  <section class="step" aria-labelledby="passo3">
-    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Ajuste e renderize</h2></div>
-    <ul class="plain">
-      <li>Peça mudanças em texto: cor, fonte, tempo de cada cena, o que entra e o que sai.</li>
-      <li>Quando gostar das prévias, peça o render final. O MP4 sai na pasta do projeto.</li>
-      <li>Para narração, grave a sua voz ou use uma voz de IA e peça para ele sincronizar a legenda com o áudio.</li>
+  <section class="bloco" aria-labelledby="time">
+    <h2 id="time">Um time de edição inteiro trabalhando para você</h2>
+    <p>São 6 agentes, cada um com a sua função. Você fala com o líder, e só recebe o vídeo depois que o revisor aprova.</p>
+    <div class="cards">
+      <article class="card"><h3>Líder</h3><p class="when">Combina formato e duração e distribui o trabalho.</p></article>
+      <article class="card"><h3>Roteirista</h3><p class="when">Escolhe o gancho dos 3 primeiros segundos e o texto de tela.</p></article>
+      <article class="card"><h3>Editor de cortes</h3><p class="when">Corta silêncio, erros e repetições e reenquadra para 9:16.</p></article>
+      <article class="card"><h3>Legendas</h3><p class="when">Legenda em português, dentro da área segura.</p></article>
+      <article class="card"><h3>Motion</h3><p class="when">Títulos, cartões e sobreposições.</p></article>
+      <article class="card"><h3>Revisor</h3><p class="when">Confere duração, áudio, legenda e enquadramento antes de entregar.</p></article>
+    </div>
+  </section>
+
+  <section class="bloco" aria-labelledby="vem">
+    <h2 id="vem">O que vem no pacote</h2>
+    <ul class="inclui">
+      <li><span class="qtd">11</span><div><strong>Skills de edição</strong><span>Uma autoral, do vídeo bruto ao Reels pronto, e 10 de código aberto, como HyperFrames, FFmpeg e MoviePy, instaladas direto do autor.</span></div></li>
+      <li><span class="qtd">6</span><div><strong>Agentes no time</strong><span>Para Claude Code e para Codex, com líder e revisor.</span></div></li>
+      <li><span class="qtd">6</span><div><strong>Prompts prontos</strong><span>Talking head, legenda, aula sem câmera, cortes de vídeo longo e o time inteiro trabalhando.</span></div></li>
+      <li><span class="qtd">1</span><div><strong>Instalador e aula curta</strong><span>O instalador baixa e coloca tudo no lugar, e a aula mostra a instalação e o primeiro vídeo.</span></div></li>
     </ul>
   </section>
 
-  <section id="oferta" data-oferta data-titulo="Quer o pacote completo de edição? Tem as skills prontas, do bruto ao post."></section>
+  <section class="bloco faq" aria-labelledby="duvidas">
+    <h2 id="duvidas">Antes de comprar</h2>
+    <details><summary>Preciso saber editar vídeo?</summary><p>Não. Você descreve o vídeo em português e o time faz os cortes, a legenda e a montagem.</p></details>
+    <details><summary>Preciso saber programar?</summary><p>Não. Você roda o instalador e um comando de atualização, e a aula mostra os dois. Depois é só pedir.</p></details>
+    <details><summary>O que eu preciso ter?</summary><p>O Claude Code (com a sua assinatura do Claude, que não vem no pacote) ou o Codex, o Node.js 22 ou mais novo, o FFmpeg e espaço livre em disco para os vídeos. Funciona no Windows, no Mac e no Linux.</p></details>
+    <details><summary>Tem algum custo além do pacote?</summary><p>O essencial roda no seu computador. Algumas ferramentas opcionais, como a voz de IA da ElevenLabs, são pagas à parte, e os agentes sempre pedem a sua aprovação antes de qualquer gasto.</p></details>
+    <details><summary>É mensalidade?</summary><p>Não. É pagamento único, e o acesso sai logo depois da compra.</p></details>
+    <details><summary>E se eu não gostar?</summary><p>Você tem 7 dias depois da compra para pedir o reembolso, como prevê o Código de Defesa do Consumidor. Veja a <a href="/reembolso">política de reembolso</a>.</p></details>
+  </section>
+
+  <div class="chamada">
+    <h2>Grave hoje. Poste hoje.</h2>
+    <p>Leve só o pacote de edição ou pegue o combo completo, com os 5 pacotes de skills e agentes de uma vez.</p>
+  </div>
+
+  <section id="oferta" data-oferta></section>
 </main>
 
 <footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
