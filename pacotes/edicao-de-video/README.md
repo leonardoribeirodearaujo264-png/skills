@@ -1,14 +1,14 @@
 # Edição de vídeo por skills
 
-Depois de instalar, você pede em português ao Claude Code ou ao Codex e ele corta, legenda e monta seus vídeos no seu computador. Gravou falando para a câmera? Ele tira os silêncios e os erros, traz a frase mais forte para os 3 primeiros segundos, coloca legenda e exporta o Reels em 1080x1920. Sem gravação? Ele monta uma aula sem câmera a partir das suas anotações. Um time de agentes divide o trabalho e um revisor confere o vídeo antes da entrega.
+Depois de instalar, você pede em português ao Claude Code ou ao Codex e ele corta, legenda e monta seus vídeos no seu computador. Gravou falando para a câmera? Ele tira os silêncios e os erros, traz a frase mais forte para os 3 primeiros segundos, coloca legenda e exporta o Reels em 1080x1920. Sem gravação? Ele monta uma aula sem câmera a partir das suas anotações, ou um Reels 100% animado, com mascote, narração, legenda palavra por palavra e efeitos sonoros. Um time de agentes divide o trabalho e um revisor confere o vídeo antes da entrega.
 
 ## O que vem no pacote
 
 - 10 skills de terceiros, gratuitas e de código aberto, instaladas direto do repositório de cada autor: HyperFrames (porta de entrada, CLI de transcrição e render, efeitos prontos, mídia e slides), FFmpeg e MoviePy, social e video-use (opcional).
 - Fluxos de trabalho do HyperFrames (legenda, cartões sobre talking head, aula sem câmera e outros), instalados pela própria CLI do HyperFrames num passo depois do instalador.
-- 1 skill autoral: `reels-do-bruto-ao-post`, o fluxo completo do vídeo bruto ao Reels pronto.
+- 2 skills autorais: `reels-do-bruto-ao-post`, o fluxo completo do vídeo bruto ao Reels pronto, e `video-animado-narrado`, o vídeo 100% animado com narração, mascote, legenda palavra por palavra e efeitos sonoros, com os scripts prontos.
 - Time autoral de 6 agentes, para Claude Code e para Codex: lider-edicao, roteirista-de-video, editor-de-cortes, especialista-em-legendas, motion-designer-de-video e revisor-de-video.
-- 6 prompts prontos para copiar e colar.
+- 7 prompts prontos para copiar e colar.
 - Aula curta mostrando a instalação e o primeiro uso.
 
 ## Instalação no Claude Code
@@ -87,6 +87,7 @@ Nenhum agente publica, envia arquivo ou gasta crédito de API sem você aprovar.
 | Skill | Para que serve | Fonte | Licença |
 |---|---|---|---|
 | reels-do-bruto-ao-post | Do vídeo bruto ao Reels pronto, apontando a skill de cada passo | Autoral | Uso pessoal |
+| video-animado-narrado | Vídeo 100% animado: narração com tempo por palavra, cenas em código, mascote, legenda, efeitos sonoros e render | Autoral | Uso pessoal |
 | hyperframes | Porta de entrada: escolhe a skill certa para cada vídeo | heygen-com/hyperframes | Apache-2.0 |
 | hyperframes-cli | Transcrição local, checagem, prévia e render | heygen-com/hyperframes | Apache-2.0 |
 | hyperframes-registry | Efeitos, transições e blocos prontos | heygen-com/hyperframes | Apache-2.0 |
@@ -121,15 +122,17 @@ Estão na pasta `prompts/`. Copie, troque o que está entre colchetes e cole no 
 - `04-cortes-de-video-longo.md`: Shorts tirados de uma live, aula ou podcast.
 - `05-time-pelo-lider-claude-code.md`: o time inteiro trabalhando, no Claude Code.
 - `06-time-pelo-lider-codex.md`: o mesmo time no Codex, com cada agente citado pelo nome.
+- `07-video-animado-narrado.md`: Reels 100% animado, com personagem, narração e legenda, sem gravar nada.
 
 ## Custos e requisitos
 
 - Node.js 22 ou mais novo. Os instaladores e o HyperFrames dependem dele.
+- Para a skill video-animado-narrado: Python 3 com numpy, scipy e soundfile, e faster-whisper para conferir a pronúncia. O agente pede autorização antes de instalar.
 - FFmpeg e ffprobe instalados e no PATH.
 - Espaço em disco. Transcrição, recortes intermediários e render ocupam várias vezes o tamanho do vídeo bruto. Escolha um disco com bastante espaço livre para a pasta de trabalho, os temporários e o render, e diga esse caminho no pedido.
 - Git Bash no Windows, só se você quiser rodar os arquivos `.sh`. Os `.ps1` rodam no PowerShell.
 - Na primeira transcrição, o Whisper baixa o modelo de voz para o computador.
-- Fora daqui, pode haver custo em: ElevenLabs, exigida pela skill video-use (opcional); recursos da HeyGen que algumas skills do HyperFrames oferecem para voz e música, com motor local como alternativa; e a licença do Remotion para empresas acima de certo porte, caso você use Remotion. Os agentes pedem sua aprovação antes de qualquer gasto.
+- Fora daqui, pode haver custo em: ElevenLabs, exigida pela skill video-use (opcional) e usada na narração da skill video-animado-narrado (opcional: dá para gravar a própria voz); recursos da HeyGen que algumas skills do HyperFrames oferecem para voz e música, com motor local como alternativa; e a licença do Remotion para empresas acima de certo porte, caso você use Remotion. Os agentes pedem sua aprovação antes de qualquer gasto.
 
 ## Créditos
 

@@ -1,0 +1,7 @@
+{
+  "name": "video-animado",
+  "private": true,
+  "dependencies": {
+    "gsap": "^3.12.5"
+  }
+}

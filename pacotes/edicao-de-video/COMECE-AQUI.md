@@ -31,7 +31,7 @@ Instale o pacote desta pasta no meu Claude Code e confira se deu certo.
    No Mac ou no Linux, rode: bash ./instalar-claude.sh
 2. Se aparecer "Node.js não encontrado", pare e me explique como instalar o Node.js 22.
 3. Depois de instalar, confira se estas pastas existem:
-   - em ~/.claude/skills: reels-do-bruto-ao-post, hyperframes, hyperframes-cli, hyperframes-registry, media-use, slideshow, remotion-to-hyperframes, ffmpeg, moviepy, social, video-use
+   - em ~/.claude/skills: reels-do-bruto-ao-post, video-animado-narrado, hyperframes, hyperframes-cli, hyperframes-registry, media-use, slideshow, remotion-to-hyperframes, ffmpeg, moviepy, social, video-use
    - em ~/.claude/agents: editor-de-cortes.md, especialista-em-legendas.md, lider-edicao.md, motion-designer-de-video.md, revisor-de-video.md, roteirista-de-video.md
 4. Me mostre uma lista com o que foi instalado e o que faltou. Se algo falhou, rode de novo só o que faltou.
 5. No fim, me diga para fechar e abrir o Claude de novo, e qual prompt da pasta prompts/ eu devo testar primeiro.
@@ -46,7 +46,7 @@ Não apague, não publique e não pague nada sem me perguntar.
 
 ## O que este pacote instala
 
-- Skills autorais: `reels-do-bruto-ao-post`
+- Skills autorais: `reels-do-bruto-ao-post`, `video-animado-narrado`
 - Skills de terceiros (baixadas do autor na hora): `hyperframes`, `hyperframes-cli`, `hyperframes-registry`, `media-use`, `slideshow`, `remotion-to-hyperframes`, `ffmpeg`, `moviepy`, `social`, `video-use`
 - Agentes: `editor-de-cortes`, `especialista-em-legendas`, `lider-edicao`, `motion-designer-de-video`, `revisor-de-video`, `roteirista-de-video`
-- Prompts prontos: 6 arquivos na pasta `prompts/`
+- Prompts prontos: 7 arquivos na pasta `prompts/`
