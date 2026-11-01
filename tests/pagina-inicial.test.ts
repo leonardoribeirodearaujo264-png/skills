@@ -40,7 +40,7 @@ const CATALOGO: Catalogo = {
   ofertas: [
     oferta("avulso", "escolha", 3700),
     oferta("cliente", "escolha", 3700, { exigeCliente: true, descontoPercentual: 20 }),
-    oferta("leve-3", "escolha", 4700, { qtdEscolha: 3 }),
+    oferta("leve-3", "escolha", 6700, { qtdEscolha: 3 }),
     oferta("combo", "todos", 9700),
   ],
   bumps: [],
