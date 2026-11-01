@@ -158,17 +158,36 @@
 <div class="sr-only" aria-live="polite" id="aviso"></div>
 <script src="../assets/pagina.js"></script>
 <script>
-  // O vídeo começa mudo (o navegador só deixa tocar sozinho assim); o botão liga o som e recomeça do início
+  // Tenta tocar com som. Onde o navegador bloqueia som sem toque, toca mudo e liga o som no primeiro
+  // toque, clique ou tecla em qualquer lugar da página. O botão continua para desligar ou religar.
   (() => {
     const v = document.getElementById("video-venda"), b = document.getElementById("botao-som");
     if (!v || !b) return;
-    v.play().catch(() => { v.controls = true; });
+    const marcar = () => {
+      b.setAttribute("aria-pressed", String(!v.muted));
+      b.textContent = v.muted ? "Ativar som" : "Desativar som";
+    };
+    const ligarSom = (doInicio) => {
+      v.muted = false;
+      if (doInicio) v.currentTime = 0;
+      return v.play().then(marcar).catch(() => { v.muted = true; marcar(); });
+    };
+    const eventos = ["pointerdown", "touchstart", "keydown"];
+    const noPrimeiroToque = (e) => {
+      eventos.forEach((n) => document.removeEventListener(n, noPrimeiroToque, true));
+      if (e.target === b || b.contains(e.target)) return; // o próprio botão cuida do clique
+      if (v.muted) ligarSom(true);
+    };
+    v.muted = false;
+    v.play().then(marcar).catch(() => {
+      v.muted = true;
+      v.play().catch(() => { v.controls = true; });
+      marcar();
+      eventos.forEach((n) => document.addEventListener(n, noPrimeiroToque, { capture: true, passive: true }));
+    });
     b.addEventListener("click", () => {
-      const ligar = v.muted;
-      v.muted = !ligar;
-      if (ligar) { v.currentTime = 0; v.play().catch(() => {}); }
-      b.setAttribute("aria-pressed", String(ligar));
-      b.textContent = ligar ? "Desativar som" : "Ativar som";
+      if (v.muted) ligarSom(true);
+      else { v.muted = true; marcar(); }
     });
   })();
 </script>
