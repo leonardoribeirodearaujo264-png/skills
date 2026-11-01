@@ -124,7 +124,7 @@ export const PAGINAS_VIDEOS: readonly PaginaVideo[] = [
     titulo: "O Claude editando vídeo",
     frase: "Peça o vídeo em português e receba o Reels pronto, com um time de 6 agentes de edição.",
     tipo: "Pacote",
-    oferta: { pacote: "edicao-de-video", gancho: "Gostou? No pacote de edição tem as skills prontas, do bruto ao post." },
+    oferta: { pacote: "edicao-de-video", gancho: "Só a edição de vídeo, do bruto ao post, por {preco}" },
   },
   {
     pasta: "trem",
