@@ -18,6 +18,23 @@
   .prova { margin: 0; }
   .prova video { display: block; width: 100%; aspect-ratio: 9 / 16; border-radius: 22px; background: var(--code-bg); box-shadow: var(--shadow); }
   .prova figcaption { margin-top: 10px; font-size: 13px; color: var(--ink-soft); text-align: center; }
+  .prova { position: relative; }
+  .som { position: absolute; right: 12px; top: 12px; min-height: 40px; padding: 8px 14px; border: 0; border-radius: 999px; cursor: pointer;
+    background: rgba(20, 22, 26, .72); color: #fff; font: 600 13px/1 var(--font-body); backdrop-filter: blur(6px); }
+  .som[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+  .lateral { display: grid; gap: 16px; }
+  /* Card pequeno do pacote abaixo do vídeo (preenchido por pagina.js com os dados do banco) */
+  .produto-topo { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 14px; box-shadow: var(--shadow); text-align: left; }
+  .produto-topo .capa-img { display: block; aspect-ratio: 3 / 2; border-radius: 12px; overflow: hidden; margin-bottom: 12px; }
+  .produto-topo .capa-img img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .produto-topo h2 { font-size: 18px; margin: 0 0 4px; max-width: none; }
+  .produto-topo-desc { font-size: 13.5px; color: var(--ink-soft); margin: 0 0 12px; }
+  .produto-topo-preco { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin: 0 0 12px; }
+  .produto-topo-preco .oferta-preco-rotulo { font: 500 12px/1.2 var(--font-mono); color: var(--ink-soft); text-transform: uppercase; }
+  .produto-topo-preco .price { font-size: 30px; margin: 0; }
+  .produto-topo .cta { max-width: none; padding: 14px 18px; font-size: 15px; }
+  .produto-topo-mais { display: block; text-align: center; margin-top: 10px; font-size: 13px; color: var(--accent); font-weight: 600; }
+  [data-produto-topo]:empty { min-height: 300px; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); }
   section.bloco { margin-top: 72px; }
   section.bloco > h2 { font-size: clamp(24px, 4vw, 32px); margin-bottom: 10px; }
   section.bloco > p { color: var(--ink-soft); margin: 0 0 22px; max-width: 60ch; }
@@ -42,7 +59,7 @@
   .chamada p { color: var(--ink-soft); margin: 0 auto 22px; max-width: 52ch; }
   @media (max-width: 760px) {
     .heroi { grid-template-columns: 1fr; gap: 28px; }
-    .prova { max-width: 300px; margin: 0 auto; }
+    .lateral { max-width: 340px; width: 100%; margin: 0 auto; }
   }
 </style>
 </head>
@@ -63,10 +80,14 @@
         <span class="confia">Pagamento único. Acesso na hora.</span>
       </div>
     </div>
-    <figure class="prova">
-      <video src="demo.mp4" poster="demo.jpg" controls playsinline preload="none" aria-label="Vídeo feito pelo Claude Code com as skills do pacote"></video>
-      <figcaption>Este vídeo saiu do Claude Code, escrito em código. Ninguém arrastou um keyframe.</figcaption>
-    </figure>
+    <div class="lateral">
+      <figure class="prova">
+        <video id="video-venda" src="demo.mp4" poster="demo.jpg" autoplay muted loop playsinline preload="auto" aria-label="Vídeo de apresentação do pacote de edição"></video>
+        <button class="som" type="button" id="botao-som" aria-pressed="false">Ativar som</button>
+        <figcaption>Feito pelo Claude Code, escrito em código.</figcaption>
+      </figure>
+      <div data-produto-topo></div>
+    </div>
   </div>
 
   <section class="bloco" aria-labelledby="dor">
@@ -88,6 +109,7 @@
       <article class="card"><p class="de">Não quer aparecer</p><h3>Aula ou explicação sem câmera</h3><p class="when">Ele monta o vídeo a partir das suas anotações, com títulos e animações.</p></article>
       <article class="card"><p class="de">Tem uma live ou podcast longo</p><h3>Vários Shorts de uma vez</h3><p class="when">Ele acha os melhores trechos e corta cada um no formato vertical.</p></article>
       <article class="card"><p class="de">Já tem o vídeo editado</p><h3>Só a legenda em português</h3><p class="when">Transcreve no seu computador e legenda no tempo da fala.</p></article>
+      <article class="card"><p class="de">Tem só a ideia</p><h3>Vídeo animado com narração</h3><p class="when">Do roteiro ao vídeo pronto: narração, cenas animadas, legenda e efeitos sonoros, o mesmo fluxo dos vídeos deste perfil.</p></article>
     </div>
   </section>
 
@@ -107,9 +129,9 @@
   <section class="bloco" aria-labelledby="vem">
     <h2 id="vem">O que vem no pacote</h2>
     <ul class="inclui">
-      <li><span class="qtd">11</span><div><strong>Skills de edição</strong><span>Uma autoral, do vídeo bruto ao Reels pronto, e 10 de código aberto, como HyperFrames, FFmpeg e MoviePy, instaladas direto do autor.</span></div></li>
+      <li><span class="qtd">12</span><div><strong>Skills de edição</strong><span>Duas autorais, do vídeo bruto ao Reels pronto e do roteiro ao vídeo animado com narração, e 10 de código aberto, como HyperFrames, FFmpeg e MoviePy, instaladas direto do autor.</span></div></li>
       <li><span class="qtd">6</span><div><strong>Agentes no time</strong><span>Para Claude Code e para Codex, com líder e revisor.</span></div></li>
-      <li><span class="qtd">6</span><div><strong>Prompts prontos</strong><span>Talking head, legenda, aula sem câmera, cortes de vídeo longo e o time inteiro trabalhando.</span></div></li>
+      <li><span class="qtd">7</span><div><strong>Prompts prontos</strong><span>Talking head, legenda, aula sem câmera, cortes de vídeo longo, vídeo animado narrado e o time inteiro trabalhando.</span></div></li>
       <li><span class="qtd">1</span><div><strong>Instalador e aula curta</strong><span>O instalador baixa e coloca tudo no lugar, e a aula mostra a instalação e o primeiro vídeo.</span></div></li>
     </ul>
   </section>
@@ -118,7 +140,7 @@
     <h2 id="duvidas">Antes de comprar</h2>
     <details><summary>Preciso saber editar vídeo?</summary><p>Não. Você descreve o vídeo em português e o time faz os cortes, a legenda e a montagem.</p></details>
     <details><summary>Preciso saber programar?</summary><p>Não. Você roda o instalador e um comando de atualização, e a aula mostra os dois. Depois é só pedir.</p></details>
-    <details><summary>O que eu preciso ter?</summary><p>O Claude Code (com a sua assinatura do Claude, que não vem no pacote) ou o Codex, o Node.js 22 ou mais novo, o FFmpeg e espaço livre em disco para os vídeos. Funciona no Windows, no Mac e no Linux.</p></details>
+    <details><summary>O que eu preciso ter?</summary><p>O Claude Code (com a sua assinatura do Claude, que não vem no pacote) ou o Codex, o Node.js 22 ou mais novo, o FFmpeg, o Python (para o vídeo animado narrado) e espaço livre em disco para os vídeos. Funciona no Windows, no Mac e no Linux.</p></details>
     <details><summary>Tem algum custo além do pacote?</summary><p>O essencial roda no seu computador. Algumas ferramentas opcionais, como a voz de IA da ElevenLabs, são pagas à parte, e os agentes sempre pedem a sua aprovação antes de qualquer gasto.</p></details>
     <details><summary>É mensalidade?</summary><p>Não. É pagamento único, e o acesso sai logo depois da compra.</p></details>
     <details><summary>E se eu não gostar?</summary><p>Você tem 7 dias depois da compra para pedir o reembolso, como prevê o Código de Defesa do Consumidor. Veja a <a href="/reembolso">política de reembolso</a>.</p></details>
@@ -135,5 +157,20 @@
 <footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
 <div class="sr-only" aria-live="polite" id="aviso"></div>
 <script src="../assets/pagina.js"></script>
+<script>
+  // O vídeo começa mudo (o navegador só deixa tocar sozinho assim); o botão liga o som e recomeça do início
+  (() => {
+    const v = document.getElementById("video-venda"), b = document.getElementById("botao-som");
+    if (!v || !b) return;
+    v.play().catch(() => { v.controls = true; });
+    b.addEventListener("click", () => {
+      const ligar = v.muted;
+      v.muted = !ligar;
+      if (ligar) { v.currentTime = 0; v.play().catch(() => {}); }
+      b.setAttribute("aria-pressed", String(ligar));
+      b.textContent = ligar ? "Desativar som" : "Ativar som";
+    });
+  })();
+</script>
 </body>
 </html>
