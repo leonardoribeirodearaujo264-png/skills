@@ -7,7 +7,7 @@ export default function Privacidade() {
   return (
     <Politica
       titulo="Política de privacidade"
-      atualizada="30 de outubro de 2026"
+      atualizada="1 de novembro de 2026"
       introducao="Esta política explica quais dados pessoais coletamos, para que usamos e quais são os seus direitos, de acordo com a Lei Geral de Proteção de Dados (Lei 13.709/2018)."
       secoes={[
         {
@@ -30,13 +30,16 @@ export default function Privacidade() {
         {
           titulo: "Com quem compartilhamos",
           paragrafos: [
-            "Só com os serviços necessários para o site funcionar: processamento de pagamento, hospedagem do site e do banco de dados, login e envio de e-mails. Alguns desses serviços guardam dados em servidores fora do Brasil. Não vendemos nem alugamos os seus dados.",
+            "Com os serviços necessários para o site funcionar: processamento de pagamento, hospedagem do site e do banco de dados, login e envio de e-mails. Com a Meta, pelo Pixel, as páginas que você visita no site (veja Cookies). Alguns desses serviços guardam dados em servidores fora do Brasil. Não vendemos nem alugamos os seus dados.",
             "As páginas grátis dos vídeos carregam as fontes do texto pelo Google Fonts, que recebe o endereço IP de quem abre a página.",
           ],
         },
         {
           titulo: "Cookies",
-          paragrafos: ["Usamos apenas os cookies necessários para manter você conectado na área de membros. Não usamos cookies de publicidade neste site."],
+          paragrafos: [
+            "Usamos os cookies necessários para manter você conectado na área de membros.",
+            "Também usamos o Pixel da Meta (Facebook e Instagram), que registra as páginas visitadas e guarda cookies no seu navegador para medir e direcionar os nossos anúncios. A Meta trata esses dados conforme a política de privacidade dela. Você pode bloquear esses cookies nas configurações do navegador ou ajustar as preferências de anúncios na sua conta da Meta.",
+          ],
         },
         {
           titulo: "Por quanto tempo guardamos",

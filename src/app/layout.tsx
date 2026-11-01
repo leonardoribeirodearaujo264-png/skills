@@ -4,6 +4,7 @@ import { Bricolage_Grotesque, Inter, JetBrains_Mono } from "next/font/google";
 import "../../public/assets/estilo.css";
 import "../../public/assets/catalogo.css";
 import "./globals.css";
+import { PixelMeta } from "@/components/PixelMeta";
 
 const display = Bricolage_Grotesque({ subsets: ["latin"], weight: ["500", "700", "800"], variable: "--fonte-display" });
 const corpo = Inter({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--fonte-corpo" });
@@ -17,7 +18,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className={`${display.variable} ${corpo.variable} ${mono.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <PixelMeta />
+      </body>
     </html>
   );
 }

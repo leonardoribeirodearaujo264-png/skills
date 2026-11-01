@@ -449,6 +449,17 @@ async function copiar(botao) {
   setTimeout(() => { delete botao.dataset.state; botao.textContent = "Copiar"; }, 2200);
 }
 
+// Meta Pixel: o ID e o código ficam só em /assets/pixel.js
+function carregarPixel() {
+  if (document.querySelector('script[data-pixel]')) return;
+  const s = document.createElement("script");
+  s.src = "/assets/pixel.js";
+  s.async = true;
+  s.dataset.pixel = "";
+  document.head.append(s);
+}
+
+carregarPixel();
 preencherMarca();
 montarOferta();
 document.querySelectorAll("[data-copy]").forEach(b => b.addEventListener("click", () => copiar(b)));
