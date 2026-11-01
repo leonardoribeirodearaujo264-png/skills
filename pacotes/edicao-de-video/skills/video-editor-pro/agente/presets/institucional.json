@@ -1,0 +1,105 @@
+{
+  "name": "INSTITUCIONAL-PRO",
+  "descricao": "Marca. Visual sofisticado, ritmo moderado, foco institucional.",
+  "formato": {
+    "preset": "youtube",
+    "resolucao": "1920x1080",
+    "aspect": "16:9",
+    "fps": 30
+  },
+  "duracao": {
+    "alvo_s": 90,
+    "maximo_s": 180,
+    "minimo_s": 30
+  },
+  "cortes": {
+    "intensidade": "media",
+    "remover_silencio_acima_de_s": 0.6,
+    "silencio_residual_s": 0.28,
+    "padding_antes_s": 0.1,
+    "padding_depois_s": 0.15,
+    "fade_audio_no_corte_s": 0.03,
+    "plano_maximo_sem_evento_s": 7.0,
+    "remover": [
+      "falsos_inicios",
+      "repeticoes_involuntarias",
+      "gaguejos",
+      "tentativas_erradas",
+      "trechos_sem_valor",
+      "ar_morto"
+    ]
+  },
+  "ritmo": {
+    "cortes_por_minuto_alvo": 9,
+    "evento_visual_a_cada_s": 7.0,
+    "comentario": "Sofisticacao e sobre composicao e respiro, nao sobre densidade."
+  },
+  "legendas": {
+    "estilo": "institucional",
+    "palavras_por_linha": 6,
+    "caixa_alta": false,
+    "destacar_numeros": true,
+    "margem_inferior_de_1080": 130,
+    "remover_fillers_do_texto": true
+  },
+  "zoom": {
+    "intensidade": "baixa",
+    "maximo_por_minuto": 2,
+    "escala_punch_in": 1.06,
+    "duracao_s": 0.7,
+    "usar_em": [
+      "frase_chave",
+      "mudanca_de_argumento",
+      "cta",
+      "numero_importante"
+    ],
+    "nunca": [
+      "cortar_olhos_ou_boca",
+      "zoom_em_toda_frase",
+      "movimento_continuo"
+    ]
+  },
+  "motion": {
+    "quantidade": "media",
+    "elementos_permitidos": [
+      "titulo",
+      "lower_third",
+      "numero",
+      "logo_lockup",
+      "legenda_de_marca"
+    ],
+    "overlay_formato": "webm_alpha",
+    "duracao_card_s": [
+      1.5,
+      4.0
+    ]
+  },
+  "broll": {
+    "quantidade": "alta",
+    "cobertura_maxima_pct": 50
+  },
+  "audio": {
+    "target_lufs": -16,
+    "true_peak_dbtp": -1.5,
+    "denoise": 0.3,
+    "musica": {
+      "usar": true,
+      "ganho_db": -24,
+      "ducking": true
+    }
+  },
+  "hook": {
+    "janela_s": 6.0,
+    "exigir_gancho": true,
+    "permitir_cold_open": true,
+    "comentario": "Cold open so e permitido se a frase movida mantiver o contexto original. Nunca montar frase que a pessoa nao disse."
+  },
+  "estrutura": [
+    "ABERTURA_DE_MARCA",
+    "PROPOSITO",
+    "O_QUE_FAZEMOS",
+    "PROVA",
+    "CONVITE"
+  ],
+  "grade": "warm_cinematic"
+}

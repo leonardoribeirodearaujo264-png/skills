@@ -175,6 +175,14 @@ export function ofertaParaMaisUm(catalogo: Catalogo, ehCliente: boolean): Oferta
   return cliente ?? catalogo.ofertas.find(ehAvulsoPorProduto) ?? null;
 }
 
+// Duração da aula para exibir: "74 s" até um minuto e meio, depois "2 min 31 s"
+export function formatarDuracao(segundos: number): string {
+  if (segundos < 90) return `${segundos} s`;
+  const min = Math.floor(segundos / 60);
+  const s = segundos % 60;
+  return s ? `${min} min ${s} s` : `${min} min`;
+}
+
 export function formatarReais(centavos: number): string {
   return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(centavos / 100);
 }

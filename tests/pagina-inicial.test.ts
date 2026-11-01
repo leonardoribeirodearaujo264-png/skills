@@ -127,3 +127,12 @@ describe("fonte única das páginas dos vídeos", () => {
     expect([...PAGINAS_ANTIGAS].sort()).toEqual(["agentes", "banca", "clonadora", "conselho", "freellm", "harvey", "pagina-agentes", "ranking"]);
   });
 });
+
+describe("duração da aula", () => {
+  it("mostra segundos até um minuto e meio e minutos depois", async () => {
+    const { formatarDuracao } = await import("@/lib/loja/dominio");
+    expect(formatarDuracao(74)).toBe("74 s");
+    expect(formatarDuracao(151)).toBe("2 min 31 s");
+    expect(formatarDuracao(120)).toBe("2 min");
+  });
+});

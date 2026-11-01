@@ -35,3 +35,4 @@ Thumbs.db
 
 # SQL combinado só para rodar no SQL Editor (as migrações numeradas são a fonte)
 banco/rodar-*.sql
+__pycache__/

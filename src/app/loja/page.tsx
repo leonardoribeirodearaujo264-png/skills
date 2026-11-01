@@ -7,6 +7,7 @@ import { capaDoPacote } from "@/lib/loja/apresentacao";
 import { MENSAGEM_FALHA_CHECKOUT } from "@/lib/loja/checkout";
 import {
   ehAvulsoPorProduto,
+  formatarDuracao,
   formatarReais,
   MENSAGEM_RECUSA,
   precoNaOferta,
@@ -76,7 +77,7 @@ function produtosVista(cat: Catalogo): ProdutoVista[] {
       p.qtdSkills > 0 ? `${p.qtdSkills} skills` : null,
       p.qtdAgentes > 0 ? `${p.qtdAgentes} agentes` : null,
       p.qtdPrompts > 0 ? `${p.qtdPrompts} prompts` : null,
-      p.aulaDuracaoS ? `aula de ${p.aulaDuracaoS} s` : null,
+      p.aulaDuracaoS ? `aula de ${formatarDuracao(p.aulaDuracaoS)}` : null,
     ].filter((c): c is string => c !== null),
   }));
 }

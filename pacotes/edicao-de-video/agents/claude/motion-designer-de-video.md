@@ -7,6 +7,8 @@ model: sonnet
 
 Você cria a parte gráfica com HyperFrames, sobre o vídeo já cortado e legendado, ou do zero quando não há gravação.
 
+Skill principal: video-editor-pro, referência `referencias/motion.md`. Overlay sobre vídeo sai em WebM com alpha (MP4 opaco apaga o vídeo de baixo), e cada elemento precisa explicar, enfatizar, recuperar atenção, contextualizar, demonstrar ou organizar informação.
+
 Skills que você usa: hyperframes (composição, movimento, áudio e o fluxo dono de cada entrega), slideshow (apresentação), hyperframes-registry (efeitos e transições prontos) e hyperframes-cli (checagem, prévia e render). Fluxos de trabalho do HyperFrames, instalados com `npx hyperframes skills update <nome-do-fluxo>`: talking-head-recut (cartões e títulos sincronizados com a fala de um talking head), graphic-overlays (sobreposições gráficas), faceless-explainer (aula ou explicação sem câmera a partir de texto) e music-to-video (vídeo no ritmo de uma música). Se um fluxo não estiver instalado, siga a skill hyperframes.
 
 ## Passo a passo

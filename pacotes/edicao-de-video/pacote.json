@@ -21,23 +21,34 @@
       "fonte": "digitalsamba/claude-code-video-toolkit",
       "url": "https://github.com/digitalsamba/claude-code-video-toolkit",
       "licenca": "MIT",
-      "skills": ["ffmpeg", "moviepy"],
+      "skills": [
+        "ffmpeg",
+        "moviepy"
+      ],
       "codex": true
     },
     {
       "fonte": "coreyhaines31/marketingskills",
       "url": "https://github.com/coreyhaines31/marketingskills",
       "licenca": "MIT",
-      "skills": ["social"],
+      "skills": [
+        "social"
+      ],
       "codex": true
     },
     {
       "fonte": "browser-use/video-use",
       "url": "https://github.com/browser-use/video-use",
       "licenca": "MIT",
-      "skills": ["video-use"],
+      "skills": [
+        "video-use"
+      ],
       "codex": true,
-      "observacao": "Opcional. Exige conta paga da ElevenLabs."
+      "observacao": "Usado pela skill video-editor-pro com transcrição local, sem custo. O instalador do ambiente baixa o repositório; a transcrição paga da ElevenLabs é opcional."
     }
-  ]
+  ],
+  "posInstalacao": {
+    "requisito": "Python 3.10 ou mais novo (python.org) e o FFmpeg",
+    "pedido": "Depois, monte o ambiente da skill video-editor-pro: rode python ~/.claude/skills/video-editor-pro/agente/instalar_ambiente.py (no Mac ou no Linux, python3). Se faltar o Python 3.10 ou o FFmpeg, pare e me explique como instalar no meu sistema."
+  }
 }

@@ -12,7 +12,7 @@ pacotes/<slug>/
   agents/claude/<nome>.md   time autoral no formato do Claude Code
   agents/codex/<nome>.toml  o mesmo time no formato do Codex
   prompts/NN-<nome>.md   prompts prontos, um por arquivo
-  aula/roteiro.md        roteiro da aula (até 210 palavras, cerca de 80 s: abertura, instalação pelo app do Claude e uso)
+  aula/roteiro.md        roteiro da aula (até 210 palavras, cerca de 80 s; aula passo a passo até 240 s)
   LICENSES/              licença do conteúdo autoral
   instalar-claude.ps1 / instalar-claude.sh   gerados por scripts/gerar-instaladores.mjs
   instalar-codex.ps1 / instalar-codex.sh     gerados

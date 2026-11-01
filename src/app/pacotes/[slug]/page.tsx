@@ -7,7 +7,7 @@ import { CapaPacote } from "@/components/CapaPacote";
 import { Icone } from "@/components/Icone";
 import { apresentacao, capaDoPacote, type Capa } from "@/lib/loja/apresentacao";
 import { conteudoDoPacote } from "@/lib/loja/conteudo";
-import { ehAvulsoPorProduto, formatarReais, precoNaOferta, type Catalogo, type Produto } from "@/lib/loja/dominio";
+import { ehAvulsoPorProduto, formatarDuracao, formatarReais, precoNaOferta, type Catalogo, type Produto } from "@/lib/loja/dominio";
 import { carregarCatalogo } from "@/lib/loja/repositorio";
 import { urlComprar } from "@/lib/loja/vitrine";
 import { env } from "@/lib/env";
@@ -113,7 +113,7 @@ function itensLeva(p: Produto): ItemLeva[] {
         }
       : null,
     p.aulaDuracaoS
-      ? { icone: "play", titulo: `Aula de ${p.aulaDuracaoS} s`, leva: "Da instalação ao primeiro uso.", ganha: "Você vê o caminho inteiro antes de começar." }
+      ? { icone: "play", titulo: `Aula de ${formatarDuracao(p.aulaDuracaoS)}`, leva: "Da instalação ao primeiro uso.", ganha: "Você vê o caminho inteiro antes de começar." }
       : null,
     {
       icone: "terminal",
@@ -249,7 +249,7 @@ export default async function PaginaPacote({ params }: Params) {
             <section className="cta-final" aria-labelledby="h-cta">
               <div>
                 <h2 id="h-cta">{p.titulo}</h2>
-                <p>Para Claude Code e Codex{p.aulaDuracaoS ? `, com aula de ${p.aulaDuracaoS} s` : ""} e guia em português.</p>
+                <p>Para Claude Code e Codex{p.aulaDuracaoS ? `, com aula de ${formatarDuracao(p.aulaDuracaoS)}` : ""} e guia em português.</p>
               </div>
               <div className="acao">
                 <span className="cat-preco">{d.precoTexto}</span>

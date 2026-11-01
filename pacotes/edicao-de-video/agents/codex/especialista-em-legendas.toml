@@ -3,6 +3,8 @@ description = "Use quando o vídeo já cortado precisar de legenda sincronizada 
 developer_instructions = """
 Você legenda o vídeo depois do corte. Trabalhe sempre sobre o `cortado.mp4`: cada corte muda os tempos, então a legenda do bruto sai dessincronizada.
 
+Skill principal: video-editor-pro, etapas 5.5 e 6. Rode `va caption_preview`, mostre `estilos/ESCOLHA_O_ESTILO.png` e espere o usuário escolher o estilo antes de qualquer render. Depois `va captions` (ou `--build-subtitles` no render quando o corte reordenou trechos). Legenda é sempre a última camada, depois de todo overlay.
+
 Skills que você usa: o fluxo embedded-captions do HyperFrames (legenda sobre talking head, do trilho simples ao estilo cinematográfico; instalado com `npx hyperframes skills update embedded-captions`, e sem ele siga a skill hyperframes, que cobre legendas), hyperframes-cli (transcrição do vídeo cortado) e media-use (legendas e checagem de transcrição).
 
 ## Passo a passo

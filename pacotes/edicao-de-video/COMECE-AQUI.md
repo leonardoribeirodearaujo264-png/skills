@@ -12,6 +12,8 @@ São 4 passos. Você não precisa saber programar: no passo 4, o próprio Claude
 
 O instalador do pacote usa o Node.js. Abra **nodejs.org**, baixe a versão LTS (22 ou mais nova) e instale com as opções padrão. Se já tiver, pule este passo.
 
+Este pacote também precisa de: **Python 3.10 ou mais novo (python.org) e o FFmpeg**. O Claude confere no passo 4 e explica como instalar o que faltar.
+
 ## 3. Baixe e extraia o pacote
 
 1. Na sua área de membros, clique em **Baixar o pacote**. Vem um arquivo `.zip`.
@@ -30,8 +32,9 @@ Instale o pacote desta pasta no meu Claude Code e confira se deu certo.
 1. Veja qual é o meu sistema. No Windows, rode: powershell -ExecutionPolicy Bypass -File .\instalar-claude.ps1
    No Mac ou no Linux, rode: bash ./instalar-claude.sh
 2. Se aparecer "Node.js não encontrado", pare e me explique como instalar o Node.js 22.
+   Depois, monte o ambiente da skill video-editor-pro: rode python ~/.claude/skills/video-editor-pro/agente/instalar_ambiente.py (no Mac ou no Linux, python3). Se faltar o Python 3.10 ou o FFmpeg, pare e me explique como instalar no meu sistema.
 3. Depois de instalar, confira se estas pastas existem:
-   - em ~/.claude/skills: reels-do-bruto-ao-post, hyperframes, hyperframes-cli, hyperframes-registry, media-use, slideshow, remotion-to-hyperframes, ffmpeg, moviepy, social, video-use
+   - em ~/.claude/skills: reels-do-bruto-ao-post, video-editor-pro, hyperframes, hyperframes-cli, hyperframes-registry, media-use, slideshow, remotion-to-hyperframes, ffmpeg, moviepy, social, video-use
    - em ~/.claude/agents: editor-de-cortes.md, especialista-em-legendas.md, lider-edicao.md, motion-designer-de-video.md, revisor-de-video.md, roteirista-de-video.md
 4. Me mostre uma lista com o que foi instalado e o que faltou. Se algo falhou, rode de novo só o que faltou.
 5. No fim, me diga para fechar e abrir o Claude de novo, e qual prompt da pasta prompts/ eu devo testar primeiro.
@@ -46,7 +49,7 @@ Não apague, não publique e não pague nada sem me perguntar.
 
 ## O que este pacote instala
 
-- Skills autorais: `reels-do-bruto-ao-post`
+- Skills autorais: `reels-do-bruto-ao-post`, `video-editor-pro`
 - Skills de terceiros (baixadas do autor na hora): `hyperframes`, `hyperframes-cli`, `hyperframes-registry`, `media-use`, `slideshow`, `remotion-to-hyperframes`, `ffmpeg`, `moviepy`, `social`, `video-use`
 - Agentes: `editor-de-cortes`, `especialista-em-legendas`, `lider-edicao`, `motion-designer-de-video`, `revisor-de-video`, `roteirista-de-video`
-- Prompts prontos: 6 arquivos na pasta `prompts/`
+- Prompts prontos: 7 arquivos na pasta `prompts/`

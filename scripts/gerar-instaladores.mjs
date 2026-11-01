@@ -194,6 +194,8 @@ function gerarComeceAqui(dados) {
   const agentes = nomesDe(dados.slug, "agents/claude", ".md");
   const prompts = nomesDe(dados.slug, "prompts", ".md");
   const lista = (xs) => (xs.length ? xs.map((x) => `\`${x}\``).join(", ") : "nenhuma");
+  // posInstalacao (pacote.json): passo extra depois do instalador, como montar o ambiente de uma skill
+  const pos = dados.posInstalacao;
   return `<!-- ${AVISO} -->
 # Comece aqui: como instalar o pacote "${dados.titulo}"
 
@@ -206,7 +208,9 @@ São 4 passos. Você não precisa saber programar: no passo 4, o próprio Claude
 
 ## 2. Instale o Node.js
 
-O instalador do pacote usa o Node.js. Abra **nodejs.org**, baixe a versão LTS (22 ou mais nova) e instale com as opções padrão. Se já tiver, pule este passo.
+O instalador do pacote usa o Node.js. Abra **nodejs.org**, baixe a versão LTS (22 ou mais nova) e instale com as opções padrão. Se já tiver, pule este passo.${pos ? `
+
+Este pacote também precisa de: **${pos.requisito}**. O Claude confere no passo 4 e explica como instalar o que faltar.` : ""}
 
 ## 3. Baixe e extraia o pacote
 
@@ -225,7 +229,8 @@ Instale o pacote desta pasta no meu Claude Code e confira se deu certo.
 
 1. Veja qual é o meu sistema. No Windows, rode: powershell -ExecutionPolicy Bypass -File .\\instalar-claude.ps1
    No Mac ou no Linux, rode: bash ./instalar-claude.sh
-2. Se aparecer "Node.js não encontrado", pare e me explique como instalar o Node.js 22.
+2. Se aparecer "Node.js não encontrado", pare e me explique como instalar o Node.js 22.${pos ? `
+   ${pos.pedido}` : ""}
 3. Depois de instalar, confira se estas pastas existem:
    - em ~/.claude/skills: ${[...skillsAutorais, ...terceiras].join(", ") || "(este pacote não tem skills)"}
    - em ~/.claude/agents: ${agentes.map((a) => `${a}.md`).join(", ")}

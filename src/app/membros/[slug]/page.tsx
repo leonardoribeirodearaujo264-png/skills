@@ -7,6 +7,7 @@ import { Cabecalho, Rodape } from "@/components/Cabecalho";
 import { Icone } from "@/components/Icone";
 import { Markdown, secoesDoGuia } from "@/components/Markdown";
 import { usuarioAtual } from "@/lib/auth/sessao";
+import { formatarDuracao } from "@/lib/loja/dominio";
 import { aulaDoProduto, conteudoDoProduto, produtoVisivel, temAcesso, type Conteudo } from "@/lib/loja/membros";
 import { BotaoDownload } from "./BotaoDownload";
 import { Instalacao } from "./Instalacao";
@@ -82,7 +83,7 @@ export default async function ConteudoProduto({ params, searchParams }: Props) {
             slug={slug}
             email={usuario?.email ?? null}
             numeros={[
-              ["Aula", produto.aulaDuracaoS ? `${produto.aulaDuracaoS} s` : "1 min"],
+              ["Aula", produto.aulaDuracaoS ? formatarDuracao(produto.aulaDuracaoS) : "1 min"],
               ["Agentes", String(produto.qtdAgentes)],
               ["Skills", String(produto.qtdSkills)],
               ["Prompts", String(produto.qtdPrompts)],
