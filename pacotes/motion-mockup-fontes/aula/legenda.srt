@@ -9,83 +9,86 @@ pedindo ao Claude Code ou ao
 Codex, sem programa de design.
 
 3
-00:00:07,729 --> 00:00:11,501
-Na sua área de membros, baixe
-o pacote e extraia a pasta.
+00:00:07,729 --> 00:00:11,886
+Só um passo é com você: baixe
+o aplicativo do Claude em
 
 4
-00:00:11,501 --> 00:00:15,447
-Dentro dela, dê dois cliques
-no arquivo instalar-requisitos.
+00:00:11,886 --> 00:00:15,912
+claude.ai barra download e
+entre no plano Pro ou Max.
 
 5
-00:00:15,447 --> 00:00:18,638
-Ele instala tudo o que
-falta no seu computador.
+00:00:15,912 --> 00:00:19,871
+Depois, baixe o pacote na
+área de membros, extraia a
 
 6
-00:00:18,988 --> 00:00:23,185
-Esse arquivo instala o
-aplicativo do Claude e o Node.js,
+00:00:19,871 --> 00:00:23,501
+pasta e abra essa pasta
+no Claude, na aba Code.
 
 7
-00:00:23,185 --> 00:00:26,660
-só o que ainda não
-estiver no seu computador.
+00:00:23,851 --> 00:00:27,548
+Agora arraste o arquivo
+COMECE-AQUI para a conversa
 
 8
-00:00:26,660 --> 00:00:30,333
-No Mac, use o instalar-requisitos
-ponto command.
+00:00:27,548 --> 00:00:30,619
+e escreva: faça o que está neste arquivo.
 
 9
-00:00:30,333 --> 00:00:35,251
-Depois, abra o Claude e entre com
-a sua conta, no plano Pro ou Max.
+00:00:30,619 --> 00:00:35,695
+O Claude instala sozinho o Node.js e
+tudo o que faltar no seu computador.
 
 10
-00:00:35,601 --> 00:00:40,630
-Abra o arquivo COMECE-AQUI, copie
-o pedido pronto e cole no Claude.
+00:00:36,045 --> 00:00:40,289
+Ele instala os programas que
+faltam, roda o instalador do pacote,
 
 11
-00:00:40,630 --> 00:00:46,530
-Ele roda o instalador, confere cada skill
-e cada agente, e avisa se faltou algo.
+00:00:40,289 --> 00:00:44,067
+confere cada skill e cada
+agente, e avisa se faltou algo.
 
 12
-00:00:46,530 --> 00:00:49,614
-No fim, feche e abra o Claude de novo.
+00:00:44,067 --> 00:00:46,974
+Você só aceita quando ele pedir permissão.
 
 13
-00:00:49,964 --> 00:00:54,955
+00:00:46,974 --> 00:00:49,648
+No fim, feche e abra o Claude de novo.
+
+14
+00:00:49,998 --> 00:00:54,989
 Peça ao líder visual o que você
 quer entregar e passe seus arquivos.
 
-14
-00:00:54,955 --> 00:01:00,143
+15
+00:00:54,989 --> 00:01:00,177
 Ele divide entre os especialistas e
 só entrega o que passou na revisão.
 
-15
-00:01:00,143 --> 00:01:02,770
+16
+00:01:00,177 --> 00:01:02,804
 No Codex, cite o nome do agente.
 
-16
-00:01:03,120 --> 00:01:06,945
+17
+00:01:03,154 --> 00:01:06,979
 Veja a skill de mockup: mando
 o print do site e recebo o
 
-17
-00:01:06,945 --> 00:01:10,232
+18
+00:01:06,979 --> 00:01:10,266
 notebook em PNG, no
 tamanho de post e de slide.
 
-18
-00:01:10,582 --> 00:01:14,725
+19
+00:01:10,616 --> 00:01:14,759
 Os prompts prontos estão na pasta
 prompts e na sua área de membros.
 
-19
-00:01:14,725 --> 00:01:17,431
+20
+00:01:14,759 --> 00:01:17,465
 Troque o que está entre colchetes e cole.

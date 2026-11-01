@@ -1,6 +1,6 @@
 # Aula: Edição de vídeo com a video-editor-pro, passo a passo
 
-Duração: 157 segundos, narração de 151.6 s. Fala total: 392 palavras.
+Duração: 156 segundos, narração de 150.6 s. Fala total: 394 palavras.
 
 ## Cena 1
 
@@ -10,21 +10,21 @@ Tela: Edição de vídeo com a video-editor-pro. Do vídeo bruto ao vídeo pront
 
 ## Cena 2
 
-Fala: Na sua área de membros, baixe o pacote e extraia a pasta. Dentro dela, dê dois cliques no arquivo instalar-requisitos. Ele instala tudo o que falta no seu computador.
+Fala: Só um passo é com você: baixe o aplicativo do Claude em claude.ai barra download e entre no plano Pro ou Max. Depois, baixe o pacote na área de membros, extraia a pasta e abra essa pasta no Claude, na aba Code.
 
-Tela: Baixe o .zip, Extraia a pasta, instalar-requisitos, Abra o Claude
+Tela: App do Claude, Baixe o .zip, Extraia a pasta, Abra no Claude
 
 ## Cena 3
 
-Fala: Esse arquivo instala o aplicativo do Claude e o Node.js, o Python e o FFmpeg, só o que ainda não estiver no seu computador. No Mac, use o instalar-requisitos ponto command. Depois, abra o Claude e entre com a sua conta, no plano Pro ou Max.
+Fala: Agora arraste o arquivo COMECE-AQUI para a conversa e escreva: faça o que está neste arquivo. O Claude instala sozinho o Node.js, o Python e o FFmpeg e tudo o que faltar no seu computador.
 
-Tela: App do Claude, Node.js, Python e FFmpeg
+Tela: Arraste o arquivo, Escreva o pedido, O Claude instala
 
 ## Cena 4
 
-Fala: Abra o arquivo COMECE-AQUI, copie o pedido pronto e cole no Claude. Ele roda o instalador, monta o ambiente do editor, confere cada skill e cada agente, e avisa se faltou algo.
+Fala: Ele instala os programas que faltam, roda o instalador do pacote, monta o ambiente do editor de vídeo e confere cada skill e cada agente. Você só aceita quando ele pedir permissão.
 
-Tela: COMECE-AQUI.md em uso: Roda o instalador do pacote; Monta o ambiente da video-editor-pro; Confere cada skill e cada agente; Avisa o que faltou e refaz
+Tela: COMECE-AQUI.md em uso: Instala Node.js, Python e FFmpeg; Roda o instalador do pacote; Monta o ambiente da video-editor-pro; Confere cada skill e cada agente
 
 ## Cena 5
 

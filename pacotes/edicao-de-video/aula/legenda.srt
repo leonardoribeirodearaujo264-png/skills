@@ -14,184 +14,187 @@ entrega o vídeo pronto,
 tudo no seu computador.
 
 4
-00:00:11,634 --> 00:00:15,358
-Na sua área de membros, baixe
-o pacote e extraia a pasta.
+00:00:11,634 --> 00:00:15,994
+Só um passo é com você: baixe
+o aplicativo do Claude em
 
 5
-00:00:15,358 --> 00:00:19,253
-Dentro dela, dê dois cliques
-no arquivo instalar-requisitos.
+00:00:15,994 --> 00:00:20,215
+claude.ai barra download e
+entre no plano Pro ou Max.
 
 6
-00:00:19,253 --> 00:00:22,404
-Ele instala tudo o que
-falta no seu computador.
+00:00:20,215 --> 00:00:24,367
+Depois, baixe o pacote na
+área de membros, extraia a
 
 7
-00:00:22,754 --> 00:00:27,888
-Esse arquivo instala o aplicativo
-do Claude e o Node.js, o Python e
+00:00:24,367 --> 00:00:28,173
+pasta e abra essa pasta
+no Claude, na aba Code.
 
 8
-00:00:27,888 --> 00:00:32,200
-o FFmpeg, só o que ainda não
-estiver no seu computador.
+00:00:28,523 --> 00:00:32,393
+Agora arraste o arquivo
+COMECE-AQUI para a conversa
 
 9
-00:00:32,200 --> 00:00:36,033
-No Mac, use o instalar-requisitos
-ponto command.
+00:00:32,393 --> 00:00:35,608
+e escreva: faça o que está neste arquivo.
 
 10
-00:00:36,033 --> 00:00:41,167
-Depois, abra o Claude e entre com
-a sua conta, no plano Pro ou Max.
+00:00:35,608 --> 00:00:39,281
+O Claude instala sozinho
+o Node.js, o Python e o
 
 11
-00:00:41,517 --> 00:00:46,516
-Abra o arquivo COMECE-AQUI, copie
-o pedido pronto e cole no Claude.
+00:00:39,281 --> 00:00:42,758
+FFmpeg e tudo o que
+faltar no seu computador.
 
 12
-00:00:46,516 --> 00:00:50,916
-Ele roda o instalador, monta
-o ambiente do editor, confere
+00:00:43,108 --> 00:00:47,363
+Ele instala os programas que faltam,
+roda o instalador do pacote, monta o
 
 13
-00:00:50,916 --> 00:00:54,715
-cada skill e cada agente,
-e avisa se faltou algo.
+00:00:47,363 --> 00:00:51,093
+ambiente do editor de vídeo e
+confere cada skill e cada agente.
 
 14
-00:00:55,065 --> 00:00:58,502
+00:00:51,093 --> 00:00:53,720
+Você só aceita quando ele pedir permissão.
+
+15
+00:00:54,070 --> 00:00:57,507
 O editor segue sempre
 a mesma ordem: analisa,
 
-15
-00:00:58,502 --> 00:01:02,004
+16
+00:00:57,507 --> 00:01:01,009
 transcreve, entende o
 vídeo e propõe um plano.
 
-16
-00:01:02,004 --> 00:01:05,117
+17
+00:01:01,009 --> 00:01:04,122
 Ele só começa a cortar depois do seu OK.
 
-17
-00:01:05,117 --> 00:01:08,100
+18
+00:01:04,122 --> 00:01:07,105
 E o arquivo original nunca é alterado.
 
-18
-00:01:08,450 --> 00:01:11,450
+19
+00:01:07,455 --> 00:01:10,455
 Primeiro, peça a skill
 com o caminho do vídeo.
 
-19
-00:01:11,450 --> 00:01:15,116
+20
+00:01:10,455 --> 00:01:14,121
 Ela mede a duração, o formato
 e os silêncios de verdade, e
 
-20
-00:01:15,116 --> 00:01:18,227
+21
+00:01:14,121 --> 00:01:17,232
 transcreve palavra por
 palavra, sem gastar nada.
 
-21
-00:01:18,577 --> 00:01:23,798
+22
+00:01:17,582 --> 00:01:22,803
 Depois, ele lê a transcrição inteira,
 encontra as melhores frases, os
 
-22
-00:01:23,798 --> 00:01:28,545
+23
+00:01:22,803 --> 00:01:27,550
 erros e as repetições, e propõe
 a estratégia em poucas frases.
 
-23
-00:01:28,545 --> 00:01:30,918
+24
+00:01:27,550 --> 00:01:29,923
 Você aprova ou pede ajuste.
 
-24
-00:01:31,268 --> 00:01:34,153
+25
+00:01:30,273 --> 00:01:33,158
 Antes de renderizar,
 ele mostra os estilos de
 
-25
-00:01:34,153 --> 00:01:36,875
+26
+00:01:33,158 --> 00:01:35,880
 legenda sobre um quadro real do seu vídeo.
 
-26
-00:01:36,875 --> 00:01:41,121
+27
+00:01:35,880 --> 00:01:40,126
 Você escolhe o estilo, e a legenda
 entra por último, por cima de tudo.
 
-27
-00:01:41,471 --> 00:01:46,117
+28
+00:01:40,476 --> 00:01:45,122
 Com o plano aprovado, ele monta a lista
 de cortes, com o motivo de cada trecho.
 
-28
-00:01:46,117 --> 00:01:49,001
+29
+00:01:45,122 --> 00:01:48,006
 Corta só entre palavras,
 suaviza cada emenda e
 
-29
-00:01:49,001 --> 00:01:51,457
+30
+00:01:48,006 --> 00:01:50,462
 entrega uma prévia para você assistir.
 
-30
-00:01:51,807 --> 00:01:55,928
+31
+00:01:50,812 --> 00:01:54,933
 Antes de entregar, o controle
 de qualidade confere duração,
 
-31
-00:01:55,928 --> 00:01:59,250
+32
+00:01:54,933 --> 00:01:58,255
 quadros pretos, volume
 e sincronia da legenda.
 
-32
-00:01:59,250 --> 00:02:02,695
+33
+00:01:58,255 --> 00:02:01,700
 Se algo falhar, ele corrige
 e renderiza de novo.
 
-33
-00:02:03,045 --> 00:02:06,201
+34
+00:02:02,050 --> 00:02:05,206
 São seis modos prontos: Reels, YouTube,
 
-34
-00:02:06,201 --> 00:02:09,625
+35
+00:02:05,206 --> 00:02:08,630
 anúncio, jurídico,
 podcast e institucional.
 
-35
-00:02:09,625 --> 00:02:15,400
+36
+00:02:08,630 --> 00:02:14,405
 Cada um já define o ritmo dos cortes, o
 estilo da legenda e o volume do áudio.
 
-36
-00:02:15,750 --> 00:02:18,593
+37
+00:02:14,755 --> 00:02:17,598
 Para vídeos maiores,
 chame o líder de edição.
 
-37
-00:02:18,593 --> 00:02:21,918
+38
+00:02:17,598 --> 00:02:20,923
 Ele divide o trabalho entre
 roteiro, cortes, legenda e
 
-38
-00:02:21,918 --> 00:02:24,761
+39
+00:02:20,923 --> 00:02:23,766
 motion, e só entrega o
 que o revisor aprovou.
 
-39
-00:02:25,111 --> 00:02:29,723
+40
+00:02:24,116 --> 00:02:28,728
 Os prompts prontos estão na pasta
 prompts e na sua área de membros.
 
-40
-00:02:29,723 --> 00:02:33,290
+41
+00:02:28,728 --> 00:02:32,295
 Troque o que está entre
 colchetes, cole no Claude,
 
-41
-00:02:33,290 --> 00:02:36,180
+42
+00:02:32,295 --> 00:02:35,185
 e nada é publicado sem a sua aprovação.

@@ -13,94 +13,97 @@ anúncios, atendimento e números.
 Tudo sai como rascunho para você aprovar.
 
 4
-00:00:10,506 --> 00:00:14,501
-Na sua área de membros, baixe
-o pacote e extraia a pasta.
+00:00:10,506 --> 00:00:14,412
+Só um passo é com você: baixe
+o aplicativo do Claude em
 
 5
-00:00:14,501 --> 00:00:18,680
-Dentro dela, dê dois cliques
-no arquivo instalar-requisitos.
+00:00:14,412 --> 00:00:18,195
+claude.ai barra download e
+entre no plano Pro ou Max.
 
 6
-00:00:18,680 --> 00:00:22,060
-Ele instala tudo o que
-falta no seu computador.
+00:00:18,195 --> 00:00:21,915
+Depois, baixe o pacote na
+área de membros, extraia a
 
 7
-00:00:22,410 --> 00:00:26,349
-Esse arquivo instala o
-aplicativo do Claude e o Node.js,
+00:00:21,915 --> 00:00:25,325
+pasta e abra essa pasta
+no Claude, na aba Code.
 
 8
-00:00:26,349 --> 00:00:29,611
-só o que ainda não
-estiver no seu computador.
+00:00:25,675 --> 00:00:29,181
+Agora arraste o arquivo
+COMECE-AQUI para a conversa
 
 9
-00:00:29,611 --> 00:00:33,058
-No Mac, use o instalar-requisitos
-ponto command.
+00:00:29,181 --> 00:00:32,092
+e escreva: faça o que está neste arquivo.
 
 10
-00:00:33,058 --> 00:00:37,674
-Depois, abra o Claude e entre com
-a sua conta, no plano Pro ou Max.
+00:00:32,092 --> 00:00:36,905
+O Claude instala sozinho o Node.js e
+tudo o que faltar no seu computador.
 
 11
-00:00:38,024 --> 00:00:42,889
-Abra o arquivo COMECE-AQUI, copie
-o pedido pronto e cole no Claude.
+00:00:37,255 --> 00:00:41,642
+Ele instala os programas que
+faltam, roda o instalador do pacote,
 
 12
-00:00:42,889 --> 00:00:48,598
-Ele roda o instalador, confere cada skill
-e cada agente, e avisa se faltou algo.
+00:00:41,642 --> 00:00:45,549
+confere cada skill e cada
+agente, e avisa se faltou algo.
 
 13
-00:00:48,598 --> 00:00:51,582
-No fim, feche e abra o Claude de novo.
+00:00:45,549 --> 00:00:48,554
+Você só aceita quando ele pedir permissão.
 
 14
-00:00:51,932 --> 00:00:53,843
-Este pacote não tem líder.
+00:00:48,554 --> 00:00:51,319
+No fim, feche e abra o Claude de novo.
 
 15
-00:00:53,843 --> 00:00:58,788
+00:00:51,669 --> 00:00:53,580
+Este pacote não tem líder.
+
+16
+00:00:53,580 --> 00:00:58,525
 Você chama os agentes na ordem da etapa,
 e cada um parte da entrega do anterior.
 
-16
-00:00:58,788 --> 00:01:02,384
+17
+00:00:58,525 --> 00:01:02,121
 Antes de publicar, passe tudo
 pelo revisor de promessas.
 
-17
-00:01:02,734 --> 00:01:05,911
+18
+00:01:02,471 --> 00:01:05,648
 Para uma tarefa pequena,
 chame a skill direto.
 
-18
-00:01:05,911 --> 00:01:09,618
+19
+00:01:05,648 --> 00:01:09,355
 A calcular CPA máximo mostra
 quanto você pode pagar por
 
-19
-00:01:09,618 --> 00:01:12,678
+20
+00:01:09,355 --> 00:01:12,415
 venda, com a conta
 aberta e os seus números.
 
-20
-00:01:13,028 --> 00:01:16,602
+21
+00:01:12,765 --> 00:01:16,339
 Os prompts prontos estão na
 pasta prompts e na sua área
 
-21
-00:01:16,602 --> 00:01:19,609
+22
+00:01:16,339 --> 00:01:19,346
 de membros, um para cada
 etapa do lançamento.
 
-22
-00:01:19,609 --> 00:01:22,899
+23
+00:01:19,346 --> 00:01:22,636
 Nenhum agente publica ou
 gasta verba sem o seu OK.

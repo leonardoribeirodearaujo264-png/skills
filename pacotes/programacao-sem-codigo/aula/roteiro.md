@@ -1,6 +1,6 @@
 # Aula: Programação para quem não programa
 
-Duração: 86 segundos, narração de 82.4 s. Fala total: 221 palavras.
+Duração: 87 segundos, narração de 83.4 s. Fala total: 225 palavras.
 
 ## Cena 1
 
@@ -10,21 +10,21 @@ Tela: Programação para quem não programa. Do pedido ao projeto no ar, com seg
 
 ## Cena 2
 
-Fala: Na sua área de membros, baixe o pacote e extraia a pasta. Dentro dela, dê dois cliques no arquivo instalar-requisitos. Ele instala tudo o que falta no seu computador.
+Fala: Só um passo é com você: baixe o aplicativo do Claude em claude.ai barra download e entre no plano Pro ou Max. Depois, baixe o pacote na área de membros, extraia a pasta e abra essa pasta no Claude, na aba Code.
 
-Tela: Baixe o .zip, Extraia a pasta, instalar-requisitos, Abra o Claude
+Tela: App do Claude, Baixe o .zip, Extraia a pasta, Abra no Claude
 
 ## Cena 3
 
-Fala: Esse arquivo instala o aplicativo do Claude e o Node.js, só o que ainda não estiver no seu computador. No Mac, use o instalar-requisitos ponto command. Depois, abra o Claude e entre com a sua conta, no plano Pro ou Max.
+Fala: Agora arraste o arquivo COMECE-AQUI para a conversa e escreva: faça o que está neste arquivo. O Claude instala sozinho o Node.js e tudo o que faltar no seu computador.
 
-Tela: App do Claude, Node.js, Só o que faltar
+Tela: Arraste o arquivo, Escreva o pedido, O Claude instala
 
 ## Cena 4
 
-Fala: Abra o arquivo COMECE-AQUI, copie o pedido pronto e cole no Claude. Ele roda o instalador, confere cada skill e cada agente, e avisa se faltou algo. No fim, feche e abra o Claude de novo.
+Fala: Ele instala os programas que faltam, roda o instalador do pacote, confere cada skill e cada agente, e avisa se faltou algo. Você só aceita quando ele pedir permissão. No fim, feche e abra o Claude de novo.
 
-Tela: COMECE-AQUI.md em uso: Roda o instalador do seu sistema; Confere cada skill e cada agente; Avisa o que faltou e refaz; Indica o primeiro prompt para testar
+Tela: COMECE-AQUI.md em uso: Instala os programas que faltam; Roda o instalador do pacote; Confere cada skill e cada agente; Indica o primeiro prompt para testar
 
 ## Cena 5
 

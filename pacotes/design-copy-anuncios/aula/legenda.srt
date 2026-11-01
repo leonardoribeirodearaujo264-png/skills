@@ -8,84 +8,87 @@ em português e o time
 monta página, texto, anúncio e velocidade.
 
 3
-00:00:05,543 --> 00:00:09,308
-Na sua área de membros, baixe
-o pacote e extraia a pasta.
+00:00:05,543 --> 00:00:10,113
+Só um passo é com você: baixe
+o aplicativo do Claude em
 
 4
-00:00:09,308 --> 00:00:13,247
-Dentro dela, dê dois cliques
-no arquivo instalar-requisitos.
+00:00:10,113 --> 00:00:14,538
+claude.ai barra download e
+entre no plano Pro ou Max.
 
 5
-00:00:13,247 --> 00:00:16,433
-Ele instala tudo o que
-falta no seu computador.
+00:00:14,538 --> 00:00:18,890
+Depois, baixe o pacote na
+área de membros, extraia a
 
 6
-00:00:16,783 --> 00:00:21,163
-Esse arquivo instala o
-aplicativo do Claude e o Node.js,
+00:00:18,890 --> 00:00:22,880
+pasta e abra essa pasta
+no Claude, na aba Code.
 
 7
-00:00:21,163 --> 00:00:24,790
-só o que ainda não
-estiver no seu computador.
+00:00:23,230 --> 00:00:26,738
+Agora arraste o arquivo
+COMECE-AQUI para a conversa
 
 8
-00:00:24,790 --> 00:00:28,622
-No Mac, use o instalar-requisitos
-ponto command.
+00:00:26,738 --> 00:00:29,651
+e escreva: faça o que está neste arquivo.
 
 9
-00:00:28,622 --> 00:00:33,755
-Depois, abra o Claude e entre com
-a sua conta, no plano Pro ou Max.
+00:00:29,651 --> 00:00:34,467
+O Claude instala sozinho o Node.js e
+tudo o que faltar no seu computador.
 
 10
-00:00:34,105 --> 00:00:38,724
-Abra o arquivo COMECE-AQUI, copie
-o pedido pronto e cole no Claude.
+00:00:34,817 --> 00:00:39,083
+Ele instala os programas que
+faltam, roda o instalador do pacote,
 
 11
-00:00:38,724 --> 00:00:44,144
-Ele roda o instalador, confere cada skill
-e cada agente, e avisa se faltou algo.
+00:00:39,083 --> 00:00:42,882
+confere cada skill e cada
+agente, e avisa se faltou algo.
 
 12
-00:00:44,144 --> 00:00:46,977
-No fim, feche e abra o Claude de novo.
+00:00:42,882 --> 00:00:45,804
+Você só aceita quando ele pedir permissão.
 
 13
-00:00:47,327 --> 00:00:51,346
+00:00:45,804 --> 00:00:48,492
+No fim, feche e abra o Claude de novo.
+
+14
+00:00:48,842 --> 00:00:52,861
 Para dar instrução ao time,
 chame o líder pelo nome e conte o
 
-14
-00:00:51,346 --> 00:00:54,840
+15
+00:00:52,861 --> 00:00:56,355
 negócio, o público, a oferta
 e a ação que você quer.
 
-15
-00:00:55,190 --> 00:00:58,534
+16
+00:00:56,705 --> 00:01:00,049
 Antes de anunciar, peça a
 checklist da página que vende.
 
-16
-00:00:58,534 --> 00:01:02,295
+17
+00:01:00,049 --> 00:01:03,810
 Ela devolve o que corrigir primeiro,
 do mais grave ao mais leve.
 
-17
-00:01:02,645 --> 00:01:06,592
+18
+00:01:04,160 --> 00:01:08,107
 Os prompts prontos estão na pasta
 prompts e na sua área de membros.
 
-18
-00:01:06,592 --> 00:01:09,539
+19
+00:01:08,107 --> 00:01:11,054
 Copie, troque o que está
 entre colchetes e cole.
 
-19
-00:01:09,539 --> 00:01:11,907
+20
+00:01:11,054 --> 00:01:13,422
 Nada é publicado sem a sua aprovação.

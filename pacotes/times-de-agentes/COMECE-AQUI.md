@@ -1,47 +1,44 @@
 <!-- Gerado por scripts/gerar-instaladores.mjs a partir do pacote.json. Não edite à mão. -->
 # Comece aqui: como instalar o pacote "Equipe Completa de Agentes"
 
-São 4 passos. Você não precisa saber programar: o passo 2 instala os programas com dois cliques, e no passo 4 o próprio Claude instala e testa o pacote por você.
+São 3 passos e só o primeiro é com você: depois, o próprio Claude instala os programas que faltam, o pacote, confere e testa tudo.
 
-## 1. Baixe e extraia o pacote
+## 1. Baixe o app do Claude
+
+1. Abra **claude.ai/download** no navegador do seu PC ou Mac, baixe o app **Claude** e instale.
+2. Entre com a sua conta. O Claude Code (a aba **Code** do app) precisa de um plano pago do Claude, como o Pro ou o Max.
+
+## 2. Baixe e extraia o pacote
 
 1. Na sua área de membros, clique em **Baixar o pacote**. Vem um arquivo `.zip`.
 2. Clique com o botão direito no `.zip` e escolha **Extrair tudo** (no Mac, basta dar dois cliques).
 3. Guarde a pasta extraída num lugar fácil, como **Documentos**.
 
-## 2. Instale os programas com dois cliques
+## 3. Entregue este arquivo ao Claude
 
-Dentro da pasta do pacote:
-
-- **Windows:** dê dois cliques em `instalar-requisitos.bat`. Se o Windows perguntar se pode abrir, clique em **Mais informações** e **Executar assim mesmo**.
-- **Mac:** clique com o botão direito em `instalar-requisitos.command`, escolha **Abrir** e confirme. Ele usa o Homebrew (brew.sh).
-
-Ele confere e instala só o que faltar: **App do Claude**, **Node.js LTS**. Quando terminar, abra o app do Claude e entre com a sua conta. O Claude Code (a aba **Code** do app) precisa de um plano pago do Claude, como o Pro ou o Max.
-
-Prefere instalar à mão? App do Claude em **claude.ai/download** e Node.js LTS em **nodejs.org**.
-
-## 3. Abra a pasta no Claude
-
-Abra o app **Claude**, vá na aba **Code** e escolha a pasta extraída do pacote como pasta de trabalho.
-
-## 4. Peça ao Claude para instalar e testar
-
-1. Copie o pedido abaixo inteiro, cole na conversa e envie.
-2. Quando o Claude pedir permissão para rodar o instalador, confira e aceite.
+1. Abra o app **Claude**, vá na aba **Code** e escolha a pasta extraída do pacote como pasta de trabalho.
+2. Arraste este arquivo, `COMECE-AQUI.md`, para a conversa e escreva: **Faça o que está neste arquivo.** (Ou copie o pedido abaixo e cole na conversa.)
+3. O Claude instala Node.js LTS se faltarem, depois o pacote, e testa tudo. Quando ele pedir permissão para rodar um instalador, confira e aceite.
 
 ```text
-Instale o pacote desta pasta no meu Claude Code e confira se deu certo.
+Instale tudo o que este pacote precisa no meu computador e confira se deu certo. Faça um passo de cada vez e me diga o que está fazendo.
 
-1. Veja qual é o meu sistema. No Windows, rode: powershell -ExecutionPolicy Bypass -File .\instalar-claude.ps1
-   No Mac ou no Linux, rode: bash ./instalar-claude.sh
-2. Se aparecer "Node.js não encontrado", pare e me explique como instalar o Node.js 22.
-3. Depois de instalar, confira se estas pastas existem:
+1. Veja qual é o meu sistema e instale os programas que faltarem (Node.js LTS):
+   No Windows, rode: powershell -ExecutionPolicy Bypass -File .\instalar-requisitos.ps1
+   No Mac, rode: bash ./instalar-requisitos.command (se faltar o Homebrew, me explique como instalar pelo brew.sh).
+   No Linux, rode o mesmo arquivo e me mostre o comando do apt que ele indicar, para eu rodar com a minha senha.
+   Se depois disso um programa ainda não for encontrado, recarregue o PATH (no Windows: $env:Path = [Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [Environment]::GetEnvironmentVariable("Path","User")) ou me peça para fechar e abrir o Claude.
+2. Instale o pacote. No Windows: powershell -ExecutionPolicy Bypass -File .\instalar-claude.ps1
+   No Mac ou no Linux: bash ./instalar-claude.sh
+3. Confira se estas pastas existem:
    - em ~/.claude/skills: montar-time-de-agentes, subagent-driven-development, dispatching-parallel-agents
    - em ~/.claude/agents: analista-atendimento.md, analista-financeiro.md, diretor-geral.md, estrategista-marketing.md, lider-atendimento.md, lider-conteudo.md, lider-financeiro.md, lider-marketing.md, lider-operacoes.md, lider-vendas.md, mapeador-operacoes.md, negociador-vendas.md, pauteiro-conteudo.md, planejador-operacoes.md, precificador-financeiro.md, prospector-vendas.md, redator-atendimento.md, redator-marketing.md, revisor-atendimento.md, revisor-conteudo.md, revisor-financeiro.md, revisor-marketing.md, revisor-operacoes.md, revisor-vendas.md, roteirista-conteudo.md
 4. Me mostre uma lista com o que foi instalado e o que faltou. Se algo falhou, rode de novo só o que faltou.
 5. No fim, me diga para fechar e abrir o Claude de novo, e qual prompt da pasta prompts/ eu devo testar primeiro.
 Não apague, não publique e não pague nada sem me perguntar.
 ```
+
+Prefere instalar os programas sem o Claude? Na pasta do pacote, dê dois cliques em `instalar-requisitos.bat` (Windows) ou clique com o botão direito em `instalar-requisitos.command` e escolha **Abrir** (Mac).
 
 ## Depois de instalar
 
