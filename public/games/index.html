@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>5 repositórios para criar um jogo com o Claude</title>
+<meta name="description" content="Os cinco links grátis do vídeo: Claude Code Game Studios, UnrealClaude, Godot MCP, ACE-Step 1.5 e NVIDIA Audio2Face-3D, com a instalação de cada um e um prompt para começar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Estes links são grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">5 links grátis</span>
+  <h1>Um estúdio de games <span class="nowrap">no seu Claude</span></h1>
+  <p class="lead">Cinco repositórios do GitHub que cobrem o jogo inteiro: um time de agentes que organiza o projeto, o Claude dentro do editor da Unreal ou da Godot, trilha sonora gerada no seu computador e rosto animado a partir de uma fala gravada. Escolha o motor do seu jogo e siga os passos.</p>
+  <div class="note">Projetos de terceiros, conferidos no GitHub em 02/11/2026. Esta página não tem ligação com os autores. Confira a licença de cada um antes de usar num jogo comercial.</div>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Claude Code Game Studios: o time</h2></div>
+    <p>49 agentes (diretores, líderes de área e especialistas, do diretor criativo ao testador de QA) e 74 skills para o Claude Code. Licença MIT. Clone como a pasta do seu jogo e abra o Claude Code dentro dela:</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-ccgs">Copiar</button></div>
+<pre id="cmd-ccgs">git clone https://github.com/Donchitos/Claude-Code-Game-Studios.git meu-jogo
+cd meu-jogo
+claude</pre>
+    </div>
+    <p>Dentro do Claude Code, digite <code class="inline">/start</code>. Ele pergunta em que ponto você está (sem ideia, ideia vaga ou projeto já começado) e monta o caminho.</p>
+    <a class="btn" href="https://github.com/Donchitos/Claude-Code-Game-Studios" target="_blank" rel="noopener">Abrir o Game Studios</a>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">UnrealClaude: o Claude no editor da Unreal</h2></div>
+    <p>Plugin para a Unreal Engine 5.7 com um painel do Claude dentro do editor e um servidor MCP com mais de 20 ferramentas para atores, Blueprints, fases e materiais. Não vem pronto: precisa compilar para a sua versão da engine. Comece clonando:</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-unreal">Copiar</button></div>
+<pre id="cmd-unreal">git clone --recurse-submodules https://github.com/Natfii/UnrealClaude.git</pre>
+    </div>
+    <div class="note">Depois siga o README: compilar com o RunUAT, copiar para a pasta Plugins do projeto e rodar <code class="inline">npm install</code> na pasta mcp-bridge. A edição de Blueprints ainda tem falhas, segundo o próprio autor.</div>
+    <a class="btn" href="https://github.com/Natfii/UnrealClaude" target="_blank" rel="noopener">Abrir o UnrealClaude</a>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Godot MCP: o Claude vê os erros do jogo</h2></div>
+    <p>Abre o editor da Godot, roda o projeto em modo debug, lê a saída e os erros e cria cenas. Licença MIT. Com a Godot instalada, adicione no Claude Code:</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-godot">Copiar</button></div>
+<pre id="cmd-godot">claude mcp add godot -- npx @coding-solo/godot-mcp</pre>
+    </div>
+    <p>Depois peça:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-godot">Copiar</button></div>
+<pre id="prompt-godot">Rode o projeto Godot desta pasta em modo debug, leia a saída e liste os erros. Para cada erro, mostre o arquivo e a linha, explique a causa e me diga a correção antes de mudar o código.</pre>
+    </div>
+    <a class="btn" href="https://github.com/Coding-Solo/godot-mcp" target="_blank" rel="noopener">Abrir o Godot MCP</a>
+  </section>
+
+  <section class="step" aria-labelledby="passo4">
+    <div class="step-head"><span class="step-num">4</span><h2 id="passo4">ACE-Step 1.5: a trilha sonora</h2></div>
+    <p>Gera música inteira no seu computador, de 10 segundos a 10 minutos. Segundo o projeto, leva menos de 10 segundos por música numa placa RTX 3090 e roda com menos de 4 GB de memória de vídeo. Licença MIT. Para Windows e Mac há um pacote portátil no README; pelo terminal:</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-ace">Copiar</button></div>
+<pre id="cmd-ace">git clone https://github.com/ACE-Step/ACE-Step-1.5.git
+cd ACE-Step-1.5
+uv sync
+uv run acestep</pre>
+    </div>
+    <div class="note">Precisa do <code class="inline">uv</code> instalado (o README mostra como). Sem placa de vídeo, o próprio projeto indica o site acemusic.ai.</div>
+    <a class="btn" href="https://github.com/ace-step/ACE-Step-1.5" target="_blank" rel="noopener">Abrir o ACE-Step 1.5</a>
+  </section>
+
+  <section class="step" aria-labelledby="passo5">
+    <div class="step-head"><span class="step-num">5</span><h2 id="passo5">Audio2Face-3D: o rosto que fala</h2></div>
+    <p>Da NVIDIA: transforma uma fala gravada em animação 3D do rosto, com sincronia da boca (lipsync) e expressão. A página central reúne os modelos, o SDK e os plugins para Unreal Engine 5 e Autodesk Maya.</p>
+    <div class="note">Cada parte tem a sua licença (o SDK é MIT, os modelos seguem os termos da NVIDIA). Confira na página antes de usar.</div>
+    <a class="btn" href="https://github.com/NVIDIA/Audio2Face-3D" target="_blank" rel="noopener">Abrir o Audio2Face-3D</a>
+  </section>
+
+  <section class="step" aria-labelledby="passo6">
+    <div class="step-head"><span class="step-num">6</span><h2 id="passo6">Primeiro pedido</h2></div>
+    <p>Com o Game Studios aberto, envie:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-jogo">Copiar</button></div>
+<pre id="prompt-jogo">Quero fazer um jogo pequeno de [GÊNERO] para [PC OU CELULAR] na [GODOT OU UNREAL], que dê para terminar em um fim de semana. Escreva uma página com a ideia, a mecânica principal e o que fica de fora. Depois divida em tarefas pequenas e comece pela primeira. Me mostre o jogo rodando antes de seguir para a próxima.</pre>
+    </div>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou? No pacote tem o caminho completo do pedido ao projeto no ar."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>

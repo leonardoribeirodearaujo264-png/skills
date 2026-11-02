@@ -189,6 +189,34 @@ export const PAGINAS_VIDEOS: readonly PaginaVideo[] = [
     tipo: "Passo a passo",
     oferta: { pacote: "programacao-sem-codigo", gancho: "Gostou? No pacote tem o caminho completo do pedido ao projeto no ar." },
   },
+  {
+    pasta: "games",
+    titulo: "Um estúdio de games no Claude",
+    frase: "Cinco repositórios grátis: time de agentes, Unreal, Godot, trilha sonora e rosto animado.",
+    tipo: "Passo a passo",
+    oferta: { pacote: "programacao-sem-codigo", gancho: "Gostou? No pacote tem o caminho completo do pedido ao projeto no ar." },
+  },
+  {
+    pasta: "aprender",
+    titulo: "Agentes que te ensinam",
+    frase: "O LearnHarness mede o que você já sabe e ensina um passo de cada vez até o seu objetivo.",
+    tipo: "Passo a passo",
+    oferta: { pacote: "times-de-agentes", gancho: "Gostou? No pacote tem seis times de agentes com líder e revisor." },
+  },
+  {
+    pasta: "arena",
+    titulo: "Arena Skill",
+    frase: "100 subagentes do Claude duelam pela mesma tarefa até sobrar a melhor resposta, com o modo econômico --quick.",
+    tipo: "Passo a passo",
+    oferta: { pacote: "times-de-agentes", gancho: "Gostou? No pacote tem seis times de agentes com líder e revisor." },
+  },
+  {
+    pasta: "trio",
+    titulo: "Trio: 3 repositórios grátis",
+    frase: "Context Mode, a auditoria de segurança da Cloudflare e o VoiceStudio, com os links oficiais.",
+    tipo: "Passo a passo",
+    oferta: { pacote: "programacao-sem-codigo", gancho: "Gostou? No pacote tem o caminho completo do pedido ao projeto no ar." },
+  },
 ];
 
 // A chave é a pasta da página (/agentes/ -> "agentes")

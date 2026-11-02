@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LearnHarness: agentes de IA que te ensinam</title>
+<meta name="description" content="Passo a passo grátis para usar o LearnHarness, app de código aberto em que agentes de IA medem o que você já sabe, montam o caminho até o seu objetivo e ensinam um passo de cada vez.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este passo a passo é grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">passo a passo grátis</span>
+  <h1>Agentes de IA que <span class="nowrap">te ensinam de verdade</span></h1>
+  <p class="lead">O LearnHarness é um app grátis e de código aberto para aprender coisas difíceis. Antes de explicar, os agentes medem onde o seu entendimento acaba. Depois montam o caminho até o seu objetivo, ensinam um passo de cada vez e guardam o que você aprendeu num grafo de conhecimento que a próxima sessão continua.</p>
+
+  <a class="btn" href="https://learnharness.ai" target="_blank" rel="noopener">Baixar o LearnHarness</a>
+  <div class="note">Projeto de terceiros (amosblomqvist/learnharness, licença AGPL-3.0). Código no <a href="https://github.com/amosblomqvist/learnharness" target="_blank" rel="noopener">GitHub</a>. Esta página não tem ligação com o autor.</div>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Instale o app</h2></div>
+    <p>Baixe pelo site oficial (learnharness.ai) ou pela página de versões do GitHub:</p>
+    <div class="cards">
+      <article class="card"><h3>Windows</h3><p class="when">Rode o instalador. Ele ainda não é assinado, então o Windows pode mostrar o aviso de "editor desconhecido".</p></article>
+      <article class="card"><h3>Mac</h3><p class="when">Para Apple Silicon. Arraste o app para a pasta Aplicativos.</p></article>
+      <article class="card"><h3>Linux</h3><p class="when">AppImage ou pacote .deb para Debian e Ubuntu.</p></article>
+    </div>
+    <div class="note">Baixe só do site oficial ou do GitHub do projeto.</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Escolha o modelo</h2></div>
+    <p>Na primeira abertura, você escolhe de onde vem a IA. São três caminhos:</p>
+    <div class="cards">
+      <article class="card"><h3>Sua chave de API</h3><p class="when">De um provedor como Anthropic ou OpenAI. O custo é cobrado pelo provedor, na sua conta.</p></article>
+      <article class="card"><h3>Claude Code instalado</h3><p class="when">Em Configurações, Provedores, Claude Code. Usa o login e o plano do seu Claude Code.</p></article>
+      <article class="card"><h3>Modelo local</h3><p class="when">Qualquer servidor compatível com a OpenAI, inclusive um rodando no seu computador.</p></article>
+    </div>
+    <div class="note">O app não cobra assinatura, mas o uso do modelo tem custo pela sua chave, pelo seu plano ou pelo seu computador. O medidor do app estima só o custo de chaves de API. Ditado e pesquisa na web pedem chaves à parte.</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Diga o que quer entender</h2></div>
+    <p>Comece uma sessão dizendo o assunto e o objetivo. Exemplos para enviar:</p>
+    <div class="code">
+      <div class="code-bar"><span>pedido</span><button class="copy" type="button" data-copy="p-juros">Copiar</button></div>
+<pre id="p-juros">Quero entender juros compostos a ponto de calcular sozinho quanto um investimento rende em 12 meses e explicar a diferença para juros simples.</pre>
+    </div>
+    <div class="code">
+      <div class="code-bar"><span>pedido</span><button class="copy" type="button" data-copy="p-trabalho">Copiar</button></div>
+<pre id="p-trabalho">Quero aprender [ASSUNTO] para [O QUE VOCÊ PRECISA FAZER]. Hoje eu já sei [O QUE VOCÊ JÁ SABE]. Comece medindo o que eu entendo antes de explicar.</pre>
+    </div>
+    <div class="code">
+      <div class="code-bar"><span>pedido</span><button class="copy" type="button" data-copy="p-pratica">Copiar</button></div>
+<pre id="p-pratica">Quero praticar o que aprendi sobre [ASSUNTO] com problemas variados, sem você dizer qual conceito usar em cada um.</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo4">
+    <div class="step-head"><span class="step-num">4</span><h2 id="passo4">Como ele ensina</h2></div>
+    <div class="cards">
+      <article class="card"><h3>Mede</h3><p class="when">Pergunta antes de explicar, para achar onde o seu entendimento acaba.</p></article>
+      <article class="card"><h3>Planeja</h3><p class="when">Monta o mapa do que você sabe hoje até o objetivo, e você pode ver o plano.</p></article>
+      <article class="card"><h3>Ensina</h3><p class="when">Um passo de cada vez: você prevê, recebe a explicação e confere se entendeu.</p></article>
+      <article class="card"><h3>Pratica</h3><p class="when">Em sessões à parte, com problemas que se adaptam ao seu raciocínio.</p></article>
+    </div>
+    <div class="note">Escreva o que está pensando nos campos de raciocínio: é assim que o agente entende onde está a dúvida, e não só se a resposta está certa. Tudo fica salvo no seu computador.</div>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou? O pacote traz times de agentes prontos para o seu negócio."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>

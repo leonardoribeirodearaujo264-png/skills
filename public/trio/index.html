@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trio: 3 repositórios grátis para o seu Claude</title>
+<meta name="description" content="Context Mode, a skill de auditoria de segurança da Cloudflare e o VoiceStudio: o que cada um faz e como instalar, com os links oficiais.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este passo a passo é grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">passo a passo grátis</span>
+  <h1>Trio: 3 repositórios grátis <span class="nowrap">para o seu Claude</span></h1>
+  <p class="lead">Um plugin que deixa o seu limite do Claude render mais, uma skill da Cloudflare que audita a segurança do seu código e um estúdio de voz que roda no seu computador. Os três estão no GitHub, com o link oficial abaixo de cada um.</p>
+  <div class="note">Projetos de terceiros. Estrelas e licenças conferidas no GitHub em 02/11/2026. Esta página não tem ligação com os autores. Instale só pelos links oficiais.</div>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo1">Context Mode: menos lixo na conversa</h2></div>
+    <p>Toda ferramenta que o Claude Code usa despeja o resultado bruto na conversa (página inteira, log, lista de issues) e isso come o seu limite. O Context Mode guarda esse material fora da conversa e deixa entrar só o que importa. No exemplo do próprio projeto, 315 KB viram 5,4 KB.</p>
+    <a class="btn" href="https://github.com/mksglu/context-mode" target="_blank" rel="noopener">Abrir mksglu/context-mode</a>
+    <p>Dentro do Claude Code, envie um comando de cada vez:</p>
+    <div class="code">
+      <div class="code-bar"><span>Claude Code</span><button class="copy" type="button" data-copy="cmd-ctx">Copiar</button></div>
+<pre id="cmd-ctx">/plugin marketplace add mksglu/context-mode
+/plugin install context-mode@context-mode</pre>
+    </div>
+    <p>Reinicie o Claude Code e confira se está tudo certo:</p>
+    <div class="code">
+      <div class="code-bar"><span>Claude Code</span><button class="copy" type="button" data-copy="cmd-ctx2">Copiar</button></div>
+<pre id="cmd-ctx2">/context-mode:ctx-doctor
+/context-mode:ctx-stats</pre>
+    </div>
+    <div class="note">O <code class="inline">ctx-stats</code> mostra quanto você economizou na sessão. Licença Elastic 2.0: uso livre, com algumas restrições para quem quer revender como serviço.</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Auditoria de segurança da Cloudflare</h2></div>
+    <p>A skill transforma o seu agente num auditor: ele mapeia o projeto, procura falhas e manda cada falha encontrada para um agente novo que tenta provar que ela é alarme falso. Só o que sobrevive vira relatório.</p>
+    <a class="btn" href="https://github.com/cloudflare/security-audit-skill" target="_blank" rel="noopener">Abrir cloudflare/security-audit-skill</a>
+    <p>No terminal, dentro da pasta do seu projeto (precisa do Node.js):</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-cf">Copiar</button></div>
+<pre id="cmd-cf">npx skills add https://github.com/cloudflare/security-audit-skill --skill security-audit</pre>
+    </div>
+    <p>Depois abra o Claude Code na mesma pasta e peça:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-cf">Copiar</button></div>
+<pre id="prompt-cf">Faça uma auditoria de segurança deste projeto e salve o relatório na pasta auditoria. No fim, me explique em português simples as falhas confirmadas, da mais grave para a menos grave, e o que corrigir em cada uma.</pre>
+    </div>
+    <div class="note">A auditoria usa vários agentes em paralelo e gasta bastante do seu limite. Rode em um projeto seu e corrija com calma. Licença MIT.</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo3">VoiceStudio: estúdio de voz no seu computador</h2></div>
+    <p>Alternativa grátis e de código aberto à ElevenLabs: clona voz, cria voz a partir de uma descrição, dubla vídeo, dita e transcreve, tudo rodando no seu computador.</p>
+    <a class="btn" href="https://github.com/debpalash/VoiceStudio" target="_blank" rel="noopener">Abrir debpalash/VoiceStudio</a>
+    <p>No Windows, baixe o instalador na página de versões do projeto (<a href="https://github.com/debpalash/VoiceStudio/releases/latest" target="_blank" rel="noopener">Releases</a>) ou, no PowerShell:</p>
+    <div class="code">
+      <div class="code-bar"><span>PowerShell</span><button class="copy" type="button" data-copy="cmd-vs">Copiar</button></div>
+<pre id="cmd-vs">irm https://voicestudio.sh/install.ps1 | iex</pre>
+    </div>
+    <p>No Mac, com o Homebrew:</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-vs-mac">Copiar</button></div>
+<pre id="cmd-vs-mac">brew tap debpalash/tap
+brew install --cask debpalash/tap/voicestudio</pre>
+    </div>
+    <div class="note">Clone só a sua própria voz ou a de alguém que autorizou. Usar a voz de outra pessoa sem permissão pode ser crime e é contra a regra do próprio projeto. Os modelos de voz têm licenças próprias, que o app mostra antes de baixar. Licença do app: AGPL-3.0.</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo4">
+    <div class="step-head"><span class="step-num">+</span><h2 id="passo4">Qual instalar primeiro</h2></div>
+    <div class="cards">
+      <article class="card"><h3>Usa muito o Claude Code</h3><p class="when">Comece pelo Context Mode: o limite rende mais em todas as sessões.</p></article>
+      <article class="card"><h3>Tem site ou app no ar</h3><p class="when">Rode a auditoria da Cloudflare antes da próxima publicação.</p></article>
+      <article class="card"><h3>Faz vídeo ou áudio</h3><p class="when">O VoiceStudio narra, dubla e transcreve sem pagar por minuto.</p></article>
+    </div>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou? O pacote traz skills e agentes prontos para o seu Claude."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>

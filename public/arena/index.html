@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arena Skill: 100 Claudes brigando pela melhor resposta</title>
+<meta name="description" content="Passo a passo grátis para instalar a Arena Skill no Claude Code: vários subagentes recebem a mesma tarefa, se atacam em duelos e um juiz elimina o pior até sobrar uma resposta. Com o modo econômico --quick.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este passo a passo é grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">passo a passo grátis</span>
+  <h1>Quando o Claude errar, <span class="nowrap">bota ele na arena</span></h1>
+  <p class="lead">A Arena Skill pega a sua tarefa e entrega a mesma tarefa, palavra por palavra, para vários subagentes do Claude Code, cada um com uma estratégia diferente. Em duelos, um ataca a solução do outro, os dois se defendem e corrigem a sua, e um juiz dá nota com critérios escritos. O pior sai. No padrão são 100 competidores e 7 rodadas, até sobrar uma resposta.</p>
+
+  <a class="btn" href="https://github.com/Jakeschincariol/arena-skill" target="_blank" rel="noopener">Abrir o repositório no GitHub</a>
+  <div class="note">Projeto de terceiros (Jakeschincariol/arena-skill, licença MIT). Esta página não tem ligação com o autor. Precisa do Claude Code e do Python 3.8 ou mais novo. A skill não mexe nos arquivos do seu projeto: tudo fica na pasta <code class="inline">.arena/</code>.</div>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Instale colando o link</h2></div>
+    <p>Abra o Claude Code e envie esta mensagem:</p>
+    <div class="code">
+      <div class="code-bar"><span>Claude Code</span><button class="copy" type="button" data-copy="cmd-link">Copiar</button></div>
+<pre id="cmd-link">https://github.com/Jakeschincariol/arena-skill
+
+Instale esta skill e depois confirme que o /arena funciona.</pre>
+    </div>
+    <p>Prefere instalar como plugin? Envie os dois comandos, um de cada vez:</p>
+    <div class="code">
+      <div class="code-bar"><span>Claude Code</span><button class="copy" type="button" data-copy="cmd-plugin">Copiar</button></div>
+<pre id="cmd-plugin">/plugin marketplace add Jakeschincariol/arena-skill
+/plugin install arena-skill@arena-skill</pre>
+    </div>
+    <div class="note">Instalada como plugin, ela aparece como <code class="inline">/arena-skill:arena</code>. Instalada pelo link ou copiando a pasta, ela fica como <code class="inline">/arena</code>.</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Use o modo econômico no dia a dia</h2></div>
+    <p>A skill é grátis, mas cada subagente gasta do seu limite do Claude. O padrão de 100 competidores faz 595 chamadas de subagente. Para o dia a dia, use o <code class="inline">--quick</code>: 16 competidores e 91 chamadas.</p>
+    <div class="code">
+      <div class="code-bar"><span>Claude Code</span><button class="copy" type="button" data-copy="cmd-quick">Copiar</button></div>
+<pre id="cmd-quick">/arena --quick escreva o título da minha página de vendas</pre>
+    </div>
+    <p>Ou escolha o número de competidores com <code class="inline">--agents</code>:</p>
+    <div class="code">
+      <div class="code-bar"><span>Claude Code</span><button class="copy" type="button" data-copy="cmd-agents">Copiar</button></div>
+<pre id="cmd-agents">/arena --agents 32 corrija o teste que falha às vezes em tests/test_api.py</pre>
+    </div>
+    <div class="cards">
+      <article class="card"><h3>--quick</h3><p class="when">16 competidores, 4 rodadas, 91 chamadas.</p></article>
+      <article class="card"><h3>--agents 32</h3><p class="when">32 competidores, 5 rodadas, 187 chamadas.</p></article>
+      <article class="card"><h3>Padrão</h3><p class="when">100 competidores, 7 rodadas, 595 chamadas. Guarde para a resposta que importa.</p></article>
+    </div>
+    <div class="note">Números do README do projeto (02/11/2026). Antes de começar, a skill mostra quantas chamadas vai fazer.</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Dicas para dar certo</h2></div>
+    <div class="cards">
+      <article class="card"><h3>Tarefa clara</h3><p class="when">Os subagentes não veem a sua conversa, só o arquivo da tarefa. Tarefa vaga gera 100 respostas vagas.</p></article>
+      <article class="card"><h3>Menos perguntas de permissão</h3><p class="when">Cada subagente grava um arquivo em <code class="inline">.arena/</code>. Rode no modo de aceitar edições (Shift+Tab) para não aprovar um por um.</p></article>
+      <article class="card"><h3>Confira o vencedor</h3><p class="when">O juiz também é o Claude. Você recebe a resposta que sobreviveu e os ataques que ela aguentou: leia antes de usar.</p></article>
+    </div>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou? O pacote traz times de agentes prontos com líder e revisor."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>
