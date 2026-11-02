@@ -1038,7 +1038,7 @@ ul, ol { padding: 0; list-style: none; }
         <div class="celular__casca">
           <!-- VSL com áudio: voz Eric (ElevenLabs) e efeitos sonoros -->
           <div class="tela" id="vsl-tela" data-estado="carregando">
-            <video id="vsl" src="midia/vsl.mp4" poster="midia/vsl.jpg" muted loop playsinline preload="metadata" aria-label="Vídeo de apresentação do pacote de edição"><track kind="captions" src="midia/vsl.vtt" srclang="pt-BR" label="Português"></video>
+            <video id="vsl" src="/editar/midia/vsl.mp4" poster="/editar/midia/vsl.jpg" muted loop playsinline preload="metadata" aria-label="Vídeo de apresentação do pacote de edição"><track kind="captions" src="/editar/midia/vsl.vtt" srclang="pt-BR" label="Português"></video>
             <button class="vsl-som" id="vsl-som" type="button" aria-label="Seu vídeo está pronto. Toque para ouvir com som, do começo">
               <span class="vsl-som__cartao">
                 <span class="vsl-som__topo">Seu vídeo está pronto</span>
@@ -1096,19 +1096,19 @@ ul, ol { padding: 0; list-style: none; }
     <!-- Vídeos: trechos mudos da VSL (D:leo-videossl-editar), 720x1280 -->
     <div class="abas" role="tablist" aria-label="Estilos de edição" id="abas">
       <button class="aba" role="tab" id="aba-1" aria-controls="palco" aria-selected="true" tabindex="0"
-        data-src="midia/estilo-01.mp4" data-poster="midia/estilo-01.jpg"
+        data-src="/editar/midia/estilo-01.mp4" data-poster="/editar/midia/estilo-01.jpg"
         data-frase="Os primeiros segundos mostram o problema com texto grande e elementos entrando, para segurar quem está rolando o feed."><span class="aba__num">01</span>Abertura que prende</button>
       <button class="aba" role="tab" id="aba-2" aria-controls="palco" aria-selected="false" tabindex="-1"
-        data-src="midia/estilo-02.mp4" data-poster="midia/estilo-02.jpg"
+        data-src="/editar/midia/estilo-02.mp4" data-poster="/editar/midia/estilo-02.jpg"
         data-frase="Você escreve o que quer em português e o Claude monta o vídeo a partir do seu pedido."><span class="aba__num">02</span>Você pede a edição</button>
       <button class="aba" role="tab" id="aba-3" aria-controls="palco" aria-selected="false" tabindex="-1"
-        data-src="midia/estilo-03.mp4" data-poster="midia/estilo-03.jpg"
+        data-src="/editar/midia/estilo-03.mp4" data-poster="/editar/midia/estilo-03.jpg"
         data-frase="Silêncios fora, enquadramento fechado, cor tratada e legenda no tempo da fala."><span class="aba__num">03</span>Bruto para editado</button>
       <button class="aba" role="tab" id="aba-4" aria-controls="palco" aria-selected="false" tabindex="-1"
-        data-src="midia/estilo-04.mp4" data-poster="midia/estilo-04.jpg"
+        data-src="/editar/midia/estilo-04.mp4" data-poster="/editar/midia/estilo-04.jpg"
         data-frase="Títulos, ícones e cartões entram na tela na hora em que a fala chega neles."><span class="aba__num">04</span>Elementos na tela</button>
       <button class="aba" role="tab" id="aba-5" aria-controls="palco" aria-selected="false" tabindex="-1"
-        data-src="midia/estilo-05.mp4" data-poster="midia/estilo-05.jpg"
+        data-src="/editar/midia/estilo-05.mp4" data-poster="/editar/midia/estilo-05.jpg"
         data-frase="A explicação vira animação: cartões, destaques e selos que mostram o que está sendo dito."><span class="aba__num">05</span>Motion explicativo</button>
     </div>
     <p class="dica-abas"><svg class="ico" aria-hidden="true" style="width:16px;height:16px"><use href="#i-dir"/></svg>Toque num estilo ou deslize o vídeo para o lado</p>
@@ -1124,7 +1124,7 @@ ul, ol { padding: 0; list-style: none; }
           <div class="celular">
             <div class="celular__casca">
               <div class="tela" id="palco-tela" data-estado="carregando">
-                <video id="palco-video" src="midia/estilo-01.mp4" poster="midia/estilo-01.jpg" muted playsinline preload="metadata" aria-label="Exemplo do estilo selecionado, sem som"></video>
+                <video id="palco-video" src="/editar/midia/estilo-01.mp4" poster="/editar/midia/estilo-01.jpg" muted playsinline preload="metadata" aria-label="Exemplo do estilo selecionado, sem som"></video>
                 <div class="tela__estado tela__estado--carregando" aria-hidden="true"><span class="giro"></span></div>
                 <div class="tela__estado tela__estado--erro" role="alert">
                   <p>Não deu para carregar este exemplo.</p>
@@ -1149,7 +1149,7 @@ ul, ol { padding: 0; list-style: none; }
         <h3 class="palco__titulo" id="palco-titulo">Abertura que prende</h3>
         <p class="palco__frase" id="palco-frase">Os primeiros segundos mostram o problema com texto grande e elementos entrando, para segurar quem está rolando o feed.</p>
         <button class="seguinte" type="button" id="seguinte">
-          <img id="seguinte-img" src="midia/bruto.jpg" alt="" width="40" height="56">
+          <img id="seguinte-img" src="/editar/midia/bruto.jpg" alt="" width="40" height="56">
           <span><small id="seguinte-quando" aria-live="off">A seguir</small><strong id="seguinte-nome">Bruto para editado</strong></span>
           <svg class="ico" aria-hidden="true"><use href="#i-dir"/></svg>
         </button>
@@ -1182,7 +1182,7 @@ ul, ol { padding: 0; list-style: none; }
         </div>
         <div class="editor__corpo">
           <figure class="previa" aria-hidden="true">
-            <img src="midia/estilo-03.jpg" alt="" loading="lazy">
+            <img src="/editar/midia/estilo-03.jpg" alt="" loading="lazy">
             <span class="previa__selo" id="previa-selo">Vídeo bruto</span>
             <span class="previa__legenda">pede <b>em português</b></span>
           </figure>
@@ -1207,11 +1207,11 @@ ul, ol { padding: 0; list-style: none; }
                 <div class="faixa-lt">
                   <span class="faixa-lt__rotulo"><svg class="ico"><use href="#i-video"/></svg>VÍDEO</span>
                   <div class="trilha" data-trilha>
-                    <div class="camada"><span class="peca peca--video" style="--de:0%;--tam:36.67%;--img:url(midia/quadro-1.jpg), url(midia/quadro-5.jpg)"></span></div>
+                    <div class="camada"><span class="peca peca--video" style="--de:0%;--tam:36.67%;--img:url(/editar/midia/quadro-1.jpg), url(/editar/midia/quadro-5.jpg)"></span></div>
                     <div class="camada" style="--desloc:0%"><span class="peca pausa" style="--de:36.67%;--tam:13.33%"><span class="pausa__rotulo">1,6 s</span></span></div>
-                    <div class="camada" style="--desloc:-13.33%"><span class="peca peca--video" style="--de:50%;--tam:26.67%;--img:url(midia/quadro-9.jpg)"></span></div>
+                    <div class="camada" style="--desloc:-13.33%"><span class="peca peca--video" style="--de:50%;--tam:26.67%;--img:url(/editar/midia/quadro-9.jpg)"></span></div>
                     <div class="camada" style="--desloc:-13.33%"><span class="peca pausa" style="--de:76.67%;--tam:6.67%"><span class="pausa__rotulo pausa__rotulo--curta">0,8 s</span></span></div>
-                    <div class="camada" style="--desloc:-20%"><span class="peca peca--video" style="--de:83.33%;--tam:16.67%;--img:url(midia/quadro-17.jpg)"></span></div>
+                    <div class="camada" style="--desloc:-20%"><span class="peca peca--video" style="--de:83.33%;--tam:16.67%;--img:url(/editar/midia/quadro-17.jpg)"></span></div>
                     <span class="fim-marca"></span>
                   </div>
                 </div>
@@ -1256,7 +1256,7 @@ ul, ol { padding: 0; list-style: none; }
   <div class="wrap direcao">
     <div class="cena-dir casca revela">
       <div class="nucleo">
-        <img src="midia/estilo-04.jpg" alt="Vídeo do Leonardo editado pelo Claude, com título, ícones e cartão na tela" loading="lazy" width="540" height="960">
+        <img src="/editar/midia/estilo-04.jpg" alt="Vídeo do Leonardo editado pelo Claude, com título, ícones e cartão na tela" loading="lazy" width="540" height="960">
         <div class="conversa" id="conversa" aria-hidden="true">
           <p class="balao balao--voce"><small>Você</small>Começa pela frase mais forte e coloca legenda grande.</p>
           <p class="balao balao--claude"><small>Claude</small>Movi a frase para os 3 primeiros segundos e legendei palavra por palavra.</p>
@@ -1441,14 +1441,14 @@ ul, ol { padding: 0; list-style: none; }
           <div class="bloco__qtd"><b>26</b><span>estilos de legenda com prévia</span></div>
           <p>Prévia real, gerada pelo pacote no seu próprio vídeo, antes de escolher. Deslize para ver alguns:</p>
           <div class="estilos-leg" tabindex="0" aria-label="Exemplos de estilos de legenda">
-            <figure class="leg"><img src="midia/leg-10-mrbeast.jpg" alt="Estilo de legenda MrBeast aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 10</small>MrBeast</figcaption></figure>
-            <figure class="leg"><img src="midia/leg-16-box-destaque.jpg" alt="Estilo de legenda Box destaque aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 16</small>Box destaque</figcaption></figure>
-            <figure class="leg"><img src="midia/leg-14-hormozi-pro.jpg" alt="Estilo de legenda Hormozi Pro aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 14</small>Hormozi Pro</figcaption></figure>
-            <figure class="leg"><img src="midia/leg-23-palavra-gigante.jpg" alt="Estilo de legenda Palavra gigante aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 23</small>Palavra gigante</figcaption></figure>
-            <figure class="leg"><img src="midia/leg-09-hormozi.jpg" alt="Estilo de legenda Hormozi aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 09</small>Hormozi</figcaption></figure>
-            <figure class="leg"><img src="midia/leg-21-neon.jpg" alt="Estilo de legenda Neon aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 21</small>Neon</figcaption></figure>
-            <figure class="leg"><img src="midia/leg-24-duas-cores.jpg" alt="Estilo de legenda Duas cores aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 24</small>Duas cores</figcaption></figure>
-            <figure class="leg"><img src="midia/leg-01-reels-impacto.jpg" alt="Estilo de legenda Reels impacto aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 01</small>Reels impacto</figcaption></figure>
+            <figure class="leg"><img src="/editar/midia/leg-10-mrbeast.jpg" alt="Estilo de legenda MrBeast aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 10</small>MrBeast</figcaption></figure>
+            <figure class="leg"><img src="/editar/midia/leg-16-box-destaque.jpg" alt="Estilo de legenda Box destaque aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 16</small>Box destaque</figcaption></figure>
+            <figure class="leg"><img src="/editar/midia/leg-14-hormozi-pro.jpg" alt="Estilo de legenda Hormozi Pro aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 14</small>Hormozi Pro</figcaption></figure>
+            <figure class="leg"><img src="/editar/midia/leg-23-palavra-gigante.jpg" alt="Estilo de legenda Palavra gigante aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 23</small>Palavra gigante</figcaption></figure>
+            <figure class="leg"><img src="/editar/midia/leg-09-hormozi.jpg" alt="Estilo de legenda Hormozi aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 09</small>Hormozi</figcaption></figure>
+            <figure class="leg"><img src="/editar/midia/leg-21-neon.jpg" alt="Estilo de legenda Neon aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 21</small>Neon</figcaption></figure>
+            <figure class="leg"><img src="/editar/midia/leg-24-duas-cores.jpg" alt="Estilo de legenda Duas cores aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 24</small>Duas cores</figcaption></figure>
+            <figure class="leg"><img src="/editar/midia/leg-01-reels-impacto.jpg" alt="Estilo de legenda Reels impacto aplicado no vídeo do Leonardo" loading="lazy" width="400" height="500"><figcaption><small>ESTILO 01</small>Reels impacto</figcaption></figure>
           </div>
         </div>
       </article>
@@ -1456,7 +1456,7 @@ ul, ol { padding: 0; list-style: none; }
       <article class="bloco casca b-aula revela" style="--atraso:100ms">
         <div class="nucleo">
           <div class="aula">
-            <div class="aula__thumb"><img src="midia/capa-aula.jpg" alt="Capa da aula passo a passo" loading="lazy" width="720" height="1040"><i aria-hidden="true"><span><svg><use href="#i-play"/></svg></span></i></div>
+            <div class="aula__thumb"><img src="/editar/midia/capa-aula.jpg" alt="Capa da aula passo a passo" loading="lazy" width="720" height="1040"><i aria-hidden="true"><span><svg><use href="#i-play"/></svg></span></i></div>
             <div>
               <p class="sub-rotulo" style="margin:0 0 8px">Aula passo a passo</p>
               <h3>Da instalação ao primeiro vídeo editado</h3>
@@ -1492,9 +1492,9 @@ ul, ol { padding: 0; list-style: none; }
         <span class="compara__selo" id="compara-selo">Sem skills</span>
         <div class="celular__casca">
           <div class="tela">
-            <video id="compara-video" src="midia/bruto.mp4" poster="midia/bruto.jpg" muted loop playsinline preload="metadata" aria-label="Exemplo do vídeo sem skills e com skills, sem som"></video>
+            <video id="compara-video" src="/editar/midia/bruto.mp4" poster="/editar/midia/bruto.jpg" muted loop playsinline preload="metadata" aria-label="Exemplo do vídeo sem skills e com skills, sem som"></video>
             <div class="leque3d" aria-hidden="true"><div class="leque3d__trilho">
-              <img src="midia/estilo-01.jpg" alt="" loading="lazy" width="720" height="1280"><img src="midia/estilo-02.jpg" alt="" loading="lazy" width="720" height="1280"><img src="midia/estilo-03.jpg" alt="" loading="lazy" width="720" height="1280"><img src="midia/estilo-05.jpg" alt="" loading="lazy" width="720" height="1280">
+              <img src="/editar/midia/estilo-01.jpg" alt="" loading="lazy" width="720" height="1280"><img src="/editar/midia/estilo-02.jpg" alt="" loading="lazy" width="720" height="1280"><img src="/editar/midia/estilo-03.jpg" alt="" loading="lazy" width="720" height="1280"><img src="/editar/midia/estilo-05.jpg" alt="" loading="lazy" width="720" height="1280">
             </div></div>
             <span class="cantos-com" aria-hidden="true"></span>
             <p class="adivinha">Sem skills, o Claude adivinha o resto.</p>
@@ -1516,7 +1516,7 @@ ul, ol { padding: 0; list-style: none; }
 <section class="secao" aria-labelledby="sobre-titulo">
   <div class="wrap sobre">
     <div class="sobre__foto casca revela">
-      <div class="nucleo"><img src="midia/quem-criou.jpg" alt="Leonardo Araujo, criador da Leonardo Skills" loading="lazy" width="720" height="900"></div>
+      <div class="nucleo"><img src="/editar/midia/quem-criou.jpg" alt="Leonardo Araujo, criador da Leonardo Skills" loading="lazy" width="720" height="900"></div>
     </div>
     <div class="revela">
       <p class="olho">Quem criou</p>
@@ -1536,7 +1536,7 @@ ul, ol { padding: 0; list-style: none; }
     <div class="cartao-preco casca revela" id="cartao-preco" data-estado="carregando">
       <div class="nucleo">
         <p class="pilula">Sua próxima edição</p>
-        <div class="capa3d"><img src="midia/capa-pacote.jpg" alt="Capa do pacote Edição de vídeo por skills" width="1200" height="900" loading="lazy"></div>
+        <div class="capa3d"><img src="/editar/midia/capa-pacote.jpg" alt="Capa do pacote Edição de vídeo por skills" width="1200" height="900" loading="lazy"></div>
         <div class="cartao-preco__marca">
           <span><strong id="preco-titulo">Edição de vídeo por skills</strong><small>Pacote Leonardo Skills</small></span>
         </div>
@@ -1873,8 +1873,8 @@ ul, ol { padding: 0; list-style: none; }
     $("#interruptor-rotulo").textContent = on ? "Skills ligadas" : "Skills desligadas";
     inter.querySelector("small").textContent = on ? "Toque para desligar" : "Toque para ligar";
     $("#compara-selo").textContent = on ? "Com skills" : "Sem skills";
-    cv.poster = on ? "midia/estilo-04.jpg" : "midia/bruto.jpg";
-    cv.src = on ? "midia/estilo-04.mp4" : "midia/bruto.mp4";
+    cv.poster = on ? "/editar/midia/estilo-04.jpg" : "/editar/midia/bruto.jpg";
+    cv.src = on ? "/editar/midia/estilo-04.mp4" : "/editar/midia/bruto.mp4";
     if (!reduzido) cv.play().catch(() => {});
     if (reduzido) { $("#interruptor-conta").textContent = on ? "5/5" : "0/5"; return; }
     let n = on ? 0 : 5; const fim = on ? 5 : 0;
