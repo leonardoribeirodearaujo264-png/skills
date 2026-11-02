@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Use o Claude como uma fábrica</title>
+<meta name="description" content="Passo a passo grátis para delegar trabalho ao Claude em vez de só fazer perguntas: o modelo de pedido com contexto, objetivo, processo, formato de entrega e critério de pronto, com exemplos para documento, planilha, apresentação e site.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este passo a passo é grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">passo a passo grátis</span>
+  <h1>Pare de só perguntar. <span class="nowrap">Delegue ao Claude.</span></h1>
+  <p class="lead">Quem só pergunta recebe uma resposta e para por aí. Quem delega passa o contexto, explica o processo e diz como quer a entrega, e volta para pegar o trabalho pronto: o documento, a planilha, a apresentação ou o site.</p>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Use este modelo de pedido</h2></div>
+    <p>Copie, troque o que está entre colchetes e envie no Claude (claude.ai, app do computador ou Claude Code). Quanto mais contexto, menos ida e volta.</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-modelo">Copiar</button></div>
+<pre id="prompt-modelo">CONTEXTO: [quem você é, o negócio, o público e de onde vêm os dados]
+OBJETIVO: [o que precisa existir no fim e para que vai servir]
+MATERIAL: [arquivos anexados, links ou dados colados abaixo]
+PROCESSO: [os passos que você seguiria, na ordem]
+ENTREGA: [formato do arquivo, tamanho, tom, estrutura]
+PRONTO QUANDO: [como você vai conferir que ficou bom]
+
+Antes de começar, me faça até 3 perguntas se faltar alguma informação importante. Depois faça o trabalho inteiro e me entregue o arquivo pronto, com um resumo do que você fez e do que eu preciso conferir.</pre>
+    </div>
+    <div class="note">O critério de pronto é o que separa uma resposta de uma entrega: o Claude usa ele para revisar o próprio trabalho antes de mandar.</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Exemplos prontos</h2></div>
+
+    <p><strong>Documento</strong></p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-doc">Copiar</button></div>
+<pre id="prompt-doc">CONTEXTO: tenho uma loja online de roupas femininas e vou contratar uma pessoa para o atendimento no WhatsApp.
+OBJETIVO: um manual de atendimento para ela ler no primeiro dia.
+PROCESSO: liste as situações mais comuns (troca, prazo, tamanho, pagamento), escreva uma resposta modelo para cada uma e as regras do que nunca prometer.
+ENTREGA: arquivo .docx com títulos, no máximo 5 páginas, linguagem simples.
+PRONTO QUANDO: uma pessoa sem experiência consegue responder um cliente só com o manual.</pre>
+    </div>
+
+    <p><strong>Planilha e análise</strong></p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-planilha">Copiar</button></div>
+<pre id="prompt-planilha">CONTEXTO: anexei o extrato de vendas dos últimos 6 meses (CSV).
+OBJETIVO: saber quais produtos dão mais lucro e em que dia da semana eu mais vendo.
+PROCESSO: limpe os dados, some por produto e por dia da semana, calcule a margem com o custo da coluna "custo" e monte os gráficos.
+ENTREGA: arquivo .xlsx com uma aba de dados, uma de resumo e uma de gráficos, mais 5 conclusões em texto.
+PRONTO QUANDO: os totais da aba de resumo batem com o total do extrato.</pre>
+    </div>
+
+    <p><strong>Apresentação</strong></p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-slides">Copiar</button></div>
+<pre id="prompt-slides">CONTEXTO: vou apresentar o resultado do trimestre para os sócios. Os números estão na planilha anexada.
+OBJETIVO: uma apresentação curta que mostre o que cresceu, o que caiu e o que eu proponho.
+PROCESSO: escolha os 3 números mais importantes, faça um gráfico para cada um e termine com 3 propostas.
+ENTREGA: arquivo .pptx com 8 slides no máximo, pouco texto por slide e notas do apresentador.
+PRONTO QUANDO: dá para apresentar em 10 minutos sem ler os slides.</pre>
+    </div>
+
+    <p><strong>Site</strong></p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-site">Copiar</button></div>
+<pre id="prompt-site">CONTEXTO: sou personal trainer em Belo Horizonte e atendo online e presencial.
+OBJETIVO: uma página de uma tela só para quem vem do meu Instagram marcar uma avaliação.
+PROCESSO: escreva o texto (quem eu sou, como funciona, 3 planos, perguntas frequentes), depois monte a página.
+ENTREGA: um arquivo HTML único, que funcione no celular, com botão para o WhatsApp [SEU NÚMERO].
+PRONTO QUANDO: abre no celular sem nada cortado e o botão leva para a conversa.</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Ligue as suas ferramentas</h2></div>
+    <p>Nos conectores do Claude (em Configurações), você liga serviços como Google Drive, Gmail e Notion. Aí o pedido pode dizer "use a planilha X do meu Drive" ou "salve o resultado no Notion", em vez de você copiar e colar.</p>
+    <div class="cards">
+      <article class="card"><h3>Pergunta</h3><p class="when">"Como faço uma planilha de vendas?" Você recebe uma explicação e ainda tem que fazer.</p></article>
+      <article class="card"><h3>Delegação</h3><p class="when">Contexto, dados, processo, entrega e critério de pronto. Você recebe a planilha feita.</p></article>
+    </div>
+    <div class="note">Os conectores disponíveis e os formatos de arquivo dependem do seu plano e de onde você usa o Claude. Sempre confira números e informações antes de usar o resultado.</div>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou? O pacote traz times de agentes prontos que já trabalham assim."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>
