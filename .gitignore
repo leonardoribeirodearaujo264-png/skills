@@ -15,8 +15,9 @@ next-env.d.ts
 
 # Vídeos e pacotes gerados (ficam no Supabase Storage, ver aulas/README.md)
 *.mp4
-# Exceção: vídeo de venda servido pela própria página /editar/ (1,5 MB)
+# Exceção: vídeos de venda servidos pela própria página /editar/ (VSL 4 MB e trechos de até 0,5 MB)
 !public/editar/demo.mp4
+!public/editar/midia/*.mp4
 *.mov
 *.webm
 *.mkv
