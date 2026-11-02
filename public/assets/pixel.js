@@ -2,7 +2,7 @@
 // e o Next pelo layout (src/components/PixelMeta.tsx, que também conta as trocas de página do app).
 // O ID do Pixel é público por natureza: ele aparece no navegador de qualquer visitante.
 (function () {
-  var PIXEL_ID = "1886157205707688";
+  var PIXEL_ID = "2696646250779478";
   if (window.fbq) return; // já carregado nesta página: não conta a visita duas vezes
   !function(f,b,e,v,n,t,s)
   {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
