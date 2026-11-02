@@ -154,6 +154,41 @@ export const PAGINAS_VIDEOS: readonly PaginaVideo[] = [
     tipo: "Passo a passo",
     oferta: { pacote: "times-de-agentes", gancho: "Gostou? No pacote tem seis times de agentes com líder e revisor." },
   },
+  {
+    pasta: "lembra",
+    titulo: "Memória para o Claude Code",
+    frase: "O plugin Claude-Mem anota cada sessão e devolve o contexto na seguinte.",
+    tipo: "Passo a passo",
+    oferta: { pacote: "programacao-sem-codigo", gancho: "Gostou? No pacote tem o caminho completo do pedido ao projeto no ar." },
+  },
+  {
+    pasta: "motion",
+    titulo: "Prompt Motion",
+    frase: "Vídeos animados feitos com o Claude, cada um com o prompt que gerou.",
+    tipo: "Passo a passo",
+    oferta: { pacote: "edicao-de-video", gancho: "Gostou? O pacote de edição faz o vídeo inteiro com você só pedindo, por {preco}" },
+  },
+  {
+    pasta: "fabrica",
+    titulo: "O Claude como fábrica",
+    frase: "O modelo de pedido para delegar documento, planilha, apresentação e site em vez de só perguntar.",
+    tipo: "Prompt grátis",
+    oferta: { pacote: "times-de-agentes", gancho: "Gostou? No pacote tem seis times de agentes com líder e revisor que já trabalham assim." },
+  },
+  {
+    pasta: "espanador",
+    titulo: "Espanador",
+    frase: "Pedidos prontos para o Claude Code arrumar a sua pasta sem apagar nada.",
+    tipo: "Prompt grátis",
+    oferta: { pacote: "times-de-agentes", gancho: "Gostou? No pacote tem seis times de agentes com líder e revisor." },
+  },
+  {
+    pasta: "ecc",
+    titulo: "ECC: time de engenharia",
+    frase: "71 agentes e 314 skills grátis no Claude Code, instalados com dois comandos.",
+    tipo: "Passo a passo",
+    oferta: { pacote: "programacao-sem-codigo", gancho: "Gostou? No pacote tem o caminho completo do pedido ao projeto no ar." },
+  },
 ];
 
 // A chave é a pasta da página (/agentes/ -> "agentes")

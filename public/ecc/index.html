@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECC: um time de engenharia no seu Claude Code</title>
+<meta name="description" content="Passo a passo grátis para instalar o ECC (Everything Claude Code) no Claude Code: 71 agentes, 314 skills e comandos para planejar, revisar segurança e testar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este passo a passo é grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">passo a passo grátis</span>
+  <h1>Um time de engenharia <span class="nowrap">no seu Claude Code</span></h1>
+  <p class="lead">O ECC (Everything Claude Code) é um projeto grátis e de código aberto com 71 agentes, 314 skills e 98 comandos para o Claude Code. Tem agente que planeja, que revisa código, que procura falhas de segurança e que cuida dos testes. Também funciona no Codex, no Cursor e no OpenCode.</p>
+
+  <a class="btn" href="https://github.com/affaan-m/ECC" target="_blank" rel="noopener">Abrir o repositório no GitHub</a>
+  <div class="note">Projeto de terceiros (affaan-m/ECC, licença MIT). Instale só pelo repositório oficial: o próprio autor avisa que cópias não oficiais podem trazer vírus. Esta página não tem ligação com o autor.</div>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Instale com dois comandos</h2></div>
+    <p>Abra o Claude Code na pasta do seu projeto e digite, um de cada vez:</p>
+    <div class="code">
+      <div class="code-bar"><span>dentro do Claude Code</span><button class="copy" type="button" data-copy="cmd-ecc">Copiar</button></div>
+<pre id="cmd-ecc">/plugin marketplace add https://github.com/affaan-m/ECC
+/plugin install ecc@ecc</pre>
+    </div>
+    <div class="note">Depois, abra uma sessão nova e rode <code class="inline">/plugin list</code> para ver o <code class="inline">ecc@ecc</code> ativo. Instale de um jeito só: se usar o plugin, não faça também a instalação manual, senão as skills ficam duplicadas.</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Peça o plano antes do código</h2></div>
+    <p>O agente planejador monta o passo a passo da função antes de qualquer linha de código:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="cmd-plano">Copiar</button></div>
+<pre id="cmd-plano">/ecc:plan "Adicionar login com Google"</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Revise segurança e testes</h2></div>
+    <p>Antes de publicar, peça a revisão de segurança e confira a cobertura de testes:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="cmd-rev">Copiar</button></div>
+<pre id="cmd-rev">/ecc:security-scan
+/ecc:test-coverage</pre>
+    </div>
+    <div class="cards">
+      <article class="card"><h3>Planejar</h3><p class="when">O agente planner desenha a função inteira antes do código.</p></article>
+      <article class="card"><h3>Segurança</h3><p class="when">O security-reviewer audita o app com a lista OWASP Top 10.</p></article>
+      <article class="card"><h3>Testes</h3><p class="when">O fluxo de TDD escreve o teste primeiro e mira 80% de cobertura ou mais.</p></article>
+    </div>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou? No pacote tem o caminho completo do pedido ao projeto no ar."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Espanador: o Claude Code arruma a sua pasta</title>
+<meta name="description" content="Pedidos prontos para o Claude Code arrumar a sua pasta de Downloads: plano antes de mexer, separar por tipo, renomear fotos pela data, juntar PDFs e separar repetidos sem apagar nada.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Estes pedidos são grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">pedidos prontos grátis</span>
+  <h1>O Claude Code arruma <span class="nowrap">a sua pasta</span></h1>
+  <p class="lead">Downloads com arquivo repetido, nome estranho e nada que se acha? Abra o Claude Code dentro da pasta e cole os pedidos abaixo, na ordem. Ele separa por tipo, renomeia as fotos pela data, junta PDFs e põe os repetidos numa pasta à parte, sempre mostrando o plano antes de mexer.</p>
+
+  <div class="note">Regra de segurança: nada destes pedidos apaga arquivo. Repetidos e dúvidas vão para uma pasta de revisão, e quem apaga é você, depois de conferir. Se a pasta tem algo importante, faça uma cópia antes (passo 1).</div>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Abra o Claude Code na pasta e peça o plano</h2></div>
+    <p>No terminal, entre na pasta que quer arrumar e abra o Claude Code (no Windows, troque o caminho pelo da sua pasta):</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-abrir">Copiar</button></div>
+<pre id="cmd-abrir">cd ~/Downloads
+claude</pre>
+    </div>
+    <p>Depois envie o primeiro pedido. Ele só olha e propõe, não mexe em nada:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-plano">Copiar</button></div>
+<pre id="prompt-plano">Quero arrumar esta pasta. Antes de mexer em qualquer arquivo, liste o que tem aqui (quantos arquivos de cada tipo, os maiores e os que parecem repetidos) e me mostre um plano passo a passo. Não mova, não renomeie e não apague nada até eu responder "pode seguir". Nunca apague arquivos: o que for descartável vai para uma pasta _revisar.</pre>
+    </div>
+    <p>Se a pasta tem coisa importante, peça uma cópia antes:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-copia">Copiar</button></div>
+<pre id="prompt-copia">Antes de seguir o plano, copie a pasta inteira para uma pasta de segurança ao lado, com a data de hoje no nome, e confirme que a quantidade de arquivos da cópia é igual à da original.</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Separe por tipo</h2></div>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-tipo">Copiar</button></div>
+<pre id="prompt-tipo">Separe os arquivos por tipo em pastas: Fotos (jpg, jpeg, png, heic), Vídeos, PDFs, Planilhas (xlsx, csv), Documentos (docx, txt), Compactados (zip, rar) e Outros. Só mova, não renomeie. No fim, mostre quantos arquivos foram para cada pasta.</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Renomeie as fotos pela data</h2></div>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-fotos">Copiar</button></div>
+<pre id="prompt-fotos">Na pasta Fotos, renomeie cada foto no formato AAAA-MM-DD_nome-original, usando a data em que a foto foi tirada (dados EXIF). Se a foto não tiver essa data, use a data de modificação e me avise quais foram. Se dois nomes ficarem iguais, acrescente _2, _3. Antes, mostre 5 exemplos de como os nomes vão ficar.</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo4">
+    <div class="step-head"><span class="step-num">4</span><h2 id="passo4">Junte PDFs num arquivo só</h2></div>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-pdf">Copiar</button></div>
+<pre id="prompt-pdf">Junte os PDFs de contas desta pasta (luz, água, internet, cartão e parecidos) num arquivo só chamado contas.pdf, em ordem de data. Mantenha os PDFs originais. Se precisar de alguma ferramenta para juntar, me diga qual antes de instalar.</pre>
+    </div>
+    <div class="note">Para juntar PDFs, o Claude Code usa uma ferramenta do seu computador (por exemplo, Python). Se ela não estiver instalada, ele vai pedir permissão antes.</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo5">
+    <div class="step-head"><span class="step-num">5</span><h2 id="passo5">Repetidos numa pasta à parte</h2></div>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-repetidos">Copiar</button></div>
+<pre id="prompt-repetidos">Ache os arquivos repetidos comparando o conteúdo (hash), não só o nome. Deixe uma cópia de cada no lugar e mova as outras para a pasta _revisar/repetidos. Não apague nada. No fim, me mostre a lista do que foi movido e quanto espaço eu liberaria se apagasse.</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo6">
+    <div class="step-head"><span class="step-num">6</span><h2 id="passo6">Confira e só então apague</h2></div>
+    <div class="cards">
+      <article class="card"><h3>Abra a pasta _revisar</h3><p class="when">Olhe o que foi para lá antes de apagar qualquer coisa.</p></article>
+      <article class="card"><h3>Peça para desfazer</h3><p class="when">Não gostou? Peça: "desfaça o último passo e devolva os arquivos para onde estavam".</p></article>
+      <article class="card"><h3>Pasta de trabalho</h3><p class="when">Use em Downloads, Documentos e fotos. Evite pastas do sistema e de programas.</p></article>
+    </div>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou? O pacote traz times de agentes prontos para o seu negócio."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>

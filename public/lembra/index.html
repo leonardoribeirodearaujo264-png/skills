@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Memória para o seu Claude Code</title>
+<meta name="description" content="Passo a passo grátis para instalar o Claude-Mem, plugin de memória do Claude Code: ele anota cada sessão, guarda no seu computador e devolve o contexto na sessão seguinte.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este passo a passo é grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">passo a passo grátis</span>
+  <h1>Memória para o seu <span class="nowrap">Claude Code</span></h1>
+  <p class="lead">Cada sessão nova do Claude Code começa do zero. O Claude-Mem é um plugin de código aberto que anota o que acontece em cada sessão, resume com IA, guarda num banco no seu computador e devolve o contexto que importa na sessão seguinte. Você explica o projeto uma vez.</p>
+
+  <a class="btn" href="https://github.com/thedotmack/claude-mem" target="_blank" rel="noopener">Abrir o repositório no GitHub</a>
+  <div class="note">Projeto de terceiros (thedotmack/claude-mem, licença Apache 2.0). Esta página não tem ligação com o autor. Precisa do Node.js 20 ou mais novo e de uma versão do Claude Code com plugins.</div>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Instale dentro do Claude Code</h2></div>
+    <p>Abra o Claude Code e envie os dois comandos, um de cada vez:</p>
+    <div class="code">
+      <div class="code-bar"><span>Claude Code</span><button class="copy" type="button" data-copy="cmd-mem">Copiar</button></div>
+<pre id="cmd-mem">/plugin marketplace add thedotmack/claude-mem
+/plugin install claude-mem</pre>
+    </div>
+    <p>Depois feche e abra o Claude Code de novo. A partir da próxima sessão, o contexto das anteriores aparece sozinho.</p>
+    <div class="note">Não use <code class="inline">npm install -g claude-mem</code>: segundo o próprio projeto, isso instala só a biblioteca, sem o plugin. Pelo terminal, o caminho oficial é <code class="inline">npx claude-mem install</code>.</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">A conta online é opcional</h2></div>
+    <p>O instalador pelo terminal oferece um login no site do projeto, com período de teste do serviço deles. Você pode pular: o próprio projeto documenta a instalação sem conta, e a memória pode usar o seu plano do Claude ou uma chave sua. No Windows (PowerShell):</p>
+    <div class="code">
+      <div class="code-bar"><span>PowerShell</span><button class="copy" type="button" data-copy="cmd-sem-conta">Copiar</button></div>
+<pre id="cmd-sem-conta">$env:CLAUDE_MEM_ONLINE_OPTIN="false"; npx claude-mem install</pre>
+    </div>
+    <div class="note">No Mac ou Linux: <code class="inline">CLAUDE_MEM_ONLINE_OPTIN=false npx claude-mem install</code></div>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Pergunte ao histórico</h2></div>
+    <p>Com o plugin ativo, o Claude consegue procurar no que foi feito antes. Exemplos para enviar:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-decisao">Copiar</button></div>
+<pre id="prompt-decisao">Procure na memória do projeto o que decidimos sobre [ASSUNTO] e por quê. Cite a sessão e a data. Se não achar, diga que não achou em vez de supor.</pre>
+    </div>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-retomar">Copiar</button></div>
+<pre id="prompt-retomar">Antes de começar, veja na memória o que ficou pendente na última sessão deste projeto e me diga em 5 linhas por onde continuar.</pre>
+    </div>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-bug">Copiar</button></div>
+<pre id="prompt-bug">Procure na memória se já corrigimos um erro parecido com este: [COLE O ERRO]. Se sim, mostre o que foi feito daquela vez antes de mexer no código.</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo4">
+    <div class="step-head"><span class="step-num">4</span><h2 id="passo4">Para que serve</h2></div>
+    <div class="cards">
+      <article class="card"><h3>Decisões</h3><p class="when">O porquê de cada escolha fica guardado e não precisa ser explicado de novo.</p></article>
+      <article class="card"><h3>Retomar trabalho</h3><p class="when">Abriu uma sessão nova? O resumo do que foi feito já vem junto.</p></article>
+      <article class="card"><h3>Privacidade</h3><p class="when">Trechos entre as marcas <code class="inline">&lt;private&gt;</code> não são guardados.</p></article>
+    </div>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou? No pacote tem o caminho completo do pedido ao projeto no ar."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prompt Motion: vídeos animados com o prompt de cada um</title>
+<meta name="description" content="Passo a passo grátis para usar a galeria Prompt Motion: escolha um vídeo animado feito com o Claude, copie o prompt, troque pelo seu produto e peça para o Claude recriar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este passo a passo é grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">passo a passo grátis</span>
+  <h1>Vídeos animados <span class="nowrap">com o prompt de cada um</span></h1>
+  <p class="lead">O Prompt Motion é uma galeria de vídeos animados feitos com o Claude. Cada vídeo mostra, do lado, o prompt ou a skill que gerou ele. Tem tela de produto, app de celular, gráfico, diagrama, texto animado, partículas e mais.</p>
+
+  <a class="btn" href="https://prompt-motion.com/" target="_blank" rel="noopener">Abrir o Prompt Motion</a>
+  <div class="note">Galeria de terceiros, com curadoria de @p4nthera_. Esta página não tem ligação com o autor. Confira no site as condições de uso de cada prompt.</div>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Escolha um vídeo</h2></div>
+    <p>Use os filtros de categoria (Product UI, Phone, Charts, Kinetic type...) e escolha um vídeo parecido com o que você quer fazer. Abra o vídeo e copie o prompt ou a skill dele.</p>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Adapte para o seu produto</h2></div>
+    <p>Cole o prompt copiado no lugar indicado e envie este pedido ao Claude:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-adaptar">Copiar</button></div>
+<pre id="prompt-adaptar">Vou te passar um prompt de vídeo animado que eu gostei. Recrie o mesmo vídeo para [SEU PRODUTO OU MARCA], com as cores [SUAS CORES] e no formato vertical 1080x1920.
+Regras:
+- Mantenha a duração, a ordem e o tempo de cada cena do original.
+- Troque só o conteúdo: textos, nome, logo e cores.
+- Se algo do original não fizer sentido para o meu produto, me diga antes de mudar.
+
+Prompt original:
+[COLE AQUI]</pre>
+    </div>
+    <div class="note">Também dá para usar a função <a href="https://prompt-motion.com/customize" target="_blank" rel="noopener">Customize</a> do próprio site, que é grátis: você diz para que é o vídeo, o formato e as cores, e ela adapta o prompt.</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Ajuste o resultado</h2></div>
+    <p>Depois da primeira versão, peça os ajustes em português:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-ajuste">Copiar</button></div>
+<pre id="prompt-ajuste">Revise o vídeo cena por cena e me diga onde o texto fica difícil de ler no celular. Depois corrija: letras maiores, no máximo 6 palavras por tela e cada cena com pelo menos 1,5 s.</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo4">
+    <div class="step-head"><span class="step-num">4</span><h2 id="passo4">Para que serve</h2></div>
+    <div class="cards">
+      <article class="card"><h3>Lançamento</h3><p class="when">Vídeo curto apresentando um produto ou uma função nova.</p></article>
+      <article class="card"><h3>App de celular</h3><p class="when">Telas do seu app animadas, sem gravar a tela.</p></article>
+      <article class="card"><h3>Números</h3><p class="when">Gráfico animado para resultado, pesquisa ou relatório.</p></article>
+    </div>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou? O pacote de edição faz o vídeo inteiro com você só pedindo em português."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>
