@@ -1,6 +1,6 @@
 // ID do Pixel da Meta. O mesmo número está em public/assets/pixel.js (arquivo estático, sem acesso a este
 // módulo); tests/meta.test.ts confere que os dois são iguais.
-export const PIXEL_META = "1135305389026652";
+export const PIXEL_META = "2696646250779478";
 
 // event_id da compra: o navegador e o servidor chegam no mesmo valor sem combinar nada
 export const idEventoCompra = (pedidoId: string) => `compra-${pedidoId}`;
