@@ -1,5 +1,5 @@
 ﻿# Gerado por scripts/gerar-instaladores.mjs a partir do pacote.json. Não edite à mão.
-# Instala o que o pacote "Motion, mockup e fontes" precisa: App do Claude, Node.js LTS.
+# Instala o que o pacote "Kit Cena" precisa: App do Claude, Node.js LTS.
 # Uso: dois cliques em instalar-requisitos.bat. Para só conferir, sem instalar: -Conferir
 param([switch]$Conferir)
 $ErrorActionPreference = "Continue"

@@ -1,5 +1,6 @@
 import { execFileSync } from "node:child_process";
 import { describe, expect, it } from "vitest";
+import { ENDERECOS_RENOMEADOS } from "@/lib/loja/rotas-pacotes";
 import { PAGINAS_ANTIGAS } from "@/lib/paginas-antigas";
 
 // Compara cada endereço antigo, servido pelo Next, com o HTML que estava publicado no branch main.
@@ -16,6 +17,8 @@ const cabecalhos: Record<string, string> = BYPASS ? { "x-vercel-protection-bypas
 // A página inicial virou rota do app (página de vendas) e tem o próprio teste abaixo.
 // Páginas antigas que ganharam conteúdo depois da migração (31/10: prompt para copiar) comparam com o commit da mudança
 const ATUALIZADAS: Record<string, string> = { freellm: "785a4e4", ranking: "785a4e4" };
+// Rebrand: o texto mudou de propósito; o endereço segue respondendo e o nome antigo leva até ele por 301
+const RENOMEADAS = new Set(["clonadora", "mesa-de-validacao", "revisao-tripla"]);
 
 function original(pasta: string): string {
   const ref = ATUALIZADAS[pasta];
@@ -30,7 +33,7 @@ describe.skipIf(!BASE)("páginas antigas dos vídeos", () => {
         const r = await fetch(`${BASE}${caminho}`, { redirect: "manual", headers: cabecalhos });
         expect(r.status).toBe(200);
         expect(r.headers.get("content-type")).toContain("text/html");
-        expect(await r.text()).toBe(original(pasta));
+        if (!RENOMEADAS.has(pasta)) expect(await r.text()).toBe(original(pasta).replace("O pacote completo de skills e agentes", "A Coleção Completa de skills e agentes"));
       });
     }
   }
@@ -39,15 +42,15 @@ describe.skipIf(!BASE)("páginas antigas dos vídeos", () => {
     const r = await fetch(`${BASE}/`, { redirect: "manual", headers: cabecalhos });
     expect(r.status).toBe(200);
     const html = await r.text();
-    expect(html).toContain("pacote de skills");
+    expect(html).toContain("trabalhando por você");
     expect(html).toContain('id="agentes-gratis"');
     const antigo = await fetch(`${BASE}/index.html`, { redirect: "manual", headers: cabecalhos });
     expect([307, 308]).toContain(antigo.status);
     expect(new URL(antigo.headers.get("location")!, BASE).pathname).toBe("/");
   }, 15_000);
 
-  // O estilo.css só pode ter mudado de cor: toda regra do original continua lá e o destaque vem do token laranja
-  it("estilo.css mantém todas as regras do original e usa o destaque laranja", async () => {
+  // O estilo.css só pode ter mudado de cor: toda regra do original continua lá e o destaque vem do token azul
+  it("estilo.css mantém todas as regras do original e usa o destaque azul", async () => {
     const r = await fetch(`${BASE}/assets/estilo.css`, { headers: cabecalhos });
     expect(r.status).toBe(200);
     const atual = await r.text();
@@ -56,8 +59,8 @@ describe.skipIf(!BASE)("páginas antigas dos vídeos", () => {
       [...css.replace(/\/\*[\s\S]*?\*\//g, "").matchAll(/(^|})\s*([^{}@]+?)\s*{/g)].map((m) => m[2]!.replace(/\s+/g, " ").trim());
     const atuais = new Set(seletores(atual));
     expect(seletores(original).filter((s) => !atuais.has(s))).toEqual([]);
-    expect(atual).toContain("--accent: #C03F00;");
-    expect(atual).not.toMatch(/2F5BFF|6B8BFF/i);
+    expect(atual).toContain("--accent: #1D4FE0;");
+    expect(atual).not.toMatch(/C03F00|FF8A3D/i);
   });
 
   it("a vitrine do fim das páginas traz o pacote do vídeo e o combo com os preços do banco", async () => {
@@ -68,12 +71,22 @@ describe.skipIf(!BASE)("páginas antigas dos vídeos", () => {
       combo: { somaTexto: string; precoTexto: string; economiaTexto: string };
     };
     expect(v.pacote.slug).toBe("times-de-agentes");
-    expect(v.pacote.precoTexto).toBe("R$\u00a037,00");
+    expect(v.pacote.precoTexto).toBe("R$\u00a027,00");
     expect(v.pacote.comprarUrl).toContain("/loja/checkout/");
-    expect([v.combo.somaTexto, v.combo.precoTexto, v.combo.economiaTexto]).toEqual(["R$\u00a0195,00", "R$\u00a097,00", "R$\u00a098,00"]);
+    expect([v.combo.somaTexto, v.combo.precoTexto, v.combo.economiaTexto]).toEqual(["R$\u00a0145,00", "R$\u00a097,00", "R$\u00a048,00"]);
     const css = await fetch(`${BASE}/assets/oferta.css`, { headers: cabecalhos });
     expect(css.status).toBe(200);
   }, 15_000); // primeira chamada fria ao Supabase pode passar de 5 s fora da CDN
+
+  it("nomes antigos levam ao endereço novo por 301", async () => {
+    for (const [de, para] of ENDERECOS_RENOMEADOS) {
+      for (const caminho of [de, `${de}/`]) {
+        const r = await fetch(`${BASE}${caminho}`, { redirect: "manual", headers: cabecalhos });
+        expect(r.status).toBe(301);
+        expect(new URL(r.headers.get("location")!, BASE).pathname).toBe(para);
+      }
+    }
+  });
 
   it("endereço inexistente responde 404", async () => {
     const r = await fetch(`${BASE}/naoexiste/`, { redirect: "manual", headers: cabecalhos });

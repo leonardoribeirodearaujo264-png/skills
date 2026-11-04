@@ -35,7 +35,7 @@ function cardAposPrompt(p) {
   const card = cardPacote(p, "oferta-apos-prompt-titulo");
   card.classList.add("oferta-apos-prompt");
   const ver = el("a", "oferta-ver-pacote", "Ver o que vem no pacote");
-  ver.href = "/pacotes/" + encodeURIComponent(p.slug) + "/";
+  ver.href = p.paginaUrl;
   card.append(ver);
   passoDoPrompt.after(card);
 }
@@ -104,7 +104,7 @@ function cardPacote(p, idTitulo = "oferta-titulo") {
   return card;
 }
 
-// Pague 2, leve 3: abre a loja com o pacote do vídeo marcado para escolher os outros
+// Leve 3: abre a loja com o pacote do vídeo marcado para escolher os outros
 function cardLeve(l) {
   const card = el("div", "oferta-leve");
   card.setAttribute("role", "group");
@@ -152,11 +152,11 @@ function cardCombo(c, comoTitulo) {
   }));
   const precos = el("div", "oferta-combo-precos");
   precos.append(el("span", "price", c.precoTexto));
-  const filhos = [el("span", "oferta-selo", "PACOTE COMPLETO"), titulo, el("p", "oferta-combo-desc", c.descricao), lista, precos];
+  const filhos = [el("span", "oferta-selo", "COLEÇÃO COMPLETA"), titulo, el("p", "oferta-combo-desc", c.descricao), lista, precos];
   if (c.somaTexto && c.economiaTexto) {
     filhos.push(el("p", "oferta-comparacao", "Separados, sairiam " + c.somaTexto + ". Você economiza " + c.economiaTexto + "."));
   }
-  const cta = el("a", "cta", "Quero o pacote completo");
+  const cta = el("a", "cta", "Quero a Coleção Completa");
   cta.href = c.comprarUrl;
   filhos.push(cta, el("p", "price-note", "Pagamento único. Acesso na hora, logo depois do pagamento."));
   if (c.capa) filhos.unshift(capa(c.capa, false));

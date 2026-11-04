@@ -1,5 +1,5 @@
 ﻿# Gerado por scripts/gerar-instaladores.mjs a partir do pacote.json. Não edite à mão.
-# Instala o pacote "Motion, mockup e fontes" no Codex.
+# Instala o pacote "Kit Cena" no Codex.
 # Uso: powershell -ExecutionPolicy Bypass -File .\instalar-codex.ps1
 $ErrorActionPreference = "Continue"
 $Aqui = Split-Path -Parent $MyInvocation.MyCommand.Path

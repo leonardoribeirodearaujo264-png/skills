@@ -4,16 +4,16 @@
   --ink: #14161A;
   --ink-soft: #565B66;
   --line: #E3E1DA;
-  /* Destaque laranja: o único lugar com o valor. Contraste AA conferido em prototipos/laranja/TOKENS.md */
-  --accent: #C03F00;
+  /* Destaque azul: o único lugar com o valor. Branco sobre #1D4FE0: 6,7:1; #1D4FE0 sobre o fundo: 6,1:1 */
+  --accent: #1D4FE0;
   --accent-ink: #FFFFFF;
-  --accent-soft: #FFEDE1;
-  --code-bg: #1F1B18;
-  --code-ink: #F5F0EA;
-  --code-muted: #BDB2A7;
+  --accent-soft: #E6EDFF;
+  --code-bg: #0B1020;
+  --code-ink: #EAF0FF;
+  --code-muted: #8C9AB8;
   --code-line: color-mix(in srgb, var(--code-ink) 12%, transparent);
-  /* Bloco sólido (faixa do topo, número do passo): mantém o laranja escuro nos dois temas */
-  --block: #C03F00;
+  /* Bloco sólido (faixa do topo, número do passo): mantém o azul nos dois temas */
+  --block: #1D4FE0;
   --block-ink: #FFFFFF;
   --blue-block: var(--block);
   --blue-block-ink: var(--block-ink);
@@ -31,16 +31,16 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0D0F13; --surface: #151921; --ink: #EEF0F4; --ink-soft: #9BA3B2;
-    --line: #252B36; --accent: #FF8A3D; --accent-ink: #0D0F13; --accent-soft: #2B1A0F;
-    --code-bg: #231D19; --ok: #3DBE86; --ok-ink: #5FD3A0; --ok-soft: #10261D;
+    --bg: #05070D; --surface: #0F1629; --ink: #EAF0FF; --ink-soft: #8C9AB8;
+    --line: #1E2A4A; --accent: #4FA3FF; --accent-ink: #05070D; --accent-soft: #0E1F3D;
+    --code-bg: #0B1020; --ok: #3DBE86; --ok-ink: #5FD3A0; --ok-soft: #10261D;
     --danger: #FF8A7E; --danger-soft: #2C1513; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0D0F13; --surface: #151921; --ink: #EEF0F4; --ink-soft: #9BA3B2;
-  --line: #252B36; --accent: #FF8A3D; --accent-ink: #0D0F13; --accent-soft: #2B1A0F;
-  --code-bg: #231D19; --ok: #3DBE86; --ok-ink: #5FD3A0; --ok-soft: #10261D;
+  --bg: #05070D; --surface: #0F1629; --ink: #EAF0FF; --ink-soft: #8C9AB8;
+  --line: #1E2A4A; --accent: #4FA3FF; --accent-ink: #05070D; --accent-soft: #0E1F3D;
+  --code-bg: #0B1020; --ok: #3DBE86; --ok-ink: #5FD3A0; --ok-soft: #10261D;
   --danger: #FF8A7E; --danger-soft: #2C1513; color-scheme: dark;
 }
 

@@ -15,7 +15,7 @@ describe.skipIf(!ativo)("Mercado Pago sandbox: pagamento no site", () => {
     const pedidoId = randomUUID();
     const dados = {
       pedidoId,
-      valorCentavos: 3700,
+      valorCentavos: 2700,
       descricao: "Avulso: teste de integração",
       email: "comprador-teste@example.com",
       urlNotificacao: "https://skills-sandy-seven.vercel.app/api/webhooks/mercadopago",

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { urlDoPacote } from "@/lib/loja/apresentacao";
 import type { BumpNaTela } from "@/lib/loja/checkout";
 import { formatarReais } from "@/lib/loja/dominio";
 
@@ -44,7 +45,7 @@ export function BlocoBump({
           </span>
         </span>
       </label>
-      <Link className="bump-ver" href={`/pacotes/${bump.slug}/`} target="_blank" rel="noopener">
+      <Link className="bump-ver" href={urlDoPacote(bump.slug)} target="_blank" rel="noopener">
         Ver o que vem no {bump.titulo}
         <span className="sr-only"> (abre em nova aba)</span>
       </Link>

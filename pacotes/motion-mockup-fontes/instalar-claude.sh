@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Gerado por scripts/gerar-instaladores.mjs a partir do pacote.json. Não edite à mão.
-# Instala o pacote "Motion, mockup e fontes" no Claude Code. No Windows, rode no Git Bash ou use o .ps1.
+# Instala o pacote "Kit Cena" no Claude Code. No Windows, rode no Git Bash ou use o .ps1.
 set -uo pipefail
 AQUI="$(cd "$(dirname "$0")" && pwd)"
 

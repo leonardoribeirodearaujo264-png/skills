@@ -6,7 +6,7 @@ Duração: 74 segundos, narração de 71.0 s. Fala total: 200 palavras.
 
 Fala: Neste pacote, você pede em português e o time monta página, texto, anúncio e velocidade.
 
-Tela: Design, copy, anúncios e velocidade. Página, texto, anúncio e velocidade com um só pedido
+Tela: Kit Vitrine de Vendas. Página, texto, anúncio e velocidade com um só pedido
 
 ## Cena 2
 

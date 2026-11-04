@@ -11,6 +11,10 @@ export function Footer() {
           <div className="rodape__marca">
             <Marca />
             <p>Skills, agentes e prompts para Claude Code e Codex, em português.</p>
+            {/* Único caminho público até o preço de cliente, que continua valendo na loja */}
+            <p>
+              <Link href={`/entrar/?next=${encodeURIComponent("/loja/?oferta=cliente")}`}>Já é cliente? Entre com o e-mail da compra</Link>
+            </p>
           </div>
           <nav aria-labelledby="rodape-contato">
             <h2 id="rodape-contato">Contato</h2>

@@ -1,4 +1,4 @@
-# Edição de vídeo por skills
+# Ilha de Edição IA
 
 Depois de instalar, você pede em português ao Claude Code ou ao Codex e ele corta, legenda e monta seus vídeos no seu computador. Gravou falando para a câmera? Ele tira os silêncios e os erros, traz a frase mais forte para os 3 primeiros segundos, coloca legenda e exporta o Reels em 1080x1920. Sem gravação? Ele monta uma aula sem câmera a partir das suas anotações, ou um Reels 100% animado, com mascote, narração, legenda palavra por palavra e efeitos sonoros. O coração do pacote é a skill `video-editor-pro`: ela analisa o vídeo, transcreve no seu computador, propõe a estratégia em português e só corta depois do seu OK. Um time de agentes divide o trabalho e um revisor confere o vídeo antes da entrega.
 

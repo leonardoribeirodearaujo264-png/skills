@@ -1,3 +1,5 @@
+import { rotaDoPacote } from "./rotas-pacotes";
+
 // Apresentação dos pacotes na vitrine e na página pública: capa e textos que não cabem no banco.
 // Preço, título, resumo, ordem e contagens vêm sempre de loja_produtos. Tudo aqui foi conferido no README
 // e no roteiro da aula de cada pacote (pacotes/<slug>/): nada de benefício que o pacote não entrega.
@@ -23,7 +25,7 @@ export type Apresentacao = {
 
 const APRESENTACOES: Record<string, Apresentacao> = {
   "times-de-agentes": {
-    capaAlt: "Capa do pacote Equipe Completa de Agentes: um diretor no centro ligado a seis times.",
+    capaAlt: "Capa do pacote Kit Empresa IA: um diretor no centro ligado a seis times.",
     complemento: "Um diretor-geral recebe o seu pedido, escolhe o time e cobra a entrega.",
     inclui: {
       agentes: "O diretor-geral e seis times, cada um com líder, dois especialistas e revisor.",
@@ -54,19 +56,19 @@ const APRESENTACOES: Record<string, Apresentacao> = {
     },
   },
   "design-copy-anuncios": {
-    capaAlt: "Capa do pacote Design, copy, anúncios e velocidade: uma página, um anúncio e um medidor de velocidade.",
+    capaAlt: "Capa do pacote Kit Vitrine de Vendas: uma página, um anúncio e um medidor de velocidade.",
   },
   "edicao-de-video": {
-    capaAlt: "Capa do pacote Edição de vídeo por skills: tela vertical com legenda, tesoura e linha do tempo.",
+    capaAlt: "Capa do pacote Ilha de Edição IA: tela vertical com legenda, tesoura e linha do tempo.",
   },
   "motion-mockup-fontes": {
-    capaAlt: "Capa do pacote Motion, mockup e fontes: notebook com tipografia, celular e trilha de animação.",
+    capaAlt: "Capa do pacote Kit Cena: notebook com tipografia, celular e trilha de animação.",
   },
   "lancamento-pro": {
     capaAlt: "Capa do pacote Lançamento Pro: página, anúncio, e-mail e balão de atendimento.",
   },
   "programacao-sem-codigo": {
-    capaAlt: "Capa do pacote Programação para quem não programa: terminal, bloco de código e sinal de concluído.",
+    capaAlt: "Capa do pacote Kit Código Seguro: terminal, bloco de código e sinal de concluído.",
   },
 };
 
@@ -76,7 +78,7 @@ const APRESENTACOES: Record<string, Apresentacao> = {
 export type VitrineInicial = {
   slug: string;
   nome: string;
-  // nome curto: filtros, painel de agentes grátis e lista do pacote completo
+  // nome curto: filtros, painel de agentes grátis e lista da Coleção Completa
   curto: string;
   descricao: string;
   botao: string;
@@ -88,42 +90,42 @@ export type VitrineInicial = {
 export const VITRINE_INICIAL: readonly VitrineInicial[] = [
   {
     slug: "design-copy-anuncios",
-    nome: "Pacote Base de Skills para sua IA",
-    curto: "Pacote Base",
-    botao: "Ver o Pacote Base",
+    nome: "Kit Vitrine de Vendas",
+    curto: "Kit Vitrine de Vendas",
+    botao: "Ver o Kit Vitrine de Vendas",
     destaque: true,
     descricao:
       "Você pede em português e o Claude Code ou o Codex monta a página com visual profissional, escreve o texto da oferta, prepara anúncios para Facebook e Instagram e mede a velocidade do site. Um revisor confere tudo antes de você publicar.",
   },
   {
     slug: "edicao-de-video",
-    nome: "Edição de Vídeo no Claude Code",
-    curto: "Edição de vídeo",
-    botao: "Ver o pacote Edição de vídeo",
+    nome: "Ilha de Edição IA",
+    curto: "Ilha de Edição IA",
+    botao: "Ver a Ilha de Edição IA",
     descricao:
       "Corte, legenda e montagem de Reels, Shorts e aulas no seu computador, pedindo em português. O time tira silêncios e erros, legenda e exporta em 1080x1920, e um revisor confere o vídeo antes da entrega.",
   },
   {
     slug: "motion-mockup-fontes",
-    nome: "Motion e Mockups",
-    curto: "Motion e Mockups",
-    botao: "Ver o pacote Motion e Mockups",
+    nome: "Kit Cena",
+    curto: "Kit Cena",
+    botao: "Ver o Kit Cena",
     descricao:
       "O print do seu site num notebook, o app num celular, o post como aparece no feed, animações de entrada e pares de fontes com escala pronta. Os mockups são gerados no seu computador, sem programa de design.",
   },
   {
     slug: "programacao-sem-codigo",
-    nome: "Programação no Claude Code",
-    curto: "Programação",
-    botao: "Ver o pacote Programação",
+    nome: "Kit Código Seguro",
+    curto: "Kit Código Seguro",
+    botao: "Ver o Kit Código Seguro",
     descricao:
       "Do pedido em português ao projeto no ar: entrevista, plano em linguagem simples, uma etapa por vez, teste como cliente e revisão de segurança. Nada é apagado, instalado ou publicado sem o seu sim.",
   },
   {
     slug: "times-de-agentes",
-    nome: "Times de Agentes",
-    curto: "Times de Agentes",
-    botao: "Ver o pacote Times de Agentes",
+    nome: "Kit Empresa IA",
+    curto: "Kit Empresa IA",
+    botao: "Ver o Kit Empresa IA",
     novo: true,
     descricao:
       "Seis times de marketing, vendas, financeiro, atendimento, operações e conteúdo, cada um com líder, dois especialistas e revisor. Um diretor-geral recebe o seu pedido, escolhe o time e cobra a entrega.",
@@ -138,7 +140,7 @@ export const CAPA_COMBO: Capa = {
   webp: "/capas/combo.webp",
   png: "/capas/combo.png",
   mini: "/capas/mini/combo.webp",
-  alt: "Capa do pacote completo: todos os pacotes empilhados.",
+  alt: "Capa da Coleção Completa: todos os pacotes empilhados.",
 };
 
 export function apresentacao(slug: string): Apresentacao | null {
@@ -153,5 +155,5 @@ export function capaDoPacote(slug: string, titulo: string): Capa | null {
 }
 
 export function urlDoPacote(slug: string): string {
-  return `/pacotes/${slug}/`;
+  return `/pacotes/${rotaDoPacote(slug)}/`;
 }

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Gerado por scripts/gerar-instaladores.mjs a partir do pacote.json. Não edite à mão.
 # Mac: dois cliques neste arquivo. Linux: bash instalar-requisitos.command
-# Instala o que o pacote "Design, copy, anúncios e velocidade" precisa: App do Claude, Node.js LTS.
+# Instala o que o pacote "Kit Vitrine de Vendas" precisa: App do Claude, Node.js LTS.
 set -u
 
 if [ "$(uname)" != "Darwin" ]; then

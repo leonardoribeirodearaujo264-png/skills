@@ -1,5 +1,5 @@
 <!-- Gerado por scripts/gerar-instaladores.mjs a partir do pacote.json. Não edite à mão. -->
-# Comece aqui: como instalar o pacote "Equipe Completa de Agentes"
+# Comece aqui: como instalar o pacote "Kit Empresa IA"
 
 São 3 passos e só o primeiro é com você: depois, o próprio Claude instala os programas que faltam, o pacote, confere e testa tudo.
 

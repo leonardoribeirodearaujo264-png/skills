@@ -1,4 +1,4 @@
-# Programação para quem não programa
+# Kit Código Seguro
 
 Com este pacote, você pede em português o site, o sistema simples, a automação ou o SaaS que quer construir, e o Claude Code ou o Codex conduz o caminho com você: entrevista, plano em linguagem simples, uma etapa por vez, teste como cliente e revisão de segurança antes de publicar. Nada é apagado, instalado, publicado ou pago sem o seu sim, e o que já funciona continua funcionando.
 

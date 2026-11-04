@@ -49,7 +49,7 @@ function montar(
         : "Pagamento aprovado. Os seus pacotes já estão na área de membros.";
   const urlEntrar = new URL("/entrar/", link).toString();
   const blocoCompra = senha
-    ? `${destaque("Seu login", email, false)}${destaque("Sua senha", senha, false)}<p style="font-size:13px;line-height:1.5;color:#565B66;margin:0 0 20px">Entre em <a href="${escaparHtml(urlEntrar)}" style="color:#C03F00">${escaparHtml(urlEntrar)}</a> com esse e-mail e essa senha. Na área de membros você pode trocar a senha quando quiser.</p>`
+    ? `${destaque("Seu login", email, false)}${destaque("Sua senha", senha, false)}<p style="font-size:13px;line-height:1.5;color:#565B66;margin:0 0 20px">Entre em <a href="${escaparHtml(urlEntrar)}" style="color:#1D4FE0">${escaparHtml(urlEntrar)}</a> com esse e-mail e essa senha. Na área de membros você pode trocar a senha quando quiser.</p>`
     : `${destaque("Seu login", email, false)}<p style="font-size:13px;line-height:1.5;color:#565B66;margin:0 0 20px">Use a senha que chegou no seu primeiro e-mail de acesso (ou a que você trocou). Esqueceu? Na página de entrar, peça um código por e-mail.</p>`;
   const corpo = motivo === "compra" ? blocoCompra : destaque("Código", codigo, true);
   const rodape =
@@ -68,7 +68,7 @@ ${capa ? `<img src="${escaparHtml(capa.url)}" width="424" height="283" alt="${es
 <h1 style="font-size:22px;margin:0 0 10px">${escaparHtml(titulo)}</h1>
 <p style="font-size:15px;line-height:1.5;color:#565B66;margin:0 0 20px">${escaparHtml(intro)}</p>
 ${corpo}
-<a href="${escaparHtml(link)}" style="display:inline-block;background:#C03F00;color:#FFFFFF;text-decoration:none;font-weight:bold;padding:14px 22px;border-radius:12px">Entrar na área de membros</a>
+<a href="${escaparHtml(link)}" style="display:inline-block;background:#1D4FE0;color:#FFFFFF;text-decoration:none;font-weight:bold;padding:14px 22px;border-radius:12px">Entrar na área de membros</a>
 <p style="font-size:12px;color:#565B66;margin:20px 0 0">${escaparHtml(rodape)}</p>
 </div></div></body></html>`;
   const assunto = motivo !== "compra" ? `Seu código de acesso: ${codigo}` : comprados ? `Seu acesso: ${comprados}` : "Seu acesso aos pacotes";

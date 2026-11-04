@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Gerado por scripts/gerar-instaladores.mjs a partir do pacote.json. Não edite à mão.
 # Mac: dois cliques neste arquivo. Linux: bash instalar-requisitos.command
-# Instala o que o pacote "Equipe Completa de Agentes" precisa: App do Claude, Node.js LTS.
+# Instala o que o pacote "Kit Empresa IA" precisa: App do Claude, Node.js LTS.
 set -u
 
 if [ "$(uname)" != "Darwin" ]; then

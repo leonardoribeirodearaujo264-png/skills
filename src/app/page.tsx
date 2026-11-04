@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { cache, Suspense } from "react";
-import { ComboBanner } from "@/components/vendas/ComboBanner";
 import { FinalCta } from "@/components/vendas/FinalCta";
 import { Footer } from "@/components/vendas/Footer";
 import { FreeAgentsSection } from "@/components/vendas/FreeAgentsSection";
@@ -13,16 +12,16 @@ import { clientePublico } from "@/lib/supabase/clientes";
 import "./vendas.css";
 
 export const metadata: Metadata = {
-  title: { absolute: "Leonardo Skills: pacotes de skills para Claude Code e Codex" },
-  description: "Pacotes de skills, agentes e prompts para Claude Code e Codex, explicados em português, e os prompts grátis dos vídeos.",
+  title: { absolute: "Leonardo Skills: kits prontos para o Claude Code e o Codex" },
+  description: "Uma equipe de IA trabalhando por você: kits com skills, agentes e prompts para o Claude Code e o Codex, além dos prompts grátis dos vídeos.",
 };
 // Preço e oferta ativa vêm do banco, renovados a cada 60 s (mesmo prazo da vitrine das páginas dos vídeos).
 // A página não lê sessão, então sai do cache da CDN em vez de rodar a função a cada visita.
 // O checkout recalcula o preço no servidor na hora de pagar.
 export const revalidate = 60;
-export const viewport: Viewport = { themeColor: "#14100D" };
+export const viewport: Viewport = { themeColor: "#05070D" };
 
-// Uma leitura do catálogo por requisição, dividida entre a pílula do combo e a lista.
+// Uma leitura do catálogo por requisição.
 // Falha no banco vira null: a página mostra os cards sem preço e bloqueia a compra, nunca um valor de reserva.
 const paginaDaVisita = cache(async () => {
   let catalogo: Catalogo | null = null;
@@ -33,10 +32,6 @@ const paginaDaVisita = cache(async () => {
   }
   return montarPaginaInicial(catalogo);
 });
-
-async function Pilula() {
-  return <ComboBanner combo={(await paginaDaVisita()).combo} />;
-}
 
 async function Lista() {
   return <PackageList pagina={await paginaDaVisita()} />;
@@ -51,25 +46,19 @@ export default function PaginaInicial() {
       <a className="sr-only pular" href="#pacotes">
         Pular para os pacotes
       </a>
-      <HeroHeader
-        combo={
-          <Suspense fallback={null}>
-            <Pilula />
-          </Suspense>
-        }
-      />
+      <HeroHeader />
       <main id="conteudo">
         <section className="pacotes wrap" id="pacotes" aria-labelledby="pacotes-titulo">
           {/* Compatibilidade: links antigos apontam para /#oferta */}
           <span id="oferta" aria-hidden="true" />
           <div className="secao-cabeca">
             <div>
-              <p className="olho">Os pacotes</p>
+              <p className="olho">Os kits</p>
               <h2 className="secao-titulo" id="pacotes-titulo">
-                Um pacote por área
+                Escolha o kit do seu próximo projeto
               </h2>
             </div>
-            <p className="secao-apoio">Cada pacote traz as skills, o time de agentes e os prompts da área, com instalador para Windows, Mac e Linux.</p>
+            <p className="secao-apoio">Cada kit já vem com as instruções, os agentes e os pedidos prontos. O instalador funciona no Windows, no Mac e no Linux.</p>
           </div>
           <Suspense fallback={<PackageListSkeleton />}>
             <Lista />

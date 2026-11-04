@@ -1,5 +1,5 @@
 ﻿# Gerado por scripts/gerar-instaladores.mjs a partir do pacote.json. Não edite à mão.
-# Instala o que o pacote "Edição de vídeo por skills" precisa: App do Claude, Node.js LTS, Python 3.12, FFmpeg.
+# Instala o que o pacote "Ilha de Edição IA" precisa: App do Claude, Node.js LTS, Python 3.12, FFmpeg.
 # Uso: dois cliques em instalar-requisitos.bat. Para só conferir, sem instalar: -Conferir
 param([switch]$Conferir)
 $ErrorActionPreference = "Continue"

@@ -1,4 +1,4 @@
-# Aula: Motion, mockup e fontes
+# Aula: Kit Cena
 
 Duração: 78 segundos, narração de 75.0 s. Fala total: 208 palavras.
 
@@ -6,7 +6,7 @@ Duração: 78 segundos, narração de 75.0 s. Fala total: 208 palavras.
 
 Fala: Neste pacote você faz mockup, animação e escolha de fontes pedindo ao Claude Code ou ao Codex, sem programa de design.
 
-Tela: Motion, mockup e fontes. Mockup, animação e fontes sem programa de design
+Tela: Kit Cena. Mockup, animação e fontes sem programa de design
 
 ## Cena 2
 

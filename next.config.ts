@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 import { fileURLToPath } from "node:url";
 import { PAGINAS_ANTIGAS } from "./src/lib/paginas-antigas";
+import { ENDERECOS_RENOMEADOS } from "./src/lib/loja/rotas-pacotes";
 
 // As páginas dos vídeos continuam como HTML estático em public/. Cada endereço responde 200,
 // com e sem barra no fim, igual ao site estático anterior (os links da DM dependem disso).
@@ -30,6 +31,11 @@ const config: NextConfig = {
   async redirects() {
     return [
       { source: "/index.html", destination: "/", permanent: false },
+      // Endereços com o nome antigo: 301 para não quebrar anúncios e links da DM já divulgados
+      ...ENDERECOS_RENOMEADOS.flatMap(([de, para]) => [
+        { source: de, destination: para, statusCode: 301 as const },
+        { source: `${de}/`, destination: para, statusCode: 301 as const },
+      ]),
       // Palavras dos criativos do pacote de edição: o link da DM leva à página do pacote
       ...["edita", "editor"].flatMap((pasta) => [
         { source: `/${pasta}`, destination: "/editar/", permanent: false },

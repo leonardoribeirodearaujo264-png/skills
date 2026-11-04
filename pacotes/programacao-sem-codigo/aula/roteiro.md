@@ -1,4 +1,4 @@
-# Aula: Programação para quem não programa
+# Aula: Kit Código Seguro
 
 Duração: 87 segundos, narração de 83.4 s. Fala total: 225 palavras.
 
@@ -6,7 +6,7 @@ Duração: 87 segundos, narração de 83.4 s. Fala total: 225 palavras.
 
 Fala: Você não precisa programar para construir um site ou um sistema. Precisa pedir do jeito certo e com segurança.
 
-Tela: Programação para quem não programa. Do pedido ao projeto no ar, com segurança
+Tela: Kit Código Seguro. Do pedido ao projeto no ar, com segurança
 
 ## Cena 2
 

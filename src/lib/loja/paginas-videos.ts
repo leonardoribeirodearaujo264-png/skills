@@ -38,11 +38,11 @@ export const PAGINAS_VIDEOS: readonly PaginaVideo[] = [
   },
   {
     pasta: "clonadora",
-    titulo: "Bancada de 6 Claudes",
+    titulo: "Esquadrão de Oferta",
     frase: "Estuda uma oferta escalada e monta a sua página.",
     tipo: "Prompt grátis",
     antiga: true,
-    oferta: { pacote: "design-copy-anuncios", gancho: "Gostou da bancada? No pacote tem as skills de design, copy e anúncios prontas." },
+    oferta: { pacote: "design-copy-anuncios", gancho: "Gostou do Esquadrão de Oferta? No pacote tem as skills de design, copy e anúncios prontas." },
   },
   {
     pasta: "harvey",
@@ -53,12 +53,12 @@ export const PAGINAS_VIDEOS: readonly PaginaVideo[] = [
     oferta: { pacote: "times-de-agentes", gancho: "Gostou do Harvey? No pacote tem o time de vendas e mais cinco times de agentes." },
   },
   {
-    pasta: "conselho",
-    titulo: "Conselho de 4 Claudes",
+    pasta: "mesa-de-validacao",
+    titulo: "Mesa de Validação",
     frase: "Testa a sua ideia antes de você gastar meses nela.",
     tipo: "Prompt grátis",
     antiga: true,
-    oferta: { pacote: "times-de-agentes", gancho: "Gostou do conselho? No pacote tem seis times de agentes com líder e revisor." },
+    oferta: { pacote: "times-de-agentes", gancho: "Gostou da Mesa de Validação? No pacote tem seis times de agentes com líder e revisor." },
   },
   {
     pasta: "freellm",
@@ -69,12 +69,12 @@ export const PAGINAS_VIDEOS: readonly PaginaVideo[] = [
     oferta: { pacote: "programacao-sem-codigo", gancho: "Gostou de ligar modelos grátis? No pacote tem o caminho completo do pedido ao projeto no ar." },
   },
   {
-    pasta: "banca",
-    titulo: "A banca do seu código",
+    pasta: "revisao-tripla",
+    titulo: "Revisão Tripla",
     frase: "Três revisões antes de publicar: bugs, segurança e limpeza.",
     tipo: "Guia grátis",
     antiga: true,
-    oferta: { pacote: "programacao-sem-codigo", gancho: "Gostou da banca? No pacote tem o time que planeja, programa, testa e revisa para você." },
+    oferta: { pacote: "programacao-sem-codigo", gancho: "Gostou da Revisão Tripla? No pacote tem o time que planeja, programa, testa e revisa para você." },
   },
   {
     pasta: "ranking",
@@ -92,8 +92,8 @@ export const PAGINAS_VIDEOS: readonly PaginaVideo[] = [
     oferta: { pacote: "programacao-sem-codigo", gancho: "Gostou do Claude Code de graça? No pacote tem o caminho completo do pedido ao projeto no ar." },
   },
   {
-    pasta: "futuro",
-    titulo: "Os 4 prompts do futuro",
+    pasta: "prompt-bola-de-cristal",
+    titulo: "Prompt Bola de Cristal",
     frase: "O Claude prevê os seus próximos 5 anos a partir da memória das suas conversas.",
     tipo: "Prompt grátis",
     oferta: { pacote: "times-de-agentes", gancho: "Gostou dos prompts? No pacote tem seis times de agentes com líder e revisor." },
@@ -107,10 +107,10 @@ export const PAGINAS_VIDEOS: readonly PaginaVideo[] = [
   },
   {
     pasta: "guia",
-    titulo: "Guia: virar vermelho na IA",
+    titulo: "Guia: do básico ao piloto automático",
     frase: "Saia do uso básico e coloque o Claude para trabalhar sozinho com agentes e automações.",
     tipo: "Guia grátis",
-    oferta: { pacote: "times-de-agentes", gancho: "Quer virar vermelho mais rápido? No pacote tem os times de agentes prontos." },
+    oferta: { pacote: "times-de-agentes", gancho: "Quer chegar mais rápido ao piloto automático? No pacote tem os times de agentes prontos." },
   },
   {
     pasta: "biblioteca",
@@ -121,7 +121,7 @@ export const PAGINAS_VIDEOS: readonly PaginaVideo[] = [
   },
   {
     pasta: "editar",
-    titulo: "O Claude editando vídeo",
+    titulo: "Ilha de Edição IA na prática",
     frase: "Peça o vídeo em português e receba o Reels pronto, com um time de 6 agentes de edição.",
     tipo: "Pacote",
     oferta: { pacote: "edicao-de-video", gancho: "Só a edição de vídeo, do bruto ao post, por {preco}" },
@@ -176,8 +176,8 @@ export const PAGINAS_VIDEOS: readonly PaginaVideo[] = [
     oferta: { pacote: "times-de-agentes", gancho: "Gostou? No pacote tem seis times de agentes com líder e revisor que já trabalham assim." },
   },
   {
-    pasta: "espanador",
-    titulo: "Espanador",
+    pasta: "faxina-de-pastas",
+    titulo: "Faxina de Pastas",
     frase: "Pedidos prontos para o Claude Code arrumar a sua pasta sem apagar nada.",
     tipo: "Prompt grátis",
     oferta: { pacote: "times-de-agentes", gancho: "Gostou? No pacote tem seis times de agentes com líder e revisor." },

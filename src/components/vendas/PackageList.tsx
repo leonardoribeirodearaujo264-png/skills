@@ -42,7 +42,7 @@ export function PackageList({ pagina }: { pagina: PaginaInicial }) {
       <ul className="lista-cartoes">
         {pagina.cartoes.map((c, i) => (
           <li key={c.id}>
-            <ProductCard cartao={c} imediata={i === 0} desconto={pagina.combo?.desconto ?? null} totalAgentes={pagina.agentes.length} />
+            <ProductCard cartao={c} imediata={i === 0} totalAgentes={pagina.agentes.length} />
           </li>
         ))}
       </ul>

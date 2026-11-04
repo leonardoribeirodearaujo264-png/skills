@@ -7,6 +7,7 @@ import { OFERTA_DOS_VIDEOS } from "./paginas-videos";
 
 export type VitrinePacote = {
   slug: string;
+  paginaUrl: string;
   capa: Capa | null;
   titulo: string;
   gancho: string;
@@ -47,7 +48,7 @@ export type CatalogoVitrine = {
   combo: { titulo: string; resumo: string; itens: string[]; capa: Capa; precoTexto: string; comprarUrl: string } | null;
 };
 
-// "Pague 2, leve 3": leva à loja com o pacote do vídeo já marcado, para escolher os outros dois
+// Leve 3: leva à loja com o pacote do vídeo já marcado, para escolher os outros dois
 export type VitrineLeve = {
   titulo: string;
   descricao: string;
@@ -139,6 +140,7 @@ export function montarVitrine(catalogo: Catalogo, pagina: string): Vitrine {
     config && produto && avulso
       ? {
           slug: produto.slug,
+          paginaUrl: urlDoPacote(produto.slug),
           capa: capaDoPacote(produto.slug, produto.titulo),
           titulo: produto.titulo,
           gancho: config.gancho.replace("{preco}", formatarReais(preco)),

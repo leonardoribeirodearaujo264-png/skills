@@ -47,7 +47,7 @@ describe.skipIf(!ativo)("order bump: do checkout ao acesso", () => {
   it("a prévia oferece o bump desmarcado com o preço do banco", async () => {
     const p = await previaCompra(null, "avulso", [PRINCIPAL]);
     if ("motivo" in p) throw new Error(p.motivo);
-    expect(p.valorCentavos).toBe(3700);
+    expect(p.valorCentavos).toBe(2700);
     expect(p.bumps.find((b) => b.slug === BUMP)).toMatchObject({ slug: BUMP, precoCentavos: 1990 });
     expect(p.itens.map((i) => i.slug)).toEqual([PRINCIPAL]);
   });
@@ -73,7 +73,7 @@ describe.skipIf(!ativo)("order bump: do checkout ao acesso", () => {
     if ("motivo" in r || "situacao" in r) throw new Error(JSON.stringify(r));
     pedidoId = r.pedidoId;
     pixId = r.pix.id;
-    expect(r.valorCentavos).toBe(3700 + 1990);
+    expect(r.valorCentavos).toBe(2700 + 1990);
     const pagamentos = await depsPagamento().mp.pagamentosDoPedido(r.pedidoId);
     expect(pagamentos.find((x) => x.id === r.pix.id)?.transaction_amount).toBe(56.9);
     const itens = await admin().from("loja_pedido_itens").select("produto_slug").eq("pedido_id", r.pedidoId);
@@ -115,7 +115,7 @@ describe.skipIf(!ativo)("order bump: do checkout ao acesso", () => {
     if ("motivo" in r || "situacao" in r) throw new Error(JSON.stringify(r));
     pedidosExtras.push(r.pedidoId);
     pixExtras.push(r.pix.id);
-    expect(r.valorCentavos).toBe(3700 + 2700 + 990);
+    expect(r.valorCentavos).toBe(2700 + 2700 + 990);
     const itens = await admin().from("loja_pedido_itens").select("produto_slug").eq("pedido_id", r.pedidoId);
     expect((itens.data ?? []).map((i) => i.produto_slug).sort()).toEqual([PRINCIPAL, "edicao-de-video", "motion-mockup-fontes"].sort());
   }, 60_000);

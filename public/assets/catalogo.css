@@ -7,7 +7,7 @@
   --cat-raio: 22px;
   --cat-capa-raio: 14px;
   --cat-ease: cubic-bezier(.32, .72, 0, 1);
-  --cat-laranja: #FF8A3D;
+  --cat-primaria: #2563FF;
 }
 
 /* ---------- Capa (sempre 3:2) e preço ---------- */
@@ -56,7 +56,7 @@
 .cat-numeros li { font: 500 12px/1 var(--font-mono); padding: 7px 10px; border-radius: 999px; background: var(--bg); box-shadow: 0 0 0 1px var(--line); color: var(--ink); }
 .cat-numeros b { font-weight: 500; color: var(--accent); }
 
-/* Pacote completo: núcleo grafite */
+/* Coleção Completa: núcleo grafite */
 .cat-card.combo { flex-direction: row; background: var(--code-bg); color: var(--code-ink); box-shadow: 0 0 0 1px var(--code-line), var(--shadow); }
 .cat-card.combo > .capa-img { flex: .9 1 0; }
 .cat-card.combo h3 { color: var(--code-ink); }
@@ -65,10 +65,10 @@
 .cat-card.combo .cat-preco-rotulo { color: var(--code-muted); }
 .cat-combo-itens { margin: 4px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 14px; }
 .cat-combo-itens li { display: flex; gap: 8px; align-items: start; }
-.cat-combo-itens svg { flex: none; margin-top: 3px; color: var(--cat-laranja); }
-.cat-card.combo .btn { background: var(--cat-laranja); color: #1F1B18; }
+.cat-combo-itens svg { flex: none; margin-top: 3px; color: var(--cat-primaria); }
+.cat-card.combo .btn { background: var(--cat-primaria); color: #0B1020; }
 .cat-card.combo .btn .ico { background: rgba(31, 27, 24, .14); }
-.cat-card.combo :focus-visible { outline-color: var(--cat-laranja); }
+.cat-card.combo :focus-visible { outline-color: var(--cat-primaria); }
 
 .cat-nota { margin: 16px 0 0; font-size: 14px; color: var(--ink-soft); }
 .cat-nota a { color: var(--accent); }

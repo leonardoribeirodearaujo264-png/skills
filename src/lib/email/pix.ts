@@ -42,7 +42,7 @@ export async function enviarEmailPix(d: EmailPix): Promise<void> {
 <p style="font-size:13px;color:#565B66;margin:0 0 6px">Pix copia e cola</p>
 <p style="font-family:Consolas,monospace;font-size:12px;word-break:break-all;background:#F6F5F1;border-radius:10px;padding:12px;margin:0 0 18px">${escaparHtml(d.copiaECola)}</p>
 <p style="text-align:center;margin:0 0 18px"><img src="cid:qr-pix" width="200" height="200" alt="QR Code do Pix" style="border:1px solid #E3E1DA;border-radius:12px"></p>
-<a href="${escaparHtml(d.link)}" style="display:inline-block;background:#C03F00;color:#FFFFFF;text-decoration:none;font-weight:bold;padding:14px 22px;border-radius:12px">Voltar para o pagamento</a>
+<a href="${escaparHtml(d.link)}" style="display:inline-block;background:#1D4FE0;color:#FFFFFF;text-decoration:none;font-weight:bold;padding:14px 22px;border-radius:12px">Voltar para o pagamento</a>
 <p style="font-size:12px;color:#565B66;margin:20px 0 0">Assim que o pagamento cair, o acesso chega neste e-mail. Se não foi você, ignore esta mensagem.</p>
 </div></div></body></html>`;
 

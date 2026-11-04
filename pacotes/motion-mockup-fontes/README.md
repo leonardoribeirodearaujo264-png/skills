@@ -1,4 +1,4 @@
-# Motion, mockup e fontes
+# Kit Cena
 
 Depois de instalar, você pede ao Claude Code ou ao Codex o que antes exigia um programa de design: o print do seu site dentro de um notebook, o app num celular, o post como vai aparecer no feed, a capa do curso em pé com sombra, uma animação de entrada na sua página e um par de fontes com escala pronta. Os mockups saem em PNG 1x e 2x nos tamanhos de post, story e slide, gerados no seu computador, com a sua imagem sem sair da máquina.
 

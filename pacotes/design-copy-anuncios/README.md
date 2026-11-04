@@ -1,4 +1,4 @@
-# Design, copy, anúncios e velocidade
+# Kit Vitrine de Vendas
 
 Depois de instalar, você pede em português e o Claude Code ou o Codex monta a página com visual profissional, escreve o texto da oferta, prepara anúncios para Facebook e Instagram, mede a velocidade do site e revisa tudo antes de você publicar. Você não precisa saber design nem programação: precisa saber o que vende e para quem.
 

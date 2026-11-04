@@ -1,26 +1,10 @@
 import { Icone } from "@/components/Icone";
-import { formatarReais } from "@/lib/loja/dominio";
 import type { CartaoVenda } from "@/lib/loja/paginaInicial";
 import { FreeAgentsPanel } from "./FreeAgentsPanel";
 import { PriceBlock } from "./PriceBlock";
 
-// Capa 3:2 levemente girada; no combo, as miniaturas dos outros pacotes em leque com o selo do desconto
-function Capa({ cartao, imediata, desconto }: { cartao: CartaoVenda; imediata: boolean; desconto: number | null }) {
-  if (cartao.variante === "combo") {
-    return (
-      <div className="leque" aria-hidden="true">
-        {cartao.minis.slice(0, 4).map((src) => (
-          // eslint-disable-next-line @next/next/no-img-element -- miniatura estática de 5 KB, decorativa
-          <img key={src} src={src} width={240} height={160} alt="" loading="lazy" decoding="async" />
-        ))}
-        {desconto !== null ? (
-          <span className="leque__selo">
-            -{desconto}%<small>CLIENTE</small>
-          </span>
-        ) : null}
-      </div>
-    );
-  }
+// Capa 3:2 levemente girada
+function Capa({ cartao, imediata }: { cartao: CartaoVenda; imediata: boolean }) {
   if (!cartao.capa) {
     return (
       <figure className="cartao__capa">
@@ -49,21 +33,9 @@ function Capa({ cartao, imediata, desconto }: { cartao: CartaoVenda; imediata: b
 }
 
 function Extras({ cartao, totalAgentes }: { cartao: CartaoVenda; totalAgentes: number }) {
-  if (cartao.variante === "combo") {
-    return (
-      <div className="cartao__extras">
-        <p className="extras__linha">
-          <Icone nome="cadeado" tamanho={16} /> Vale para qualquer e-mail que já comprou
-        </p>
-        <p className="extras__linha">
-          <Icone nome="pacote" tamanho={16} /> Um pacote por compra
-        </p>
-      </div>
-    );
-  }
   return (
     <div className="cartao__extras">
-      {cartao.agentes ? <FreeAgentsPanel agentes={cartao.agentes} de={cartao.agentesDe} total={totalAgentes} /> : null}
+      <FreeAgentsPanel agentes={cartao.agentes} de={cartao.agentesDe} total={totalAgentes} />
       <p className="extras__linha">
         <Icone nome="terminal" tamanho={16} /> Claude Code e Codex
       </p>
@@ -92,35 +64,28 @@ function Botao({ cartao }: { cartao: CartaoVenda }) {
     );
   }
   return (
-    <>
-      <a className="botao-acao" href={cartao.href}>
-        {cartao.botao}
-        <span className="botao-acao__icone" aria-hidden="true">
-          <Icone nome={cartao.variante === "combo" ? "entrar" : "direita"} tamanho={18} />
-        </span>
-      </a>
-      {cartao.variante === "combo" ? (
-        <p className="preco__nota cartao__nota-botao">Use o mesmo e-mail da primeira compra. O desconto é conferido no servidor.</p>
-      ) : null}
-    </>
+    <a className="botao-acao" href={cartao.href}>
+      {cartao.botao}
+      <span className="botao-acao__icone" aria-hidden="true">
+        <Icone nome="direita" tamanho={18} />
+      </span>
+    </a>
   );
 }
 
-// Card de pacote da página inicial: avulso, destaque (o primeiro), pacote completo ou combo de cliente
+// Card de pacote da página inicial: avulso, destaque (o primeiro) ou Coleção Completa
 export function ProductCard({
   cartao,
   imediata,
-  desconto,
   totalAgentes,
 }: {
   cartao: CartaoVenda;
   imediata: boolean;
-  desconto: number | null;
   totalAgentes: number;
 }) {
   return (
     <article className={`cartao revelar${cartao.variante === "destaque" ? " cartao--destaque" : ""}`} id={cartao.id} aria-labelledby={`${cartao.id}-t`}>
-      <Capa cartao={cartao} imediata={imediata} desconto={desconto} />
+      <Capa cartao={cartao} imediata={imediata} />
       <div className="cartao__corpo">
         <p className="cartao__meta">
           {cartao.tag ? <span className={`tag${cartao.tag.suave ? " tag--suave" : ""}`}>{cartao.tag.texto}</span> : null}
@@ -149,28 +114,6 @@ export function ProductCard({
               <li key={n}>{n}</li>
             ))}
           </ul>
-        ) : null}
-        {cartao.linhas.length ? (
-          <table className="tabela-desconto">
-            <caption>Preço de cliente</caption>
-            <tbody>
-              {cartao.linhas.map((l) => (
-                <tr key={l.nome}>
-                  <th scope="row">{l.nome}</th>
-                  <td>
-                    <s>
-                      <span className="sr-only">de </span>
-                      {formatarReais(l.de)}
-                    </s>
-                    <strong>
-                      <span className="sr-only">por </span>
-                      {formatarReais(l.por)}
-                    </strong>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
         ) : null}
         <div className="cartao__base">
           <Extras cartao={cartao} totalAgentes={totalAgentes} />

@@ -47,18 +47,18 @@ try {
   const loja = await pagina("/loja/");
   conferir("loja responde 200 para visitante", loja.status === 200, String(loja.status));
   conferir("loja mostra a capa de cada pacote", ["times-de-agentes", "edicao-de-video", "design-copy-anuncios"].every((p) => loja.texto.includes(`/capas/${p}.webp`)));
-  conferir("loja mostra R$ 37, R$ 47 do leve 3 e R$ 97 do combo vindos do banco", ["37", "47", "97"].every((v) => loja.texto.includes(`<small>R$</small>${v}`)));
-  conferir("loja mostra o avulso de edição de vídeo a R$ 47", loja.texto.includes("R$\u00a047,00") || loja.texto.includes("R$&nbsp;47,00"));
+  conferir("loja mostra R$ 27, R$ 37 da edição e R$ 97 da Coleção Completa vindos do banco", ["27", "37", "97"].every((v) => loja.texto.includes(`<small>R$</small>${v}`)));
+  conferir("loja mostra o avulso de edição de vídeo a R$ 37", loja.texto.includes("R$\u00a037,00") || loja.texto.includes("R$&nbsp;37,00"));
   conferir("loja não mostra a oferta de cliente para visitante", !loja.texto.includes("Preço de cliente"));
   // Catálogo da página inicial e página pública do pacote
   const vitrine = await fetch(`${SITE}/api/loja/vitrine?pagina=`, { headers: bypass }).then((r) => r.json());
   const cartoes = vitrine.catalogo ? [vitrine.catalogo.destaque, ...vitrine.catalogo.pacotes].filter(Boolean) : [];
   conferir("página inicial recebe os 5 pacotes à venda e o combo", cartoes.length === 5 && vitrine.catalogo?.combo?.precoTexto.includes("97,00"), String(cartoes.length));
-  conferir("catálogo traz edição de vídeo a R$ 47 e capa com texto alternativo em todos", cartoes.find((c) => c.slug === "edicao-de-video")?.precoTexto.includes("47,00") && cartoes.every((c) => c.capa?.alt));
+  conferir("catálogo traz edição de vídeo a R$ 37 e capa com texto alternativo em todos", cartoes.find((c) => c.slug === "edicao-de-video")?.precoTexto.includes("37,00") && cartoes.every((c) => c.capa?.alt));
   const capa = await fetch(`${SITE}${cartoes[0]?.capa?.webp ?? "/capas/x.webp"}`, { headers: bypass });
   conferir("capa do catálogo responde 200 como WebP", capa.status === 200 && (capa.headers.get("content-type") ?? "").includes("webp"), String(capa.status));
   const pp = await pagina(`/pacotes/${BLOQUEADO}/`);
-  conferir("página do pacote abre sem login, com preço do banco e compra direta", pp.status === 200 && /<h1>Equipe Completa de Agentes<\/h1>/.test(pp.texto) && pp.texto.includes("37,00") && pp.texto.includes(`/loja/checkout/?oferta=avulso&amp;produtos=${BLOQUEADO}`), String(pp.status));
+  conferir("página do pacote abre sem login, com preço do banco e compra direta", pp.status === 200 && /<h1>Kit Empresa IA<\/h1>/.test(pp.texto) && pp.texto.includes("37,00") && pp.texto.includes(`/loja/checkout/?oferta=avulso&amp;produtos=${BLOQUEADO}`), String(pp.status));
   conferir("página do pacote não cita o Mercado Pago", !pp.texto.includes("Mercado Pago"));
   conferir("pacote inexistente responde 404", (await pagina("/pacotes/nao-existe/")).status === 404);
   const bumpPagina = await pagina("/pacotes/lancamento-pro/");
@@ -87,20 +87,20 @@ try {
 
   // Compra liberada pela mesma função que o webhook usa
   const itens = [COMPRADO];
-  const ped = await admin.rpc("loja_criar_pedido", { p_email: email, p_user: userId, p_oferta: "avulso", p_valor_centavos: 3700, p_chave: `avulso:${COMPRADO}`, p_itens: itens });
+  const ped = await admin.rpc("loja_criar_pedido", { p_email: email, p_user: userId, p_oferta: "avulso", p_valor_centavos: 2700, p_chave: `avulso:${COMPRADO}`, p_itens: itens });
   if (ped.error) throw ped.error;
   const pedidoId = ped.data[0].pedido_id;
-  const lib = await admin.rpc("loja_liberar_pedido", { p_pedido: pedidoId, p_payment_id: `teste-${randomUUID()}`, p_valor_centavos: 3700 });
+  const lib = await admin.rpc("loja_liberar_pedido", { p_pedido: pedidoId, p_payment_id: `teste-${randomUUID()}`, p_valor_centavos: 2700 });
   conferir("pedido liberado", lib.data === "liberado", JSON.stringify(lib));
 
   const membros = await pagina("/membros/", cookie);
   conferir("área de membros lista o produto comprado", membros.texto.includes(`/membros/${COMPRADO}/`));
   conferir("área de membros mostra a capa do comprado e dos bloqueados", membros.texto.includes(`/capas/${COMPRADO}.webp`) && membros.texto.includes(`/capas/${BLOQUEADO}.webp`));
   conferir("área de membros mostra os outros como bloqueados com preço", membros.texto.includes("Outros pacotes") && membros.texto.includes(`produtos=${BLOQUEADO}`));
-  conferir("cliente vê 20% de desconto nos outros pacotes (R$ 37,00 vira R$ 29,60)", membros.texto.includes("20% de desconto") && membros.texto.includes("29,60"));
+  conferir("cliente vê 20% de desconto nos outros pacotes (R$ 27,00 vira R$ 21,60)", membros.texto.includes("20% de desconto") && membros.texto.includes("21,60"));
   conferir("a vitrine não oferece o pacote que ele já tem", !membros.texto.includes(`produtos=${COMPRADO}`));
   const checkoutDesconto = await pagina(`/loja/checkout/?oferta=cliente&produtos=${BLOQUEADO}`, cookie);
-  conferir("checkout do cliente calcula o desconto no servidor", checkoutDesconto.texto.includes("29,60"));
+  conferir("checkout do cliente calcula o desconto no servidor", checkoutDesconto.texto.includes("21,60"));
   const conteudo = await pagina(`/membros/${COMPRADO}/`, cookie);
   conferir("conteúdo comprado tem aula, instalação, prompts e arquivos", ['id="aula"', 'id="instalar"', 'id="prompts"', 'id="arquivos"'].every((x) => conteudo.texto.includes(x)));
   conferir("conteúdo comprado tem o player com URL assinada", conteudo.texto.includes("<video") && conteudo.texto.includes("/storage/v1/object/sign/loja-aulas/"));

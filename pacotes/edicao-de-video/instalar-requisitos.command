@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Gerado por scripts/gerar-instaladores.mjs a partir do pacote.json. Não edite à mão.
 # Mac: dois cliques neste arquivo. Linux: bash instalar-requisitos.command
-# Instala o que o pacote "Edição de vídeo por skills" precisa: App do Claude, Node.js LTS, Python 3.12, FFmpeg.
+# Instala o que o pacote "Ilha de Edição IA" precisa: App do Claude, Node.js LTS, Python 3.12, FFmpeg.
 set -u
 
 if [ "$(uname)" != "Darwin" ]; then

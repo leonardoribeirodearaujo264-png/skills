@@ -1,5 +1,6 @@
 import { EventoMeta } from "@/components/EventoMeta";
 import type { Metadata } from "next";
+import { slugDaRota } from "@/lib/loja/rotas-pacotes";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cache } from "react";
@@ -42,14 +43,15 @@ const dadosDoPacote = cache(async (slug: string): Promise<Dados | null> => {
   if (!/^[a-z0-9-]{1,60}$/.test(slug)) return null;
   const cat: Catalogo = await carregarCatalogo(clientePublico());
   const avulso = cat.ofertas.find(ehAvulsoPorProduto);
-  const produto = cat.produtos.find((p) => p.slug === slug) ?? cat.bumps.find((p) => p.slug === slug && p.soBump);
+  const interno = slugDaRota(slug);
+  const produto = cat.produtos.find((p) => p.slug === interno) ?? cat.bumps.find((p) => p.slug === interno && p.soBump);
   if (!produto || !avulso) return null;
   const todos = cat.ofertas.find((o) => o.tipo === "todos");
   const soBump = produto.soBump && produto.precoBumpCentavos !== null;
   const precoCentavos = soBump ? (produto.precoBumpCentavos ?? 0) : precoNaOferta(cat, avulso, produto);
   return {
     produto,
-    destaque: cat.produtos[0]?.slug === slug,
+    destaque: cat.produtos[0]?.slug === interno,
     capa: capaDoPacote(produto.slug, produto.titulo),
     precoTexto: formatarReais(precoCentavos),
     precoCentavos,
@@ -264,7 +266,7 @@ export default async function PaginaPacote({ params }: Params) {
 
             {d.combo ? (
               <p className="cat-nota">
-                Quer os {d.combo.qtd} pacotes? <Link href="/#pacotes">O pacote completo sai por {d.combo.precoTexto}</Link>.
+                Quer os {d.combo.qtd} pacotes? <Link href="/#pacotes">A Coleção Completa sai por {d.combo.precoTexto}</Link>.
               </p>
             ) : null}
           </div>

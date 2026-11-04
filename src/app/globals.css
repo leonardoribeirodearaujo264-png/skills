@@ -455,11 +455,11 @@ main.narrow { max-width: 760px; padding: 48px 16px 96px; }
 
 .times { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .times li { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 14px; background: var(--surface); box-shadow: 0 0 0 1px var(--line); font: 600 15px/1.2 var(--font-body); }
-.times .ic { width: 32px; height: 32px; border-radius: 10px; flex: none; display: grid; place-items: center; background: var(--code-bg); color: #FF8A3D; }
+.times .ic { width: 32px; height: 32px; border-radius: 10px; flex: none; display: grid; place-items: center; background: var(--code-bg); color: #2563FF; }
 
 .fluxo { margin: 0; padding: 24px; list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; background: var(--code-bg); color: var(--code-ink); border-radius: var(--radius-lg); counter-reset: f; }
 .fluxo li { display: grid; gap: 6px; align-content: start; padding: 16px; border-radius: 14px; background: rgba(255, 255, 255, .04); box-shadow: 0 0 0 1px var(--code-line); counter-increment: f; }
-.fluxo li::before { content: counter(f, decimal-leading-zero); font: 500 12px/1 var(--font-mono); color: #FF8A3D; }
+.fluxo li::before { content: counter(f, decimal-leading-zero); font: 500 12px/1 var(--font-mono); color: #4FA3FF; }
 .fluxo strong { font: 700 16px/1.25 var(--font-display); }
 .fluxo span { font-size: 13px; color: var(--code-muted); line-height: 1.5; }
 .fluxo-nota { margin: 12px 0 0; display: flex; gap: 10px; align-items: start; font-size: 14px; color: var(--ink-soft); }

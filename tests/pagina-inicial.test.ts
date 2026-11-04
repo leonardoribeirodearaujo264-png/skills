@@ -34,13 +34,13 @@ const CATALOGO: Catalogo = {
   produtos: [
     produto("times-de-agentes", 0),
     produto("design-copy-anuncios", 1),
-    produto("edicao-de-video", 2, 4700),
+    produto("edicao-de-video", 2, 3700),
     produto("motion-mockup-fontes", 3),
     produto("programacao-sem-codigo", 4),
   ],
   ofertas: [
-    oferta("avulso", "escolha", 3700),
-    oferta("cliente", "escolha", 3700, { exigeCliente: true, descontoPercentual: 20 }),
+    oferta("avulso", "escolha", 2700),
+    oferta("cliente", "escolha", 2700, { exigeCliente: true, descontoPercentual: 20 }),
     oferta("leve-3", "escolha", 6700, { qtdEscolha: 3 }),
     oferta("combo", "todos", 9700),
   ],
@@ -51,50 +51,29 @@ describe("página inicial de vendas", () => {
   const pagina = montarPaginaInicial(CATALOGO);
   const porId = (id: string) => pagina.cartoes.find((c) => c.id === id)!;
 
-  it("segue a ordem do dono, não a do banco, e termina com o pacote completo e o combo", () => {
+  it("segue a ordem do dono, não a do banco, e termina com a Coleção Completa", () => {
     expect(pagina.estado).toBe("ok");
-    expect(pagina.cartoes.map((c) => c.slug)).toEqual([...VITRINE_INICIAL.map((v) => v.slug), "completo", "combo"]);
-    expect(pagina.cartoes[0]).toMatchObject({ variante: "destaque", titulo: "Pacote Base de Skills para sua IA", tag: { texto: "Comece por aqui" } });
+    expect(pagina.cartoes.map((c) => c.slug)).toEqual([...VITRINE_INICIAL.map((v) => v.slug), "completo"]);
+    expect(pagina.cartoes[0]).toMatchObject({ variante: "destaque", titulo: "Kit Vitrine de Vendas", tag: { texto: "Comece por aqui" } });
     expect(porId("pacote-times-de-agentes").tag?.texto).toBe("Novo");
   });
 
   it("avulsos mostram só o preço do banco, sem riscado", () => {
-    expect(porId("pacote-design-copy-anuncios").preco).toMatchObject({ centavos: 3700, anterior: null, economia: null });
-    expect(porId("pacote-edicao-de-video").preco).toMatchObject({ centavos: 4700, anterior: null });
-    expect(porId("pacote-design-copy-anuncios").href).toBe("/pacotes/design-copy-anuncios/");
+    expect(porId("pacote-design-copy-anuncios").preco).toMatchObject({ centavos: 2700, anterior: null, economia: null });
+    expect(porId("pacote-edicao-de-video").preco).toMatchObject({ centavos: 3700, anterior: null });
+    expect(porId("pacote-design-copy-anuncios").href).toBe("/pacotes/kit-vitrine-de-vendas/");
   });
 
   it("pacote completo riscado pela soma real dos avulsos", () => {
     const completo = porId("pacote-completo");
-    expect(completo.preco).toMatchObject({ centavos: 9700, anterior: 19500, economia: 9800 });
+    expect(completo.preco).toMatchObject({ centavos: 9700, anterior: 14500, economia: 4800 });
     expect(completo.href).toBe("/loja/checkout/?oferta=combo");
     expect(completo.inclui).toEqual(VITRINE_INICIAL.map((v) => v.curto));
-  });
-
-  it("combo usa o desconto de cliente do banco sobre o avulso de cada pacote, sem o pacote base", () => {
-    const combo = porId("combo");
-    expect(pagina.combo).toEqual({ desconto: 20, outros: 4 });
-    expect(combo.linhas.map((l) => [l.nome, l.de, l.por])).toEqual([
-      ["Edição de vídeo", 4700, 3760],
-      ["Motion e Mockups", 3700, 2960],
-      ["Programação", 3700, 2960],
-      ["Times de Agentes", 3700, 2960],
-    ]);
-    expect(combo.preco).toMatchObject({ centavos: 2960, anterior: 3700, aPartirDe: true, soma: { qtd: 4, de: 15800, por: 12640 } });
-    expect(combo.href).toBe(`/entrar/?next=${encodeURIComponent("/loja/?oferta=cliente")}`);
-    expect(combo.agentes).toBeNull();
-  });
-
-  it("sem oferta de cliente ativa, não há combo nem pílula", () => {
-    const p = montarPaginaInicial({ ...CATALOGO, ofertas: CATALOGO.ofertas.filter((o) => o.codigo !== "cliente") });
-    expect(p.combo).toBeNull();
-    expect(p.cartoes.some((c) => c.variante === "combo")).toBe(false);
   });
 
   it("banco fora do ar: cards sem preço, nenhum valor de reserva", () => {
     const p = montarPaginaInicial(null);
     expect(p.estado).toBe("erro");
-    expect(p.combo).toBeNull();
     expect(p.cartoes.length).toBeGreaterThan(0);
     expect(p.cartoes.every((c) => c.preco === null)).toBe(true);
   });
@@ -105,9 +84,9 @@ describe("página inicial de vendas", () => {
 
   it("cada card lista os agentes grátis do seu pacote; o completo lista todos", () => {
     expect(porId("pacote-completo").agentes).toHaveLength(PAGINAS_VIDEOS.length);
-    expect(porId("pacote-times-de-agentes").agentes?.map((a) => a.pasta)).toEqual(["agentes", "harvey", "conselho", "futuro", "guia", "leis", "fabrica", "espanador", "aprender", "arena"]);
+    expect(porId("pacote-times-de-agentes").agentes?.map((a) => a.pasta)).toEqual(["agentes", "harvey", "mesa-de-validacao", "prompt-bola-de-cristal", "guia", "leis", "fabrica", "faxina-de-pastas", "aprender", "arena"]);
     expect(porId("pacote-edicao-de-video").agentes?.map((a) => a.pasta)).toEqual(["editar", "trem", "motion"]);
-    expect(pagina.agentes.find((a) => a.pasta === "banca")?.pacoteCurto).toBe("Programação");
+    expect(pagina.agentes.find((a) => a.pasta === "revisao-tripla")?.pacoteCurto).toBe("Kit Código Seguro");
   });
 });
 
@@ -125,7 +104,7 @@ describe("fonte única das páginas dos vídeos", () => {
   });
 
   it("os endereços antigos continuam no rewrite fixo; a página inicial saiu dele", () => {
-    expect([...PAGINAS_ANTIGAS].sort()).toEqual(["agentes", "banca", "clonadora", "conselho", "freellm", "harvey", "pagina-agentes", "ranking"]);
+    expect([...PAGINAS_ANTIGAS].sort()).toEqual(["agentes", "clonadora", "freellm", "harvey", "mesa-de-validacao", "pagina-agentes", "ranking", "revisao-tripla"]);
   });
 });
 

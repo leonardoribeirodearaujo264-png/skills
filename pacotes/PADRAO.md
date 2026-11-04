@@ -26,7 +26,7 @@ Não edite à mão os arquivos marcados como gerados. Rode `node scripts/gerar-i
 ```json
 {
   "slug": "design-copy-anuncios",
-  "titulo": "Design, copy, anúncios e velocidade",
+  "titulo": "Kit Vitrine de Vendas",
   "terceiros": [
     {
       "fonte": "coreyhaines31/marketingskills",

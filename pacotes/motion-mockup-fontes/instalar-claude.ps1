@@ -1,5 +1,5 @@
 ﻿# Gerado por scripts/gerar-instaladores.mjs a partir do pacote.json. Não edite à mão.
-# Instala o pacote "Motion, mockup e fontes" no Claude Code.
+# Instala o pacote "Kit Cena" no Claude Code.
 # Uso: powershell -ExecutionPolicy Bypass -File .\instalar-claude.ps1
 $ErrorActionPreference = "Continue"
 $Aqui = Split-Path -Parent $MyInvocation.MyCommand.Path

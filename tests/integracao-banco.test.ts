@@ -75,13 +75,13 @@ describe.skipIf(!ativo)("banco da loja: RLS e liberação", () => {
     expect(error).toBeNull();
     const ofertas = data ?? [];
     expect(Object.fromEntries(ofertas.filter((o) => o.desconto_percentual === null).map((o) => [o.codigo, o.preco_centavos]))).toEqual({
-      avulso: 3700,
+      avulso: 2700,
       "leve-3": 6700,
       combo: 9700,
     });
     expect(ofertas.find((o) => o.codigo === "cliente")?.desconto_percentual).toBe(20);
     const video = await anon.from("loja_produtos").select("preco_avulso_centavos").eq("slug", "edicao-de-video").single();
-    expect(video.data?.preco_avulso_centavos).toBe(4700);
+    expect(video.data?.preco_avulso_centavos).toBe(3700);
   });
 
   it("o visitante não lê caminhos de arquivo nem conteúdo", async () => {
@@ -92,7 +92,7 @@ describe.skipIf(!ativo)("banco da loja: RLS e liberação", () => {
   });
 
   it("quem compra 1 produto vê só aquele; o leve 3 libera exatamente os 3 do pedido", async () => {
-    const ra = await comprar(a, "avulso", ["edicao-de-video"], 4700);
+    const ra = await comprar(a, "avulso", ["edicao-de-video"], 3700);
     expect(ra.r).toBe("liberado");
     const trio = ["design-copy-anuncios", "programacao-sem-codigo", "times-de-agentes"];
     const rb = await comprar(b, "leve-3", trio, 6700);
@@ -135,19 +135,19 @@ describe.skipIf(!ativo)("banco da loja: RLS e liberação", () => {
 
   it("notificação repetida não duplica acesso e o duplo clique devolve o mesmo pedido", async () => {
     const itens = ["motion-mockup-fontes"];
-    const p1 = await criarOuReusarPedido(admin, { email: a.email, userId: a.id }, "avulso", { itens, valorCentavos: 3700, chaveItens: "avulso:motion-mockup-fontes" });
-    const p2 = await criarOuReusarPedido(admin, { email: a.email, userId: a.id }, "avulso", { itens, valorCentavos: 3700, chaveItens: "avulso:motion-mockup-fontes" });
+    const p1 = await criarOuReusarPedido(admin, { email: a.email, userId: a.id }, "avulso", { itens, valorCentavos: 2700, chaveItens: "avulso:motion-mockup-fontes" });
+    const p2 = await criarOuReusarPedido(admin, { email: a.email, userId: a.id }, "avulso", { itens, valorCentavos: 2700, chaveItens: "avulso:motion-mockup-fontes" });
     expect(p2.id).toBe(p1.id);
     const repo = repoPagamento(admin);
-    expect(await repo.liberar(p1.id, "teste-dup-1", 3700)).toBe("liberado");
-    expect(await repo.liberar(p1.id, "teste-dup-1", 3700)).toBe("ja_pago");
-    expect(await repo.liberar(p1.id, "teste-dup-2", 3700)).toBe("pagamento_duplicado");
+    expect(await repo.liberar(p1.id, "teste-dup-1", 2700)).toBe("liberado");
+    expect(await repo.liberar(p1.id, "teste-dup-1", 2700)).toBe("ja_pago");
+    expect(await repo.liberar(p1.id, "teste-dup-2", 2700)).toBe("pagamento_duplicado");
     const { count } = await admin.from("loja_acessos").select("*", { count: "exact", head: true }).eq("user_id", a.id);
     expect(count).toBe(2);
   });
 
   it("valor diferente do pedido não libera", async () => {
-    const p = await criarOuReusarPedido(admin, { email: b.email, userId: b.id }, "avulso", { itens: ["edicao-de-video"], valorCentavos: 4700, chaveItens: "avulso:edicao-de-video" });
+    const p = await criarOuReusarPedido(admin, { email: b.email, userId: b.id }, "avulso", { itens: ["edicao-de-video"], valorCentavos: 3700, chaveItens: "avulso:edicao-de-video" });
     expect(await repoPagamento(admin).liberar(p.id, "teste-valor", 100)).toBe("valor_divergente");
     expect(await slugsComAcesso(b)).not.toContain("edicao-de-video");
   });
@@ -166,7 +166,7 @@ describe.skipIf(!ativo)("banco da loja: RLS e liberação", () => {
     const email = `teste-loja-convidado-${randomUUID()}@example.com`;
     const pedido = await criarOuReusarPedido(admin, { email, userId: null }, "avulso", {
       itens: ["programacao-sem-codigo"],
-      valorCentavos: 3700,
+      valorCentavos: 2700,
       chaveItens: "avulso:programacao-sem-codigo",
     });
     const repo = repoPagamento(admin);
@@ -176,7 +176,7 @@ describe.skipIf(!ativo)("banco da loja: RLS e liberação", () => {
     expect(conta).not.toBeNull();
     criados.push(conta!);
     expect([v1, v2].sort()).toEqual(["ja_vinculado", "vinculado"]);
-    expect(await repo.liberar(pedido.id, `teste-${randomUUID()}`, 3700)).toBe("liberado");
+    expect(await repo.liberar(pedido.id, `teste-${randomUUID()}`, 2700)).toBe("liberado");
     const { data } = await admin.auth.admin.listUsers({ perPage: 1000 });
     expect(data.users.filter((u) => u.email === email)).toHaveLength(1);
     const acessos = await admin.from("loja_acessos").select("produto_slug").eq("user_id", conta!);
@@ -187,15 +187,15 @@ describe.skipIf(!ativo)("banco da loja: RLS e liberação", () => {
     const email = `teste-loja-semconta-${randomUUID()}@example.com`;
     const p = await criarOuReusarPedido(admin, { email, userId: null }, "avulso", {
       itens: ["times-de-agentes"],
-      valorCentavos: 3700,
+      valorCentavos: 2700,
       chaveItens: "avulso:times-de-agentes",
     });
-    expect(await repoPagamento(admin).liberar(p.id, `teste-${randomUUID()}`, 3700)).toBe("sem_conta");
+    expect(await repoPagamento(admin).liberar(p.id, `teste-${randomUUID()}`, 2700)).toBe("sem_conta");
     await admin.from("loja_pedidos").delete().eq("id", p.id);
   });
 
   it("estorno revoga, mas mantém o que outra compra paga cobre", async () => {
-    const avulso = await comprar(c, "avulso", ["edicao-de-video"], 4700);
+    const avulso = await comprar(c, "avulso", ["edicao-de-video"], 3700);
     // c já tem edicao-de-video pelo combo: o avulso não cria acesso novo
     expect(avulso.r).toBe("liberado");
     const r = await repoPagamento(admin).estornar(avulso.pedido.id, avulso.pagamento);
