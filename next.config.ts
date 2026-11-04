@@ -28,7 +28,14 @@ const config: NextConfig = {
   },
   // A página inicial virou rota do app; o HTML antigo em public/ não é mais a capa do site
   async redirects() {
-    return [{ source: "/index.html", destination: "/", permanent: false }];
+    return [
+      { source: "/index.html", destination: "/", permanent: false },
+      // Palavras dos criativos do pacote de edição: o link da DM leva à página do pacote
+      ...["edita", "editor"].flatMap((pasta) => [
+        { source: `/${pasta}`, destination: "/editar/", permanent: false },
+        { source: `/${pasta}/`, destination: "/editar/", permanent: false },
+      ]),
+    ];
   },
   async headers() {
     return [
