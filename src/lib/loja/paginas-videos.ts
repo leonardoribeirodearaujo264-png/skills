@@ -217,6 +217,27 @@ export const PAGINAS_VIDEOS: readonly PaginaVideo[] = [
     tipo: "Passo a passo",
     oferta: { pacote: "programacao-sem-codigo", gancho: "Gostou? No pacote tem o caminho completo do pedido ao projeto no ar." },
   },
+  {
+    pasta: "placa",
+    titulo: "GPU Unlock: destrave sua placa para IA",
+    frase: "Código aberto que tira o limite dos núcleos de IA das placas RTX 20, 30 e 40 no Linux.",
+    tipo: "Passo a passo",
+    oferta: { pacote: "programacao-sem-codigo", gancho: "Gostou? No pacote tem o caminho completo do pedido ao projeto no ar." },
+  },
+  {
+    pasta: "cad",
+    titulo: "SolidCraft: peças 3D com o Claude",
+    frase: "CAD 3D grátis que conecta no Claude: descreva a peça e mude as medidas conversando.",
+    tipo: "Passo a passo",
+    oferta: { pacote: "programacao-sem-codigo", gancho: "Gostou? No pacote tem o caminho completo do pedido ao projeto no ar." },
+  },
+  {
+    pasta: "clone",
+    titulo: "Replica: 11 skills que clonam um app",
+    frase: "11 skills grátis para o Claude estudar um app, reconstruir as funções e colocar a sua versão no ar.",
+    tipo: "Passo a passo",
+    oferta: { pacote: "programacao-sem-codigo", gancho: "Gostou? No pacote tem o caminho completo do pedido ao projeto no ar." },
+  },
 ];
 
 // A chave é a pasta da página (/agentes/ -> "agentes")

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Replica: 11 skills que clonam um app</title>
+<meta name="description" content="Passo a passo grátis do Replica: 11 skills para o Claude que estudam um aplicativo, reconstroem as funções, testam e colocam a sua versão no ar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este passo a passo é grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">passo a passo grátis</span>
+  <h1>Clone um aplicativo <span class="nowrap">com 11 skills</span></h1>
+  <p class="lead">O Replica é um conjunto grátis de 11 skills para o Claude (licença MIT). Cada skill faz uma etapa: estuda o aplicativo, planeja, reconstrói, testa, compara com o original, corrige o que os usuários reclamam e coloca a sua versão no ar.</p>
+
+  <a class="btn" href="https://github.com/Jakeschincariol/replica-skill" target="_blank" rel="noopener">Abrir o Replica no GitHub</a>
+  <div class="note">Projeto de terceiros, sem ligação com esta página. Ele copia o que um aplicativo faz, nunca o código, o logo, os textos ou o conteúdo. Respeite os termos de uso e as marcas do aplicativo original. Dados conferidos em 03/11/2026.</div>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Instale</h2></div>
+    <p>Cole isto no Claude:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-instalar">Copiar</button></div>
+<pre id="prompt-instalar">https://github.com/Jakeschincariol/replica-skill
+
+install skill</pre>
+    </div>
+    <p>Ou, no Claude Code, como plugin:</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-plugin">Copiar</button></div>
+<pre id="cmd-plugin">/plugin marketplace add Jakeschincariol/replica-skill
+/plugin install replica-skill@replica-skill</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Rode na ordem</h2></div>
+    <p>Cada skill lê o que a anterior escreveu, numa pasta <code>replica/</code> do seu projeto:</p>
+    <div class="code">
+      <div class="code-bar"><span>ordem</span><button class="copy" type="button" data-copy="ordem">Copiar</button></div>
+<pre id="ordem">recon &gt; architect &gt; design &gt; build &gt; backend &gt; test &gt; diff &gt; entrepreneur &gt; brand &gt; launch &gt; deploy</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Comece pelo estudo do app</h2></div>
+    <p>Instalado como plugin, os comandos ficam com o prefixo <code>/replica-skill:</code>.</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-recon">Copiar</button></div>
+<pre id="prompt-recon">/replica-skill:replica-recon [ENDEREÇO DO APLICATIVO]
+
+Quero a minha própria versão desse aplicativo. Mapeie telas, fluxos e dados só com o que é público e com a minha própria conta.</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo4">
+    <div class="step-head"><span class="step-num">4</span><h2 id="passo4">Deixe a versão com a sua cara</h2></div>
+    <p>A skill Entrepreneur lê as reclamações reais dos usuários e transforma em melhorias. A Brand dá nome e marca própria. A Deploy coloca no ar no seu domínio.</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-melhorias">Copiar</button></div>
+<pre id="prompt-melhorias">/replica-skill:replica-entrepreneur
+
+Me mostre as reclamações mais frequentes e o que corrigir primeiro na minha versão.</pre>
+    </div>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou? No pacote tem o caminho completo do pedido ao projeto no ar."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>

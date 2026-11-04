@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SolidCraft: peças 3D com o Claude</title>
+<meta name="description" content="Passo a passo grátis do SolidCraft: programa de CAD 3D de código aberto que conecta no Claude Code e cria peças para impressão a partir de texto.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este passo a passo é grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">passo a passo grátis</span>
+  <h1>Peças para impressora 3D <span class="nowrap">só com texto</span></h1>
+  <p class="lead">O SolidCraft é um programa de CAD 3D grátis e de código aberto (licença Apache-2.0). Ele tem um servidor MCP embutido: você conecta no Claude Code, descreve a peça e muda as medidas conversando.</p>
+
+  <a class="btn" href="https://solidcraft.io/download" target="_blank" rel="noopener">Baixar o SolidCraft</a>
+  <div class="note">Projeto de terceiros, sem ligação com esta página. O próprio projeto diz que ainda está no começo e serve bem para peças simples: confira as medidas antes de uma impressão longa. Dados conferidos em 03/11/2026.</div>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Instale o programa</h2></div>
+    <p>Baixe para Windows, macOS ou Linux. As versões para Windows ainda não são assinadas: no aviso do SmartScreen, escolha Mais informações e depois Executar assim mesmo.</p>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Conecte no Claude Code</h2></div>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-mcp">Copiar</button></div>
+<pre id="cmd-mcp">claude mcp add solidcraft -- solidcraft-cli mcp</pre>
+    </div>
+    <div class="note">Se o terminal não achar o comando, use o caminho completo. No Windows, o padrão é <code>C:\Program Files\SolidCraft\solidcraft-cli.exe</code>.</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Peça a peça</h2></div>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-peca">Copiar</button></div>
+<pre id="prompt-peca">Usando o SolidCraft, crie um suporte de celular com inclinação de 60 graus, base de 80 x 60 mm e bordas arredondadas. Me mostre as medidas principais e deixe tudo por parâmetros, para eu mudar depois.</pre>
+    </div>
+    <p>Para mudar, é só pedir:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-muda">Copiar</button></div>
+<pre id="prompt-muda">Muda a inclinação para 45 graus e mantém o resto.</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo4">
+    <div class="step-head"><span class="step-num">4</span><h2 id="passo4">Exporte e imprima</h2></div>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-exporta">Copiar</button></div>
+<pre id="prompt-exporta">Exporte a peça em STL e em 3MF, e me diga as medidas finais para eu conferir antes de imprimir.</pre>
+    </div>
+    <p>Abra o arquivo no seu fatiador e comece com uma peça pequena.</p>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou? No pacote tem o caminho completo do pedido ao projeto no ar."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>

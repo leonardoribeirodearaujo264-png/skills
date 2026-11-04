@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GPU Unlock: destrave sua placa para IA</title>
+<meta name="description" content="Passo a passo grátis do GPU Unlock: projeto de código aberto que tira o limite dos núcleos de IA das placas GeForce RTX 20, 30 e 40 no Linux.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este passo a passo é grátis. O pacote completo de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">passo a passo grátis</span>
+  <h1>Sua placa roda IA <span class="nowrap">pela metade</span></h1>
+  <p class="lead">O GPU Unlock é um projeto de código aberto (licença GPL-2.0) de Zagitta. Ele retira o limite de velocidade dos núcleos que fazem as contas de IA nas placas GeForce, antes do driver da Nvidia carregar. Não usa driver modificado nem mexe na BIOS.</p>
+
+  <a class="btn" href="https://github.com/Zagitta/gpu-unlock" target="_blank" rel="noopener">Abrir o GPU Unlock no GitHub</a>
+  <div class="note">Projeto de terceiros, sem ligação com esta página nem com a Nvidia. Ele instala um módulo no sistema e altera a inicialização do Linux: faça por sua conta e risco. Dados conferidos em 03/11/2026.</div>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Confira a sua placa</h2></div>
+    <p>Funciona só no Linux. A série RTX 30 é a estável. As séries RTX 20 e RTX 40 ainda são experimentais. A série RTX 50 não é suportada. O ganho é em IA: em jogos não muda nada.</p>
+    <p>Na RTX 3090 Ti, o teste do projeto foi de 88 para 157 TFLOPS (+80%). Em uso real, o próprio projeto cita de +25% a +55% em LLM e de +30% a +55% em geração de imagem.</p>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Instale</h2></div>
+    <p>No terminal do Linux:</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-instalar">Copiar</button></div>
+<pre id="cmd-instalar">git clone https://github.com/Zagitta/gpu-unlock
+cd gpu-unlock
+make install</pre>
+    </div>
+    <p>Depois acrescente <code>gpu_unlock.targets=all</code> na linha de comando do kernel, mantendo as opções que já existem, e reinicie. O README explica como fazer em GRUB, Fedora, systemd-boot e UKI.</p>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Peça ajuda ao Claude</h2></div>
+    <p>Se preferir, mande este pedido no Claude Code, na máquina com a placa:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-ajuda">Copiar</button></div>
+<pre id="prompt-ajuda">Leia o README de https://github.com/Zagitta/gpu-unlock e confira se a minha placa e o meu Linux são compatíveis. Me mostre cada comando e cada arquivo de inicialização que vai mudar, e espere o meu OK antes de executar. No fim, me diga como confirmar que funcionou e como desfazer.</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo4">
+    <div class="step-head"><span class="step-num">4</span><h2 id="passo4">E no Windows?</h2></div>
+    <p>O autor não mantém versão para Windows. Ele cita um porte feito pela comunidade e recomenda muito cuidado com instaladores que circulam por aí.</p>
+    <a class="btn" href="https://github.com/impacifist/Windows-GPU-UNLOCK" target="_blank" rel="noopener">Ver o porte para Windows</a>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou? No pacote tem o caminho completo do pedido ao projeto no ar."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>
