@@ -1,4 +1,4 @@
-import { CAPA_COMBO, capaDoPacote, urlDoPacote, VITRINE_INICIAL, vitrineInicial, type Capa } from "./apresentacao";
+import { DEMONSTRACAO_COLECAO, urlDoPacote, VITRINE_INICIAL, vitrineInicial, type Demonstracao } from "./apresentacao";
 import { precoNaOferta, somaAvulsos, type Catalogo, type Produto } from "./dominio";
 import { PAGINAS_VIDEOS, type TipoPagina } from "./paginas-videos";
 import { numerosDoPacote, urlComprar } from "./vitrine";
@@ -16,13 +16,16 @@ export type PrecoCartao = {
   economia: number | null;
 };
 
+export type NumeroCartao = { valor: number; nome: string; ajuda: string };
+
 export type CartaoVenda = {
   id: string;
   variante: "avulso" | "destaque" | "completo";
   slug: string;
-  capa: Capa | null;
-  tag: { texto: string; suave: boolean } | null;
-  meta: string[];
+  demonstracao: Demonstracao | null;
+  etiqueta: string | null;
+  numeros: NumeroCartao[];
+  agentesGratis: number;
   titulo: string;
   descricao: string;
   inclui: string[];
@@ -30,8 +33,6 @@ export type CartaoVenda = {
   preco: PrecoCartao | null;
   botao: string;
   href: string;
-  agentes: AgenteGratis[];
-  agentesDe: string;
 };
 
 export type PaginaInicial = {
@@ -56,6 +57,22 @@ export function agentesGratis(catalogo: Catalogo | null): AgenteGratis[] {
   }));
 }
 
+// Explica cada número para quem nunca usou skill nem agente
+const AJUDA_DO_NUMERO: Record<string, string> = {
+  agente: "ajudante especializado",
+  agentes: "ajudantes especializados",
+  time: "área da empresa",
+  times: "áreas da empresa",
+  skill: "instrução pronta",
+  skills: "instruções prontas",
+  prompt: "pedido para copiar",
+  prompts: "pedidos para copiar",
+};
+
+function numerosDoCartao(p: Produto): NumeroCartao[] {
+  return numerosDoPacote(p).map((n) => ({ valor: n.n, nome: n.rotulo, ajuda: AJUDA_DO_NUMERO[n.rotulo] ?? "" }));
+}
+
 // Ordem do dono (apresentacao.ts) primeiro; pacote à venda fora da lista vai para o fim, na ordem do banco
 function ordenar(produtos: readonly Produto[]): Produto[] {
   const posicao = (slug: string) => {
@@ -65,43 +82,41 @@ function ordenar(produtos: readonly Produto[]): Produto[] {
   return [...produtos].sort((a, b) => posicao(a.slug) - posicao(b.slug) || a.ordem - b.ordem);
 }
 
-function cartaoAvulso(p: Pick<Produto, "slug" | "titulo" | "resumo">, meta: string[], preco: PrecoCartao | null, agentes: AgenteGratis[], primeiro: boolean): CartaoVenda {
+function cartaoAvulso(p: Pick<Produto, "slug" | "titulo" | "resumo">, numeros: NumeroCartao[], preco: PrecoCartao | null, agentes: AgenteGratis[], primeiro: boolean): CartaoVenda {
   const v = vitrineInicial(p.slug);
   const destaque = primeiro && Boolean(v?.destaque);
   return {
     id: `pacote-${p.slug}`,
     variante: destaque ? "destaque" : "avulso",
     slug: p.slug,
-    capa: capaDoPacote(p.slug, p.titulo),
-    tag: destaque ? { texto: "Comece por aqui", suave: true } : v?.novo ? { texto: "Novo", suave: false } : null,
-    meta,
+    demonstracao: v?.demonstracao ?? null,
+    etiqueta: destaque ? "Comece por aqui" : v?.novo ? "Novo" : null,
+    numeros,
+    agentesGratis: agentes.filter((a) => a.pacote === p.slug).length,
     titulo: v?.nome ?? p.titulo,
     descricao: v?.descricao ?? p.resumo,
     inclui: [],
     preco,
-    botao: v?.botao ?? `Ver o pacote ${p.titulo}`,
+    botao: v?.botao ?? `Ver ${p.titulo}`,
     href: urlDoPacote(p.slug),
-    agentes: agentes.filter((a) => a.pacote === p.slug),
-    agentesDe: v?.curto ?? p.titulo,
   };
 }
 
-function cartaoCompleto(slugs: string[], nomes: string[], preco: PrecoCartao | null, href: string, agentes: AgenteGratis[]): CartaoVenda {
+function cartaoCompleto(nomes: string[], preco: PrecoCartao | null, href: string, agentes: AgenteGratis[]): CartaoVenda {
   return {
     id: "pacote-completo",
     variante: "completo",
     slug: "completo",
-    capa: CAPA_COMBO,
-    tag: null,
-    meta: [`${slugs.length} pacotes`, "todos os agentes, skills e prompts"],
+    demonstracao: DEMONSTRACAO_COLECAO,
+    etiqueta: "Todos os kits",
+    numeros: [],
+    agentesGratis: agentes.length,
     titulo: "Coleção Completa",
-    descricao: "Todos os pacotes numa compra só, com um pagamento único.",
+    descricao: "Todos os kits numa compra só, com um pagamento único.",
     inclui: nomes,
     preco,
     botao: "Quero a Coleção Completa",
     href,
-    agentes,
-    agentesDe: "todos os pacotes",
   };
 }
 
@@ -112,7 +127,7 @@ export function montarPaginaInicial(catalogo: Catalogo | null): PaginaInicial {
 
   if (!catalogo) {
     const cartoes = VITRINE_INICIAL.map((v, i) => cartaoAvulso({ slug: v.slug, titulo: v.nome, resumo: v.descricao }, [], null, agentes, i === 0));
-    cartoes.push(cartaoCompleto(VITRINE_INICIAL.map((v) => v.slug), VITRINE_INICIAL.map((v) => v.curto), null, "/loja/", agentes));
+    cartoes.push(cartaoCompleto(VITRINE_INICIAL.map((v) => v.curto), null, "/loja/", agentes));
     return { estado: "erro", cartoes, agentes, filtros };
   }
 
@@ -123,7 +138,7 @@ export function montarPaginaInicial(catalogo: Catalogo | null): PaginaInicial {
   const cartoes = produtos.map((p, i) =>
     cartaoAvulso(
       p,
-      numerosDoPacote(p).map((n) => `${n.n} ${n.rotulo}`),
+      numerosDoCartao(p),
       { centavos: precoNaOferta(catalogo, avulso, p), anterior: null, rotulo: "Pagamento único", economia: null },
       agentes,
       i === 0,
@@ -137,7 +152,6 @@ export function montarPaginaInicial(catalogo: Catalogo | null): PaginaInicial {
     const anterior = soma !== null && soma > todos.precoCentavos ? soma : null;
     cartoes.push(
       cartaoCompleto(
-        slugs,
         slugs.map((s) => nomeCurto(s, catalogo)),
         { centavos: todos.precoCentavos, anterior, rotulo: "Pagamento único", economia: anterior === null ? null : anterior - todos.precoCentavos },
         urlComprar(todos.codigo),

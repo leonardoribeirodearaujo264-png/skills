@@ -1,52 +1,9 @@
 import { Icone } from "@/components/Icone";
 import type { CartaoVenda } from "@/lib/loja/paginaInicial";
-import { FreeAgentsPanel } from "./FreeAgentsPanel";
+import { MockupKit } from "./MockupKit";
 import { PriceBlock } from "./PriceBlock";
 
-// Capa 3:2 levemente girada
-function Capa({ cartao, imediata }: { cartao: CartaoVenda; imediata: boolean }) {
-  if (!cartao.capa) {
-    return (
-      <figure className="cartao__capa">
-        <div className="capa__vazia" aria-hidden="true">
-          {cartao.titulo}
-        </div>
-      </figure>
-    );
-  }
-  return (
-    <figure className="cartao__capa">
-      <picture>
-        <source srcSet={cartao.capa.webp} type="image/webp" />
-        <img
-          src={cartao.capa.png}
-          width={1200}
-          height={800}
-          alt={cartao.capa.alt}
-          decoding="async"
-          loading={imediata ? "eager" : "lazy"}
-          fetchPriority={imediata ? "high" : undefined}
-        />
-      </picture>
-    </figure>
-  );
-}
-
-function Extras({ cartao, totalAgentes }: { cartao: CartaoVenda; totalAgentes: number }) {
-  return (
-    <div className="cartao__extras">
-      <FreeAgentsPanel agentes={cartao.agentes} de={cartao.agentesDe} total={totalAgentes} />
-      <p className="extras__linha">
-        <Icone nome="terminal" tamanho={16} /> Claude Code e Codex
-      </p>
-      <p className="extras__linha">
-        <Icone nome="baixar" tamanho={16} /> Download logo após o pagamento
-      </p>
-    </div>
-  );
-}
-
-function Botao({ cartao }: { cartao: CartaoVenda }) {
+function Compra({ cartao }: { cartao: CartaoVenda }) {
   if (!cartao.preco) {
     const motivo = `motivo-${cartao.slug}`;
     return (
@@ -66,63 +23,75 @@ function Botao({ cartao }: { cartao: CartaoVenda }) {
   return (
     <a className="botao-acao" href={cartao.href}>
       {cartao.botao}
-      <span className="botao-acao__icone" aria-hidden="true">
-        <Icone nome="direita" tamanho={18} />
-      </span>
     </a>
   );
 }
 
-// Card de pacote da página inicial: avulso, destaque (o primeiro) ou Coleção Completa
-export function ProductCard({
-  cartao,
-  imediata,
-  totalAgentes,
-}: {
-  cartao: CartaoVenda;
-  imediata: boolean;
-  totalAgentes: number;
-}) {
+// Card de produto da vitrine: mudam só os dados de CartaoVenda (src/lib/loja/paginaInicial.ts).
+// Protótipo aprovado: variação B de prototipos/card-vitrine.
+export function ProductCard({ cartao }: { cartao: CartaoVenda }) {
+  const qtdNumeros = cartao.numeros.length;
   return (
     <article className={`cartao revelar${cartao.variante === "destaque" ? " cartao--destaque" : ""}`} id={cartao.id} aria-labelledby={`${cartao.id}-t`}>
-      <Capa cartao={cartao} imediata={imediata} />
+      {cartao.demonstracao ? (
+        <div className="palco">
+          <MockupKit demo={cartao.demonstracao} />
+        </div>
+      ) : null}
       <div className="cartao__corpo">
-        <p className="cartao__meta">
-          {cartao.tag ? <span className={`tag${cartao.tag.suave ? " tag--suave" : ""}`}>{cartao.tag.texto}</span> : null}
-          {cartao.meta.length ? (
-            <span>
-              {cartao.meta.map((m, i) => (
-                <span key={m}>
-                  {i > 0 ? (
-                    <span className="ponto" aria-hidden="true">
-                      {" · "}
-                    </span>
-                  ) : null}
-                  {m}
-                </span>
-              ))}
-            </span>
-          ) : null}
-        </p>
-        <h3 className="cartao__titulo" id={`${cartao.id}-t`}>
-          {cartao.titulo}
-        </h3>
-        <p className="cartao__desc">{cartao.descricao}</p>
+        <div>
+          {cartao.etiqueta ? <p className="cartao__etiqueta">{cartao.etiqueta}</p> : null}
+          <h3 className="cartao__titulo" id={`${cartao.id}-t`}>
+            {cartao.titulo}
+          </h3>
+          <p className="cartao__desc">{cartao.descricao}</p>
+        </div>
+        {qtdNumeros ? (
+          <ul className={`numeros numeros--${qtdNumeros}`}>
+            {cartao.numeros.map((n) => (
+              <li className="numero" key={n.nome}>
+                <span className="numero__valor">{n.valor}</span>
+                <span className="numero__nome">{n.nome}</span>
+                {n.ajuda ? (
+                  <span className="numero__ajuda">
+                    <span className="sr-only">, </span>
+                    {n.ajuda}
+                  </span>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        ) : null}
         {cartao.inclui.length ? (
-          <ul className="cartao__inclui" aria-label="Pacotes incluídos">
+          <ul className="cartao__inclui" aria-label="Kits incluídos">
             {cartao.inclui.map((n) => (
               <li key={n}>{n}</li>
             ))}
           </ul>
         ) : null}
-        <div className="cartao__base">
-          <Extras cartao={cartao} totalAgentes={totalAgentes} />
-          <hr className="divisor" aria-hidden="true" />
-          <PriceBlock preco={cartao.preco} />
-        </div>
-        <Botao cartao={cartao} />
+        {cartao.agentesGratis > 0 ? (
+          <p className="cartao__bonus">
+            <strong>
+              {cartao.agentesGratis} {cartao.agentesGratis === 1 ? "agente grátis" : "agentes grátis"}
+            </strong>
+            , abertos no site, sem precisar comprar.
+          </p>
+        ) : null}
+        <dl className="fatos">
+          <div>
+            <dt>Compatível com</dt>
+            <dd>Claude Code e Codex</dd>
+          </div>
+          <div>
+            <dt>Entrega</dt>
+            <dd>Download imediato após o pagamento</dd>
+          </div>
+        </dl>
+      </div>
+      <div className="cartao__pe">
+        <PriceBlock preco={cartao.preco} />
+        <Compra cartao={cartao} />
       </div>
     </article>
   );
 }
-

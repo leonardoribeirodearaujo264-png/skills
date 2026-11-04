@@ -54,8 +54,16 @@ describe("página inicial de vendas", () => {
   it("segue a ordem do dono, não a do banco, e termina com a Coleção Completa", () => {
     expect(pagina.estado).toBe("ok");
     expect(pagina.cartoes.map((c) => c.slug)).toEqual([...VITRINE_INICIAL.map((v) => v.slug), "completo"]);
-    expect(pagina.cartoes[0]).toMatchObject({ variante: "destaque", titulo: "Kit Vitrine de Vendas", tag: { texto: "Comece por aqui" } });
-    expect(porId("pacote-times-de-agentes").tag?.texto).toBe("Novo");
+    expect(pagina.cartoes[0]).toMatchObject({ variante: "destaque", titulo: "Kit Vitrine de Vendas", etiqueta: "Comece por aqui" });
+    expect(porId("pacote-times-de-agentes").etiqueta).toBe("Novo");
+  });
+
+  it("cada card explica os números e traz a demonstração do próprio kit", () => {
+    expect(porId("pacote-design-copy-anuncios").numeros[0]).toEqual({ valor: 5, nome: "agentes", ajuda: "ajudantes especializados" });
+    for (const c of pagina.cartoes) {
+      expect(c.demonstracao?.passos.length).toBeGreaterThan(0);
+      expect(c.numeros.every((n) => n.ajuda)).toBe(true);
+    }
   });
 
   it("avulsos mostram só o preço do banco, sem riscado", () => {
@@ -82,10 +90,10 @@ describe("página inicial de vendas", () => {
     expect(montarPaginaInicial({ ...CATALOGO, produtos: [] }).estado).toBe("vazio");
   });
 
-  it("cada card lista os agentes grátis do seu pacote; o completo lista todos", () => {
-    expect(porId("pacote-completo").agentes).toHaveLength(PAGINAS_VIDEOS.length);
-    expect(porId("pacote-times-de-agentes").agentes?.map((a) => a.pasta)).toEqual(["agentes", "harvey", "mesa-de-validacao", "prompt-bola-de-cristal", "guia", "leis", "fabrica", "faxina-de-pastas", "aprender", "arena"]);
-    expect(porId("pacote-edicao-de-video").agentes?.map((a) => a.pasta)).toEqual(["editar", "trem", "motion"]);
+  it("cada card conta os agentes grátis do seu pacote; o completo conta todos", () => {
+    expect(porId("pacote-completo").agentesGratis).toBe(PAGINAS_VIDEOS.length);
+    expect(porId("pacote-times-de-agentes").agentesGratis).toBe(10);
+    expect(porId("pacote-edicao-de-video").agentesGratis).toBe(3);
     expect(pagina.agentes.find((a) => a.pasta === "revisao-tripla")?.pacoteCurto).toBe("Kit Código Seguro");
   });
 });

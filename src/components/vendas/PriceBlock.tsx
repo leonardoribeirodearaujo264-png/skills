@@ -12,7 +12,6 @@ export function PriceBlock({ preco }: { preco: PrecoCartao | null }) {
     return (
       <div className="preco">
         <p className="preco__indisponivel">Preço indisponível</p>
-        <p className="preco__nota">Não mostramos valor sem a confirmação do servidor.</p>
       </div>
     );
   }

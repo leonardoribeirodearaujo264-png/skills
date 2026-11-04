@@ -40,9 +40,9 @@ export function PackageList({ pagina }: { pagina: PaginaInicial }) {
         </div>
       ) : null}
       <ul className="lista-cartoes">
-        {pagina.cartoes.map((c, i) => (
+        {pagina.cartoes.map((c) => (
           <li key={c.id}>
-            <ProductCard cartao={c} imediata={i === 0} totalAgentes={pagina.agentes.length} />
+            <ProductCard cartao={c} />
           </li>
         ))}
       </ul>
@@ -54,7 +54,7 @@ export function PackageList({ pagina }: { pagina: PaginaInicial }) {
 export function PackageListSkeleton() {
   const um = (i: number) => (
     <li key={i}>
-      <div className="cartao" aria-hidden="true">
+      <div className="cartao cartao--esqueleto" aria-hidden="true">
         <span className="esqueleto esqueleto--capa" />
         <div>
           <span className="esqueleto" style={{ width: "46%", height: 14 }} />

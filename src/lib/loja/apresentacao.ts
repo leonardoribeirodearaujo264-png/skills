@@ -72,17 +72,27 @@ const APRESENTACOES: Record<string, Apresentacao> = {
   },
 };
 
+// Janela animada do card: mostra o que o kit faz. Sem nota, porcentagem ou número inventado.
+export type Demonstracao = {
+  resumo: string;
+  janela: string;
+  pedido: string;
+  passos: string[];
+  previa: { titulo: string; botao: string; selo: string; extras: [string, string] };
+};
+
 // Como cada pacote aparece na página inicial: nome de vitrine, frase curta e rótulo do botão.
 // A ordem desta lista é a ordem dos cards (pedido do dono); pacote à venda fora dela vai para o fim
 // com o título e o resumo do banco. Textos conferidos no README de cada pacote.
 export type VitrineInicial = {
   slug: string;
+  demonstracao: Demonstracao;
   nome: string;
   // nome curto: filtros, painel de agentes grátis e lista da Coleção Completa
   curto: string;
   descricao: string;
   botao: string;
-  // primeiro card, maior, com a etiqueta "Comece por aqui"
+  // primeiro card, com a etiqueta "Comece por aqui" e o brilho de destaque
   destaque?: boolean;
   novo?: boolean;
 };
@@ -95,7 +105,14 @@ export const VITRINE_INICIAL: readonly VitrineInicial[] = [
     botao: "Ver o Kit Vitrine de Vendas",
     destaque: true,
     descricao:
-      "Você pede em português e o Claude Code ou o Codex monta a página com visual profissional, escreve o texto da oferta, prepara anúncios para Facebook e Instagram e mede a velocidade do site. Um revisor confere tudo antes de você publicar.",
+      "Peça em português e a IA monta sua página de venda, escreve a oferta, prepara os anúncios e mede a velocidade. Um revisor confere antes de publicar.",
+    demonstracao: {
+      resumo: "Demonstração: a partir de um pedido em português, a IA monta a página de venda, escreve a oferta, prepara os anúncios, mede a velocidade e o revisor aprova.",
+      janela: "Nova página de venda",
+      pedido: "Monte a página de venda do meu escritório e prepare os anúncios.",
+      passos: ["Página montada", "Oferta escrita", "Anúncios para Facebook e Instagram", "Velocidade medida", "Revisor aprovou"],
+      previa: { titulo: "Sua página de venda", botao: "Quero contratar", selo: "Revisado", extras: ["Facebook", "Instagram"] },
+    },
   },
   {
     slug: "edicao-de-video",
@@ -103,7 +120,14 @@ export const VITRINE_INICIAL: readonly VitrineInicial[] = [
     curto: "Ilha de Edição IA",
     botao: "Ver a Ilha de Edição IA",
     descricao:
-      "Corte, legenda e montagem de Reels, Shorts e aulas no seu computador, pedindo em português. O time tira silêncios e erros, legenda e exporta em 1080x1920, e um revisor confere o vídeo antes da entrega.",
+      "Peça em português e a IA tira silêncios e erros, coloca legenda e exporta seu vídeo em 1080x1920, no seu computador. Um revisor confere antes da entrega.",
+    demonstracao: {
+      resumo: "Demonstração: a partir de um pedido em português, a IA corta silêncios e erros, coloca a legenda, exporta para Reels e o revisor aprova.",
+      janela: "Novo vídeo",
+      pedido: "Corte as pausas, coloque legenda e deixe pronto para o Reels.",
+      passos: ["Silêncios e erros cortados", "Legenda colocada", "Exportado em 1080x1920", "Revisor aprovou"],
+      previa: { titulo: "Seu vídeo", botao: "Pronto para postar", selo: "Revisado", extras: ["Reels", "Shorts"] },
+    },
   },
   {
     slug: "motion-mockup-fontes",
@@ -111,7 +135,14 @@ export const VITRINE_INICIAL: readonly VitrineInicial[] = [
     curto: "Kit Cena",
     botao: "Ver o Kit Cena",
     descricao:
-      "O print do seu site num notebook, o app num celular, o post como aparece no feed, animações de entrada e pares de fontes com escala pronta. Os mockups são gerados no seu computador, sem programa de design.",
+      "Peça em português e a IA coloca seu site num notebook, seu app num celular e cria animações e pares de fontes, no seu computador, sem programa de design.",
+    demonstracao: {
+      resumo: "Demonstração: a partir de um pedido em português, a IA gera o mockup no notebook, o app no celular, o post do feed e escolhe as fontes, e o revisor aprova.",
+      janela: "Nova imagem",
+      pedido: "Coloque o print do meu site num notebook e monte o post para o feed.",
+      passos: ["Site no notebook", "App no celular", "Post para o feed", "Fontes escolhidas", "Revisor aprovou"],
+      previa: { titulo: "Seu mockup", botao: "Exportar imagem", selo: "Revisado", extras: ["Notebook", "Celular"] },
+    },
   },
   {
     slug: "programacao-sem-codigo",
@@ -119,7 +150,14 @@ export const VITRINE_INICIAL: readonly VitrineInicial[] = [
     curto: "Kit Código Seguro",
     botao: "Ver o Kit Código Seguro",
     descricao:
-      "Do pedido em português ao projeto no ar: entrevista, plano em linguagem simples, uma etapa por vez, teste como cliente e revisão de segurança. Nada é apagado, instalado ou publicado sem o seu sim.",
+      "Do pedido em português ao projeto no ar: entrevista, plano simples, teste como cliente e revisão de segurança. Nada é apagado ou publicado sem o seu sim.",
+    demonstracao: {
+      resumo: "Demonstração: a partir de um pedido em português, a IA entrevista, faz o plano, constrói por etapas, testa como cliente, revisa a segurança e espera o seu sim.",
+      janela: "Novo projeto",
+      pedido: "Crie um sistema simples de agendamento para o meu escritório.",
+      passos: ["Plano em linguagem simples", "Uma etapa por vez", "Teste como cliente", "Segurança revisada", "Aguardando o seu sim"],
+      previa: { titulo: "Seu projeto", botao: "Publicar", selo: "Falta seu sim", extras: ["Plano", "Testes"] },
+    },
   },
   {
     slug: "times-de-agentes",
@@ -128,7 +166,14 @@ export const VITRINE_INICIAL: readonly VitrineInicial[] = [
     botao: "Ver o Kit Empresa IA",
     novo: true,
     descricao:
-      "Seis times de marketing, vendas, financeiro, atendimento, operações e conteúdo, cada um com líder, dois especialistas e revisor. Um diretor-geral recebe o seu pedido, escolhe o time e cobra a entrega.",
+      "Um diretor-geral recebe o seu pedido em português, escolhe o time certo e cobra a entrega. Seis áreas da empresa, cada uma com líder, especialistas e revisor.",
+    demonstracao: {
+      resumo: "Demonstração: o diretor-geral recebe o pedido em português e escolhe o time, o líder divide o trabalho, os especialistas executam e o revisor confere.",
+      janela: "Novo pedido",
+      pedido: "Prepare a campanha de vendas deste mês.",
+      passos: ["Diretor escolheu o time", "Líder dividiu o trabalho", "Especialistas executaram", "Revisor conferiu"],
+      previa: { titulo: "Sua entrega", botao: "Ver a entrega", selo: "Revisado", extras: ["Marketing", "Vendas"] },
+    },
   },
 ];
 
@@ -141,6 +186,14 @@ export const CAPA_COMBO: Capa = {
   png: "/capas/combo.png",
   mini: "/capas/mini/combo.webp",
   alt: "Capa da Coleção Completa: todos os pacotes empilhados.",
+};
+
+export const DEMONSTRACAO_COLECAO: Demonstracao = {
+  resumo: "Demonstração: um único pedido libera os kits, com os agentes, as skills e os prompts de cada um.",
+  janela: "Coleção Completa",
+  pedido: "Quero todos os kits numa compra só.",
+  passos: ["Todos os kits", "Todos os agentes", "Todas as skills", "Todos os prompts"],
+  previa: { titulo: "Sua coleção", botao: "Começar", selo: "Liberada", extras: ["Claude Code", "Codex"] },
 };
 
 export function apresentacao(slug: string): Apresentacao | null {
