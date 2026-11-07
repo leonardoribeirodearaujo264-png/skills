@@ -238,6 +238,13 @@ export const PAGINAS_VIDEOS: readonly PaginaVideo[] = [
     tipo: "Passo a passo",
     oferta: { pacote: "programacao-sem-codigo", gancho: "Gostou? No pacote tem o caminho completo do pedido ao projeto no ar." },
   },
+  {
+    pasta: "craft",
+    titulo: "Craft Anything: refaça um site com IA",
+    frase: "Cole o link, diga o que quer e a IA monta uma versão nova, compara com o original e corrige.",
+    tipo: "Passo a passo",
+    oferta: { pacote: "programacao-sem-codigo", gancho: "Gostou? No pacote tem o caminho completo do pedido ao projeto no ar." },
+  },
 ];
 
 // A chave é a pasta da página (/agentes/ -> "agentes")
