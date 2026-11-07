@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Craft Anything: refaça um site com IA</title>
-<meta name="description" content="Endereço oficial do Craft Anything e como começar: cole o link do site, diga o que quer e a IA monta uma versão nova, compara com o original e corrige">
+<meta name="description" content="Passo a passo do Craft Anything: prompt para o Claude Code instalar pelo GitHub oficial e o pedido pronto para a IA recriar um site, comparar com o original e corrigir">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -21,36 +21,68 @@
   <h1>Refaça um site <span class="nowrap">com o Craft Anything</span></h1>
   <p class="lead">O Craft Anything é um projeto de código aberto, em versão alfa. Você aponta para um site, diz o que quer, e um agente de IA monta um projeto novo, compara com o original e ajusta o que não bate.</p>
 
-  <a class="btn" href="https://getartcraft.com/apps/craft-anything" target="_blank" rel="noopener">Abrir a página oficial</a>
-  <div class="note">Projeto de terceiros, sem ligação com esta página. O código está em <a href="https://github.com/storytold/craft-anything" target="_blank" rel="noopener">github.com/storytold/craft-anything</a>. Dados conferidos em 06/11/2026.</div>
+  <a class="btn" href="https://github.com/storytold/craft-anything/releases/latest" target="_blank" rel="noopener">Baixar no GitHub</a>
+  <div class="note">Projeto de terceiros, sem ligação com esta página. Código e instaladores oficiais ficam só em <a href="https://github.com/storytold/craft-anything" target="_blank" rel="noopener">github.com/storytold/craft-anything</a>. Versão 0.5.0, dados conferidos em 07/11/2026.</div>
 
   <section class="step" aria-labelledby="passo1">
-    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Veja o que você precisa</h2></div>
-    <p>Hoje o construtor que já funciona é o Claude Code, instalado e conectado no seu computador. O plano gratuito do Claude não inclui o Claude Code, então confira o seu plano antes de começar.</p>
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Tenha o Claude Code no computador</h2></div>
+    <p>O Craft Anything usa o seu próprio Claude Code, com o seu login, para construir o projeto. Ele precisa estar instalado e conectado antes. O plano gratuito do Claude não inclui o Claude Code, então confira o seu plano.</p>
   </section>
 
   <section class="step" aria-labelledby="passo2">
-    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Baixe o aplicativo</h2></div>
-    <p>Na página oficial ou na seção Downloads do repositório, escolha o instalador do seu sistema. Baixe só desses dois endereços: nomes parecidos na internet não têm ligação com o projeto.</p>
-  </section>
-
-  <section class="step" aria-labelledby="passo3">
-    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Faça o pedido</h2></div>
-    <p>Na tela inicial, escolha <strong>A website</strong>, cole o endereço, deixe o modo <strong>Clean room</strong>, que é o padrão e não lê o código do site, escreva o que quer e aperte <strong>Start</strong>.</p>
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Peça para o Claude Code instalar</h2></div>
+    <p>Abra o Claude Code e cole este prompt. Ele baixa só do GitHub oficial e pede a sua confirmação antes de baixar e de instalar.</p>
     <div class="code">
-      <div class="code-bar"><span>pedido</span><button class="copy" type="button" data-copy="pedido">Copiar</button></div>
-<pre id="pedido">Recreate this website</pre>
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-instalar">Copiar</button></div>
+<pre id="prompt-instalar">Instale o Craft Anything no meu computador usando só o repositório oficial: https://github.com/storytold/craft-anything
+
+1. Descubra o meu sistema (Windows, macOS ou Linux) e o tipo de processador.
+2. Em https://github.com/storytold/craft-anything/releases/latest, escolha o instalador certo para mim: no Windows o arquivo .msi, no Mac o .dmg.
+3. Me mostre o nome e o tamanho do arquivo e espere eu confirmar antes de baixar e antes de instalar.
+4. Depois de instalado, rode "craft-anything-cli doctor" e me explique em português o que estiver faltando. Se o comando não existir, me diga como abrir o aplicativo Craft Anything.</pre>
     </div>
   </section>
 
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Ou instale você mesmo</h2></div>
+    <p>Abra o botão <strong>Baixar no GitHub</strong> lá em cima e, na lista de arquivos da versão, baixe:</p>
+    <ul>
+      <li><strong>Windows:</strong> <code>craft-anything-0.5.0-windows-x64.msi</code>. Dê dois cliques e siga o instalador.</li>
+      <li><strong>Mac:</strong> <code>craft-anything-0.5.0-macos-universal.dmg</code>. Abra e arraste o app para Aplicativos.</li>
+    </ul>
+    <p>Se aparecer uma versão mais nova, troque o número no nome. Não baixe de outros sites: nomes parecidos não têm ligação com o projeto.</p>
+  </section>
+
   <section class="step" aria-labelledby="passo4">
-    <div class="step-head"><span class="step-num">4</span><h2 id="passo4">Confira o resultado</h2></div>
-    <p>Em sites, ele compara a versão nova com o original em três tamanhos de tela, mostra o quanto ficou parecido, lista o que ainda não bate e volta para ajustar. App e jogo também aparecem como opção, mas essa checagem ainda é parcial.</p>
+    <div class="step-head"><span class="step-num">4</span><h2 id="passo4">Faça o pedido no aplicativo</h2></div>
+    <p>Abra o Craft Anything, escolha <strong>A website</strong>, cole o endereço do site, deixe o modo <strong>Clean room</strong> (o padrão, que não lê o código do site), cole o pedido abaixo e aperte <strong>Start</strong>.</p>
+    <div class="code">
+      <div class="code-bar"><span>pedido</span><button class="copy" type="button" data-copy="pedido">Copiar</button></div>
+<pre id="pedido">Recrie este site com o mesmo layout, cores, fontes e espaçamento, funcionando no celular e no computador. Use textos e imagens de exemplo no lugar dos originais e não copie logo, marcas nem fotos do site.</pre>
+    </div>
   </section>
 
   <section class="step" aria-labelledby="passo5">
-    <div class="step-head"><span class="step-num">5</span><h2 id="passo5">Use só no que você pode</h2></div>
-    <p>Segundo o próprio projeto, ele é para software seu ou que você tem permissão de examinar, e nunca burla DRM, login ou anti-cheat. Para refazer o site de um cliente, peça autorização antes e não copie logo, textos ou imagens de terceiros.</p>
+    <div class="step-head"><span class="step-num">5</span><h2 id="passo5">Prefere o terminal?</h2></div>
+    <p>O mesmo pedido funciona pela linha de comando. Troque o endereço pelo do seu site e rode no terminal; as perguntas aparecem ali mesmo.</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-rebuild">Copiar</button></div>
+<pre id="cmd-rebuild">craft-anything-cli rebuild https://seusite.com "Recreate this website"</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo6">
+    <div class="step-head"><span class="step-num">6</span><h2 id="passo6">Confira e peça ajustes</h2></div>
+    <p>Em sites, ele compara a versão nova com o original em três tamanhos de tela, mostra o quanto ficou parecido, lista o que ainda não bate e volta para ajustar. App e jogo também aparecem como opção, mas essa checagem ainda é parcial.</p>
+    <div class="code">
+      <div class="code-bar"><span>ajuste</span><button class="copy" type="button" data-copy="pedido-ajuste">Copiar</button></div>
+<pre id="pedido-ajuste">Deixe o cabeçalho azul e troque o nome do site por [SEU NOME]. Mantenha o resto igual.</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo7">
+    <div class="step-head"><span class="step-num">7</span><h2 id="passo7">Use só no que você pode</h2></div>
+    <p>Segundo o próprio projeto, ele é para software seu ou que você tem permissão de examinar, e nunca burla DRM, login ou anti-cheat. Para refazer o site de um cliente, peça autorização antes.</p>
   </section>
 
   <section id="oferta" data-oferta data-titulo="Gostou? No pacote tem o caminho completo do pedido ao projeto no ar."></section>
