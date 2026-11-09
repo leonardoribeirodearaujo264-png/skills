@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Garimpo: o time de 4 agentes que acha clientes</title>
+<meta name="description" content="Prompt grátis de um time de 4 agentes no Claude Code: acha negócios bem avaliados com site ruim, aponta onde perdem cliente, refaz o site e escreve o e-mail para o dono. Você revisa e manda.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este prompt é grátis. A Coleção Completa de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">prompt grátis</span>
+  <h1>Garimpo: 4 agentes que <span class="nowrap">acham clientes</span></h1>
+  <p class="lead">Um time no Claude Code que faz a pesquisa, a criação e a prospecção. O primeiro acha negócios bem avaliados com site ruim, o segundo mostra onde cada site perde cliente, o terceiro refaz o site e o quarto escreve o e-mail para o dono. Nada é enviado sozinho: você revisa e manda.</p>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Abra o Claude Code numa pasta vazia</h2></div>
+    <p>Crie uma pasta só para o garimpo (por exemplo <code>garimpo</code>) e abra o Claude Code dentro dela. É lá que ficam a lista, os relatórios, os sites novos e os e-mails. O plano gratuito do Claude não inclui o Claude Code, então confira o seu plano.</p>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Cole o prompt do time</h2></div>
+    <p>Troque o que está entre colchetes. Comece com 3 negócios para conferir a qualidade antes de aumentar.</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-time">Copiar</button></div>
+<pre id="prompt-time">Monte um time de 4 agentes (subagentes) para prospectar clientes de criação de sites. Eu sou [SEU NOME], faço sites para [TIPO DE NEGÓCIO] em [CIDADE]. Trabalhe só nesta pasta e siga as etapas na ordem.
+
+AGENTE 1, GARIMPEIRO
+Pesquise na web negócios de [TIPO DE NEGÓCIO] em [CIDADE] com boa avaliação pública (nota 4,5 ou mais e pelo menos 30 avaliações) e site fraco: site lento, quebrado no celular, sem botão de contato, desatualizado ou sem site. Use só informação pública. Salve em garimpo.csv: nome, nota, número de avaliações, endereço do site, e-mail ou formulário de contato público, e o motivo de o site ser fraco. Pare em [QUANTIDADE, comece com 3].
+
+AGENTE 2, AUDITOR
+Para cada negócio, abra o site e escreva relatorios/NOME.md com os 3 pontos em que ele mais perde cliente (por exemplo: telefone escondido, foto quebrada, sem pedido online, texto confuso), cada um com o que está errado e o que muda se for corrigido. Linguagem simples, sem termo técnico. Não invente número de visita ou de venda.
+
+AGENTE 3, CRIADOR
+Para cada negócio, crie sites/NOME/index.html: uma página de uma tela só, bonita no celular, com os dados reais do negócio, chamada clara e botão de contato. Corrija os 3 pontos do relatório. Não copie fotos nem textos protegidos: use espaços marcados "FOTO DO CLIENTE" onde precisar. Tire um print do antes e do depois e salve na mesma pasta.
+
+AGENTE 4, PROSPECTOR
+Para cada negócio, escreva emails/NOME.txt para o dono: assunto curto, até 120 palavras, o elogio da boa avaliação, o principal ponto em que o site perde cliente, o convite para ver a versão nova (antes e depois) e a minha assinatura. Tom respeitoso, sem pressão e sem promessa de resultado.
+
+REGRAS
+- Nunca envie e-mail, mensagem ou formulário. Eu reviso e mando.
+- Use só contatos que o próprio negócio publica para clientes. Nada de comprar lista ou adivinhar e-mail pessoal.
+- No fim, me mostre uma tabela com o negócio, os 3 problemas e os caminhos dos arquivos, e o que eu preciso conferir antes de mandar.</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Revise e mande</h2></div>
+    <div class="cards">
+      <article class="card"><h3>Confira</h3><p class="when">Abra cada site novo no celular, leia o relatório e ajuste o e-mail com o seu jeito de falar.</p></article>
+      <article class="card"><h3>Mande você</h3><p class="when">Envie do seu e-mail, um por um, com o print do antes e do depois. Quem responder, você fecha.</p></article>
+    </div>
+    <div class="note">Mande só para negócios que divulgam o contato para clientes e respeite quem pedir para não receber mais. Prospecção em massa sem consentimento pode esbarrar na LGPD e nas regras contra spam.</div>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou? No pacote tem seis times de agentes com líder e revisor."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>

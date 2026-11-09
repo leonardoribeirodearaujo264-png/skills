@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3 skills que fazem o Claude perguntar</title>
+<meta name="description" content="As 3 skills grátis que fazem o Claude te entrevistar antes de começar o projeto: Interview Me, Brainstorming e Grill Me, com o comando de instalar cada uma.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Estas 3 skills são grátis. A Coleção Completa de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">3 skills grátis</span>
+  <h1>Faça o Claude perguntar <span class="nowrap">antes de errar</span></h1>
+  <p class="lead">O Claude erra o projeto quando sai fazendo sem entender o que você quer. Estas 3 skills obrigam ele a te entrevistar primeiro. Todas são de código aberto, com licença MIT, e os números de instalação são do skills.sh em 09/11/2026.</p>
+
+  <div class="code">
+    <div class="code-bar"><span>prompt rápido para o Claude Code</span><button class="copy" type="button" data-copy="prompt-rapido">Copiar</button></div>
+<pre id="prompt-rapido">Instale no meu Claude Code estas 3 skills, só dos repositórios oficiais, e me mostre cada comando antes de rodar:
+1. interview-me, de https://github.com/addyosmani/agent-skills
+2. brainstorming, de https://github.com/obra/superpowers
+3. grill-me, de https://github.com/mattpocock/skills
+Depois me explique em português quando usar cada uma.</pre>
+  </div>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo1">Interview Me: 66 mil instalações</h2></div>
+    <p>Faz uma pergunta por vez, sempre com um palpite junto, até entender quem vai usar, por que você quer aquilo, como é o sucesso e qual é a maior restrição. Serve para pedido vago, do tipo "faz um dashboard".</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-interview">Copiar</button></div>
+<pre id="cmd-interview">npx skills add https://github.com/addyosmani/agent-skills --skill interview-me</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Brainstorming: 422 mil instalações</h2></div>
+    <p>Desenha a solução com você, apresenta as opções e só deixa o Claude começar depois que você aprova o desenho. Faz parte do Superpowers, um conjunto de skills de método para programar com IA.</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-brainstorming">Copiar</button></div>
+<pre id="cmd-brainstorming">npx skills add https://github.com/obra/superpowers --skill brainstorming</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo3">Grill Me: 1,5 milhão de instalações</h2></div>
+    <p>A mais instalada das 3. Pergunta sem parar sobre cada parte do plano, decisão por decisão, até não sobrar furo. Quando a resposta está no código, ela mesma vai ler em vez de perguntar para você.</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-grill">Copiar</button></div>
+<pre id="cmd-grill">npx skills add https://github.com/mattpocock/skills --skill grill-me</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo4">
+    <div class="step-head"><span class="step-num">✓</span><h2 id="passo4">Como usar no dia a dia</h2></div>
+    <div class="cards">
+      <article class="card"><h3>Ideia ainda vaga</h3><p class="when">"Use a interview-me: quero um app para a minha clínica."</p></article>
+      <article class="card"><h3>Sabe o que quer, falta o desenho</h3><p class="when">"Use a brainstorming antes de escrever qualquer código."</p></article>
+      <article class="card"><h3>Plano pronto para conferir</h3><p class="when">"Use a grill-me no meu plano e só pare quando não houver furo."</p></article>
+    </div>
+    <div class="note">O comando <code>npx skills</code> precisa do Node.js instalado. Os números de instalação mudam todo dia; confira no skills.sh.</div>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou? No pacote tem o caminho completo do pedido ao projeto no ar."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>

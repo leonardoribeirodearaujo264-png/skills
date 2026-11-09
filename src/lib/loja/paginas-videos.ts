@@ -245,6 +245,20 @@ export const PAGINAS_VIDEOS: readonly PaginaVideo[] = [
     tipo: "Passo a passo",
     oferta: { pacote: "programacao-sem-codigo", gancho: "Gostou? No pacote tem o caminho completo do pedido ao projeto no ar." },
   },
+  {
+    pasta: "sabatina",
+    titulo: "3 skills que fazem o Claude perguntar",
+    frase: "Interview Me, Brainstorming e Grill Me: o Claude te entrevista antes de começar o projeto.",
+    tipo: "Passo a passo",
+    oferta: { pacote: "programacao-sem-codigo", gancho: "Gostou? No pacote tem o caminho completo do pedido ao projeto no ar." },
+  },
+  {
+    pasta: "garimpo",
+    titulo: "Garimpo: 4 agentes que acham clientes",
+    frase: "O prompt do time que acha negócios com site ruim, refaz o site e escreve o e-mail para o dono.",
+    tipo: "Prompt grátis",
+    oferta: { pacote: "times-de-agentes", gancho: "Gostou? No pacote tem seis times de agentes com líder e revisor." },
+  },
 ];
 
 // A chave é a pasta da página (/agentes/ -> "agentes")
