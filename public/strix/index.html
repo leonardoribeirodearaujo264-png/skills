@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Strix: a IA que testa a segurança do seu app</title>
+<meta name="description" content="O link da Strix, IA de pentest open source: como instalar, configurar a chave do modelo, rodar o primeiro teste no seu app e usar pelo Claude Code.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este link é grátis. A Coleção Completa de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">link grátis</span>
+  <h1>Ache a falha antes <span class="nowrap">do hacker</span></h1>
+  <p class="lead">A Strix é uma IA de pentest open source: em vez de entregar uma lista de bugs possíveis, ela solta um time de agentes que atacam o seu app de verdade, confirmam cada falha com uma prova e sugerem a correção. Roda no seu computador, com Docker e a chave de um modelo de IA.</p>
+  <div class="note">Projeto de terceiros (usestrix/strix, licença Apache-2.0, mais de 70 mil estrelas), conferido no GitHub em 10/11/2026. Esta página não tem ligação com os autores. A Strix é grátis; o modelo de IA que ela usa é cobrado pelo provedor da sua chave.</div>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Antes de começar</h2></div>
+    <div class="cards">
+      <article class="card"><h3>Docker</h3><p class="when">Instale o Docker Desktop e deixe ele aberto. Na primeira vez a Strix baixa a imagem onde os testes rodam.</p></article>
+      <article class="card"><h3>Chave de um modelo</h3><p class="when">Uma chave de API de um provedor aceito (OpenAI, Anthropic, Google, OpenRouter e outros). A lista está na documentação da Strix.</p></article>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Instale</h2></div>
+    <p>No Mac e no Linux:</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-instalar">Copiar</button></div>
+<pre id="cmd-instalar">curl -sSL https://strix.ai/install | bash</pre>
+    </div>
+    <p>No Windows, instale o WSL (o Linux dentro do Windows) e rode este comando e os próximos dentro dele.</p>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Configure o modelo e rode o primeiro teste</h2></div>
+    <p>Troque o modelo e a chave pelos do seu provedor, no formato da documentação. Depois aponte para a pasta do seu app:</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-rodar">Copiar</button></div>
+<pre id="cmd-rodar">export STRIX_LLM="[PROVEDOR/MODELO]"
+export LLM_API_KEY="[SUA CHAVE]"
+strix --target ./pasta-do-seu-app</pre>
+    </div>
+    <p>Também dá para testar o app no ar ou um repositório: <code class="inline">strix --target https://seu-app.com</code>. Os resultados ficam na pasta <code class="inline">strix_runs</code>.</p>
+    <div class="note">Teste só o que é seu ou o que você tem autorização por escrito para testar. Atacar sistema de terceiros sem permissão é crime. Prefira um ambiente de teste a produção.</div>
+    <a class="btn" href="https://github.com/usestrix/strix" target="_blank" rel="noopener">Abrir a Strix no GitHub</a>
+  </section>
+
+  <section class="step" aria-labelledby="passo4">
+    <div class="step-head"><span class="step-num">4</span><h2 id="passo4">Pelo Claude Code</h2></div>
+    <p>A Strix tem skills prontas para o Claude Code rodar o teste e corrigir as falhas. Instale na pasta do seu projeto:</p>
+    <div class="code">
+      <div class="code-bar"><span>terminal</span><button class="copy" type="button" data-copy="cmd-skills">Copiar</button></div>
+<pre id="cmd-skills">npx skills add usestrix/strix</pre>
+    </div>
+    <p>Depois peça:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-strix">Copiar</button></div>
+<pre id="prompt-strix">Use a Strix para fazer um teste de segurança neste projeto, que é meu. Quando terminar, me mostre cada falha confirmada em linguagem simples: o que é, onde está, a prova e o risco. Proponha a correção de cada uma e só mude o código depois que eu aprovar. No fim, rode o teste de novo para confirmar que as falhas sumiram.</pre>
+    </div>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou? No pacote tem o caminho completo do pedido ao projeto no ar."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>As buscas prontas para achar vaga antes de todo mundo</title>
+<meta name="description" content="As buscas do Google que acham vagas no site das empresas (Gupy, Greenhouse e Lever) e o prompt para o Claude rodar a busca todo dia, filtrar pelo seu currículo e escrever as candidaturas.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Estas buscas são grátis. A Coleção Completa de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">buscas grátis</span>
+  <h1>A vaga antes de <span class="nowrap">todo mundo</span></h1>
+  <p class="lead">Muitas empresas publicam a vaga primeiro na própria página de carreiras, em sistemas como Gupy, Greenhouse e Lever. Com uma busca no Google você acha essas páginas direto. Depois o Claude roda a busca todo dia, separa as vagas que combinam com o seu currículo e deixa as candidaturas escritas para você revisar e enviar.</p>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Vagas no Brasil</h2></div>
+    <p>Cole no Google e troque o cargo. As aspas obrigam a frase exata.</p>
+    <div class="code">
+      <div class="code-bar"><span>busca</span><button class="copy" type="button" data-copy="busca-br">Copiar</button></div>
+<pre id="busca-br">site:gupy.io "designer de produto" remoto</pre>
+    </div>
+    <div class="note">Para ver só as recentes, no Google clique em Ferramentas e troque "Em qualquer data" por "Na última semana" ou "Nas últimas 24 horas".</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Vagas gringas</h2></div>
+    <p>Em inglês, com o cargo em inglês e a palavra remote. A Greenhouse usa dois endereços, por isso a primeira busca junta os dois.</p>
+    <div class="code">
+      <div class="code-bar"><span>busca</span><button class="copy" type="button" data-copy="busca-greenhouse">Copiar</button></div>
+<pre id="busca-greenhouse">(site:boards.greenhouse.io OR site:job-boards.greenhouse.io) "product designer" remote</pre>
+    </div>
+    <div class="code">
+      <div class="code-bar"><span>busca</span><button class="copy" type="button" data-copy="busca-lever">Copiar</button></div>
+<pre id="busca-lever">site:jobs.lever.co "product designer" remote</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">O Claude faz a busca por você</h2></div>
+    <p>Crie uma pasta (por exemplo <code>vagas</code>), coloque nela o seu currículo como <code>curriculo.pdf</code> e abra o Claude Code dentro dela. Troque o que está entre colchetes e envie:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-vagas">Copiar</button></div>
+<pre id="prompt-vagas">Você é o meu caçador de vagas. Trabalhe só nesta pasta.
+
+1. Leia o curriculo.pdf e resuma em 5 linhas o meu perfil: cargo, anos de experiência, ferramentas e o que eu procuro.
+2. Pesquise na web vagas de [CARGO] publicadas nos últimos 2 dias com estas buscas:
+   site:gupy.io "[CARGO]" remoto
+   (site:boards.greenhouse.io OR site:job-boards.greenhouse.io) "[CARGO EM INGLÊS]" remote
+   site:jobs.lever.co "[CARGO EM INGLÊS]" remote
+3. Abra cada vaga e dê uma nota de 0 a 10 de combinação com o meu currículo. Fique só com as de nota 7 ou mais e ignore as que já estão em vagas/historico.csv.
+4. Salve em vagas/AAAA-MM-DD.md uma tabela com empresa, cargo, link, data de publicação, nota e o motivo da nota. Acrescente as vagas novas no vagas/historico.csv.
+5. Para cada vaga escolhida, escreva candidaturas/EMPRESA-CARGO.md: um texto curto para o recrutador, que ligue a minha experiência real ao que a vaga pede. Não invente experiência, número ou ferramenta que não está no currículo.
+6. Nunca envie candidatura nem preencha formulário. No fim, me mostre a tabela do dia.</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo4">
+    <div class="step-head"><span class="step-num">4</span><h2 id="passo4">Todo dia às 8 da manhã</h2></div>
+    <p>No app do Claude para computador, na aba Code, crie uma tarefa agendada diária às 8h na pasta <code>vagas</code>, com o mesmo prompt. Ela roda no seu computador, então ele precisa estar ligado nesse horário.</p>
+    <div class="cards">
+      <article class="card"><h3>Revise</h3><p class="when">Abra a tabela do dia, confira a vaga no site da empresa e ajuste o texto com o seu jeito de falar.</p></article>
+      <article class="card"><h3>Envie você</h3><p class="when">Candidate-se pelo próprio site da vaga, cedo, enquanto ela ainda tem poucos candidatos.</p></article>
+    </div>
+    <div class="note">O resultado depende da sua área e do seu currículo: chegar cedo aumenta a chance de ser visto, mas não garante entrevista. O Claude Code não está no plano gratuito do Claude; confira o seu plano.</div>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou? No pacote tem seis times de agentes com líder e revisor."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>

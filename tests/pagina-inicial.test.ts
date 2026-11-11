@@ -92,7 +92,7 @@ describe("página inicial de vendas", () => {
 
   it("cada card conta os agentes grátis do seu pacote; o completo conta todos", () => {
     expect(porId("pacote-completo").agentesGratis).toBe(PAGINAS_VIDEOS.length);
-    expect(porId("pacote-times-de-agentes").agentesGratis).toBe(10);
+    expect(porId("pacote-times-de-agentes").agentesGratis).toBe(PAGINAS_VIDEOS.filter((p) => p.oferta.pacote === "times-de-agentes").length);
     expect(porId("pacote-edicao-de-video").agentesGratis).toBe(3);
     expect(pagina.agentes.find((a) => a.pasta === "revisao-tripla")?.pacoteCurto).toBe("Kit Código Seguro");
   });

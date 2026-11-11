@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mods do Claude Code: o guia completo</title>
+<meta name="description" content="Guia dos Mods do Claude Code: o que são, a versão necessária e os pedidos prontos para sessões que conversam, um painel dos seus agentes e tarefas fáceis num modelo mais barato.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+
+<a class="topbar" href="../"><span class="dot" aria-hidden="true"></span><span data-config="marca"></span></a>
+
+<div class="strip">Este guia é grátis. A Coleção Completa de skills e agentes está <a href="#oferta">logo abaixo</a>.</div>
+
+<main>
+  <span class="badge">guia grátis</span>
+  <h1>Os Mods do <span class="nowrap">Claude Code</span></h1>
+  <p class="lead">Um mod muda como o Claude Code funciona e o que ele mostra: um painel ao lado da conversa, um comando novo, uma regra que entra antes de cada ação. Você não precisa programar: descreve o que quer e o próprio Claude escreve o mod. Abaixo estão os três usos do vídeo, com o pedido pronto de cada um.</p>
+  <div class="note">Conferido na documentação oficial do Claude Code em 10/11/2026.</div>
+
+  <section class="step" aria-labelledby="passo1">
+    <div class="step-head"><span class="step-num">1</span><h2 id="passo1">Confira a versão</h2></div>
+    <p>Os Mods vêm ligados a partir da versão 2.1.287 no terminal e 2.1.286 no app do Claude para computador.</p>
+    <div class="cards">
+      <article class="card"><h3>No terminal</h3><p class="when">Rode <code class="inline">claude --version</code>. Se for mais antiga, atualize o Claude Code.</p></article>
+      <article class="card"><h3>No app</h3><p class="when">Numa sessão da aba Code, digite <code class="inline">/status</code> e veja a linha Claude Code.</p></article>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo2">
+    <div class="step-head"><span class="step-num">2</span><h2 id="passo2">Como pedir um mod</h2></div>
+    <p>Abra uma sessão normal do Claude Code e descreva o mod com as suas palavras. Quando o Claude salvar o primeiro arquivo, ele pergunta se pode ligar a recarga automática: aceite e o mod passa a funcionar no fim da resposta. Se ele não usar o caminho certo, digite <code class="inline">/plugin-authoring</code> antes do pedido.</p>
+    <div class="note">Um mod pode ver tudo o que acontece na sessão, aprovar ações e gastar o seu uso. Peça mods para você e não instale mod de quem você não confia.</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo3">
+    <div class="step-head"><span class="step-num">3</span><h2 id="passo3">Uso 1: sessões que conversam</h2></div>
+    <p>Uma sessão do Claude Code pode mandar mensagem para outra. Com um mod, você deixa a troca visível e passa o plano de uma para a outra com um comando:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-sessoes">Copiar</button></div>
+<pre id="prompt-sessoes">Faça um mod com um painel ao lado da conversa que mostre as mensagens que esta sessão manda e recebe das minhas outras sessões, com a hora de cada uma. Crie também o comando /passar, que manda para a sessão que eu escolher um resumo do plano combinado aqui, com a lista de tarefas, para ela construir.</pre>
+    </div>
+    <p>Na prática: uma sessão planeja, você usa <code class="inline">/passar</code>, a outra constrói e responde quando terminar.</p>
+  </section>
+
+  <section class="step" aria-labelledby="passo4">
+    <div class="step-head"><span class="step-num">4</span><h2 id="passo4">Uso 2: um painel só seu</h2></div>
+    <p>O mod desenha um painel dentro do próprio Claude Code. Este mostra o que os seus agentes estão fazendo:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-painel">Copiar</button></div>
+<pre id="prompt-painel">Faça um mod com um painel chamado "Seus agentes" ao lado da conversa. Para cada subagente que começar nesta sessão, mostre o nome, o que ele está fazendo agora, há quanto tempo está rodando e se terminou. Atualize o painel a cada mudança e guarde a lista do dia mesmo se eu fechar e abrir a sessão.</pre>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="passo5">
+    <div class="step-head"><span class="step-num">5</span><h2 id="passo5">Uso 3: tarefa fácil no modelo mais barato</h2></div>
+    <p>Um mod pode mandar um pedido para outro modelo antes de ele sair. Assim as tarefas simples param de comer o seu limite:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-barato">Copiar</button></div>
+<pre id="prompt-barato">Faça um mod que mande para o modelo Haiku os pedidos simples, como renomear arquivos, traduzir um texto curto, resumir um log ou formatar uma lista, e deixe todo o resto no modelo atual. Mostre sob cada resposta qual modelo respondeu. Crie o comando /desvio para eu ligar e desligar a regra, e comece desligado.</pre>
+    </div>
+    <div class="note">Comece com poucos tipos de pedido e confira as respostas. Se um pedido difícil cair no modelo menor, a resposta piora; aí é só ajustar a regra com o próprio Claude.</div>
+  </section>
+
+  <section class="step" aria-labelledby="passo6">
+    <div class="step-head"><span class="step-num">6</span><h2 id="passo6">Guarde o mod para sempre</h2></div>
+    <p>O mod que o Claude escreve vale só na sessão em que ele nasceu e some depois de um tempo. Para usar em toda sessão, peça:</p>
+    <div class="code">
+      <div class="code-bar"><span>prompt</span><button class="copy" type="button" data-copy="prompt-guardar">Copiar</button></div>
+<pre id="prompt-guardar">Copie a pasta do mod que você criou nesta sessão para ~/mods/ e me diga como carregar ele nas próximas sessões.</pre>
+    </div>
+    <a class="btn" href="https://code.claude.com/docs/en/plugins/mods/overview" target="_blank" rel="noopener">Ler a documentação dos Mods</a>
+  </section>
+
+  <section id="oferta" data-oferta data-titulo="Gostou? No pacote tem o caminho completo do pedido ao projeto no ar."></section>
+</main>
+
+<footer>© <span data-config="ano"></span> <span data-config="marca"></span></footer>
+<div class="sr-only" aria-live="polite" id="aviso"></div>
+<script src="../assets/pagina.js"></script>
+</body>
+</html>

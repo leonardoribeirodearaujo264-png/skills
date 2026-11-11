@@ -259,6 +259,27 @@ export const PAGINAS_VIDEOS: readonly PaginaVideo[] = [
     tipo: "Prompt grátis",
     oferta: { pacote: "times-de-agentes", gancho: "Gostou? No pacote tem seis times de agentes com líder e revisor." },
   },
+  {
+    pasta: "busca",
+    titulo: "A vaga antes de todo mundo",
+    frase: "As buscas que acham vagas no site das empresas e o prompt para o Claude rodar todo dia às 8h.",
+    tipo: "Prompt grátis",
+    oferta: { pacote: "times-de-agentes", gancho: "Gostou? No pacote tem seis times de agentes com líder e revisor." },
+  },
+  {
+    pasta: "strix",
+    titulo: "Strix: pentest com IA",
+    frase: "A IA open source que ataca o seu app como um hacker e prova cada falha antes de você subir.",
+    tipo: "Passo a passo",
+    oferta: { pacote: "programacao-sem-codigo", gancho: "Gostou? No pacote tem o caminho completo do pedido ao projeto no ar." },
+  },
+  {
+    pasta: "mods",
+    titulo: "Os Mods do Claude Code",
+    frase: "Sessões que conversam, um painel dos seus agentes e tarefa fácil no modelo mais barato.",
+    tipo: "Guia grátis",
+    oferta: { pacote: "programacao-sem-codigo", gancho: "Gostou? No pacote tem o caminho completo do pedido ao projeto no ar." },
+  },
 ];
 
 // A chave é a pasta da página (/agentes/ -> "agentes")
